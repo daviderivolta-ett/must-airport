@@ -1,6 +1,7 @@
 .header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 24px;
     height: 56px;
     background-color: var(--dark-grey-100);
@@ -8,4 +9,20 @@
 
 .logo {
     height: 40px;
+}
+
+.menu {
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+.menu ul {
+    list-style-type: none;
+    display: flex;
+    gap: 24px;
+}
+
+.menu ul li a {
+    color: white;
+    text-decoration: none;
 }
