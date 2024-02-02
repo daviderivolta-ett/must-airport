@@ -8,6 +8,12 @@
     background-color: var(--dark-grey-100);
     color: white;
     transition: .2s ease-in-out;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.header h1 {
+    font-size: 1rem;
 }
 
 .close-icon-wrapper {
@@ -15,7 +21,7 @@
     height: 32px;
     width: 32px;
     position: absolute;
-    top: 32px;
+    top: 30px;
     right: -32px;
     display: flex;
     align-items: center;
