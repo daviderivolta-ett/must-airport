@@ -18,7 +18,7 @@ export class MapComponent {
     this.map.setMaxBounds(this.map.getBounds());
   }
 
-  initMap(): void {
+  private initMap(): void {
     this.map = Leaflet.map('map', {
       zoomControl: false,
       maxZoom: 20,
