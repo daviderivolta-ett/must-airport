@@ -1,0 +1,33 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "reportParents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "verticalId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "creationTime",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "reportParents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "verticalId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "location",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

@@ -9,8 +9,9 @@ import { firebaseConfig } from '../environments/environment.development';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    importProvidersFrom(provideFirebaseApp(() => initializeApp(firebaseConfig))),
-    importProvidersFrom(provideFirestore(() => getFirestore())
-    )
+    importProvidersFrom([
+      provideFirebaseApp(() => initializeApp(firebaseConfig)),
+      provideFirestore(() => getFirestore())
+    ])
   ]
 };
