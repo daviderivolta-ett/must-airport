@@ -1,11 +1,10 @@
-import { Injectable, WritableSignal, effect, signal } from '@angular/core';
+import { Injectable, WritableSignal, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { DocumentData, QuerySnapshot, collection, getDocs, onSnapshot, query } from 'firebase/firestore';
 import { Failure } from '../models/failure.model';
 import { GeoPoint } from 'firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
 import { Fields } from '../models/fields.model';
-import { BehaviorSubject } from 'rxjs';
 
 export interface FailureDb {
   childFlowId: string;

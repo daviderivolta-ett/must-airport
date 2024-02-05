@@ -14,9 +14,7 @@ export class SidebarContentComponent {
 
   constructor(private failuresService: FailuresService) {
     effect(() => {
-      this.failures = this.failuresService.failures();
+      this.failures = this.failuresService.failures();      
     });
   }
-
-  
 }

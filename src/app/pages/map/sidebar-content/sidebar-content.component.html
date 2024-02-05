@@ -1,4 +1,7 @@
-<p>sidebar-content works!</p>
-@for (failure of failures; track $index) {
+<div class="sidebar-content">
+    @for (failure of failures; track $index) {
     <p>{{failure.userId}}</p>
-}
+    <p>{{failure.verticalId}}</p>
+    <img src={{failure.coverImgUrls}}>
+    }
+</div>
