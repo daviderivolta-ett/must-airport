@@ -2,6 +2,8 @@ import { GeoPoint, Timestamp } from 'firebase/firestore';
 import { Fields } from './fields.model';
 
 export class Failure {
+    [key: string]: any;
+    
     childFlowId: string;
     childrenIds: string[];
     closed: boolean;

@@ -1,8 +1,4 @@
 import { Component } from '@angular/core';
-import { FailureDb, FailuresService } from '../../../services/failures.service';
-import { QuerySnapshot, DocumentData } from 'firebase/firestore';
-import { Failure } from '../../../models/failure.model';
-import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-sidebar-content',
@@ -12,16 +8,7 @@ import { AuthService } from '../../../services/auth.service';
   styleUrl: './sidebar-content.component.scss'
 })
 export class SidebarContentComponent {
-  public allFailures: Failure[] = [];
+  constructor() { }
 
-  constructor(private failuresService: FailuresService) { }
-
-  async ngOnInit() {
-    const allFailuresSnapshot: QuerySnapshot<DocumentData> = await this.failuresService.getAllFailures();
-    const allFailures = allFailuresSnapshot.docs.map((item: DocumentData) => {
-      const failureDb: FailureDb = item['data']() as FailureDb;
-      return this.failuresService.parseFailure(failureDb);
-    });
-    console.log(allFailures);
-  }
+  ngOnInit(): void { }
 }
