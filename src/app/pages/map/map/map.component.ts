@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChanges, effect } from '@angular/core';
 import * as Leaflet from 'leaflet';
 import { FailuresService } from '../../../services/failures.service';
 import { MapService } from '../../../services/map.service';
@@ -11,18 +11,18 @@ import { MapService } from '../../../services/map.service';
   styleUrl: './map.component.scss'
 })
 export class MapComponent {
-  public geoJsonData: any;
+  private geoJsonData: any;
   private map!: Leaflet.Map;
 
-  constructor(private failuresService: FailuresService, private mapService: MapService) { }
+  constructor(private failuresService: FailuresService, private mapService: MapService) {
+    effect(() => {
+      this.geoJsonData = this.mapService.createGeoJson(this.failuresService.failures());
+      this.populateMap(this.geoJsonData);
+    });
+  }
 
   ngOnInit(): void {
     this.initMap();
-
-    this.failuresService.failures$.subscribe(failures => {
-      this.geoJsonData = this.mapService.createGeoJson(failures);
-      this.populateMap(this.geoJsonData);
-    });
   }
 
   private initMap(): void {

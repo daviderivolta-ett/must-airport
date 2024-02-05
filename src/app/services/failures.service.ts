@@ -1,4 +1,4 @@
-import { Injectable, WritableSignal, signal } from '@angular/core';
+import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { DocumentData, QuerySnapshot, collection, getDocs, onSnapshot, query } from 'firebase/firestore';
 import { Failure } from '../models/failure.model';
@@ -36,8 +36,7 @@ export interface FieldsDb {
   providedIn: 'root'
 })
 export class FailuresService {
-  private failures: BehaviorSubject<Failure[]> = new BehaviorSubject<Failure[]>([]);
-  public failures$ = this.failures.asObservable();
+  public failures: WritableSignal<Failure[]> = signal([]);
 
   constructor(private db: Firestore) {
     this.getAllFailuresSnapshot();
@@ -59,7 +58,7 @@ export class FailuresService {
         querySnapshot.forEach(doc => {
           failures.push(this.parseFailure(doc.id, doc.data() as FailureDb));
         });
-        this.failures.next(failures);
+        this.failures.set(failures);
       },
       (error: Error) => console.log(error)
     );
