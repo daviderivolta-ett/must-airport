@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import * as Leaflet from 'leaflet';
 
 @Component({
@@ -9,13 +9,19 @@ import * as Leaflet from 'leaflet';
   styleUrl: './map.component.scss'
 })
 export class MapComponent {
+  @Input() geoJsonData: any;
   private map!: Leaflet.Map;
 
   constructor() { }
 
   ngOnInit(): void {
     this.initMap();
-    this.map.setMaxBounds(this.map.getBounds());
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['geoJsonData'] && !changes['geoJsonData'].firstChange) {
+      this.populateMap(this.geoJsonData);
+    }
   }
 
   private initMap(): void {
@@ -34,5 +40,27 @@ export class MapComponent {
     Leaflet.control.zoom({
       position: 'bottomright'
     }).addTo(this.map);
+
+    // this.map.setMaxBounds(this.map.getBounds());
+  }
+
+  private populateMap(geoJsonData: any): void {
+    Leaflet.geoJSON(geoJsonData, {
+      pointToLayer: (feature, latLng) => this.styleMarker(latLng)
+    }).addTo(this.map);
+  }
+
+  private styleMarker(latLng: Leaflet.LatLng): Leaflet.CircleMarker {
+    let options = {
+      stroke: true,
+      radius: 8,
+      fillColor: "#b71b28",
+      color: "#b71b28",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.5
+    };
+
+    return new Leaflet.CircleMarker(latLng, options);
   }
 }

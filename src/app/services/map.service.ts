@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Failure } from '../models/failure.model';
 
-interface GeoJSON {
+interface GeoJsonData {
   type: string;
   features: any[];
 }
@@ -13,7 +13,7 @@ export class MapService {
 
   constructor() { }
 
-  public createGeoJson(failures: Failure[]): GeoJSON {
+  public createGeoJson(failures: Failure[]): GeoJsonData {
     const features = failures.map(failure => ({
       type: "Feature",
       properties: this.parseProperties(failure),
@@ -23,7 +23,7 @@ export class MapService {
       }
     }));
 
-    const geoJSON: GeoJSON = {
+    const geoJSON: GeoJsonData = {
       type: 'FeatureCollection',
       features: features
     }

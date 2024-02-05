@@ -15,6 +15,7 @@ import { MapService } from '../../../services/map.service';
 })
 export class MapFailuresComponent {
   public allFailures: Failure[] = [];
+  public geoJsonData: any;
 
   constructor(private failuresService: FailuresService, private mapService: MapService) { }
 
@@ -26,7 +27,6 @@ export class MapFailuresComponent {
     });
     console.log(this.allFailures);
 
-    const geoJSON = this.mapService.createGeoJson(this.allFailures);
-    console.log(geoJSON);    
+    this.geoJsonData = this.mapService.createGeoJson(this.allFailures);   
   }
 }
