@@ -54,10 +54,10 @@ export class MapComponent {
     let options = {
       stroke: true,
       radius: 8,
-      fillColor: "#b71b28",
-      color: "#b71b28",
       weight: 2,
+      color: "#b71b28",
       opacity: 1,
+      fillColor: "#b71b28",
       fillOpacity: 0.5
     };
 
