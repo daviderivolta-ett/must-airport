@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
+import { AuthService } from './services/auth.service';
+import { FirebaseService } from './services/firebase.service';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +13,9 @@ import { HeaderComponent } from './components/header/header.component';
 })
 export class AppComponent {
   title = 'must';
+
+  constructor(private firebaseService: FirebaseService, private authService: AuthService) { }
+
+  ngOnInit(): void {
+  }
 }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FailureDb, FailuresService } from '../../../services/failures.service';
 import { QuerySnapshot, DocumentData } from 'firebase/firestore';
 import { Failure } from '../../../models/failure.model';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-sidebar-content',
