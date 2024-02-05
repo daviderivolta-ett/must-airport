@@ -1,6 +1,6 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { DocumentData, QuerySnapshot, collection, getDocs, onSnapshot, query, doc } from 'firebase/firestore';
+import { DocumentData, QuerySnapshot, collection, getDocs, onSnapshot, query } from 'firebase/firestore';
 import { Failure } from '../models/failure.model';
 import { GeoPoint } from 'firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
@@ -57,7 +57,7 @@ export class FailuresService {
       (querySnapshot: QuerySnapshot<DocumentData>) => {
         const failures: any[] = [];
         querySnapshot.forEach(doc => {
-          failures.push(this.parseFailure(doc.data() as FailureDb));
+          failures.push(this.parseFailure(doc.id, doc.data() as FailureDb));
         });
         this.failures.next(failures);
       },
@@ -65,7 +65,7 @@ export class FailuresService {
     );
   }
 
-  public parseFailure(failure: FailureDb): Failure {
+  public parseFailure(id: string, failure: FailureDb): Failure {
     let f = Failure.createEmpty();
 
     f.childFlowId = failure.childFlowId;
@@ -83,6 +83,7 @@ export class FailuresService {
     f.parentFlowId = failure.parentFlowId;
     f.userId = failure.userId;
     f.verticalId = failure.verticalId;
+    f.id = id;
 
     return f;
   }

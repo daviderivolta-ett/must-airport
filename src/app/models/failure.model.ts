@@ -19,6 +19,7 @@ export class Failure {
     parentFlowId: string;
     userId: string;
     verticalId: string
+    id: string;
 
     constructor(childFlowId: string,
         childrenIds: string[],
@@ -34,7 +35,8 @@ export class Failure {
         location: GeoPoint,
         parentFlowId: string,
         userId: string,
-        verticalId: string) {
+        verticalId: string,
+        id: string) {
             this.childFlowId = childFlowId;
             this.childrenIds = childrenIds;
             this.closed = closed;
@@ -50,6 +52,7 @@ export class Failure {
             this.parentFlowId = parentFlowId;
             this.userId = userId;
             this.verticalId = verticalId;
+            this.id = id;
     }
 
     static createEmpty(): Failure {
@@ -66,6 +69,7 @@ export class Failure {
             '',
             Timestamp.now(),
             new GeoPoint(44.415229489227684, 8.845336246602141),
+            '',
             '',
             '',
             ''
