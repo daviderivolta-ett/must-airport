@@ -41,7 +41,7 @@ export class MapComponent {
       position: 'bottomright'
     }).addTo(this.map);
 
-    // this.map.setMaxBounds(this.map.getBounds());
+    this.map.setMaxBounds(this.map.getBounds());
   }
 
   private populateMap(geoJsonData: any): void {
