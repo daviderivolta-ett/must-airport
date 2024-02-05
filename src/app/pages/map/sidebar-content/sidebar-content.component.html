@@ -1,7 +1,5 @@
 <div class="sidebar-content">
-    @for (failure of failures; track $index) {
-    <p>{{failure.userId}}</p>
-    <p>{{failure.verticalId}}</p>
-    <img src={{failure.coverImgUrls}}>
+    @for (failure of failures; track failure.id) {
+    <app-sidebar-card [failure]="failure" />
     }
 </div>
