@@ -1,7 +1,8 @@
-import { Component, Input, SimpleChanges, effect } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import * as Leaflet from 'leaflet';
 import { FailuresService } from '../../../services/failures.service';
 import { MapService } from '../../../services/map.service';
+import { SidebarService } from '../../../observables/sidebar.service';
 
 @Component({
   selector: 'app-map',
@@ -14,7 +15,7 @@ export class MapComponent {
   private geoJsonData: any;
   private map!: Leaflet.Map;
 
-  constructor(private failuresService: FailuresService, private mapService: MapService) {
+  constructor(private failuresService: FailuresService, private mapService: MapService, private sidebarService: SidebarService) {
     effect(() => {
       this.geoJsonData = this.mapService.createGeoJson(this.failuresService.failures());
       this.populateMap(this.geoJsonData);
@@ -43,6 +44,8 @@ export class MapComponent {
     }).addTo(this.map);
 
     this.map.setMaxBounds(this.map.getBounds());
+
+    this.map.on('click', () => this.sidebarService.isOpen.set(false));
   }
 
   private populateMap(geoJsonData: any): void {
