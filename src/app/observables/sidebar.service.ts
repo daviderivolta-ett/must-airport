@@ -1,10 +1,10 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, WritableSignal, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SidebarService {
-  public isOpen = signal(true);
+  public isOpen: WritableSignal<boolean> = signal(true);
 
   constructor() { }
 }

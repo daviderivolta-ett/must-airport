@@ -1,5 +1,7 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
 import * as Leaflet from 'leaflet';
+import { FailuresService } from '../../../services/failures.service';
+import { MapService } from '../../../services/map.service';
 
 @Component({
   selector: 'app-map',
@@ -9,19 +11,18 @@ import * as Leaflet from 'leaflet';
   styleUrl: './map.component.scss'
 })
 export class MapComponent {
-  @Input() geoJsonData: any;
+  public geoJsonData: any;
   private map!: Leaflet.Map;
 
-  constructor() { }
+  constructor(private failuresService: FailuresService, private mapService: MapService) { }
 
   ngOnInit(): void {
     this.initMap();
-  }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['geoJsonData'] && !changes['geoJsonData'].firstChange) {
+    this.failuresService.failures$.subscribe(failures => {
+      this.geoJsonData = this.mapService.createGeoJson(failures);
       this.populateMap(this.geoJsonData);
-    }
+    });
   }
 
   private initMap(): void {

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { FailuresService } from '../../../services/failures.service';
+import { Failure } from '../../../models/failure.model';
 
 @Component({
   selector: 'app-sidebar-content',
@@ -8,7 +10,15 @@ import { Component } from '@angular/core';
   styleUrl: './sidebar-content.component.scss'
 })
 export class SidebarContentComponent {
-  constructor() { }
+  public failures: Failure[] = [];
 
-  ngOnInit(): void { }
+  constructor(private failuresService: FailuresService) { }
+
+  ngOnInit(): void {
+    this.failuresService.failures$.subscribe(failures => {
+      this.failures = failures;
+      console.log(failures);
+           
+    });    
+  }
 }
