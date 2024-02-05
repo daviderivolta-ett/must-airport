@@ -25,10 +25,10 @@ export interface FailureDb {
 }
 
 export interface FieldsDb {
-  wideShots: string[],
-  elementType: string[],
-  tagTechElement: string[],
-  subTagTechElement: string[]
+  foto_campo_largo: string[],
+  element_type: string[],
+  tag_tech_el: string[],
+  sub_tag_tech_el: string[]
 }
 
 @Injectable({
@@ -46,7 +46,7 @@ export class FailuresService {
 
   public parseFailure(failure: FailureDb): Failure {
     let f = Failure.createEmpty();
-
+    
     f.childFlowId = failure.childFlowId;
     f.childrenIds = failure.childrenIds;
     f.closed = failure.closed;
@@ -69,10 +69,10 @@ export class FailuresService {
   private parseFields(fields: FieldsDb): Fields {
     let f = Fields.createEmpty();
 
-    f.wideShots = fields.wideShots;
-    f.elementType = fields.elementType;
-    f.tagTechElement = fields.tagTechElement;
-    f.subTagTechElement = fields.subTagTechElement;
+    if(fields.foto_campo_largo !== undefined) f.wideShots = fields.foto_campo_largo;
+    if(fields.element_type !== undefined) f.elementType = fields.element_type;
+    if(fields.tag_tech_el !== undefined) f.tagTechElement = fields.tag_tech_el;
+    if(fields.sub_tag_tech_el !== undefined) f.subTagTechElement = fields.sub_tag_tech_el;
 
     return f;
   }
