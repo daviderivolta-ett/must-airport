@@ -32,10 +32,11 @@ export class TechElementsService {
 
   constructor(private db: Firestore) {
     this.getAllTechElementTags();
-
+    
     effect(() => {
-      this.techElementTags = this.techElementTagsSignal();
-      console.log(this.techElementTags);
+      this.techElementTags = this.techElementTagsSignal();      
+      console.log(this.getTechElementTagById('cte01.01.01'));
+      console.log(this.getTechElementSubTagById('cte01.01.01.07'));
     });
   }
 
@@ -78,5 +79,24 @@ export class TechElementsService {
     t.name = { it: techElementSubTag.name, en: techElementSubTag.nameEN };
 
     return t;
+  }
+
+  public getTechElementTagById(id: string): TechElementTag {
+    let tag: TechElementTag = TechElementTag.createEmpty();
+    this.techElementTags.forEach(techElementTag => {
+      if (techElementTag.id === id) tag = techElementTag;
+    });
+    return tag;
+  }
+
+  public getTechElementSubTagById(id: string): TechElementSubTag {
+    let tag: TechElementSubTag = TechElementSubTag.createEmpty();
+    this.techElementTags.forEach(techElementTag => {
+      if (techElementTag.subTags.length === 0) return;
+      techElementTag.subTags.forEach((subTag: TechElementSubTag) => {
+        if (subTag.id === id) tag = subTag;
+      });
+    });
+    return tag;
   }
 }

@@ -35,8 +35,9 @@ export class FailuresService {
 
     effect(() => {
       this.failureTags = this.failureTagsSignal();
-      console.log(this.failureTags);
-      console.log(this.getFailureTagById('cf01.01.02'));
+      // console.log(this.failureTags);
+      // console.log(this.getFailureSubTagById('cf01.01.02'));
+      // console.log(this.getFailureTagById('cf02.03'));      
     });
   }
 
@@ -81,7 +82,15 @@ export class FailuresService {
     return f;
   }
 
-  public getFailureTagById(id: string): FailureSubTag {
+  getFailureTagById(id: string): FailureTag {
+    let tag: FailureTag = FailureTag.createEmpty();
+    this.failureTags.forEach(failureTag => {
+      if (failureTag.id === id) tag = failureTag;
+    });
+    return tag;
+  }
+
+  public getFailureSubTagById(id: string): FailureSubTag {
     let tag: FailureSubTag = FailureSubTag.createEmpty();
     this.failureTags.forEach(failureTag => {
       if (failureTag.subTags.length === 0) return;

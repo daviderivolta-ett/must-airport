@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MapComponent } from '../map/map.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { TechElementsService } from '../../../services/tech-elements.service';
+import { FailuresService } from '../../../services/failures.service';
 
 @Component({
   selector: 'app-map-failures',
@@ -12,5 +13,5 @@ import { TechElementsService } from '../../../services/tech-elements.service';
 })
 export class MapFailuresComponent {
 
-  constructor(private techElementsService: TechElementsService) { }
+  constructor(private techElementsService: TechElementsService, failuresService: FailuresService) { }
 }
