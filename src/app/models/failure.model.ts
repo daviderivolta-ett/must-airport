@@ -3,7 +3,7 @@ import { Fields } from './fields.model';
 
 export class Failure {
     [key: string]: any;
-    
+
     childFlowId: string;
     childrenIds: string[];
     closed: boolean;
@@ -21,7 +21,8 @@ export class Failure {
     verticalId: string
     id: string;
 
-    constructor(childFlowId: string,
+    constructor(
+        childFlowId: string,
         childrenIds: string[],
         closed: boolean,
         closingChildId: string,
@@ -36,23 +37,24 @@ export class Failure {
         parentFlowId: string,
         userId: string,
         verticalId: string,
-        id: string) {
-            this.childFlowId = childFlowId;
-            this.childrenIds = childrenIds;
-            this.closed = closed;
-            this.closingChildId = closingChildId;
-            this.closingTime = closingTime.toDate();
-            this.coverImgUrls = coverImgUrls;
-            this.creationTime = creationTime.toDate();
-            this.descriptionSelections = descriptionSelections;
-            this.fields = fields;
-            this.language = language;
-            this.lastChildTime = lastChildTime.toDate();
-            this.location = location;
-            this.parentFlowId = parentFlowId;
-            this.userId = userId;
-            this.verticalId = verticalId;
-            this.id = id;
+        id: string
+    ) {
+        this.childFlowId = childFlowId;
+        this.childrenIds = childrenIds;
+        this.closed = closed;
+        this.closingChildId = closingChildId;
+        this.closingTime = closingTime.toDate();
+        this.coverImgUrls = coverImgUrls;
+        this.creationTime = creationTime.toDate();
+        this.descriptionSelections = descriptionSelections;
+        this.fields = fields;
+        this.language = language;
+        this.lastChildTime = lastChildTime.toDate();
+        this.location = location;
+        this.parentFlowId = parentFlowId;
+        this.userId = userId;
+        this.verticalId = verticalId;
+        this.id = id;
     }
 
     static createEmpty(): Failure {
@@ -73,6 +75,6 @@ export class Failure {
             '',
             '',
             ''
-        ) 
+        )
     }
 }

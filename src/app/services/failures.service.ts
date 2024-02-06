@@ -1,10 +1,11 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { DocumentData, QuerySnapshot, collection, getDocs, onSnapshot, query } from 'firebase/firestore';
+import { DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query } from 'firebase/firestore';
 import { Failure } from '../models/failure.model';
 import { GeoPoint } from 'firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
 import { Fields } from '../models/fields.model';
+import { Report } from '../models/report.model';
 
 export interface FailureDb {
   childFlowId: string;
@@ -31,6 +32,18 @@ export interface FieldsDb {
   sub_tag_tech_el: string[]
 }
 
+export interface ReportDb {
+  closure: boolean;
+  creationTime: Timestamp;
+  description: string;
+  flowId: string;
+  foto_dettaglio: string[];
+  language: string;
+  parentId: string;
+  userId: string;
+  verticalId: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -39,6 +52,8 @@ export class FailuresService {
 
   constructor(private db: Firestore) {
     this.getAllFailuresSnapshot();
+    this.populateChildrenReport('S2O6aBZH1U8BcpBvzSVz');
+    this.populateChildrenReport('mcrko1HkRFJwj1wm1kxY');
   }
 
   public async getAllFailures(): Promise<QuerySnapshot<DocumentData>> {
@@ -95,5 +110,35 @@ export class FailuresService {
     if (fields.sub_tag_tech_el !== undefined) f.subTagTechElement = fields.sub_tag_tech_el;
 
     return f;
+  }
+
+  public async populateChildrenReport(id: string): Promise<Report> {
+    const q = doc(this.db, 'reportChildren', id);
+    const snapshot = await getDoc(q);
+    if (snapshot.exists()) {
+      const r = snapshot.data() as ReportDb;
+      const report: Report = this.parseReport(r);
+      console.log(r);
+      // console.log(report);      
+      return report;
+    } else {
+      throw new Error('Report non trovato');
+    }
+  }
+
+  private parseReport(report: ReportDb): Report {
+    let r = Report.createEmpty();
+
+    r.closure = report.closure;
+    r.creationTime = report.creationTime.toDate();
+    r.description = report.description;
+    r.flowId = report.flowId;
+    r.detailPics = report.foto_dettaglio;
+    r.language = report.language;
+    r.parentId = report.parentId;
+    r.userId = report.userId;
+    r.verticalId = report.verticalId;
+
+    return r;
   }
 }
