@@ -1,6 +1,6 @@
-import { Injectable, WritableSignal, signal } from '@angular/core';
+import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { collection, getDocs, query } from 'firebase/firestore';
+import { doc, collection, getDocs, query, getDoc } from 'firebase/firestore';
 import { FailureTag } from '../models/failure-tag.model';
 import { FailureSubTag } from '../models/failure-subtag.model';
 
@@ -19,7 +19,6 @@ interface FailureSubTagDb {
   description: string;
   descriptionEN: string;
   id: string;
-  imageUrls: string[]
   name: string;
   nameEN: string;
 }
@@ -28,10 +27,17 @@ interface FailureSubTagDb {
   providedIn: 'root'
 })
 export class FailuresService {
-  public failureTags: WritableSignal<FailureTag[]> = signal([]);
+  private failureTagsSignal: WritableSignal<FailureTag[]> = signal([]);
+  public failureTags: FailureTag[] = [];
 
   constructor(private db: Firestore) {
     this.getAllFailureTags();
+
+    effect(() => {
+      this.failureTags = this.failureTagsSignal();
+      console.log(this.failureTags);
+      console.log(this.getFailureTagById('cf01.01.02'));
+    });
   }
 
   public async getAllFailureTags() {
@@ -49,7 +55,7 @@ export class FailuresService {
       return failureTag;
     });
 
-    this.failureTags.set(failureTags);
+    this.failureTagsSignal.set(failureTags);
   }
 
   private parseFailureTag(failureTag: FailureTagDb): FailureTag {
@@ -70,9 +76,19 @@ export class FailuresService {
 
     f.description = { it: failureSubTag.description, en: failureSubTag.descriptionEN };
     f.id = failureSubTag.id;
-    f.imageUrls = failureSubTag.imageUrls;
-    f.name = { it: failureSubTag.description, en: failureSubTag.descriptionEN };
+    f.name = { it: failureSubTag.name, en: failureSubTag.nameEN };
 
     return f;
+  }
+
+  public getFailureTagById(id: string): FailureSubTag {
+    let tag: FailureSubTag = FailureSubTag.createEmpty();
+    this.failureTags.forEach(failureTag => {
+      if (failureTag.subTags.length === 0) return;
+      failureTag.subTags.forEach((subTag: FailureSubTag) => {
+        if (subTag.id === id) tag = subTag;
+      });
+    });
+    return tag;
   }
 }

@@ -37,6 +37,8 @@ export interface ReportChildDb {
   foto_dettaglio: string[];
   language: string;
   parentId: string;
+  sub_tag_failure: string[];
+  tag_failure: string[];
   userId: string;
   verticalId: string;
 }
@@ -49,14 +51,7 @@ export class ReportsService {
 
   constructor(private db: Firestore) {
     this.getAllParentReportsSnapshot();
-    this.getChildReportById('S2O6aBZH1U8BcpBvzSVz');
     this.getChildReportById('NXVcSiVL6McspPB9PoCm');
-  }
-
-  public async getParentReports(): Promise<QuerySnapshot<DocumentData>> {
-    const q = query(collection(this.db, 'reportParents'));
-    const snapshot = await getDocs(q);
-    return snapshot;
   }
 
   public getAllParentReportsSnapshot(): void {
@@ -107,14 +102,21 @@ export class ReportsService {
     return f;
   }
 
+  public async populateChildrenReports(ids: string[]): Promise<ReportChild[]> {
+    let reports: ReportChild[] = await Promise.all(ids.map(async id => {
+      return await this.getChildReportById(id);
+    }));
+    return reports;
+  }
+
+
   public async getChildReportById(id: string): Promise<ReportChild> {
     const q = doc(this.db, 'reportChildren', id);
     const snapshot = await getDoc(q);
     if (snapshot.exists()) {
       const r = snapshot.data() as ReportChildDb;
       const report: ReportChild = this.parseChildReport(r);
-      console.log(r);
-      // console.log(report);      
+      // console.log(report);
       return report;
     } else {
       throw new Error('Report non trovato');
@@ -130,6 +132,8 @@ export class ReportsService {
     r.detailPics = report.foto_dettaglio;
     r.language = report.language;
     r.parentId = report.parentId;
+    r.subTagFailure = report.sub_tag_failure;
+    r.tagFailure = report.tag_failure;
     r.userId = report.userId;
     r.verticalId = report.verticalId;
 
