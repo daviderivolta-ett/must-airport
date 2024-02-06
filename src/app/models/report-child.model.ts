@@ -1,6 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 
-export class Report {
+export class ReportChild {
     closure: boolean;
     creationTime: Date;
     description: string;
@@ -33,8 +33,8 @@ export class Report {
         this.verticalId = verticalId;
     }
 
-    static createEmpty(): Report {
-        return new Report(
+    static createEmpty(): ReportChild {
+        return new ReportChild(
             false,
             Timestamp.now(),
             '',

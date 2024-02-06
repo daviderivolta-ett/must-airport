@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Failure } from '../../../models/failure.model';
+import { ReportParent } from '../../../models/report-parent.model';
 
 @Component({
   selector: 'app-sidebar-card',
@@ -9,5 +9,5 @@ import { Failure } from '../../../models/failure.model';
   styleUrl: './sidebar-card.component.scss'
 })
 export class SidebarCardComponent {
-  @Input() public failure!: Failure;
+  @Input() public report!: ReportParent;
 }

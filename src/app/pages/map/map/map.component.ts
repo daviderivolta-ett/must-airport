@@ -1,6 +1,6 @@
 import { Component, effect } from '@angular/core';
 import * as Leaflet from 'leaflet';
-import { FailuresService } from '../../../services/failures.service';
+import { FailuresService } from '../../../services/reports.service';
 import { MapService } from '../../../services/map.service';
 import { SidebarService } from '../../../observables/sidebar.service';
 
@@ -17,7 +17,7 @@ export class MapComponent {
 
   constructor(private failuresService: FailuresService, private mapService: MapService, private sidebarService: SidebarService) {
     effect(() => {
-      this.geoJsonData = this.mapService.createGeoJson(this.failuresService.failures());
+      this.geoJsonData = this.mapService.createGeoJson(this.failuresService.reports());
       this.populateMap(this.geoJsonData);
     });
   }

@@ -1,4 +1,4 @@
-export class Fields {
+export class ReportParentFields {
     wideShots: string[];
     elementType: string[]
     tagTechElement: string[];
@@ -11,7 +11,7 @@ export class Fields {
         this.subTagTechElement = subTagTechElement;
     }
 
-    static createEmpty(): Fields {
-        return new Fields([], [], [], []);
+    static createEmpty(): ReportParentFields {
+        return new ReportParentFields([], [], [], []);
     }
 }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MapComponent } from '../map/map.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
-import { Failure } from '../../../models/failure.model';
+import { ReportParent } from '../../../models/report-parent.model';
 
 @Component({
   selector: 'app-map-failures',
@@ -11,7 +11,7 @@ import { Failure } from '../../../models/failure.model';
   styleUrl: './map-failures.component.scss'
 })
 export class MapFailuresComponent {
-  public failures: Failure [] = [];
+  public failures: ReportParent [] = [];
   public geoJsonData: any;
 
   constructor() { }

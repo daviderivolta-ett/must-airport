@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Failure } from '../models/failure.model';
+import { ReportParent } from '../models/report-parent.model';
 
 interface GeoJsonData {
   type: string;
@@ -13,7 +13,7 @@ export class MapService {
 
   constructor() { }
 
-  public createGeoJson(failures: Failure[]): GeoJsonData {
+  public createGeoJson(failures: ReportParent[]): GeoJsonData {
     const features = failures.map(failure => ({
       type: "Feature",
       properties: this.parseProperties(failure),
@@ -31,7 +31,7 @@ export class MapService {
     return geoJSON;
   }
 
-  private parseProperties(failure: Failure): { [key: string]: any } {
+  private parseProperties(failure: ReportParent): { [key: string]: any } {
     const properties: { [key: string]: any } = {};
 
     for (const key in failure) {

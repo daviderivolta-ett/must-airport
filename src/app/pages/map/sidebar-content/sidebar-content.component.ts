@@ -1,6 +1,6 @@
 import { Component, effect } from '@angular/core';
-import { FailuresService } from '../../../services/failures.service';
-import { Failure } from '../../../models/failure.model';
+import { FailuresService } from '../../../services/reports.service';
+import { ReportParent } from '../../../models/report-parent.model';
 import { SidebarCardComponent } from '../sidebar-card/sidebar-card.component';
 
 @Component({
@@ -11,11 +11,11 @@ import { SidebarCardComponent } from '../sidebar-card/sidebar-card.component';
   styleUrl: './sidebar-content.component.scss'
 })
 export class SidebarContentComponent {
-  public failures: Failure[] = [];
+  public reports: ReportParent[] = [];
 
   constructor(private failuresService: FailuresService) {
     effect(() => {
-      this.failures = this.failuresService.failures();      
+      this.reports = this.failuresService.reports();      
     });
   }
 }

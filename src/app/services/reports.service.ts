@@ -1,13 +1,13 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query } from 'firebase/firestore';
-import { Failure } from '../models/failure.model';
+import { ReportParent } from '../models/report-parent.model';
 import { GeoPoint } from 'firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
-import { Fields } from '../models/fields.model';
-import { Report } from '../models/report.model';
+import { ReportParentFields } from '../models/report-parent.fields.model';
+import { ReportChild } from '../models/report-child.model';
 
-export interface FailureDb {
+export interface ReportParentDb {
   childFlowId: string;
   childrenIds: string[];
   closed: boolean;
@@ -16,7 +16,7 @@ export interface FailureDb {
   coverImgUrls: string[];
   creationTime: Timestamp;
   descriptionSelections: string[];
-  fields: FieldsDb;
+  fields: ReportParentFieldsDb;
   language: string;
   lastChildTime: Timestamp;
   location: GeoPoint;
@@ -25,14 +25,14 @@ export interface FailureDb {
   verticalId: string
 }
 
-export interface FieldsDb {
+export interface ReportParentFieldsDb {
   foto_campo_largo: string[],
   element_type: string[],
   tag_tech_el: string[],
   sub_tag_tech_el: string[]
 }
 
-export interface ReportDb {
+export interface ReportChildDb {
   closure: boolean;
   creationTime: Timestamp;
   description: string;
@@ -48,12 +48,12 @@ export interface ReportDb {
   providedIn: 'root'
 })
 export class FailuresService {
-  public failures: WritableSignal<Failure[]> = signal([]);
+  public reports: WritableSignal<ReportParent[]> = signal([]);
 
   constructor(private db: Firestore) {
-    this.getAllFailuresSnapshot();
-    this.populateChildrenReport('S2O6aBZH1U8BcpBvzSVz');
-    this.populateChildrenReport('mcrko1HkRFJwj1wm1kxY');
+    this.getAllParentReportsSnapshot();
+    // this.populateReportChildren('S2O6aBZH1U8BcpBvzSVz');
+    this.populateChildReport('NXVcSiVL6McspPB9PoCm');
   }
 
   public async getAllFailures(): Promise<QuerySnapshot<DocumentData>> {
@@ -64,22 +64,22 @@ export class FailuresService {
     return snapshot;
   }
 
-  public getAllFailuresSnapshot(): void {
+  public getAllParentReportsSnapshot(): void {
     const q = query(collection(this.db, 'reportParents'));
     const unsubscribe = onSnapshot(q,
       (querySnapshot: QuerySnapshot<DocumentData>) => {
         const failures: any[] = [];
         querySnapshot.forEach(doc => {
-          failures.push(this.parseFailure(doc.id, doc.data() as FailureDb));
+          failures.push(this.parseParentReports(doc.id, doc.data() as ReportParentDb));
         });
-        this.failures.set(failures);
+        this.reports.set(failures);
       },
       (error: Error) => console.log(error)
     );
   }
 
-  public parseFailure(id: string, failure: FailureDb): Failure {
-    let f = Failure.createEmpty();
+  public parseParentReports(id: string, failure: ReportParentDb): ReportParent {
+    let f = ReportParent.createEmpty();
 
     f.childFlowId = failure.childFlowId;
     f.childrenIds = failure.childrenIds;
@@ -89,7 +89,7 @@ export class FailuresService {
     f.coverImgUrls = failure.coverImgUrls;
     f.creationTime = failure.creationTime.toDate();
     f.descriptionSelections = failure.descriptionSelections;
-    f.fields = this.parseFields(failure.fields as FieldsDb);
+    f.fields = this.parseParentReportsFields(failure.fields as ReportParentFieldsDb);
     f.language = failure.language;
     f.lastChildTime = failure.lastChildTime.toDate();
     f.location = failure.location;
@@ -101,8 +101,8 @@ export class FailuresService {
     return f;
   }
 
-  private parseFields(fields: FieldsDb): Fields {
-    let f = Fields.createEmpty();
+  private parseParentReportsFields(fields: ReportParentFieldsDb): ReportParentFields {
+    let f = ReportParentFields.createEmpty();
 
     if (fields.foto_campo_largo !== undefined) f.wideShots = fields.foto_campo_largo;
     if (fields.element_type !== undefined) f.elementType = fields.element_type;
@@ -112,12 +112,12 @@ export class FailuresService {
     return f;
   }
 
-  public async populateChildrenReport(id: string): Promise<Report> {
+  public async populateChildReport(id: string): Promise<ReportChild> {
     const q = doc(this.db, 'reportChildren', id);
     const snapshot = await getDoc(q);
     if (snapshot.exists()) {
-      const r = snapshot.data() as ReportDb;
-      const report: Report = this.parseReport(r);
+      const r = snapshot.data() as ReportChildDb;
+      const report: ReportChild = this.parseChildReport(r);
       console.log(r);
       // console.log(report);      
       return report;
@@ -126,8 +126,8 @@ export class FailuresService {
     }
   }
 
-  private parseReport(report: ReportDb): Report {
-    let r = Report.createEmpty();
+  private parseChildReport(report: ReportChildDb): ReportChild {
+    let r = ReportChild.createEmpty();
 
     r.closure = report.closure;
     r.creationTime = report.creationTime.toDate();

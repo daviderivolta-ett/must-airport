@@ -1,7 +1,7 @@
 import { GeoPoint, Timestamp } from 'firebase/firestore';
-import { Fields } from './fields.model';
+import { ReportParentFields } from './report-parent.fields.model';
 
-export class Failure {
+export class ReportParent {
     [key: string]: any;
 
     childFlowId: string;
@@ -12,7 +12,7 @@ export class Failure {
     coverImgUrls: string[];
     creationTime: Date;
     descriptionSelections: string[];
-    fields: Fields;
+    fields: ReportParentFields;
     language: string;
     lastChildTime: Date;
     location: GeoPoint;
@@ -57,8 +57,8 @@ export class Failure {
         this.id = id;
     }
 
-    static createEmpty(): Failure {
-        return new Failure(
+    static createEmpty(): ReportParent {
+        return new ReportParent(
             '',
             [],
             false,
@@ -67,7 +67,7 @@ export class Failure {
             [],
             Timestamp.now(),
             [],
-            Fields.createEmpty(),
+            ReportParentFields.createEmpty(),
             '',
             Timestamp.now(),
             new GeoPoint(44.415229489227684, 8.845336246602141),
