@@ -3,32 +3,35 @@ import { Timestamp } from "firebase/firestore";
 export class ReportChild {
     closure: boolean;
     creationTime: Date;
-    description: string;
     flowId: string;
     detailPics: string[];
     language: string;
     parentId: string;
+    subTagFailure: string[];
+    tagFailure: string[];
     userId: string;
     verticalId: string;
 
     constructor(
         closure: boolean,
         creationTime: Timestamp,
-        description: string,
         flowId: string,
         detailPics: string[],
         language: string,
         parentId: string,
+        subTagFailure: string[],
+        tagFailure: string[],
         userId: string,
         verticalId: string
     ) {
         this.closure = closure;
         this.creationTime = creationTime.toDate();
-        this.description = description;
         this.flowId = flowId;
         this.detailPics = detailPics;
         this.language = language;
         this.parentId = parentId;
+        this.subTagFailure = subTagFailure;
+        this.tagFailure = tagFailure;
         this.userId = userId;
         this.verticalId = verticalId;
     }
@@ -38,10 +41,11 @@ export class ReportChild {
             false,
             Timestamp.now(),
             '',
-            '',
             [],
             '',
             '',
+            [],
+            [],
             '',
             ''
         )

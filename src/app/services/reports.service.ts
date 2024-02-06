@@ -33,7 +33,6 @@ export interface ReportParentFieldsDb {
 export interface ReportChildDb {
   closure: boolean;
   creationTime: Timestamp;
-  description: string;
   flowId: string;
   foto_dettaglio: string[];
   language: string;
@@ -50,8 +49,8 @@ export class ReportsService {
 
   constructor(private db: Firestore) {
     this.getAllParentReportsSnapshot();
-    // this.populateReportChildren('S2O6aBZH1U8BcpBvzSVz');
-    // this.populateChildReport('NXVcSiVL6McspPB9PoCm');
+    this.getChildReportById('S2O6aBZH1U8BcpBvzSVz');
+    this.getChildReportById('NXVcSiVL6McspPB9PoCm');
   }
 
   public async getParentReports(): Promise<QuerySnapshot<DocumentData>> {
@@ -108,13 +107,13 @@ export class ReportsService {
     return f;
   }
 
-  public async populateChildReport(id: string): Promise<ReportChild> {
+  public async getChildReportById(id: string): Promise<ReportChild> {
     const q = doc(this.db, 'reportChildren', id);
     const snapshot = await getDoc(q);
     if (snapshot.exists()) {
       const r = snapshot.data() as ReportChildDb;
       const report: ReportChild = this.parseChildReport(r);
-      // console.log(r);
+      console.log(r);
       // console.log(report);      
       return report;
     } else {
@@ -127,7 +126,6 @@ export class ReportsService {
 
     r.closure = report.closure;
     r.creationTime = report.creationTime.toDate();
-    r.description = report.description;
     r.flowId = report.flowId;
     r.detailPics = report.foto_dettaglio;
     r.language = report.language;

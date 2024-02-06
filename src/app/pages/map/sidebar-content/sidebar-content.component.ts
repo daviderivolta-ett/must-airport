@@ -20,7 +20,8 @@ export class SidebarContentComponent {
     effect(() => {
       this.reports = this.reportsService.reports();
       this.failureTags = this.failuresService.failureTags();
-      console.log(this.failureTags);   
+      // console.log(this.reports);      
+      // console.log(this.failureTags);   
     });
   }
 }
