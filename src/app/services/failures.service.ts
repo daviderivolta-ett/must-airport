@@ -1,6 +1,6 @@
 import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { doc, collection, getDocs, query, getDoc } from 'firebase/firestore';
+import { collection, getDocs, query } from 'firebase/firestore';
 import { FailureTag } from '../models/failure-tag.model';
 import { FailureSubTag } from '../models/failure-subtag.model';
 
