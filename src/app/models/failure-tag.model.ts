@@ -1,44 +1,46 @@
 import { FailureSubTag } from "./failure-subtag.model";
 
+interface name {
+    it: string;
+    en:string;
+}
+
+interface description {
+    it: string;
+    en: string;
+}
+
 export class FailureTag {
     categoryId: string;
-    descriptionIt: string;
-    descriptionEn: string;
+    description: description;
     id: string;
     imageUrls: string[];
-    nameIt: string;
-    nameEn: string;
+    name: name;
     subTags: FailureSubTag[];
 
     constructor(
         categoryId: string,
-        descriptionIt: string,
-        descriptionEn: string,
+        description: description,
         id: string,
         imageUrls: string[],
-        nameIt: string,
-        nameEn: string,
+        name: name,
         subTags: FailureSubTag[]
     ) {
         this.categoryId = categoryId;
-        this.descriptionIt = descriptionIt;
-        this.descriptionEn = descriptionEn;
+        this.description = description;
         this.id = id;
         this.imageUrls = imageUrls;
-        this.nameIt = nameIt;
-        this.nameEn = nameEn;
+        this.name = name;
         this.subTags = subTags;
     }
 
     static createEmpty(): FailureTag {
         return new FailureTag(
             '',
-            '',
-            '',
+            { it: '', en: '' },
             '',
             [],
-            '',
-            '',
+            { it: '', en: '' },
             []
         )
     }

@@ -1,9 +1,10 @@
-import { Injectable, WritableSignal, effect, signal } from '@angular/core';
+import { Injectable, WritableSignal, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { collection, getDocs, query } from 'firebase/firestore';
 import { FailureTag } from '../models/failure-tag.model';
+import { FailureSubTag } from '../models/failure-subtag.model';
 
-export interface FailureTagDb {
+interface FailureTagDb {
   categoryID: string;
   description: string;
   descriptionEN: string;
@@ -12,6 +13,15 @@ export interface FailureTagDb {
   name: string;
   nameEN: string;
   subTags: any;
+}
+
+interface FailureSubTagDb {
+  description: string;
+  descriptionEN: string;
+  id: string;
+  imageUrls: string[]
+  name: string;
+  nameEN: string;
 }
 
 @Injectable({
@@ -31,20 +41,37 @@ export class FailuresService {
     snapshot.forEach(doc => {
       failureTags.push(this.parseFailureTag(doc.data() as FailureTagDb));
     });
+
+    failureTags = failureTags.map(failureTag => {
+      failureTag.subTags = failureTag.subTags.map((subTag: FailureSubTagDb) => {
+        return this.parseFailureSubTag(subTag);
+      });
+      return failureTag;
+    });
+
     this.failureTags.set(failureTags);
   }
 
   private parseFailureTag(failureTag: FailureTagDb): FailureTag {
     let f = FailureTag.createEmpty();
-    console.log(failureTag);
+
     f.categoryId = failureTag.categoryID;
-    f.descriptionIt = failureTag.description;
-    f.descriptionEn = failureTag.descriptionEN;
+    f.description = { it: failureTag.description, en: failureTag.descriptionEN };
     f.id = failureTag.id;
     f.imageUrls = failureTag.imageUrls;
-    f.nameIt = failureTag.name;
-    f.nameEn = failureTag.nameEN;
+    f.name = { it: failureTag.name, en: failureTag.nameEN };
     f.subTags = failureTag.subTags;
+
+    return f;
+  }
+
+  private parseFailureSubTag(failureSubTag: FailureSubTagDb): FailureSubTag {
+    let f = FailureSubTag.createEmpty();
+
+    f.description = { it: failureSubTag.description, en: failureSubTag.descriptionEN };
+    f.id = failureSubTag.id;
+    f.imageUrls = failureSubTag.imageUrls;
+    f.name = { it: failureSubTag.description, en: failureSubTag.descriptionEN };
 
     return f;
   }

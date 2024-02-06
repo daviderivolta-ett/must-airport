@@ -1,35 +1,37 @@
+interface description {
+    it: string;
+    en: string;
+}
+
+interface name {
+    it: string;
+    en: string;
+}
+
 export class FailureSubTag {
-    descriptionIt?: string;
-    descriptionEn?: string;
+    description?: description;
     id: string;
     imageUrls: string[];
-    nameIt: string;
-    nameEn: string;
+    name: name;
 
     constructor(
-        descriptionIt: string,
-        descriptionEn: string,
+        description: description,
         id: string,
         imageUrls: string[],
-        nameIt: string,
-        nameEn: string
+        name: name,
     ) {
-        this.descriptionIt = descriptionIt;
-        this.descriptionEn = descriptionEn;
+        this.description = description;
         this.id = id;
         this.imageUrls = imageUrls;
-        this.nameIt = nameIt;
-        this.nameEn = nameEn
+        this.name = name;
     }
 
     static createEmpty() {
         return new FailureSubTag(
-            '',
-            '',
+            { it: '', en: '' },
             '',
             [],
-            '',
-            ''
+            { it: '', en: '' }
         )
     }
 }
