@@ -1,9 +1,7 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query } from 'firebase/firestore';
+import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query } from 'firebase/firestore';
 import { ReportParent } from '../models/report-parent.model';
-import { GeoPoint } from 'firebase/firestore';
-import { Timestamp } from 'firebase/firestore';
 import { ReportParentFields } from '../models/report-parent.fields.model';
 import { ReportChild } from '../models/report-child.model';
 
@@ -47,20 +45,18 @@ export interface ReportChildDb {
 @Injectable({
   providedIn: 'root'
 })
-export class FailuresService {
+export class ReportsService {
   public reports: WritableSignal<ReportParent[]> = signal([]);
 
   constructor(private db: Firestore) {
     this.getAllParentReportsSnapshot();
     // this.populateReportChildren('S2O6aBZH1U8BcpBvzSVz');
-    this.populateChildReport('NXVcSiVL6McspPB9PoCm');
+    // this.populateChildReport('NXVcSiVL6McspPB9PoCm');
   }
 
-  public async getAllFailures(): Promise<QuerySnapshot<DocumentData>> {
+  public async getParentReports(): Promise<QuerySnapshot<DocumentData>> {
     const q = query(collection(this.db, 'reportParents'));
     const snapshot = await getDocs(q);
-    console.log(snapshot);
-
     return snapshot;
   }
 
@@ -68,37 +64,37 @@ export class FailuresService {
     const q = query(collection(this.db, 'reportParents'));
     const unsubscribe = onSnapshot(q,
       (querySnapshot: QuerySnapshot<DocumentData>) => {
-        const failures: any[] = [];
+        const reports: any[] = [];
         querySnapshot.forEach(doc => {
-          failures.push(this.parseParentReports(doc.id, doc.data() as ReportParentDb));
+          reports.push(this.parseParentReport(doc.id, doc.data() as ReportParentDb));
         });
-        this.reports.set(failures);
+        this.reports.set(reports);
       },
       (error: Error) => console.log(error)
     );
   }
 
-  public parseParentReports(id: string, failure: ReportParentDb): ReportParent {
-    let f = ReportParent.createEmpty();
+  public parseParentReport(id: string, report: ReportParentDb): ReportParent {
+    let r = ReportParent.createEmpty();
 
-    f.childFlowId = failure.childFlowId;
-    f.childrenIds = failure.childrenIds;
-    f.closed = failure.closed;
-    f.closingChildId = failure.closingChildId;
-    f.closingTime = failure.closingTime.toDate();
-    f.coverImgUrls = failure.coverImgUrls;
-    f.creationTime = failure.creationTime.toDate();
-    f.descriptionSelections = failure.descriptionSelections;
-    f.fields = this.parseParentReportsFields(failure.fields as ReportParentFieldsDb);
-    f.language = failure.language;
-    f.lastChildTime = failure.lastChildTime.toDate();
-    f.location = failure.location;
-    f.parentFlowId = failure.parentFlowId;
-    f.userId = failure.userId;
-    f.verticalId = failure.verticalId;
-    f.id = id;
+    r.childFlowId = report.childFlowId;
+    r.childrenIds = report.childrenIds;
+    r.closed = report.closed;
+    r.closingChildId = report.closingChildId;
+    r.closingTime = report.closingTime.toDate();
+    r.coverImgUrls = report.coverImgUrls;
+    r.creationTime = report.creationTime.toDate();
+    r.descriptionSelections = report.descriptionSelections;
+    r.fields = this.parseParentReportsFields(report.fields as ReportParentFieldsDb);
+    r.language = report.language;
+    r.lastChildTime = report.lastChildTime.toDate();
+    r.location = report.location;
+    r.parentFlowId = report.parentFlowId;
+    r.userId = report.userId;
+    r.verticalId = report.verticalId;
+    r.id = id;
 
-    return f;
+    return r;
   }
 
   private parseParentReportsFields(fields: ReportParentFieldsDb): ReportParentFields {
@@ -118,7 +114,7 @@ export class FailuresService {
     if (snapshot.exists()) {
       const r = snapshot.data() as ReportChildDb;
       const report: ReportChild = this.parseChildReport(r);
-      console.log(r);
+      // console.log(r);
       // console.log(report);      
       return report;
     } else {

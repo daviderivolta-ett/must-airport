@@ -1,7 +1,9 @@
 import { Component, effect } from '@angular/core';
-import { FailuresService } from '../../../services/reports.service';
+import { ReportsService } from '../../../services/reports.service';
 import { ReportParent } from '../../../models/report-parent.model';
 import { SidebarCardComponent } from '../sidebar-card/sidebar-card.component';
+import { FailuresService } from '../../../services/failures.service';
+import { FailureTag } from '../../../models/failure-tag.model';
 
 @Component({
   selector: 'app-sidebar-content',
@@ -12,10 +14,14 @@ import { SidebarCardComponent } from '../sidebar-card/sidebar-card.component';
 })
 export class SidebarContentComponent {
   public reports: ReportParent[] = [];
+  public failureTags: FailureTag[] = [];
 
-  constructor(private failuresService: FailuresService) {
+  constructor(private reportsService: ReportsService, private failuresService: FailuresService) {
     effect(() => {
-      this.reports = this.failuresService.reports();      
+      this.reports = this.reportsService.reports();
+      this.failureTags = this.failuresService.failureTags();
+      console.log(this.failureTags);
+      
     });
   }
 }
