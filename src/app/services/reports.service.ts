@@ -116,7 +116,7 @@ export class ReportsService {
     if (snapshot.exists()) {
       const r = snapshot.data() as ReportChildDb;
       const report: ReportChild = this.parseChildReport(r);
-      // console.log(report);
+      console.log(report);
       return report;
     } else {
       throw new Error('Report non trovato');

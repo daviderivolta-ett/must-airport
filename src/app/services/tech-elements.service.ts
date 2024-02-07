@@ -3,6 +3,19 @@ import { TechElementTag } from '../models/tech-element-tag.model';
 import { Firestore } from '@angular/fire/firestore';
 import { collection, getDocs, query } from 'firebase/firestore';
 import { TechElementSubTag } from '../models/tech-element-subtag.model';
+import { TechElementCategory } from '../models/tech-element-category.model';
+import { TechElementSubCategory } from '../models/tech-element-subcategory.model';
+
+interface TechElementCategoryDb {
+  id: string;
+  name: string;
+  subCategories: TechElementSubCategoryDb[];
+}
+
+interface TechElementSubCategoryDb {
+  id: string;
+  name: string;
+}
 
 interface TechElementTagDb {
   categoryID: string;
@@ -12,7 +25,7 @@ interface TechElementTagDb {
   name: string;
   nameEN: string;
   subCategoryID: string;
-  subTags: any[];
+  subTags: TechElementSubTagDb[];
 }
 
 interface TechElementSubTagDb {
@@ -27,17 +40,45 @@ interface TechElementSubTagDb {
   providedIn: 'root'
 })
 export class TechElementsService {
+  private techElementCategoriesSignal: WritableSignal<TechElementCategory[]> = signal([]);
+  public techElementCategories: TechElementCategory[] = [];
+
   private techElementTagsSignal: WritableSignal<TechElementTag[]> = signal([]);
   public techElementTags: TechElementTag[] = [];
 
+
   constructor(private db: Firestore) {
     this.getAllTechElementTags();
-    
+    this.getAllTechElementCategories();
+
     effect(() => {
-      this.techElementTags = this.techElementTagsSignal();      
-      console.log(this.getTechElementTagById('cte01.01.01'));
-      console.log(this.getTechElementSubTagById('cte01.01.01.07'));
+      this.techElementTags = this.techElementTagsSignal();
+      // console.log(this.getTechElementTagById('cte01.01.01'));
+      // console.log(this.getTechElementSubTagById('cte01.01.01.07'));
     });
+
+    effect(() => {
+      this.techElementCategories = this.techElementCategoriesSignal();
+      console.log(this.getTechElementCategoryById('cte02'));
+      console.log(this.getTechElementSubCategoryById('cte01.02'));      
+    })
+  }
+
+  public async getAllTechElementCategories() {
+    const q = query(collection(this.db, 'categoriesTechElement'));
+    const snapshot = await getDocs(q);
+    let techElementCategories: any[] = [];
+    snapshot.forEach(doc => {
+      techElementCategories.push(this.parseTechElementCategory(doc.data() as TechElementCategoryDb));
+    });
+    // console.log(techElementCategories);
+    techElementCategories = techElementCategories.map(techElementCategory => {
+      techElementCategory.subCategories = techElementCategory.subCategories.map((subCategory: TechElementSubCategoryDb) => {
+        return this.parseTechElementSubCategory(subCategory);
+      });
+      return techElementCategory;
+    });
+    this.techElementCategoriesSignal.set(techElementCategories);
   }
 
   public async getAllTechElementTags() {
@@ -50,12 +91,31 @@ export class TechElementsService {
 
     techElementTags = techElementTags.map(techElementTag => {
       techElementTag.subTags = techElementTag.subTags.map((subTag: TechElementSubTagDb) => {
-        return this.parseTechEleementSubTag(subTag);
+        return this.parseTechElementSubTag(subTag);
       });
       return techElementTag;
     });
 
     this.techElementTagsSignal.set(techElementTags);
+  }
+
+  private parseTechElementCategory(techElementCategory: TechElementCategoryDb): TechElementCategory {
+    let t = TechElementCategory.createEmpty();
+
+    t.id = techElementCategory.id;
+    t.name = techElementCategory.name;
+    t.subCategories = techElementCategory.subCategories;
+
+    return t;
+  }
+
+  private parseTechElementSubCategory(techElementSubCategory: TechElementSubCategoryDb): TechElementSubCategory {
+    let t = TechElementSubCategory.createEmpty();
+
+    t.id = techElementSubCategory.id;
+    t.name = techElementSubCategory.name;
+
+    return t;
   }
 
   private parseTechElementTag(techElementTag: TechElementTagDb): TechElementTag {
@@ -71,7 +131,7 @@ export class TechElementsService {
     return t;
   }
 
-  private parseTechEleementSubTag(techElementSubTag: TechElementSubTagDb): TechElementSubTag {
+  private parseTechElementSubTag(techElementSubTag: TechElementSubTagDb): TechElementSubTag {
     let t = TechElementSubTag.createEmpty();
 
     t.description = { it: techElementSubTag.description, en: techElementSubTag.descriptionEN };
@@ -98,5 +158,24 @@ export class TechElementsService {
       });
     });
     return tag;
+  }
+
+  public getTechElementCategoryById(id: string): TechElementCategory {
+    let category: TechElementCategory = TechElementCategory.createEmpty();
+    this.techElementCategories.forEach(techElementCategory => {
+      if (techElementCategory.id === id) category = techElementCategory;
+    });
+    return category;
+  }
+
+  public getTechElementSubCategoryById(id: string): TechElementSubCategory {
+    let category: TechElementSubCategory = TechElementSubCategory.createEmpty();
+    this.techElementCategories.forEach(techElementCategory => {
+      if (techElementCategory.subCategories.length === 0) return;
+      techElementCategory.subCategories.forEach((subCategory: TechElementSubCategory) => {
+        if (subCategory.id === id) category = subCategory;
+      });
+    });
+    return category;
   }
 }
