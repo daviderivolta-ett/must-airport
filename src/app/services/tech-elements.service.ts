@@ -53,14 +53,16 @@ export class TechElementsService {
 
     effect(() => {
       this.techElementTags = this.techElementTagsSignal();
-      // console.log(this.getTechElementTagById('cte01.01.01'));
-      // console.log(this.getTechElementSubTagById('cte01.01.01.07'));
+      console.log(this.getTechElementTagById('cte02.03.01'));
+      console.log(this.getTechElementSubTagById('cte02.03.01.06'));
+      // console.log(this.techElementTags);
+      
     });
 
     effect(() => {
       this.techElementCategories = this.techElementCategoriesSignal();
-      console.log(this.getTechElementCategoryById('cte02'));
-      console.log(this.getTechElementSubCategoryById('cte01.02'));      
+      // console.log(this.getTechElementCategoryById('cte02'));
+      // console.log(this.getTechElementSubCategoryById('cte01.02'));      
     })
   }
 
@@ -82,11 +84,17 @@ export class TechElementsService {
   }
 
   public async getAllTechElementTags() {
-    const q = query(collection(this.db, 'tagsTechElement'));
-    const snapshot = await getDocs(q);
+    const qv = query(collection(this.db, 'tagsTechElement'));
+    const snapshotV = await getDocs(qv);
     let techElementTags: any[] = [];
-    snapshot.forEach(doc => {
+    snapshotV.forEach(doc => {
       techElementTags.push(this.parseTechElementTag(doc.data() as TechElementTagDb));
+    });
+
+    const qh = query(collection(this.db, 'tagsTechElementOriz'));
+    const snapshotH = await getDocs(qh);
+    snapshotH.forEach(doc => {
+      techElementTags.push(this.parseTechElementTag(doc.data()  as TechElementTagDb));
     });
 
     techElementTags = techElementTags.map(techElementTag => {

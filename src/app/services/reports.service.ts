@@ -14,6 +14,7 @@ export interface ReportParentDb {
   coverImgUrls: string[];
   creationTime: Timestamp;
   descriptionSelections: string[];
+  descriptionText: string,
   fields: ReportParentFieldsDb;
   language: string;
   lastChildTime: Timestamp;
@@ -79,6 +80,7 @@ export class ReportsService {
     r.coverImgUrls = report.coverImgUrls;
     r.creationTime = report.creationTime.toDate();
     r.descriptionSelections = report.descriptionSelections;
+    r.descriptionText = report.descriptionText;
     r.fields = this.parseParentReportsFields(report.fields as ReportParentFieldsDb);
     r.language = report.language;
     r.lastChildTime = report.lastChildTime.toDate();
@@ -116,7 +118,7 @@ export class ReportsService {
     if (snapshot.exists()) {
       const r = snapshot.data() as ReportChildDb;
       const report: ReportChild = this.parseChildReport(r);
-      console.log(report);
+      // console.log(report);
       return report;
     } else {
       throw new Error('Report non trovato');

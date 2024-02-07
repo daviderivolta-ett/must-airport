@@ -18,7 +18,7 @@ export class SidebarComponent {
   constructor(public sidebarService: SidebarService, private reportsService: ReportsService) {
     effect(() => {
       this.reports = this.reportsService.reports();
-      // console.log(this.reports);    
+      console.log(this.reports);  
     });
   }
 

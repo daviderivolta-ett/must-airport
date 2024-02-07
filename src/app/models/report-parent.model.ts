@@ -12,6 +12,7 @@ export class ReportParent {
     coverImgUrls: string[];
     creationTime: Date;
     descriptionSelections: string[];
+    descriptionText: string;
     fields: ReportParentFields;
     language: string;
     lastChildTime: Date;
@@ -30,6 +31,7 @@ export class ReportParent {
         coverImgUrls: string[],
         creationTime: Timestamp,
         descriptionSelections: string[],
+        descriptionText: string,
         fields: any,
         language: string,
         lastChildTime: Timestamp,
@@ -47,6 +49,7 @@ export class ReportParent {
         this.coverImgUrls = coverImgUrls;
         this.creationTime = creationTime.toDate();
         this.descriptionSelections = descriptionSelections;
+        this.descriptionText = descriptionText;
         this.fields = fields;
         this.language = language;
         this.lastChildTime = lastChildTime.toDate();
@@ -67,6 +70,7 @@ export class ReportParent {
             [],
             Timestamp.now(),
             [],
+            '',
             ReportParentFields.createEmpty(),
             '',
             Timestamp.now(),
