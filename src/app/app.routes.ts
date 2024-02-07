@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
-import { MapFailuresComponent } from './pages/map/page/map-failures.component';
+import { MapPageComponent } from './pages/map/page/map-page.component';
 import { ManagementComponent } from './pages/management/management/management.component';
 
 export const routes: Routes = [
     {
         path: '',
         title: 'MUST Airport - Segnalazioni',
-        component: MapFailuresComponent
+        component: MapPageComponent
     },
     {
         path: 'gestione',

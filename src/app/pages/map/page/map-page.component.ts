@@ -5,13 +5,13 @@ import { TechElementsService } from '../../../services/tech-elements.service';
 import { FailuresService } from '../../../services/failures.service';
 
 @Component({
-  selector: 'app-map-failures',
+  selector: 'app-map-page',
   standalone: true,
   imports: [MapComponent, SidebarComponent],
-  templateUrl: './map-failures.component.html',
-  styleUrl: './map-failures.component.scss'
+  templateUrl: './map-page.component.html',
+  styleUrl: './map-page.component.scss'
 })
-export class MapFailuresComponent {
+export class MapPageComponent {
 
   constructor(private techElementsService: TechElementsService, failuresService: FailuresService) { }
 }
