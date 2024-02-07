@@ -1,7 +1,6 @@
-import { Component, effect } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { SidebarService } from '../../../observables/sidebar.service';
-import { ReportsService } from '../../../services/reports.service';
 import { ReportParent } from '../../../models/report-parent.model';
 import { SidebarCardComponent } from '../sidebar-card/sidebar-card.component';
 
@@ -13,14 +12,9 @@ import { SidebarCardComponent } from '../sidebar-card/sidebar-card.component';
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
-  public reports: ReportParent[] = [];
+  @Input() public reports: ReportParent[] = [];
 
-  constructor(public sidebarService: SidebarService, private reportsService: ReportsService) {
-    effect(() => {
-      this.reports = this.reportsService.reports();
-      console.log(this.reports);  
-    });
-  }
+  constructor(public sidebarService: SidebarService) { }
 
   public toggleSidebar() {
     this.sidebarService.isOpen.set(!this.sidebarService.isOpen());

@@ -51,11 +51,11 @@ export class ReportsService {
   public reports: WritableSignal<ReportParent[]> = signal([]);
 
   constructor(private db: Firestore) {
-    this.getAllParentReportsSnapshot();
-    this.getChildReportById('NXVcSiVL6McspPB9PoCm');
+    this.getAllParentReports();
+    // this.getChildReportById('NXVcSiVL6McspPB9PoCm');
   }
 
-  public getAllParentReportsSnapshot(): void {
+  public getAllParentReports(): void {
     const q = query(collection(this.db, 'reportParents'));
     const unsubscribe = onSnapshot(q,
       (querySnapshot: QuerySnapshot<DocumentData>) => {
@@ -118,7 +118,6 @@ export class ReportsService {
     if (snapshot.exists()) {
       const r = snapshot.data() as ReportChildDb;
       const report: ReportChild = this.parseChildReport(r);
-      // console.log(report);
       return report;
     } else {
       throw new Error('Report non trovato');

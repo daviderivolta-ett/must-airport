@@ -53,8 +53,8 @@ export class TechElementsService {
 
     effect(() => {
       this.techElementTags = this.techElementTagsSignal();
-      console.log(this.getTechElementTagById('cte02.03.01'));
-      console.log(this.getTechElementSubTagById('cte02.03.01.06'));
+      // console.log(this.getTechElementTagById('cte01.03.01'));
+      // console.log(this.getTechElementSubTagById('cte01.03.01.06'));
       // console.log(this.techElementTags);
       
     });

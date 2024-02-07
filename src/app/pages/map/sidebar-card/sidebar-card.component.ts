@@ -9,5 +9,5 @@ import { ReportParent } from '../../../models/report-parent.model';
   styleUrl: './sidebar-card.component.scss'
 })
 export class SidebarCardComponent {
-  @Input() public report!: ReportParent;
+  @Input() public report: ReportParent = ReportParent.createEmpty();
 }

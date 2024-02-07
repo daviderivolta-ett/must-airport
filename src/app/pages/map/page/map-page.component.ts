@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { MapComponent } from '../map/map.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
-import { TechElementsService } from '../../../services/tech-elements.service';
-import { FailuresService } from '../../../services/failures.service';
+import { ReportsService } from '../../../services/reports.service';
+import { ReportParent } from '../../../models/report-parent.model';
 
 @Component({
   selector: 'app-map-page',
@@ -12,6 +12,12 @@ import { FailuresService } from '../../../services/failures.service';
   styleUrl: './map-page.component.scss'
 })
 export class MapPageComponent {
+  public reports: ReportParent[] = [];
 
-  constructor(private techElementsService: TechElementsService, failuresService: FailuresService) { }
+  constructor(private reportsService: ReportsService) {
+    effect(() => {
+      this.reports = this.reportsService.reports();
+      console.log(this.reports);      
+    });
+  }
 }
