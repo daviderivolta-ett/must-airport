@@ -5,6 +5,7 @@ import { ReportParent } from '../models/report-parent.model';
 import { ReportParentFields } from '../models/report-parent.fields.model';
 import { ReportChild } from '../models/report-child.model';
 import { TechElementsService } from './tech-elements.service';
+import { DictionaryService } from './dictionary.service';
 
 export interface ReportParentDb {
   childFlowId: string;
@@ -51,11 +52,11 @@ export interface ReportChildDb {
 export class ReportsService {
   public reports: WritableSignal<ReportParent[]> = signal([]);
 
-  constructor(private db: Firestore, private techElementsService: TechElementsService) { }
+  constructor(private db: Firestore, private dictionaryService: DictionaryService) { }
 
   public async getAllParentReports() {
-    await this.techElementsService.getAll();
-    
+    await this.dictionaryService.getAll();
+
     const q = query(collection(this.db, 'reportParents'));
     const unsubscribe = onSnapshot(q,
       (querySnapshot: QuerySnapshot<DocumentData>) => {

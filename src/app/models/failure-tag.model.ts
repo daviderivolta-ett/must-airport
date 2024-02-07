@@ -1,5 +1,3 @@
-import { FailureSubTag } from "./failure-subtag.model";
-
 interface name {
     it: string;
     en:string;
@@ -16,7 +14,7 @@ export class FailureTag {
     id: string;
     imageUrls: string[];
     name: name;
-    subTags: FailureSubTag[];
+    subTags: any[];
 
     constructor(
         categoryId: string,
@@ -24,7 +22,7 @@ export class FailureTag {
         id: string,
         imageUrls: string[],
         name: name,
-        subTags: FailureSubTag[]
+        subTags: any[]
     ) {
         this.categoryId = categoryId;
         this.description = description;
