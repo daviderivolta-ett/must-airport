@@ -15,3 +15,11 @@ img {
     object-fit: cover;
     object-position: bottom;
 }
+
+.tech-tag {
+    font-size: .75rem;
+}
+
+.comma::after {
+    content: ', ';
+}

@@ -20,13 +20,13 @@ export class MapPageComponent {
   constructor(private reportsService: ReportsService, private dictionaryService: DictionaryService) {
     effect(() => {
       this.reports = this.reportsService.reports();
-      // console.log(this.reports);
+      console.log(this.reports);
     });
   }
 
   async ngOnInit(): Promise<void> {
-    await this.reportsService.getAllParentReports();
-    console.log(this.dictionaryService.techElementTags);
-    console.log(this.dictionaryService.failureTags);
+    await this.reportsService.getAllParentReports();   
+    // console.log(this.dictionaryService.techElementTags);
+    // console.log(this.dictionaryService.failureTags);
   }
 }

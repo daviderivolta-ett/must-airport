@@ -1,11 +1,11 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query } from 'firebase/firestore';
+import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { ReportParent } from '../models/report-parent.model';
 import { ReportParentFields } from '../models/report-parent.fields.model';
 import { ReportChild } from '../models/report-child.model';
-import { TechElementsService } from './tech-elements.service';
 import { DictionaryService } from './dictionary.service';
+import { TechElementTag } from '../models/tech-element-tag.model';
 
 export interface ReportParentDb {
   childFlowId: string;
@@ -56,14 +56,27 @@ export class ReportsService {
 
   public async getAllParentReports() {
     await this.dictionaryService.getAll();
+    // console.log(this.dictionaryService.failureTags);
+    // console.log(this.dictionaryService.techElementTags);
 
-    const q = query(collection(this.db, 'reportParents'));
+    const q = query(collection(this.db, 'reportParents'), orderBy('lastChildTime', 'desc'));
     const unsubscribe = onSnapshot(q,
       (querySnapshot: QuerySnapshot<DocumentData>) => {
-        const reports: any[] = [];
+        let reports: any[] = [];
         querySnapshot.forEach(doc => {
           reports.push(this.parseParentReport(doc.id, doc.data() as ReportParentDb));
         });
+
+        reports = reports.map(report => {
+          let techElementTags = report.fields.tagTechElement;
+          techElementTags = techElementTags.map((tag: string) => {
+            return this.dictionaryService.techElementTags.find((item: TechElementTag) => item.id === tag);
+          });
+          report.fields.tagTechElement = techElementTags;
+
+          return report;
+        });
+       
         this.reports.set(reports);
       },
       (error: Error) => console.log(error)
@@ -111,7 +124,6 @@ export class ReportsService {
     }));
     return reports;
   }
-
 
   public async getChildReportById(id: string): Promise<ReportChild> {
     const q = doc(this.db, 'reportChildren', id);

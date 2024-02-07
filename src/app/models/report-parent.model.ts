@@ -32,7 +32,7 @@ export class ReportParent {
         creationTime: Timestamp,
         descriptionSelections: string[],
         descriptionText: string,
-        fields: any,
+        fields: ReportParentFields,
         language: string,
         lastChildTime: Timestamp,
         location: GeoPoint,
