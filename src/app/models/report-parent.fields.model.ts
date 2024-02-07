@@ -1,11 +1,8 @@
-import { TechElementSubTag } from "./tech-element-subtag.model";
-import { TechElementTag } from "./tech-element-tag.model";
-
 export class ReportParentFields {
     wideShots: string[];
     elementType: string[]
-    tagTechElement: string[] | TechElementTag[];
-    subTagTechElement: string[] | TechElementSubTag[];
+    tagTechElement: string[];
+    subTagTechElement: string[];
 
     constructor(wideShots: string[], elementType: string[], tagTechElement: string[], subTagTechElement: string[]) {
         this.wideShots = wideShots;

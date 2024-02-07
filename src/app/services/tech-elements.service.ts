@@ -1,4 +1,4 @@
-import { Injectable, WritableSignal, effect, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { TechElementTag } from '../models/tech-element-tag.model';
 import { Firestore } from '@angular/fire/firestore';
 import { collection, getDocs, query } from 'firebase/firestore';
@@ -40,72 +40,68 @@ interface TechElementSubTagDb {
   providedIn: 'root'
 })
 export class TechElementsService {
-  private techElementCategoriesSignal: WritableSignal<TechElementCategory[]> = signal([]);
-  public techElementCategories: TechElementCategory[] = [];
-
-  private techElementTagsSignal: WritableSignal<TechElementTag[]> = signal([]);
   public techElementTags: TechElementTag[] = [];
+  public allLoaded: boolean = false;
 
+  constructor(private db: Firestore) { }
 
-  constructor(private db: Firestore) {
-    this.getAllTechElementTags();
-    this.getAllTechElementCategories();
-
-    effect(() => {
-      this.techElementTags = this.techElementTagsSignal();
-      // console.log(this.getTechElementTagById('cte01.03.01'));
-      // console.log(this.getTechElementSubTagById('cte01.03.01.06'));
-      // console.log(this.techElementTags);
-      
-    });
-
-    effect(() => {
-      this.techElementCategories = this.techElementCategoriesSignal();
-      // console.log(this.getTechElementCategoryById('cte02'));
-      // console.log(this.getTechElementSubCategoryById('cte01.02'));      
-    })
-  }
-
-  public async getAllTechElementCategories() {
-    const q = query(collection(this.db, 'categoriesTechElement'));
-    const snapshot = await getDocs(q);
-    let techElementCategories: any[] = [];
-    snapshot.forEach(doc => {
-      techElementCategories.push(this.parseTechElementCategory(doc.data() as TechElementCategoryDb));
-    });
-    // console.log(techElementCategories);
-    techElementCategories = techElementCategories.map(techElementCategory => {
-      techElementCategory.subCategories = techElementCategory.subCategories.map((subCategory: TechElementSubCategoryDb) => {
-        return this.parseTechElementSubCategory(subCategory);
+  public async getAll() {
+    if (this.allLoaded) return;
+    const requests = [this.getAllTechElementTags()];
+    await Promise.all(requests)
+      .then(res => {
+        this.allLoaded = true;
+        console.log(res);
       });
-      return techElementCategory;
-    });
-    this.techElementCategoriesSignal.set(techElementCategories);
   }
 
   public async getAllTechElementTags() {
     const qv = query(collection(this.db, 'tagsTechElement'));
-    const snapshotV = await getDocs(qv);
-    let techElementTags: any[] = [];
-    snapshotV.forEach(doc => {
-      techElementTags.push(this.parseTechElementTag(doc.data() as TechElementTagDb));
-    });
-
     const qh = query(collection(this.db, 'tagsTechElementOriz'));
-    const snapshotH = await getDocs(qh);
-    snapshotH.forEach(doc => {
-      techElementTags.push(this.parseTechElementTag(doc.data()  as TechElementTagDb));
-    });
 
-    techElementTags = techElementTags.map(techElementTag => {
-      techElementTag.subTags = techElementTag.subTags.map((subTag: TechElementSubTagDb) => {
-        return this.parseTechElementSubTag(subTag);
+    try {
+      const [snapshotV, snapshotH] = await Promise.all([getDocs(qv), getDocs(qh)]);
+
+      const techElementTagsV = snapshotV.docs.map(doc => {
+        const techElementTag = this.parseTechElementTag(doc.data() as TechElementTagDb);
+        techElementTag.subTags = techElementTag.subTags.map((subTag: TechElementSubTagDb) => {
+          return this.parseTechElementSubTag(subTag);
+        });
+        return techElementTag;
       });
-      return techElementTag;
-    });
 
-    this.techElementTagsSignal.set(techElementTags);
+      const techElementTagsH = snapshotH.docs.map(doc => {
+        const techElementTag = this.parseTechElementTag(doc.data() as TechElementTagDb);
+        techElementTag.subTags = techElementTag.subTags.map((subTag: TechElementSubTagDb) => {
+          return this.parseTechElementSubTag(subTag);
+        });
+        return techElementTag;
+      });
+
+      this.techElementTags = [...techElementTagsV, ...techElementTagsH];
+      return this.techElementTags;
+
+    } catch (error) {
+      console.error('Errore durante il recupero dei dati:', error);
+      throw error;
+    }
   }
+
+  // public async getAllTechElementCategories() {
+  //   const q = query(collection(this.db, 'categoriesTechElement'));
+  //   const snapshot = await getDocs(q);
+  //   let techElementCategories: any[] = [];
+  //   snapshot.forEach(doc => {
+  //     techElementCategories.push(this.parseTechElementCategory(doc.data() as TechElementCategoryDb));
+  //   });
+  //   techElementCategories = techElementCategories.map(techElementCategory => {
+  //     techElementCategory.subCategories = techElementCategory.subCategories.map((subCategory: TechElementSubCategoryDb) => {
+  //       return this.parseTechElementSubCategory(subCategory);
+  //     });
+  //     return techElementCategory;
+  //   });
+  //   this.techElementCategoriesSignal.set(techElementCategories);
+  // }
 
   private parseTechElementCategory(techElementCategory: TechElementCategoryDb): TechElementCategory {
     let t = TechElementCategory.createEmpty();
@@ -168,22 +164,22 @@ export class TechElementsService {
     return tag;
   }
 
-  public getTechElementCategoryById(id: string): TechElementCategory {
-    let category: TechElementCategory = TechElementCategory.createEmpty();
-    this.techElementCategories.forEach(techElementCategory => {
-      if (techElementCategory.id === id) category = techElementCategory;
-    });
-    return category;
-  }
+  // public getTechElementCategoryById(id: string): TechElementCategory {
+  //   let category: TechElementCategory = TechElementCategory.createEmpty();
+  //   this.techElementCategories.forEach(techElementCategory => {
+  //     if (techElementCategory.id === id) category = techElementCategory;
+  //   });
+  //   return category;
+  // }
 
-  public getTechElementSubCategoryById(id: string): TechElementSubCategory {
-    let category: TechElementSubCategory = TechElementSubCategory.createEmpty();
-    this.techElementCategories.forEach(techElementCategory => {
-      if (techElementCategory.subCategories.length === 0) return;
-      techElementCategory.subCategories.forEach((subCategory: TechElementSubCategory) => {
-        if (subCategory.id === id) category = subCategory;
-      });
-    });
-    return category;
-  }
+  // public getTechElementSubCategoryById(id: string): TechElementSubCategory {
+  //   let category: TechElementSubCategory = TechElementSubCategory.createEmpty();
+  //   this.techElementCategories.forEach(techElementCategory => {
+  //     if (techElementCategory.subCategories.length === 0) return;
+  //     techElementCategory.subCategories.forEach((subCategory: TechElementSubCategory) => {
+  //       if (subCategory.id === id) category = subCategory;
+  //     });
+  //   });
+  //   return category;
+  // }
 }

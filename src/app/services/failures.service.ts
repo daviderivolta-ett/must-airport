@@ -34,10 +34,7 @@ export class FailuresService {
     this.getAllFailureTags();
 
     effect(() => {
-      this.failureTags = this.failureTagsSignal();
-      // console.log(this.failureTags);
-      // console.log(this.getFailureSubTagById('cf01.01.02'));
-      // console.log(this.getFailureTagById('cf02.03'));      
+      this.failureTags = this.failureTagsSignal();    
     });
   }
 
