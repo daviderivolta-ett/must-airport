@@ -31,8 +31,12 @@
     box-sizing: border-box;
 }
 
+.sidebar-content::-webkit-scrollbar {
+    width: 6px;
+}
+
 .sidebar-content::-webkit-scrollbar-thumb {
-    width: 1px;
+    background: #252525;
 }
 
 .close-icon-wrapper {

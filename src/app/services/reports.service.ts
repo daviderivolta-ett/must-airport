@@ -6,6 +6,7 @@ import { ReportParentFields } from '../models/report-parent.fields.model';
 import { ReportChild } from '../models/report-child.model';
 import { DictionaryService } from './dictionary.service';
 import { TechElementTag } from '../models/tech-element-tag.model';
+import { TechElementSubTag } from '../models/tech-element-subtag.model';
 
 export interface ReportParentDb {
   childFlowId: string;
@@ -67,16 +68,33 @@ export class ReportsService {
           reports.push(this.parseParentReport(doc.id, doc.data() as ReportParentDb));
         });
 
-        reports = reports.map(report => {
-          let techElementTags = report.fields.tagTechElement;
-          techElementTags = techElementTags.map((tag: string) => {
-            return this.dictionaryService.techElementTags.find((item: TechElementTag) => item.id === tag);
-          });
-          report.fields.tagTechElement = techElementTags;
+        // reports = reports.map(report => {
+        //   let techElementTags = report.fields.tagTechElement;
+        //   techElementTags = techElementTags.map((tag: string) => {
+        //     return this.dictionaryService.techElementTags.find((item: TechElementTag) => item.id === tag);
+        //   });
+        //   report.fields.tagTechElement = techElementTags;
 
+        //   return report;
+        // });
+
+        reports = reports.map((report: ReportParent) => {
+          let tagIds: string[] = report.fields.tagTechElement as string[];
+          let techElementTags: TechElementTag[] = tagIds.map((id: string) => {
+            return this.dictionaryService.getTechElementTagById(id);
+          });
+
+          let subTagIds: string[] = report.fields.subTagTechElement as string[];
+          let techElementSubTags: TechElementSubTag[] = subTagIds.map((id: string) => {
+            return this.dictionaryService.getTechElementSubTagById(id);
+          });
+
+          report.descriptionSelections = techElementSubTags;
+          report.fields.subTagTechElement = techElementSubTags;
+          report.fields.tagTechElement = techElementTags;
           return report;
         });
-       
+
         this.reports.set(reports);
       },
       (error: Error) => console.log(error)

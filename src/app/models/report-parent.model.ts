@@ -1,5 +1,6 @@
 import { GeoPoint, Timestamp } from 'firebase/firestore';
 import { ReportParentFields } from './report-parent.fields.model';
+import { TechElementSubTag } from './tech-element-subtag.model';
 
 export class ReportParent {
     [key: string]: any;
@@ -11,7 +12,7 @@ export class ReportParent {
     closingTime: Date;
     coverImgUrls: string[];
     creationTime: Date;
-    descriptionSelections: string[];
+    descriptionSelections: string[] | TechElementSubTag[];
     descriptionText: string;
     fields: ReportParentFields;
     language: string;
@@ -30,7 +31,7 @@ export class ReportParent {
         closingTime: Timestamp,
         coverImgUrls: string[],
         creationTime: Timestamp,
-        descriptionSelections: string[],
+        descriptionSelections: string[] | TechElementSubTag[],
         descriptionText: string,
         fields: ReportParentFields,
         language: string,
