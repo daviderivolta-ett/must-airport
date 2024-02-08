@@ -1,8 +1,8 @@
 import { Component, effect } from '@angular/core';
-import { DialogService } from '../../observables/dialog.service';
-import { ReportParent } from '../../models/report-parent.model';
-import { ReportChild } from '../../models/report-child.model';
-import { ReportsService } from '../../services/reports.service';
+import { DialogService } from '../../../observables/dialog.service';
+import { ReportParent } from '../../../models/report-parent.model';
+import { ReportChild } from '../../../models/report-child.model';
+import { ReportsService } from '../../../services/reports.service';
 
 @Component({
   selector: 'app-dialog',

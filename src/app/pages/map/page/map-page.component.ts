@@ -5,7 +5,7 @@ import { ReportsService } from '../../../services/reports.service';
 import { ReportParent } from '../../../models/report-parent.model';
 import { TechElementTag } from '../../../models/tech-element-tag.model';
 import { DictionaryService } from '../../../services/dictionary.service';
-import { DialogComponent } from '../../../components/dialog/dialog.component';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-map-page',

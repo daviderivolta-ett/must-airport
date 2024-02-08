@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ReportParent } from '../../../models/report-parent.model';
 import { NgClass } from '@angular/common';
-import { DialogComponent } from '../../../components/dialog/dialog.component';
+import { DialogComponent } from '../dialog/dialog.component';
 import { DialogService } from '../../../observables/dialog.service';
 import { SidebarService } from '../../../observables/sidebar.service';
 
