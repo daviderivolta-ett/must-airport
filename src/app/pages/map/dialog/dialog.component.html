@@ -5,10 +5,33 @@
             <div class="close-icon-wrapper" (click)="closeDialog()">
                 <span class="material-symbols-outlined">close</span>
             </div>
-            <p>{{reportParent.language}}</p>
-            @for (item of reportChildren; track $index) {
-            <p>{{item.language}}</p>
-            }
+            <div class="column parent-report-column">
+                <h2>Dettaglio</h2>
+                <div class="img-container">
+                    <img src="{{parentReport.coverImgUrls[0]}}" alt="">
+                </div>
+                <p class="info">Prima segnalazione: <span class="info-value">{{parentReport.creationTime | date: 'dd/MM/yyyy'}} h:{{parentReport.creationTime | date: 'HH:mm'}}</span></p>
+                <p class="info">Ultimo aggiornamento: <span class="info-value">{{parentReport.lastChildTime | date: 'dd/MM/yyyy'}} h:{{parentReport.lastChildTime | date: 'HH:mm'}}</span></p>
+                <p class="info">Oggetto:
+                @for (tag of parentReport.fields.tagTechElement; track $index) {
+                    <span class="info-value">{{$any(tag).name.it}}</span>
+                }
+                </p>
+                <p class="info">Elemento tecnico:
+                @for (tag of parentReport.fields.subTagTechElement; track $index) {
+                    <span class="info-value">{{$any(tag).name.it}}</span>
+                }
+                </p>
+            </div>
+            <div class="column children-report-column">
+                <h2>Report</h2>
+                <div class="children-report">
+                @for (childReport of childrenReport; track $index) {
+                <p>{{childReport.language}}</p>
+                <img src="{{childReport.detailPics[0]}}" alt="">
+                }
+                </div>
+            </div>
         </div>
     </div>
 </div>

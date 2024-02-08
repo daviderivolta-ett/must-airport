@@ -4,7 +4,6 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ReportsService } from '../../../services/reports.service';
 import { ReportParent } from '../../../models/report-parent.model';
 import { TechElementTag } from '../../../models/tech-element-tag.model';
-import { DictionaryService } from '../../../services/dictionary.service';
 import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
@@ -18,7 +17,7 @@ export class MapPageComponent {
   public reports: ReportParent[] = [];
   public techElementTags: TechElementTag[] = [];
 
-  constructor(private reportsService: ReportsService, private dictionaryService: DictionaryService) {
+  constructor(private reportsService: ReportsService) {
     effect(() => {
       this.reports = this.reportsService.reports();
       console.log(this.reports);

@@ -12,6 +12,7 @@
     width:100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,10 +20,66 @@
 
 .modal-content {
     position: relative;
+    font-size: 14px;
+    color: white;
     width: 60%;
     height: 80%;
-    background-color: white;
-    padding: 24px;
+    background-color: var(--dark-grey-90);
+    padding: 48px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    gap: 48px;
+}
+
+.parent-report-column {
+    flex: 0 0 60%;
+}
+
+h2 {
+    height: 48px;
+    margin: 0;
+}
+
+img {
+    width: 100%;
+}
+
+.img-container {
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 4px;
+    margin: 0 0 24px 0;
+    background-color: #101010;
+}
+
+.img-container img {
+    height: 100%;
+    border-radius: 4px;
+    object-fit: contain;
+}
+
+.info {
+    font-weight: 600;
+    margin: 0 0 4px 0;
+}
+
+.info-value {
+    font-weight: 400;
+}
+
+.children-report {
+    overflow-y: auto;
+    height: calc(100% - 48px);
+}
+
+.children-report::-webkit-scrollbar {
+    width: 6px;
+}
+
+.children-report::-webkit-scrollbar-thumb {
+    background: #252525;
 }
 
 .close-icon-wrapper {

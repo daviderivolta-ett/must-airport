@@ -20,7 +20,8 @@ export class SidebarCardComponent {
   public openDialog(): void {
     this.sidebarService.isOpen.set(false);
     this.dialogService.isOpen.set(true);
-    this.dialogService.report.set(this.dialogService.transformLanguage(this.report));
+    // this.dialogService.report.set(this.dialogService.transformLanguage(this.report));
+    this.dialogService.report.set(this.report);
   }
 
   public closeDialog(): void {

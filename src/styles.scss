@@ -1,5 +1,6 @@
 :root {
-    --dark-grey-100: #151515;
+    --dark-grey-100: rgba(21, 21, 21, 1);
+    --dark-grey-90: rgba(21, 21, 21, .9);
 }
 
 body,
@@ -7,6 +8,15 @@ html {
     margin: 0;
     font-family: 'Poppins', sans-serif;
     overflow: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 600;
 }
 
 .material-symbols-outlined {

@@ -1,7 +1,8 @@
-import { Component, effect } from '@angular/core';
+import { Component, Input, effect } from '@angular/core';
 import * as Leaflet from 'leaflet';
 import { MapService } from '../../../services/map.service';
 import { SidebarService } from '../../../observables/sidebar.service';
+import { ReportParent } from '../../../models/report-parent.model';
 import { ReportsService } from '../../../services/reports.service';
 
 @Component({
@@ -12,14 +13,16 @@ import { ReportsService } from '../../../services/reports.service';
   styleUrl: './map.component.scss'
 })
 export class MapComponent {
+  public reports: ReportParent[] = [];
   private geoJsonData: any;
   private map!: Leaflet.Map;
 
   constructor(private mapService: MapService, private reportsService: ReportsService, private sidebarService: SidebarService) {
     effect(() => {
-      this.geoJsonData = this.mapService.createGeoJson(this.reportsService.reports());
+      this.reports = this.reportsService.reports();
+      this.geoJsonData = this.mapService.createGeoJson(this.reports);
       this.populateMap(this.geoJsonData);      
-    });
+    }); 
   }
 
   ngOnInit(): void {
