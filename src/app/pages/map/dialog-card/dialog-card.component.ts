@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { ReportChild } from '../../../models/report-child.model';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-dialog-card',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, NgClass],
   templateUrl: './dialog-card.component.html',
   styleUrl: './dialog-card.component.scss'
 })

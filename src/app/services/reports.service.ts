@@ -7,6 +7,8 @@ import { ReportChild } from '../models/report-child.model';
 import { DictionaryService } from './dictionary.service';
 import { TechElementTag } from '../models/tech-element-tag.model';
 import { TechElementSubTag } from '../models/tech-element-subtag.model';
+import { FailureTag } from '../models/failure-tag.model';
+import { FailureSubTag } from '../models/failure-subtag.model';
 
 export interface ReportParentDb {
   childFlowId: string;
@@ -120,7 +122,7 @@ export class ReportsService {
     let reports: ReportChild[] = await Promise.all(ids.map(async id => {
       return await this.getChildReportById(id);
     }));
-    return reports;
+    return reports.reverse();
   }
 
   public populateTechElementTags(report: ReportParent): ReportParent {
@@ -170,5 +172,23 @@ export class ReportsService {
     r.verticalId = report.verticalId;
 
     return r;
+  }
+
+  public populateFailureTags(report: ReportChild): ReportChild {
+    let tagIds: string[] = report.tagFailure as string[];
+    let failureTags: FailureTag[] = tagIds.map((id: string) => {
+      return this.dictionaryService.getFailureTagById(id);
+    });
+    report.tagFailure = failureTags;
+    return report;
+  }
+
+  public populateFailureSubtags(report: ReportChild): ReportChild {
+    let subTagIds: string[] = report.subTagFailure as string[];
+    let failureSubTags: FailureSubTag[] = subTagIds.map((id: string) => {
+      return this.dictionaryService.getFailureSubTagById(id);
+    });
+    report.subTagFailure = failureSubTags;
+    return report;
   }
 }

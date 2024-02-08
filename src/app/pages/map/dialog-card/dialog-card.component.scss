@@ -3,7 +3,7 @@
     height: 250px;
     overflow: hidden;
     border-radius: 4px;
-    margin: 0 0 24px 0;
+    margin: 0 0 16px 0;
     background-color: #101010;
 }
 
@@ -21,4 +21,8 @@ img {
 
 .info-value {
     font-weight: 400;
+}
+
+.comma::after {
+    content: ', ';
 }

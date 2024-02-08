@@ -1,4 +1,6 @@
 import { Timestamp } from "firebase/firestore";
+import { FailureTag } from "./failure-tag.model";
+import { FailureSubTag } from "./failure-subtag.model";
 
 export class ReportChild {
     closure: boolean;
@@ -8,8 +10,8 @@ export class ReportChild {
     detailPics: string[];
     language: string;
     parentId: string;
-    subTagFailure: string[];
-    tagFailure: string[];
+    subTagFailure: string[] | FailureSubTag[];
+    tagFailure: string[] | FailureTag[];
     userId: string;
     verticalId: string;
 
@@ -21,8 +23,8 @@ export class ReportChild {
         detailPics: string[],
         language: string,
         parentId: string,
-        subTagFailure: string[],
-        tagFailure: string[],
+        subTagFailure: string[] | FailureSubTag[],
+        tagFailure: string[] | FailureTag[],
         userId: string,
         verticalId: string
     ) {

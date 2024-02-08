@@ -20,7 +20,7 @@
 
 .modal-content {
     position: relative;
-    font-size: 14px;
+    font-size: 12px;
     color: white;
     width: 60%;
     height: 80%;
@@ -70,6 +70,10 @@ img {
     font-weight: 400;
 }
 
+.comma::after {
+    content: ', ';
+}
+
 .children-report-column {
     flex: 1;
 }
@@ -85,6 +89,11 @@ img {
 
 .children-report::-webkit-scrollbar-thumb {
     background: #252525;
+}
+
+app-dialog-card {
+    display: block;
+    margin: 0 0 32px 0;
 }
 
 .close-icon-wrapper {

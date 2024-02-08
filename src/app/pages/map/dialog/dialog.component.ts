@@ -3,13 +3,13 @@ import { DialogService } from '../../../observables/dialog.service';
 import { ReportParent } from '../../../models/report-parent.model';
 import { ReportChild } from '../../../models/report-child.model';
 import { ReportsService } from '../../../services/reports.service';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { DialogCardComponent } from '../dialog-card/dialog-card.component';
 
 @Component({
   selector: 'app-dialog',
   standalone: true,
-  imports: [DialogCardComponent, DatePipe],
+  imports: [DialogCardComponent, DatePipe, NgClass],
   templateUrl: './dialog.component.html',
   styleUrl: './dialog.component.scss'
 })
@@ -26,12 +26,15 @@ export class DialogComponent {
     effect(async () => {
       this.parentReport = this.dialogService.report();
       this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
+      this.childrenReport.map((report: ReportChild) => {       
+        if (report.tagFailure != undefined) report = this.reportsService.populateFailureTags(report);
+        if (report.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
+      });
       console.log(this.childrenReport);
-      
     });
   }
 
-  closeDialog():void {
+  closeDialog(): void {
     this.dialogService.isOpen.set(false);
     this.parentReport = ReportParent.createEmpty();
     this.childrenReport = [];

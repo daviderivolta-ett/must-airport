@@ -13,13 +13,13 @@
                 <p class="info">Prima segnalazione: <span class="info-value">{{parentReport.creationTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.creationTime | date: 'HH:mm'}}</span></p>
                 <p class="info">Ultimo aggiornamento: <span class="info-value">{{parentReport.lastChildTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.lastChildTime | date: 'HH:mm'}}</span></p>
                 <p class="info">Oggetto:
-                @for (tag of parentReport.fields.tagTechElement; track $index) {
-                    <span class="info-value">{{$any(tag).name.it}}</span>
+                @for (tag of parentReport.fields.tagTechElement; track $index; let last = $last) {
+                    <span class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</span>
                 }
                 </p>
                 <p class="info">Elemento tecnico:
-                @for (tag of parentReport.fields.subTagTechElement; track $index) {
-                    <span class="info-value">{{$any(tag).name.it}}</span>
+                @for (tag of parentReport.fields.subTagTechElement; track $index; let last = $last) {
+                    <span class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</span>
                 }
                 </p>
             </div>
