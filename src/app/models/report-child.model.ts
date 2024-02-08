@@ -2,6 +2,7 @@ import { Timestamp } from "firebase/firestore";
 
 export class ReportChild {
     closure: boolean;
+    comment?: string;
     creationTime: Date;
     flowId: string;
     detailPics: string[];
@@ -14,6 +15,7 @@ export class ReportChild {
 
     constructor(
         closure: boolean,
+        comment: string,
         creationTime: Timestamp,
         flowId: string,
         detailPics: string[],
@@ -25,6 +27,7 @@ export class ReportChild {
         verticalId: string
     ) {
         this.closure = closure;
+        this.comment = comment || '-';
         this.creationTime = creationTime.toDate();
         this.flowId = flowId;
         this.detailPics = detailPics;
@@ -39,6 +42,7 @@ export class ReportChild {
     static createEmpty(): ReportChild {
         return new ReportChild(
             false,
+            '-',
             Timestamp.now(),
             '',
             [],

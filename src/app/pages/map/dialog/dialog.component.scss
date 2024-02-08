@@ -39,6 +39,7 @@
 h2 {
     height: 48px;
     margin: 0;
+    font-size: 18px;
 }
 
 img {
@@ -67,6 +68,10 @@ img {
 
 .info-value {
     font-weight: 400;
+}
+
+.children-report-column {
+    flex: 1;
 }
 
 .children-report {

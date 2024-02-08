@@ -1,0 +1,7 @@
+<div class="card">
+    <div class="img-container">
+        <img src="{{childReport.detailPics[0]}}" alt="Immagine del report">
+    </div>
+    <p class="info">Data: <span class="info-value">{{childReport.creationTime | date: 'dd/MM/yyyy'}} - h. {{childReport.creationTime | date: 'HH:mm'}}</span></p>
+    <p class="info">Commento: <span class="info-value">{{childReport.comment}}</span></p>
+</div>

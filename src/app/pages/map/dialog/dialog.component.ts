@@ -4,11 +4,12 @@ import { ReportParent } from '../../../models/report-parent.model';
 import { ReportChild } from '../../../models/report-child.model';
 import { ReportsService } from '../../../services/reports.service';
 import { DatePipe } from '@angular/common';
+import { DialogCardComponent } from '../dialog-card/dialog-card.component';
 
 @Component({
   selector: 'app-dialog',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DialogCardComponent, DatePipe],
   templateUrl: './dialog.component.html',
   styleUrl: './dialog.component.scss'
 })
@@ -32,5 +33,7 @@ export class DialogComponent {
 
   closeDialog():void {
     this.dialogService.isOpen.set(false);
+    this.parentReport = ReportParent.createEmpty();
+    this.childrenReport = [];
   }
 }

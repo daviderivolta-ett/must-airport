@@ -36,6 +36,7 @@ export interface ReportParentFieldsDb {
 
 export interface ReportChildDb {
   closure: boolean;
+  comment: string;
   creationTime: Timestamp;
   flowId: string;
   foto_dettaglio: string[];
@@ -157,6 +158,7 @@ export class ReportsService {
     let r = ReportChild.createEmpty();
 
     r.closure = report.closure;
+    r.comment = report.comment || '-';
     r.creationTime = report.creationTime.toDate();
     r.flowId = report.flowId;
     r.detailPics = report.foto_dettaglio;
