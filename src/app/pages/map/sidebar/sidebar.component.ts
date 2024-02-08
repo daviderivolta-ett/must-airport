@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, effect } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { SidebarService } from '../../../observables/sidebar.service';
 import { ReportParent } from '../../../models/report-parent.model';
@@ -13,8 +13,13 @@ import { SidebarCardComponent } from '../sidebar-card/sidebar-card.component';
 })
 export class SidebarComponent {
   @Input() public reports: ReportParent[] = [];
+  public isOpen: boolean = false;
 
-  constructor(public sidebarService: SidebarService) { }
+  constructor(private sidebarService: SidebarService) {
+    effect(() => {
+      this.isOpen = this.sidebarService.isOpen();
+    });
+  }
 
   public toggleSidebar() {
     this.sidebarService.isOpen.set(!this.sidebarService.isOpen());

@@ -1,11 +1,14 @@
-@if (dialogService.isOpen()) {
+@if (isOpen) {
 <div class="dialog">
     <div class="backdrop-overlay" (click)="closeDialog()">
         <div class="modal-content" (click)="$event.stopPropagation()">
             <div class="close-icon-wrapper" (click)="closeDialog()">
                 <span class="material-symbols-outlined">close</span>
             </div>
-            <p>{{dialogService.report().childrenIds}}</p>
+            <p>{{reportParent.language}}</p>
+            @for (item of reportChildren; track $index) {
+            <p>{{item.language}}</p>
+            }
         </div>
     </div>
 </div>
