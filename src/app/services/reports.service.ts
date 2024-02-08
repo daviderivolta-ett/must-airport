@@ -68,30 +68,9 @@ export class ReportsService {
           reports.push(this.parseParentReport(doc.id, doc.data() as ReportParentDb));
         });
 
-        // reports = reports.map(report => {
-        //   let techElementTags = report.fields.tagTechElement;
-        //   techElementTags = techElementTags.map((tag: string) => {
-        //     return this.dictionaryService.techElementTags.find((item: TechElementTag) => item.id === tag);
-        //   });
-        //   report.fields.tagTechElement = techElementTags;
-
-        //   return report;
-        // });
-
         reports = reports.map((report: ReportParent) => {
-          let tagIds: string[] = report.fields.tagTechElement as string[];
-          let techElementTags: TechElementTag[] = tagIds.map((id: string) => {
-            return this.dictionaryService.getTechElementTagById(id);
-          });
-
-          let subTagIds: string[] = report.fields.subTagTechElement as string[];
-          let techElementSubTags: TechElementSubTag[] = subTagIds.map((id: string) => {
-            return this.dictionaryService.getTechElementSubTagById(id);
-          });
-
-          report.descriptionSelections = techElementSubTags;
-          report.fields.subTagTechElement = techElementSubTags;
-          report.fields.tagTechElement = techElementTags;
+          report = this.populateTechElementTags(report);
+          report = this.populateTechElementSubTags(report);
           return report;
         });
 
@@ -141,6 +120,25 @@ export class ReportsService {
       return await this.getChildReportById(id);
     }));
     return reports;
+  }
+
+  public populateTechElementTags(report: ReportParent): ReportParent {
+    let tagIds: string[] = report.fields.tagTechElement as string[];
+    let techElementTags: TechElementTag[] = tagIds.map((id: string) => {
+      return this.dictionaryService.getTechElementTagById(id);
+    });
+    report.fields.tagTechElement = techElementTags;
+    return report;
+  }
+
+  public populateTechElementSubTags(report: ReportParent): ReportParent {
+    let subTagIds: string[] = report.fields.subTagTechElement as string[];
+    let techElementSubTags: TechElementSubTag[] = subTagIds.map((id: string) => {
+      return this.dictionaryService.getTechElementSubTagById(id);
+    });
+    report.descriptionSelections = techElementSubTags;
+    report.fields.subTagTechElement = techElementSubTags;
+    return report;
   }
 
   public async getChildReportById(id: string): Promise<ReportChild> {

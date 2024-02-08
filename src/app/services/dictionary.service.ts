@@ -136,7 +136,7 @@ export class DictionaryService {
         return failureTag;
       });
       return this.failureTags;
-      
+
     } catch (error) {
       console.error('Errore durante il recupero dei dati:', error);
       throw error;
@@ -226,7 +226,7 @@ export class DictionaryService {
     return f;
   }
 
-  getFailureTagById(id: string): FailureTag {
+  public getFailureTagById(id: string): FailureTag {
     let tag: FailureTag = FailureTag.createEmpty();
     this.failureTags.forEach(failureTag => {
       if (failureTag.id === id) tag = failureTag;
