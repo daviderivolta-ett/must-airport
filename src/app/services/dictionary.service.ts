@@ -70,7 +70,7 @@ export class DictionaryService {
     await Promise.all(requests)
       .then(res => {
         this.allLoaded = true;
-        // console.log(res);
+        console.log(res);
       });
   }
 

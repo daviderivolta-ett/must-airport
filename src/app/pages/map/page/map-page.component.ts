@@ -20,7 +20,7 @@ export class MapPageComponent {
   constructor(private reportsService: ReportsService) {
     effect(() => {
       this.reports = this.reportsService.reports();
-      console.log(this.reports);
+      // console.log(this.reports);
     });
   }
 
