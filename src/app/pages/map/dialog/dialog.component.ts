@@ -5,11 +5,12 @@ import { ReportChild } from '../../../models/report-child.model';
 import { ReportsService } from '../../../services/reports.service';
 import { DatePipe, NgClass } from '@angular/common';
 import { DialogCardComponent } from '../dialog-card/dialog-card.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-dialog',
   standalone: true,
-  imports: [DialogCardComponent, DatePipe, NgClass],
+  imports: [DialogCardComponent, DatePipe, NgClass, RouterLink],
   templateUrl: './dialog.component.html',
   styleUrl: './dialog.component.scss'
 })
