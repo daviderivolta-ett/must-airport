@@ -13,12 +13,12 @@ export class MapService {
 
   constructor() { }
 
-  public createGeoJson(failures: ReportParent[]): GeoJsonData {
-    const features = failures.map(failure => ({
+  public createGeoJson(reports: ReportParent[]): GeoJsonData {
+    const features = reports.map(report => ({
       type: "Feature",
-      properties: this.parseProperties(failure),
+      properties: report,
       geometry: {
-        coordinates: [failure.location.longitude, failure.location.latitude],
+        coordinates: [report.location.longitude, report.location.latitude],
         type: "Point"
       }
     }));
@@ -31,12 +31,12 @@ export class MapService {
     return geoJSON;
   }
 
-  private parseProperties(failure: ReportParent): { [key: string]: any } {
+  private parseProperties(report: ReportParent): { [key: string]: any } {
     const properties: { [key: string]: any } = {};
 
-    for (const key in failure) {
+    for (const key in report) {
       if (key !== 'location') {
-        properties[key] = failure[key];
+        properties[key] = report[key];
       }
     }
 

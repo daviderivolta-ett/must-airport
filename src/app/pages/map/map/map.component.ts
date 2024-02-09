@@ -4,6 +4,7 @@ import { MapService } from '../../../services/map.service';
 import { SidebarService } from '../../../observables/sidebar.service';
 import { ReportParent } from '../../../models/report-parent.model';
 import { ReportsService } from '../../../services/reports.service';
+import { DialogService } from '../../../observables/dialog.service';
 
 @Component({
   selector: 'app-map',
@@ -17,10 +18,10 @@ export class MapComponent {
   private geoJsonData: any;
   private map!: Leaflet.Map;
 
-  constructor(private mapService: MapService, private reportsService: ReportsService, private sidebarService: SidebarService) {
+  constructor(private mapService: MapService, private reportsService: ReportsService, private sidebarService: SidebarService, private dialogService: DialogService) {
     effect(() => {
       this.reports = this.reportsService.reports();
-      this.geoJsonData = this.mapService.createGeoJson(this.reports);
+      this.geoJsonData = this.mapService.createGeoJson(this.reports);     
       this.populateMap(this.geoJsonData);      
     }); 
   }
@@ -53,11 +54,11 @@ export class MapComponent {
 
   private populateMap(geoJsonData: any): void {
     Leaflet.geoJSON(geoJsonData, {
-      pointToLayer: (feature, latLng) => this.styleMarker(latLng)
+      pointToLayer: (feature, latLng) => this.createMarker(latLng).on('click', () => this.onMarkerClick(feature))
     }).addTo(this.map);
   }
 
-  private styleMarker(latLng: Leaflet.LatLng): Leaflet.CircleMarker {
+  private createMarker(latLng: Leaflet.LatLng): Leaflet.CircleMarker {
     let options = {
       stroke: true,
       radius: 8,
@@ -69,5 +70,11 @@ export class MapComponent {
     };
 
     return new Leaflet.CircleMarker(latLng, options);
+  }
+
+  private onMarkerClick(feature: any): void {
+    let report: ReportParent = feature.properties;
+    this.dialogService.report.set(report);
+    this.dialogService.isOpen.set(true);
   }
 }
