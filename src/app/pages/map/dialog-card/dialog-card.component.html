@@ -2,16 +2,18 @@
     <div class="img-container">
         <img src="{{childReport.detailPics[0]}}" alt="Immagine del report">
     </div>
-    <p class="info">Data: <span class="info-value">{{childReport.creationTime | date: 'dd/MM/yyyy'}} - h. {{childReport.creationTime | date: 'HH:mm'}}</span></p>
-    <p class="info">Segnale di guasto:        
-         @for (failureTag of childReport.tagFailure; track $index; let last = $last) {
-            <span class="info-value" [ngClass]="{'comma': !last}">{{$any(failureTag).name.it}}</span>
-        }
-    </p>
-    <p class="info">Modo di guasto:        
-        @for (failureSubTag of childReport.subTagFailure; track $index; let last = $last) {
-            <span class="info-value" [ngClass]="{'comma': !last}">{{$any(failureSubTag).name.it}}</span>
-        }
-    </p>
-    <p class="info">Commento: <span class="info-value">{{childReport.comment}}</span></p>
+    <div class="details">
+        <p class="info">Data: <span class="info-value">{{childReport.creationTime | date: 'dd/MM/yyyy'}} - h. {{childReport.creationTime | date: 'HH:mm'}}</span></p>
+        <p class="info">Segnale di guasto:        
+            @for (failureTag of childReport.tagFailure; track $index; let last = $last) {
+                <span class="info-value" [ngClass]="{'comma': !last}">{{$any(failureTag).name.it}}</span>
+            }
+        </p>
+        <p class="info">Modo di guasto:        
+            @for (failureSubTag of childReport.subTagFailure; track $index; let last = $last) {
+                <span class="info-value" [ngClass]="{'comma': !last}">{{$any(failureSubTag).name.it}}</span>
+            }
+        </p>
+        <p class="info">Commento: <span class="info-value">{{childReport.comment}}</span></p>
+    </div>
 </div>

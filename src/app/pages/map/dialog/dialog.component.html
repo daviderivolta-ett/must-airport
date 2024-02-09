@@ -12,8 +12,10 @@
                     </div>
                         <div class="parent-report-title-section">
                             <h2 class="parent-report-title">Dettaglio segnalazione</h2>
-                            <!-- <button type="button" [routerLink]="['/gestione', parentReport.id]">Gestisci</button> -->
-                            <button type="button" (click)="navigateTo(parentReport.id)">Gestisci</button>
+                            <button type="button" (click)="navigateTo(parentReport.id)">
+                                Gestisci
+                                <span class="material-symbols-outlined">more_horiz</span>
+                            </button>
                         </div>
                         <div class="parent-report-details">
                         <p class="info">Prima segnalazione: <span class="info-value">{{parentReport.creationTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.creationTime | date: 'HH:mm'}}</span></p>

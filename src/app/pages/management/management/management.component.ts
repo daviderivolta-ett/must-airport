@@ -20,9 +20,9 @@ export class ManagementComponent {
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
     this.parentReport = history.state.parentReport;
-    this.childrenReport = history.state.childrenReport;
-    console.log(this.id);
-    console.log(this.parentReport);
-    console.log(this.childrenReport);
+    this.childrenReport = history.state.childrenReport;    
+    // console.log(this.id);
+    // console.log(this.parentReport);
+    // console.log(this.childrenReport);
   }
 }

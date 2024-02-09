@@ -11,7 +11,7 @@
 .backdrop-overlay {
     width:100%;
     height: 100%;
-    background-color: var(--black-50);
+    background-color: rgba(var(--bg-overlay), .5);
     backdrop-filter: blur(3px);
     display: flex;
     justify-content: center;
@@ -21,12 +21,12 @@
 .modal-content {
     position: relative;
     font-size: .9rem;
-    color: var(--white-100);
+    color: var(--f-default);
     width: 60%;
     height: 80%;
-    background-color: var(--black-90);
+    background-color: var(--bg-default);
     border-radius: 8px;
-
+    border: 1px solid var(--border-default);
 }
 
 .columns {
@@ -43,7 +43,7 @@
 }
 
 .columns::-webkit-scrollbar-thumb {
-    background: var(--grey-100);
+    background: var(-bg-default);
     border-radius: 8px;
 }
 
@@ -73,7 +73,9 @@ img {
     overflow: hidden;
     border-radius: 8px;
     margin: 0 0 24px 0;
-    background-color: var(--pure-black-100);
+    background-color: var(--bg-inset);
+    border: 1px solid var(--border-default);
+    box-sizing: border-box;
 }
 
 .img-container img {
@@ -93,29 +95,33 @@ img {
 
 .parent-report-title-section button {
     cursor: pointer;
-    font-weight: 500;
     font-family: 'Poppins', sans-serif;
     font-size: .9rem;
-    color: var(--black-100);
-    background-color: var(--white-100);
-    border-radius: 100px;
-    border: none;
-    padding: 6px 24px;
+    color: var(--f-default);
+    background-color: var(--bg-subtle);
+    border-radius: 4px;
+    border: 1px solid var(--border-subtle);
+    padding: 4px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 
     &:hover {
-        background-color: var(--dark-white-100);
+        border-color: var(--border-emphasis);
     }
 }
 
 .parent-report-details {
     padding: 24px;
-    background-color: var(--dark-grey-100);
+    background-color: var(--bg-default);
     border-radius: 8px;
+    border: 1px solid var(--border-default);
 }
 
 .info {
     font-weight: 600;
     margin: 0 0 4px 0;
+    color: var(--f-subtle);
 }
 
 .info:last-child {
@@ -124,6 +130,7 @@ img {
 
 .info-value {
     font-weight: 400;
+    color: var(--f-default);
 }
 
 .comma::after {
@@ -145,7 +152,7 @@ img {
 }
 
 .children-report::-webkit-scrollbar-thumb {
-    background: var(--grey-100);
+    background: var(--bg-subtle);
     border-radius: 8px;
 }
 
@@ -168,6 +175,25 @@ app-dialog-card:last-child {
     top: 16px;
     right: 16px;
     z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--f-muted);
+    background-color: var(--bg-default);
+    border-radius: 4px;
+    border: 1px solid var(--border-subtle);
+    height: 32px;
+    width: 32px;
+    transition: .2s ease-in-out;
+
+    &:hover {
+        color: var(--f-default);
+        border-color: var(--border-emphasis);
+    }
+}
+
+.material-symbols-outlined {
+    font-size: 1.2rem;
 }
 
 p {
@@ -195,6 +221,7 @@ p {
 
     .parent-report-column {
         margin: 0 0 48px 0;
+        height: auto;
     }
 
     .children-report {

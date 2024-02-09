@@ -5,10 +5,11 @@
     height: calc(100% - 56px);
     width: 384px;
     z-index: 99999;
-    background-color: var(--black-100);
-    color: var(--white-100);
+    background-color: var(--bg-default);
+    color: var(--f-default);
     transition: .2s ease-in-out;
     box-sizing: border-box;
+    border: 1px solid var(--border-default);
 }
 
 .header {
@@ -21,7 +22,7 @@
 
 .header h1 {
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 500;
     margin: 0;
 }
 
@@ -37,14 +38,12 @@
 }
 
 .sidebar-content::-webkit-scrollbar-thumb {
-    background: var(--grey-100);
+    background: var(--bg-subtle);
     border-radius: 8px;
 }
 
 .close-icon-wrapper {
     cursor: pointer;
-    height: 40px;
-    width: 40px;
     position: absolute;
     top: 16px;
     right: -48px;
@@ -52,9 +51,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: 0.2s ease-in-out;
-    background-color: var(--black-100);
-    border-radius: 100px;
+    color: var(--f-muted);
+    background-color: var(--bg-inset);
+    border-radius: 4px;
+    border: 1px solid var(--border-subtle);
+    height: 40px;
+    width: 40px;
+    transition: .2s ease-in-out;
+
+    &:hover {
+        color: var(--f-default);
+        border-color: var(--border-emphasis);
+    }
 }
 
 .material-symbols-outlined {

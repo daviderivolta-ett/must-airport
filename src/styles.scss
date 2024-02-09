@@ -1,25 +1,49 @@
 :root {
     font-size: 14px;
-    --pure-black-100: rgba(8, 8, 8, 1);
+    
+    --f-default: rgb(230, 237, 243);
+    --f-muted: rgb(125, 133, 144);
+    --f-subtle: rgb(110, 118, 129);
 
-    --black-100: rgba(15, 15, 15, 1);
-    --black-90: rgba(15, 15, 15, .9);
-    --black-50: rgba(15, 15, 15, .5);
+    --f-accent: rgb(47, 129, 247);
+    --f-success: rgb(63, 185, 80);
+    --f-attention: rgb(210, 153, 34);
+    --f-severe: rgb(219, 109, 40);
+    --f-danger: rgb(248, 81, 73);
+    --f-done: rgb(163, 113, 247);
+    --f-other: rgb(219, 97, 162);
 
-    --dark-grey-100: rgba(32, 32, 32, 1);
+    --bg-inset: rgb(1, 4, 9);
+    --bg-default: rgb(13, 17, 23);
+    --bg-overlay: rgb(22, 27, 34);
+    --bg-subtle: rgb(39, 45, 52);
+    --bg-emphasis: rgb(110, 118, 129);
 
-    --grey-100: rgba(40, 41, 42, 1);
+    --bg-accent-dull: rgb(18, 29, 47);
+    --bg-accent-emphasis: rgb(31, 111, 235);
+    --bg-success-dull: rgb(18, 38, 30);
+    --bg-success-emphasis: rgb(35, 134, 54);
+    --bg-attention-dull: rgb(39, 33, 21);
+    --bg-attention-emphasis: rgb(158, 106, 3);
+    --bg-severe-dull: rgb(34, 26, 25);
+    --bg-severe-emphasis: rgb(189, 86, 29);
+    --bg-danger-dull: rgb(37, 23, 28);
+    --bg-danger-emphasis: rgb(218, 54, 51);
+    --bg-done-dull: rgb(29, 27, 46);
+    --bg-done-emphasis: rgb(137, 87, 229);
+    --bg-other-dull: rgb(34, 25, 38);
+    --bg-other-emphasis: rgb(191, 75, 138);
 
-    --light-grey-100: rgba(62, 62, 62, 1);
-
-    --dark-white-100: rgba(212, 212, 212, 1);
-    --white-100: rgba(241, 241, 241, 1);
+    --border-default: rgb(48, 54, 61);
+    --border-subtle: rgba(240, 246, 252, 0.1);
+    --border-muted: rgb(33, 38, 45);
+    --border-emphasis: rgba(139, 148, 158);
 }
 
 body,
 html {
     margin: 0;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Noto Sans', sans-serif;
     overflow: hidden;
 }
 
@@ -32,12 +56,50 @@ h6 {
     font-weight: 600;
 }
 
-
-
 .material-symbols-outlined {
     font-variation-settings:
         'FILL' 0,
         'wght' 400,
         'GRAD' 0,
-        'opsz' 24
+        'opsz' 24;
+    line-height: 0;
+}
+
+.img-container {
+    position: relative;
+    width: 100%;
+    padding: 0 0 56.25% 0;
+    overflow: hidden;
+    border-radius: 8px;
+    background-color: var(--bg-inset);
+    border: 1px solid var(--border-default);
+    box-sizing: border-box;
+}
+
+.card {
+    cursor: pointer;
+    margin: 0 0 24px 0;
+}
+
+.card .img-container {
+    border-radius: 8px 8px 0 0;
+    border-bottom: none;
+}
+
+.card .details {
+    font-size: 0.9rem;
+    border: 1px solid var(--border-default);
+    padding: 16px;
+    border-radius: 0 0 8px 8px;
+}
+
+.card .details .info {
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    color: var(--f-subtle);
+}
+
+.card .details .info-value {
+    font-weight: 400;
+    color: var(--f-default);
 }

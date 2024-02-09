@@ -2,10 +2,10 @@
     <div class="img-container">
         <img src={{report.coverImgUrls[0]}}>
     </div>
-    <div class="tech-tags">
-        <span class="tech-tags-title">Oggetto: </span>
+    <div class="details">
+        <span class="info">Oggetto: </span>
         @for (techTag of report.fields.tagTechElement; track $index; let last = $last) {
-        <span class="tech-tag" [ngClass]="{'comma': !last}">{{$any(techTag).name.it}}</span>
+        <span class="info-title" [ngClass]="{'comma': !last}">{{$any(techTag).name.it}}</span>
         }
     </div>
 </div>

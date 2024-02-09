@@ -1,11 +1,5 @@
-.img-container {
-    position: relative;
-    width: 100%;
-    padding: 0 0 56.25% 0;
-    overflow: hidden;
-    border-radius: 8px;
-    margin: 0 0 16px 0;
-    background-color: var(--pure-black-100);
+.card {
+    cursor: inherit;
 }
 
 img {
@@ -14,16 +8,6 @@ img {
     height: 100%;
     border-radius: 8px;
     object-fit: contain;
-}
-
-.info {
-    font-weight: 600;
-    margin: 0 0 4px 0;
-}
-
-.info-value {
-    font-weight: 400;
-    color: var(--dark-white-100);
 }
 
 .comma::after {
