@@ -5,7 +5,7 @@
     height: calc(100% - 56px);
     width: 288px;
     z-index: 999;
-    background-color: var(--dark-grey-100);
+    background-color: var(--black-100);
     color: white;
     transition: .2s ease-in-out;
     box-sizing: border-box;
@@ -20,7 +20,7 @@
 }
 
 .header h1 {
-    font-size: 14px;
+    font-size: 1rem;
     font-weight: 600;
     margin: 0;
 }

@@ -1,6 +1,10 @@
 :root {
-    --dark-grey-100: rgba(21, 21, 21, 1);
-    --dark-grey-90: rgba(21, 21, 21, .9);
+    font-size: 14px;
+    --black-100: rgba(15, 15, 15, 1);
+    --black-90: rgba(15, 15, 15, .9);
+    --grey-100: rgba(40, 41, 42, 1);
+    --light-grey-100: rgba(62, 62, 62, 1);
+    --white-100: rgba(241, 241, 241, 1);
 }
 
 body,
@@ -18,6 +22,8 @@ h5,
 h6 {
     font-weight: 600;
 }
+
+
 
 .material-symbols-outlined {
     font-variation-settings:
