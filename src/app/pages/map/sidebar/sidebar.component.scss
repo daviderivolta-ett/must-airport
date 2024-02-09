@@ -6,7 +6,7 @@
     width: 288px;
     z-index: 999;
     background-color: var(--black-100);
-    color: white;
+    color: var(--white-100);
     transition: .2s ease-in-out;
     box-sizing: border-box;
 }
@@ -37,7 +37,8 @@
 }
 
 .sidebar-content::-webkit-scrollbar-thumb {
-    background: #252525;
+    background: var(--grey-100);
+    border-radius: 8px;
 }
 
 .close-icon-wrapper {

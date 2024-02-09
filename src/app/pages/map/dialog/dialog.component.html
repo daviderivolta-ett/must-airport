@@ -5,30 +5,34 @@
             <div class="close-icon-wrapper" (click)="closeDialog()">
                 <span class="material-symbols-outlined">close</span>
             </div>
-            <div class="column parent-report-column">
-                <h2>Dettaglio</h2>
-                <div class="img-container">
-                    <img src="{{parentReport.coverImgUrls[0]}}" alt="">
+            <div class="columns">
+                <div class="column parent-report-column">
+                    <h2>Dettaglio</h2>
+                    <div class="img-container">
+                        <img src="{{parentReport.coverImgUrls[0]}}" alt="">
+                    </div>
+                        <div class="parent-report-details">
+                        <p class="info">Prima segnalazione: <span class="info-value">{{parentReport.creationTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.creationTime | date: 'HH:mm'}}</span></p>
+                        <p class="info">Ultimo aggiornamento: <span class="info-value">{{parentReport.lastChildTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.lastChildTime | date: 'HH:mm'}}</span></p>
+                        <p class="info">Oggetto:
+                        @for (tag of parentReport.fields.tagTechElement; track $index; let last = $last) {
+                            <span class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</span>
+                        }
+                        </p>
+                        <p class="info">Elemento tecnico:
+                        @for (tag of parentReport.fields.subTagTechElement; track $index; let last = $last) {
+                            <span class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</span>
+                        }
+                        </p>
+                    </div>
                 </div>
-                <p class="info">Prima segnalazione: <span class="info-value">{{parentReport.creationTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.creationTime | date: 'HH:mm'}}</span></p>
-                <p class="info">Ultimo aggiornamento: <span class="info-value">{{parentReport.lastChildTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.lastChildTime | date: 'HH:mm'}}</span></p>
-                <p class="info">Oggetto:
-                @for (tag of parentReport.fields.tagTechElement; track $index; let last = $last) {
-                    <span class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</span>
-                }
-                </p>
-                <p class="info">Elemento tecnico:
-                @for (tag of parentReport.fields.subTagTechElement; track $index; let last = $last) {
-                    <span class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</span>
-                }
-                </p>
-            </div>
-            <div class="column children-report-column">
-                <h2>Report ({{parentReport.childrenIds.length}})</h2>
-                <div class="children-report">
-                @for (childReport of childrenReport; track $index) {
-                <app-dialog-card [childReport]="childReport"/>
-                }
+                <div class="column children-report-column">
+                    <h2>Report ({{parentReport.childrenIds.length}})</h2>
+                    <div class="children-report">
+                    @for (childReport of childrenReport; track $index) {
+                    <app-dialog-card [childReport]="childReport"/>
+                    }
+                    </div>
                 </div>
             </div>
         </div>

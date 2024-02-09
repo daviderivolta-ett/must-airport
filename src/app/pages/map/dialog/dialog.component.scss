@@ -11,7 +11,7 @@
 .backdrop-overlay {
     width:100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--black-50);
     backdrop-filter: blur(3px);
     display: flex;
     justify-content: center;
@@ -20,16 +20,31 @@
 
 .modal-content {
     position: relative;
-    font-size: 12px;
-    color: white;
+    font-size: .9rem;
+    color: var(--white-100);
     width: 60%;
     height: 80%;
     background-color: var(--black-90);
-    padding: 48px;
     border-radius: 8px;
+
+}
+
+.columns {
+    height: 100%;
+    padding: 48px;
+    box-sizing: border-box;
     display: flex;
     justify-content: space-between;
     gap: 48px;
+}
+
+.columns::-webkit-scrollbar {
+    width: 6px;
+}
+
+.columns::-webkit-scrollbar-thumb {
+    background: var(--grey-100);
+    border-radius: 8px;
 }
 
 .parent-report-column {
@@ -39,7 +54,7 @@
 h2 {
     height: 48px;
     margin: 0;
-    font-size: 18px;
+    font-size: 1.2rem;
 }
 
 img {
@@ -47,23 +62,36 @@ img {
 }
 
 .img-container {
+    position: relative;
     width: 100%;
-    height: 400px;
+    padding: 0 0 56.25% 0;
     overflow: hidden;
-    border-radius: 4px;
+    border-radius: 8px;
     margin: 0 0 24px 0;
-    background-color: #101010;
+    background-color: var(--pure-black-100);
 }
 
 .img-container img {
+    position: absolute;
+    width: 100%;
     height: 100%;
-    border-radius: 4px;
+    border-radius: 8px;
     object-fit: contain;
+}
+
+.parent-report-details {
+    padding: 24px;
+    background-color: var(--dark-grey-100);
+    border-radius: 8px;
 }
 
 .info {
     font-weight: 600;
     margin: 0 0 4px 0;
+}
+
+.info:last-child {
+    margin: 0;
 }
 
 .info-value {
@@ -81,6 +109,7 @@ img {
 .children-report {
     overflow-y: auto;
     height: calc(100% - 48px);
+    padding: 0 16px 0 0;
 }
 
 .children-report::-webkit-scrollbar {
@@ -88,7 +117,8 @@ img {
 }
 
 .children-report::-webkit-scrollbar-thumb {
-    background: #252525;
+    background: var(--grey-100);
+    border-radius: 8px;
 }
 
 app-dialog-card {
@@ -96,13 +126,48 @@ app-dialog-card {
     margin: 0 0 32px 0;
 }
 
+app-dialog-card:last-child {
+    margin: 0;
+}
+
 .close-icon-wrapper {
     cursor: pointer;
     position: absolute;
     top: 16px;
     right: 16px;
+    z-index: 999999;
 }
 
 p {
     margin: 0;
+}
+
+@media screen and (max-width: 1600px) {
+    .modal-content {
+        width: 80%;
+    }
+}
+
+@media screen and ( max-width: 1024px) {
+    .modal-content {
+        width: 100%;
+        height: 100%;
+    }
+
+    .columns {
+        padding: 24px;
+        display: block;
+        overflow-y: auto;
+        box-sizing: border-box;
+    }
+
+    .parent-report-column {
+        margin: 0 0 48px 0;
+    }
+
+    .children-report {
+        overflow-y: hidden;
+        height: auto;
+        padding: 0;
+    }
 }
