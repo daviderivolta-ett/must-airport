@@ -7,10 +7,13 @@
             </div>
             <div class="columns">
                 <div class="column parent-report-column">
-                    <h2>Dettaglio</h2>
                     <div class="img-container">
                         <img src="{{parentReport.coverImgUrls[0]}}" alt="">
                     </div>
+                        <div class="parent-report-title-section">
+                            <h2 class="parent-report-title">Dettaglio segnalazione</h2>
+                            <button>Gestisci</button>
+                        </div>
                         <div class="parent-report-details">
                         <p class="info">Prima segnalazione: <span class="info-value">{{parentReport.creationTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.creationTime | date: 'HH:mm'}}</span></p>
                         <p class="info">Ultimo aggiornamento: <span class="info-value">{{parentReport.lastChildTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.lastChildTime | date: 'HH:mm'}}</span></p>
@@ -27,7 +30,7 @@
                     </div>
                 </div>
                 <div class="column children-report-column">
-                    <h2>Report ({{parentReport.childrenIds.length}})</h2>
+                    <h2 class="children-report-title">Report ({{parentReport.childrenIds.length}})</h2>
                     <div class="children-report">
                     @for (childReport of childrenReport; track $index) {
                     <app-dialog-card [childReport]="childReport"/>

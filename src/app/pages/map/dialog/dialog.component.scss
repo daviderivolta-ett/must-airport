@@ -52,9 +52,8 @@
 }
 
 h2 {
-    height: 48px;
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 
 img {
@@ -77,6 +76,29 @@ img {
     height: 100%;
     border-radius: 8px;
     object-fit: contain;
+}
+
+.parent-report-title-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0 16px 0;
+}
+
+.parent-report-title-section button {
+    cursor: pointer;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    font-size: .9rem;
+    color: var(--black-100);
+    background-color: var(--white-100);
+    border-radius: 100px;
+    border: none;
+    padding: 6px 24px;
+
+    &:hover {
+        background-color: var(--dark-white-100);
+    }
 }
 
 .parent-report-details {
@@ -119,6 +141,10 @@ img {
 .children-report::-webkit-scrollbar-thumb {
     background: var(--grey-100);
     border-radius: 8px;
+}
+
+.children-report-title {
+    height: 48px;
 }
 
 app-dialog-card {

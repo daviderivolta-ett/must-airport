@@ -1,9 +1,9 @@
 .sidebar {
     position: absolute;
-    left: -288px;
+    left: -384px;
     bottom: 0;
     height: calc(100% - 56px);
-    width: 288px;
+    width: 384px;
     z-index: 999;
     background-color: var(--black-100);
     color: var(--white-100);
@@ -43,15 +43,17 @@
 
 .close-icon-wrapper {
     cursor: pointer;
-    height: 32px;
-    width: 32px;
+    height: 40px;
+    width: 40px;
     position: absolute;
     top: 16px;
-    right: -32px;
+    right: -48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: .2s ease-in-out;
+    transition: 0.2s ease-in-out;
+    background-color: var(--black-100);
+    border-radius: 100px;
 }
 
 .material-symbols-outlined {
@@ -65,4 +67,15 @@
 .open .close-icon-wrapper {
     right: 16px;
     transform: rotateY(180deg);
+}
+
+@media screen and (max-width: 576px) {
+    .sidebar {
+        width: 100%;
+        left: -100%;
+    }
+
+    .open {
+        left: 0;
+    }
 }
