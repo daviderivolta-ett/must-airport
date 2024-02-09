@@ -5,7 +5,7 @@ import { ReportChild } from '../../../models/report-child.model';
 import { ReportsService } from '../../../services/reports.service';
 import { DatePipe, NgClass } from '@angular/common';
 import { DialogCardComponent } from '../dialog-card/dialog-card.component';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-dialog',
@@ -19,7 +19,7 @@ export class DialogComponent {
   public parentReport: ReportParent = ReportParent.createEmpty();
   public childrenReport: ReportChild[] = [];
 
-  constructor(private dialogService: DialogService, private reportsService: ReportsService) {
+  constructor(private dialogService: DialogService, private reportsService: ReportsService, private router: Router) {
     effect(() => {
       this.isOpen = this.dialogService.isOpen();
     });
@@ -27,7 +27,7 @@ export class DialogComponent {
     effect(async () => {
       this.parentReport = this.dialogService.report();
       this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
-      this.childrenReport.map((report: ReportChild) => {       
+      this.childrenReport.map((report: ReportChild) => {
         if (report.tagFailure != undefined) report = this.reportsService.populateFailureTags(report);
         if (report.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
       });
@@ -35,9 +35,18 @@ export class DialogComponent {
     });
   }
 
-  closeDialog(): void {
+  public closeDialog(): void {
     this.dialogService.isOpen.set(false);
     this.parentReport = ReportParent.createEmpty();
     this.childrenReport = [];
+  }
+
+  public navigateTo(id: string): void {
+    this.router.navigate(['/gestione', id], {
+      state: {
+        parentReport: this.parentReport,
+        childrenReport: this.childrenReport
+      }
+    })
   }
 }
