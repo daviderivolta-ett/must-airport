@@ -49,6 +49,12 @@
 
 .parent-report-column {
     flex: 0 0 60%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.parent-report-column::-webkit-scrollbar {
+    display: none;
 }
 
 h2 {

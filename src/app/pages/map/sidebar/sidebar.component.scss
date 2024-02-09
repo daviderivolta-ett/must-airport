@@ -4,7 +4,7 @@
     bottom: 0;
     height: calc(100% - 56px);
     width: 384px;
-    z-index: 999;
+    z-index: 99999;
     background-color: var(--black-100);
     color: var(--white-100);
     transition: .2s ease-in-out;
@@ -48,6 +48,7 @@
     position: absolute;
     top: 16px;
     right: -48px;
+    transform: rotateY(180deg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -66,7 +67,7 @@
 
 .open .close-icon-wrapper {
     right: 16px;
-    transform: rotateY(180deg);
+    transform: rotateY(0deg);
 }
 
 @media screen and (max-width: 576px) {
