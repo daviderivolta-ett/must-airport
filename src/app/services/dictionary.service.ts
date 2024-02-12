@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, WritableSignal, signal } from '@angular/core';
 import { TechElementTag } from '../models/tech-element-tag.model';
 import { Firestore, getDocs, query, collection } from '@angular/fire/firestore';
 import { TechElementSubTag } from '../models/tech-element-subtag.model';
@@ -58,7 +58,7 @@ interface FailureSubTagDb {
   providedIn: 'root'
 })
 export class DictionaryService {
-  public techElementTags: TechElementTag[] = [];
+  public techElementTags: WritableSignal<TechElementTag[]> = signal([]);
   public failureTags: FailureTag[] = [];
   public allLoaded: boolean = false;
 
@@ -70,7 +70,7 @@ export class DictionaryService {
     await Promise.all(requests)
       .then(res => {
         this.allLoaded = true;
-        console.log(res);
+        // console.log(res);
       });
   }
 
@@ -97,7 +97,7 @@ export class DictionaryService {
         return techElementTag;
       });
 
-      this.techElementTags = [...techElementTagsV, ...techElementTagsH];
+      this.techElementTags.set([...techElementTagsV, ...techElementTagsH]);
       return this.techElementTags;
 
     } catch (error) {
@@ -168,7 +168,7 @@ export class DictionaryService {
 
   public getTechElementTagById(id: string): TechElementTag {
     let tag: TechElementTag = TechElementTag.createEmpty();
-    this.techElementTags.forEach(techElementTag => {
+    this.techElementTags().forEach(techElementTag => {
       if (techElementTag.id === id) tag = techElementTag;
     });
     return tag;
@@ -176,7 +176,7 @@ export class DictionaryService {
 
   public getTechElementSubTagById(id: string): TechElementSubTag {
     let tag: TechElementSubTag = TechElementSubTag.createEmpty();
-    this.techElementTags.forEach(techElementTag => {
+    this.techElementTags().forEach(techElementTag => {
       if (techElementTag.subTags.length === 0) return;
       techElementTag.subTags.forEach((subTag: TechElementSubTag) => {
         if (subTag.id === id) tag = subTag;

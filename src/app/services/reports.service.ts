@@ -1,4 +1,4 @@
-import { Injectable, WritableSignal, signal } from '@angular/core';
+import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { ReportParent } from '../models/report-parent.model';
@@ -54,6 +54,8 @@ export interface ReportChildDb {
   providedIn: 'root'
 })
 export class ReportsService {
+  public selectedReport: WritableSignal<ReportParent> = signal(ReportParent.createEmpty());
+  public selectedReportId: string = '';
   public reports: WritableSignal<ReportParent[]> = signal([]);
 
   constructor(private db: Firestore, private dictionaryService: DictionaryService) { }
@@ -78,10 +80,33 @@ export class ReportsService {
         });
 
         this.reports.set(reports);
+
+        if (this.selectedReportId) {
+          const selectedReport = reports.find(report => report.id === this.selectedReportId);
+          if (selectedReport) this.selectedReport.set(selectedReport);
+        }
       },
       (error: Error) => console.log(error)
     );
   }
+
+  public selectReport(id: string) {
+    this.selectedReportId = id;
+    if(this.reports().length > 0) {
+      const selectedReport = this.reports().find(report => report.id === this.selectedReportId);
+      if (selectedReport) this.selectedReport.set(selectedReport);      
+    }
+  }
+
+  // public getParentReportById(id: string | null) {
+  //   let reports = this.reports();
+  //   let report = ReportParent.createEmpty();
+  //   reports.forEach((r: ReportParent) => {    
+  //     if (r.id === id) report = r;
+  //   });
+  //   console.log(reports);
+  //   return report;
+  // }
 
   public parseParentReport(id: string, report: ReportParentDb): ReportParent {
     let r = ReportParent.createEmpty();

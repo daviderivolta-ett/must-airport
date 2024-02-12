@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { MapPageComponent } from './pages/map/page/map-page.component';
-import { ManagementComponent } from './pages/management/management/management.component';
+import { ManagementComponent } from './pages/management/page/management.component';
 
 export const routes: Routes = [
     {
