@@ -59,7 +59,7 @@ interface FailureSubTagDb {
 })
 export class DictionaryService {
   public techElementTags: WritableSignal<TechElementTag[]> = signal([]);
-  public failureTags: FailureTag[] = [];
+  public failureTags: WritableSignal<FailureTag[]> = signal([]);
   public allLoaded: boolean = false;
 
   constructor(private db: Firestore) { }
@@ -128,13 +128,13 @@ export class DictionaryService {
 
     try {
       const snapshot = await getDocs(q);
-      this.failureTags = snapshot.docs.map(doc => {
+      this.failureTags.set(snapshot.docs.map(doc => {
         const failureTag = this.parseFailureTag(doc.data() as FailureTagDb);
         failureTag.subTags = failureTag.subTags.map((subTag: FailureSubTagDb) => {
           return this.parseFailureSubTag(subTag);
         });
         return failureTag;
-      });
+      }));
       return this.failureTags;
 
     } catch (error) {
@@ -228,7 +228,7 @@ export class DictionaryService {
 
   public getFailureTagById(id: string): FailureTag {
     let tag: FailureTag = FailureTag.createEmpty();
-    this.failureTags.forEach(failureTag => {
+    this.failureTags().forEach(failureTag => {
       if (failureTag.id === id) tag = failureTag;
     });
     return tag;
@@ -236,7 +236,7 @@ export class DictionaryService {
 
   public getFailureSubTagById(id: string): FailureSubTag {
     let tag: FailureSubTag = FailureSubTag.createEmpty();
-    this.failureTags.forEach(failureTag => {
+    this.failureTags().forEach(failureTag => {
       if (failureTag.subTags.length === 0) return;
       failureTag.subTags.forEach((subTag: FailureSubTag) => {
         if (subTag.id === id) tag = subTag;

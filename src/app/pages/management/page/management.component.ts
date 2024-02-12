@@ -6,6 +6,7 @@ import { TechElementTag } from '../../../models/tech-element-tag.model';
 import { DictionaryService } from '../../../services/dictionary.service';
 import { ValidationFormComponent } from '../validation-form/validation-form.component';
 import { ReportsService } from '../../../services/reports.service';
+import { FailureTag } from '../../../models/failure-tag.model';
 
 @Component({
   selector: 'app-management',
@@ -15,8 +16,8 @@ import { ReportsService } from '../../../services/reports.service';
   styleUrl: './management.component.scss'
 })
 export class ManagementComponent {
-  public data: any = null;
   public techElementTags: TechElementTag[] = [];
+  public failureTags: FailureTag[] = [];
   public id: string | null = null;
   public parentReport: ReportParent = ReportParent.createEmpty();
   public childrenReport: ReportChild[] = [];
@@ -25,14 +26,8 @@ export class ManagementComponent {
     effect(() => {
       this.parentReport = this.reportsService.selectedReport();
       this.techElementTags = this.dictionaryService.techElementTags();
-
-      if (this.parentReport.id != '' && this.techElementTags.length > 0) {
-        this.data = {
-          parentReport: this.parentReport,
-          techElementTags: this.techElementTags
-        }
-      }
-    })
+      this.failureTags = this.dictionaryService.failureTags();
+    });
   }
 
   ngOnInit(): void {
@@ -45,7 +40,7 @@ export class ManagementComponent {
     if (this.id) this.reportsService.selectReport(this.id);
     // console.log(this.id);
     // console.log(this.parentReport);
-    this.techElementTags = this.dictionaryService.techElementTags();
+    // this.techElementTags = this.dictionaryService.techElementTags();
 
     // console.log(this.techElementTags);
     // console.log(this.childrenReport);

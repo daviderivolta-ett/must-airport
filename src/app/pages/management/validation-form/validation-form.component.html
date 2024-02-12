@@ -1,16 +1,21 @@
 @if (validationForm) {
 <form [formGroup]="validationForm">
-    <!-- @for (tag of _techElementTags; track tag.id) {
-    <input type="checkbox" id="{{tag.id}}" [formControlName]="tag.id">
-    <label for="{{tag.id}}">{{tag.name.it}}</label>
-    } -->
+    @if (tagForm) {
+    <div formGroupName="tagForm">
+        @for (tag of _techElementTags; track tag.id) {
+        <input type="checkbox" id="{{tag.id}}" [formControlName]="tag.id">
+        <label for="{{tag.id}}">{{tag.name.it}}</label>
+        }
+    </div>
+    }
 
-    <!-- <div formArrayName="techElementTagsFormArray">
-        <div *ngFor="let tag of techElementTagsFormArray.controls; let i = index">
-            <div [formGroupName]="i">
-
-            </div>
+    @if (failureTagsForm) {
+        <div formGroupName="failureTagsForm">
+            @for (failureTag of _failureTags; track failureTag.id) {
+                <input type="checkbox" id="{{failureTag.id}}" [formControlName]="failureTag.id">
+                <label for="{{failureTag.id}}">{{failureTag.name.it}}</label>
+            }
         </div>
-    </div> -->
+    }
 </form>
 }
