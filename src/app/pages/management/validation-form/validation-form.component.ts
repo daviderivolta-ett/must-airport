@@ -68,8 +68,12 @@ export class ValidationFormComponent {
 
   private initializeFailureTagsForm(): void {
     this.failureTagsForm = this.fb.group({});
-    for (const failureTag of this._failureTags) {   
-      this.failureTagsForm.addControl(failureTag.id, new FormControl(this._childrenReport.some(report => report.tagFailure.some((r: FailureTag | string) => typeof r === 'string' ? r : r.id === failureTag.id))));
+    for (const failureTag of this._failureTags) {
+      this.failureTagsForm.addControl(failureTag.id, new FormControl(this._childrenReport.some(report => {
+        return report.tagFailure && report.tagFailure.some((r: FailureTag | string) => {
+          return typeof r === 'string' ? r : r.id === failureTag.id
+        });
+      })));
     }
 
     this.validationForm.addControl('failureTagsForm', this.failureTagsForm);
