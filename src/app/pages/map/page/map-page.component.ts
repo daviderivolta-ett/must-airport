@@ -23,8 +23,4 @@ export class MapPageComponent {
       // console.log(this.reports);
     });
   }
-
-  async ngOnInit(): Promise<void> {
-    await this.reportsService.getAllParentReports();   
-  }
 }

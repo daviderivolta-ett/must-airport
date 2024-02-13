@@ -31,8 +31,8 @@ export class ManagementComponent {
         if (report.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
       });
     });
-    effect(() => this.techElementTags = this.dictionaryService.techElementTags());
-    effect(() => this.failureTags = this.dictionaryService.failureTags());
+    effect(() => this.techElementTags = this.dictionaryService.techElementTagsSignal());
+    effect(() => this.failureTags = this.dictionaryService.failureTagsSignal());
   }
 
   async ngOnInit(): Promise<void> {

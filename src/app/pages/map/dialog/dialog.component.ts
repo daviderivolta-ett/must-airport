@@ -31,7 +31,7 @@ export class DialogComponent {
         if (report.tagFailure != undefined) report = this.reportsService.populateFailureTags(report);
         if (report.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
       });
-      console.log(this.parentReport);
+      // console.log(this.parentReport);
       // console.log(this.childrenReport);
     });
   }

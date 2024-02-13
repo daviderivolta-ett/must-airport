@@ -1,4 +1,4 @@
-import { Injectable, WritableSignal, signal } from '@angular/core';
+import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { TechElementTag } from '../models/tech-element-tag.model';
 import { Firestore, getDocs, query, collection } from '@angular/fire/firestore';
 import { TechElementSubTag } from '../models/tech-element-subtag.model';
@@ -58,11 +58,16 @@ interface FailureSubTagDb {
   providedIn: 'root'
 })
 export class DictionaryService {
-  public techElementTags: WritableSignal<TechElementTag[]> = signal([]);
-  public failureTags: WritableSignal<FailureTag[]> = signal([]);
+  public techElementTags: TechElementTag[] = [];
+  public techElementTagsSignal: WritableSignal<TechElementTag[]> = signal([]);
+  public techElementSubTagsSignal: WritableSignal<TechElementSubTag[]> = signal([]);
+  public failureTagsSignal: WritableSignal<FailureTag[]> = signal([]);
+  public failureSubTags: WritableSignal<FailureSubTag[]> = signal([]);
   public allLoaded: boolean = false;
 
-  constructor(private db: Firestore) { }
+  constructor(private db: Firestore) {
+    effect(() => this.techElementTags = this.techElementTagsSignal());
+  }
 
   public async getAll() {
     if (this.allLoaded) return;
@@ -71,6 +76,11 @@ export class DictionaryService {
       .then(res => {
         this.allLoaded = true;
         // console.log(res);
+        // console.log(this.techElementTagsSignal());
+        // console.log(this.failureTagsSignal());
+        this.getAllTechElementSubTags();
+        // console.log(this.techElementSubTagsSignal());
+        
       });
   }
 
@@ -97,8 +107,8 @@ export class DictionaryService {
         return techElementTag;
       });
 
-      this.techElementTags.set([...techElementTagsV, ...techElementTagsH]);
-      return this.techElementTags;
+      this.techElementTagsSignal.set([...techElementTagsV, ...techElementTagsH]);
+      return this.techElementTagsSignal;
 
     } catch (error) {
       console.error('Errore durante il recupero dei dati:', error);
@@ -106,36 +116,31 @@ export class DictionaryService {
     }
   }
 
-  // public async getAllTechElementTags() {
-  //   const q = query(collection(this.db, 'tagsTechElement'));
-  //   return await getDocs(q)
-  //     .then(snapshot => {
-  //       snapshot.forEach(doc => {
-  //         this.techElementTags.push(this.parseTechElementTag(doc.data() as TechElementTagDb));
-  //       });
-
-  //       this.techElementTags = this.techElementTags.map(techElementTag => {
-  //         techElementTag.subTags = techElementTag.subTags.map((subTag: TechElementSubTagDb) => {
-  //           return this.parseTechElementSubTag(subTag);
-  //         });
-  //         return techElementTag;
-  //       });
-  //     })
-  // }
+  public async getAllTechElementSubTags() {
+    let foundSubTags: TechElementSubTag[] = [];
+    this.techElementTags.map(tag => tag.subTags.map((subTag: TechElementSubTag) => foundSubTags.push(subTag)));
+    let subTags : TechElementSubTag[] = [];
+    foundSubTags.forEach(t => {
+      if (subTags.some((obj: TechElementSubTag) => obj.id === t.id)) return;
+      subTags.push(t);
+    })   
+    this.techElementSubTagsSignal.set(subTags);
+    return this.techElementSubTagsSignal;
+  }
 
   public async getAllFailureTags() {
     const q = query(collection(this.db, 'tagsFailure'));
 
     try {
       const snapshot = await getDocs(q);
-      this.failureTags.set(snapshot.docs.map(doc => {
+      this.failureTagsSignal.set(snapshot.docs.map(doc => {
         const failureTag = this.parseFailureTag(doc.data() as FailureTagDb);
         failureTag.subTags = failureTag.subTags.map((subTag: FailureSubTagDb) => {
           return this.parseFailureSubTag(subTag);
         });
         return failureTag;
       }));
-      return this.failureTags;
+      return this.failureTagsSignal;
 
     } catch (error) {
       console.error('Errore durante il recupero dei dati:', error);
@@ -168,7 +173,7 @@ export class DictionaryService {
 
   public getTechElementTagById(id: string): TechElementTag {
     let tag: TechElementTag = TechElementTag.createEmpty();
-    this.techElementTags().forEach(techElementTag => {
+    this.techElementTagsSignal().forEach(techElementTag => {
       if (techElementTag.id === id) tag = techElementTag;
     });
     return tag;
@@ -176,7 +181,7 @@ export class DictionaryService {
 
   public getTechElementSubTagById(id: string): TechElementSubTag {
     let tag: TechElementSubTag = TechElementSubTag.createEmpty();
-    this.techElementTags().forEach(techElementTag => {
+    this.techElementTagsSignal().forEach(techElementTag => {
       if (techElementTag.subTags.length === 0) return;
       techElementTag.subTags.forEach((subTag: TechElementSubTag) => {
         if (subTag.id === id) tag = subTag;
@@ -228,7 +233,7 @@ export class DictionaryService {
 
   public getFailureTagById(id: string): FailureTag {
     let tag: FailureTag = FailureTag.createEmpty();
-    this.failureTags().forEach(failureTag => {
+    this.failureTagsSignal().forEach(failureTag => {
       if (failureTag.id === id) tag = failureTag;
     });
     return tag;
@@ -236,7 +241,7 @@ export class DictionaryService {
 
   public getFailureSubTagById(id: string): FailureSubTag {
     let tag: FailureSubTag = FailureSubTag.createEmpty();
-    this.failureTags().forEach(failureTag => {
+    this.failureTagsSignal().forEach(failureTag => {
       if (failureTag.subTags.length === 0) return;
       failureTag.subTags.forEach((subTag: FailureSubTag) => {
         if (subTag.id === id) tag = subTag;
