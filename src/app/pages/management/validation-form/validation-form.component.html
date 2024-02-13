@@ -1,31 +1,57 @@
 @if (validationForm) {
-<form [formGroup]="validationForm">
+<form [formGroup]="validationForm" (ngSubmit)="handleSubmit()">
 
+    <p>Elemento tecnico</p>
     @if (techElementTagsForm) {
-    <div formGroupName="techElementTagsForm">
+    <div class="form-group" formGroupName="techElementTagsForm">
         @for (tag of _techElementTags; track tag.id) {
-        <input type="checkbox" id="{{tag.id}}" [formControlName]="tag.id">
-        <label for="{{tag.id}}">{{tag.name.it}}</label>
+        <div class="checkbox-single">
+            <input type="checkbox" id="{{tag.id}}" [formControlName]="tag.id">
+            <label for="{{tag.id}}">{{tag.name.it}}</label>
+        </div>
         }
     </div>
     }
 
+    <p>Sottoelemento tecnico</p>
     @if (techElementSubTagsForm) {
-    <div formGroupName="techElementSubTagsForm">
-        @for (subTag of _techElementSubTags; track subTag.id) {
-        <input type="checkbox" id="{{subTag.id}}" [formControlName]="subTag.id">
-        <label for="{{subTag.id}}">{{subTag.name.it}}</label>
+    <div class="form-group" formGroupName="techElementSubTagsForm">
+        @for (subTag of _reportTechElementSubTags; track subTag.id) {
+        <div class="checkbox-single">
+            <input type="checkbox" id="{{subTag.id}}" [formControlName]="subTag.id">
+            <label for="{{subTag.id}}">{{subTag.name.it}}</label>
+        </div>
         }
     </div>
     }
-    
+
+    <!-- <p>Segnale di guasto</p>
     @if (failureTagsForm) {
-    <div formGroupName="failureTagsForm">
+    <div class="form-group" formGroupName="failureTagsForm">
         @for (failureTag of _failureTags; track failureTag.id) {
-        <input type="checkbox" id="{{failureTag.id}}" [formControlName]="failureTag.id">
-        <label for="{{failureTag.id}}">{{failureTag.name.it}}</label>
+        <div class="checkbox-single">
+            <input type="checkbox" id="{{failureTag.id}}" [formControlName]="failureTag.id">
+            <label for="{{failureTag.id}}">{{failureTag.name.it}}</label>
+        </div>
         }
     </div>
-    }
+    } -->
+
+    <p>Priorità</p>
+    <div class="form-group">
+        <div class="radio-single">
+            <input type="radio" id="low" value="low" name="priority" formControlName="priority">
+            <label for="low">Bassa</label>
+        </div>
+        <div class="radio-single">
+            <input type="radio" id="medium" value="medium" name="priority" formControlName="priority">
+            <label for="medium">Media</label>
+        </div>
+        <div class="radio-single">
+            <input type="radio" id="high" value="high" name="priority" formControlName="priority">
+            <label for="high">Alta</label>
+        </div>
+    </div>
+    <button type="submit">Valida segnalazione</button>
 </form>
 }

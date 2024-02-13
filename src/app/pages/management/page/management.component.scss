@@ -1,0 +1,48 @@
+// :host {
+//     display: block;
+//     overflow: hidden;
+//     height: calc(100% - 56px);
+// }
+
+img {
+    width: 100%;
+}
+
+.comma::after {
+    content: ', ';
+}
+
+.page {
+    background-color: var(--bg-inset);
+    color: var(--f-default);
+    display: flex;
+    // gap: 24px;
+    height: 100%;
+    height: calc(100% - 56px);
+}
+
+.column {
+    width: 25%;
+    padding: 24px;
+    overflow-y: auto;
+    box-sizing: border-box
+}
+
+.first-column {
+    // width: 25%;
+    background-color: var(--bg-default);
+    border-right: 1px solid var(--border-default);
+}
+
+.second-column {
+    overflow-y: hidden;
+}
+
+.children-report {
+    height: calc(100% - 56px);
+    overflow-y: auto;
+}
+
+.children-report::-webkit-scrollbar {
+    display: none;
+}

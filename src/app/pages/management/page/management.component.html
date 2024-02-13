@@ -1,2 +1,42 @@
-<p>{{id}}</p>
-<app-validation-form [techElementTags]="techElementTags" [failureTags]="failureTags" [parentReport]="parentReport" [childrenReport]="childrenReport" />
+<div class="page">
+    <div class="column first-column">
+        <div class="img-container">
+            <img src="{{parentReport.coverImgUrls}}" alt="Immagine della segnalazione">
+        </div>
+        <h2>Dettaglio segnalazione</h2>
+        <div>
+            <p class="info">Prima segnalazione: <span class="value">{{parentReport.creationTime | date: 'dd/MM/yyyy'}} -
+                    h. {{parentReport.creationTime| date: 'HH:mm'}}</span></p>
+            <p class="info">Ultimo aggiornamento: <span class="value">{{parentReport.lastChildTime | date:
+                    'dd/MM/yyyy'}} - h. {{parentReport.lastChildTime| date: 'HH:mm'}}</span></p>
+            <p class="info">Oggetto:
+                @for (tag of parentReport.fields.tagTechElement; track $index; let last = $last) {
+                <span class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</span>
+                }
+            </p>
+            <p class="info">Elemento tecnico:
+                @for (tag of parentReport.fields.subTagTechElement; track $index; let last = $last) {
+                <span class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</span>
+                }
+            </p>
+        </div>
+    </div>
+    <div class="column second-column">
+        <h2>Aggiornamenti</h2>
+        <div class="children-report">
+            @for (report of childrenReport; track $index) {
+            <div class="img-container" style="margin-bottom: 40px;">
+                <img src="{{report.detailPics}}">
+            </div>
+            }
+        </div>
+    </div>
+    <div class="column third-column">
+        <h2>Scheda validazione</h2>
+        <app-validation-form [techElementTags]="techElementTags" [failureTags]="failureTags"
+            [parentReport]="parentReport" [childrenReport]="childrenReport" />
+    </div>
+    <div class="column fourth-column">
+        <h2>Segnalazioni ed interventi</h2>
+    </div>
+</div>
