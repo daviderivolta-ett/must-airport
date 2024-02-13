@@ -54,11 +54,14 @@ export interface ReportChildDb {
   providedIn: 'root'
 })
 export class ReportsService {
-  public selectedReport: WritableSignal<ReportParent> = signal(ReportParent.createEmpty());
+  public reportsSignal: WritableSignal<ReportParent[]> = signal([]);
+  public reports: ReportParent[] = [];
+  public selectedReportSignal: WritableSignal<ReportParent> = signal(ReportParent.createEmpty());
   public selectedReportId: string = '';
-  public reports: WritableSignal<ReportParent[]> = signal([]);
 
-  constructor(private db: Firestore, private dictionaryService: DictionaryService) { }
+  constructor(private db: Firestore, private dictionaryService: DictionaryService) {
+    effect(() => this.reports = this.reportsSignal());
+  }
 
   public async getAllParentReports() {
     await this.dictionaryService.getAll();
@@ -79,23 +82,23 @@ export class ReportsService {
           return report;
         });
 
-        this.reports.set(reports);
+        this.reportsSignal.set(reports);
 
         if (this.selectedReportId) {
           const selectedReport = reports.find(report => report.id === this.selectedReportId);
-          if (selectedReport) this.selectedReport.set(selectedReport);
+          if (selectedReport) this.selectedReportSignal.set(selectedReport);
         }
       },
       (error: Error) => console.log(error)
     );
   }
 
-  public selectReport(id: string) {
+  public selectReport(id: string) {   
     this.selectedReportId = id;
-    if(this.reports().length > 0) {
-      const selectedReport = this.reports().find(report => report.id === this.selectedReportId);
-      if (selectedReport) this.selectedReport.set(selectedReport);      
-    }
+    if(this.reports.length > 0) {
+      const selectedReport = this.reports.find(report => report.id === this.selectedReportId);
+      if (selectedReport) this.selectedReportSignal.set(selectedReport);
+    }    
   }
 
   // public getParentReportById(id: string | null) {

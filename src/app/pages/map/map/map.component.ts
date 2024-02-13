@@ -20,7 +20,7 @@ export class MapComponent {
 
   constructor(private mapService: MapService, private reportsService: ReportsService, private sidebarService: SidebarService, private dialogService: DialogService) {
     effect(() => {
-      this.reports = this.reportsService.reports();
+      this.reports = this.reportsService.reportsSignal();
       this.geoJsonData = this.mapService.createGeoJson(this.reports);     
       this.populateMap(this.geoJsonData);      
     }); 

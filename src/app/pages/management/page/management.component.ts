@@ -16,33 +16,29 @@ import { FailureTag } from '../../../models/failure-tag.model';
   styleUrl: './management.component.scss'
 })
 export class ManagementComponent {
-  public techElementTags: TechElementTag[] = [];
-  public failureTags: FailureTag[] = [];
   public id: string | null = null;
   public parentReport: ReportParent = ReportParent.createEmpty();
   public childrenReport: ReportChild[] = [];
+  public techElementTags: TechElementTag[] = [];
+  public failureTags: FailureTag[] = [];
 
   constructor(private route: ActivatedRoute, private dictionaryService: DictionaryService, private reportsService: ReportsService) {
-    effect(() => {
-      this.parentReport = this.reportsService.selectedReport();
-      this.techElementTags = this.dictionaryService.techElementTags();
-      this.failureTags = this.dictionaryService.failureTags();
+    effect(async () => {
+      this.parentReport = this.reportsService.selectedReportSignal();
+      this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
+      this.childrenReport.map((report: ReportChild) => {
+        if (report.tagFailure != undefined) report = this.reportsService.populateFailureTags(report);
+        if (report.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
+      });
     });
+    effect(() => this.techElementTags = this.dictionaryService.techElementTags());
+    effect(() => this.failureTags = this.dictionaryService.failureTags());
   }
 
-  ngOnInit(): void {
-    // await this.dictionaryService.getAll();
-
+  async ngOnInit(): Promise<void> {
     this.id = this.route.snapshot.paramMap.get('id');
-    // this.parentReport = history.state.parentReport;
-    // this.childrenReport = history.state.childrenReport;
-
-    if (this.id) this.reportsService.selectReport(this.id);
-    // console.log(this.id);
-    // console.log(this.parentReport);
-    // this.techElementTags = this.dictionaryService.techElementTags();
-
-    // console.log(this.techElementTags);
-    // console.log(this.childrenReport);
+    if (this.id) {     
+      this.reportsService.selectReport(this.id);
+    }
   }
 }

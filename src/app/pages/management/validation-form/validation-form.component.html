@@ -1,8 +1,8 @@
 @if (validationForm) {
 <form [formGroup]="validationForm">
     
-    @if (tagForm) {
-    <div formGroupName="tagForm">
+    @if (techElementTagsForm) {
+    <div formGroupName="techElementTagsForm">
         @for (tag of _techElementTags; track tag.id) {
         <input type="checkbox" id="{{tag.id}}" [formControlName]="tag.id">
         <label for="{{tag.id}}">{{tag.name.it}}</label>
