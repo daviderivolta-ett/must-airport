@@ -1,5 +1,6 @@
 @if (validationForm) {
 <form [formGroup]="validationForm">
+    
     @if (tagForm) {
     <div formGroupName="tagForm">
         @for (tag of _techElementTags; track tag.id) {
@@ -10,12 +11,12 @@
     }
 
     @if (failureTagsForm) {
-        <div formGroupName="failureTagsForm">
-            @for (failureTag of _failureTags; track failureTag.id) {
-                <input type="checkbox" id="{{failureTag.id}}" [formControlName]="failureTag.id">
-                <label for="{{failureTag.id}}">{{failureTag.name.it}}</label>
-            }
-        </div>
+    <div formGroupName="failureTagsForm">
+        @for (failureTag of _failureTags; track failureTag.id) {
+        <input type="checkbox" id="{{failureTag.id}}" [formControlName]="failureTag.id">
+        <label for="{{failureTag.id}}">{{failureTag.name.it}}</label>
+        }
+    </div>
     }
 </form>
 }
