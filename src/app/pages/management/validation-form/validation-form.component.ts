@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { TechElementTag } from '../../../models/tech-element-tag.model';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ReportParent } from '../../../models/report-parent.model';
-import { KeyValuePipe, NgFor } from '@angular/common';
+import { KeyValuePipe, NgClass } from '@angular/common';
 import { FailureTag } from '../../../models/failure-tag.model';
 import { ReportChild } from '../../../models/report-child.model';
 import { DictionaryService } from '../../../services/dictionary.service';
@@ -11,11 +11,14 @@ import { TechElementSubTag } from '../../../models/tech-element-subtag.model';
 @Component({
   selector: 'app-validation-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, NgFor, KeyValuePipe],
+  imports: [ReactiveFormsModule, FormsModule, KeyValuePipe, NgClass],
   templateUrl: './validation-form.component.html',
   styleUrl: './validation-form.component.scss'
 })
 export class ValidationFormComponent {
+  public isTechElementTagsFormOpen: boolean = false;
+  public isTechElementSubTagsFormOpen: boolean = false;
+
   public _parentReport: ReportParent = ReportParent.createEmpty();
   @Input() set parentReport(value: ReportParent) {
     if (value && value.id.length > 0) {
@@ -94,20 +97,20 @@ export class ValidationFormComponent {
   private updateTechElementSubTagsForm(values: any): void {
     // Lista dei controlli che dovrebbero esistere nel form
     const existingControls: string[] = [];
-  
+
     let validTagsId: string[] = [];
     for (const key in values) {
       if (values[key] === true) validTagsId.push(key);
     }
-  
+
     let tags: TechElementTag[] = validTagsId.map((id: string) => this.dictionaryService.getTechElementTagById(id));
     let subTags: TechElementSubTag[] = [];
     tags.forEach(tag => tag.subTags.forEach(s => subTags.push(s)));
     this._reportTechElementSubTags = subTags;
-  
+
     for (const subtag of this._reportTechElementSubTags) {
       existingControls.push(subtag.id);
-  
+
       const control = this.techElementSubTagsForm.get(subtag.id);
       if (control) {
         control.setValue(values[subtag.id] === true);
@@ -116,17 +119,17 @@ export class ValidationFormComponent {
         this.techElementSubTagsForm.addControl(subtag.id, new FormControl(values[subtag.id] === true));
       }
     }
-  
+
     // Rimuovi i controlli che non dovrebbero più esistere nel form
     for (const control in this.techElementSubTagsForm.controls) {
       if (!existingControls.includes(control)) {
         this.techElementSubTagsForm.removeControl(control);
       }
     }
-  
+
     this.validationForm.setControl('techElementSubTagsForm', this.techElementSubTagsForm);
   }
-  
+
 
   private initializeFailureTagsForm(): void {
     this.failureTagsForm = this.fb.group({});
@@ -143,5 +146,15 @@ export class ValidationFormComponent {
 
   public handleSubmit(): void {
     console.log(this.validationForm.value);
+  }
+
+  public toggleTechElementTagsForm(): void {
+    this.isTechElementTagsFormOpen = !this.isTechElementTagsFormOpen;
+    if (this.isTechElementTagsFormOpen === true) this.isTechElementSubTagsFormOpen = false;
+  }
+
+  public toggleTechElementSubTagsForm(): void {
+    this.isTechElementSubTagsFormOpen = !this.isTechElementSubTagsFormOpen;
+    if (this.isTechElementSubTagsFormOpen === true) this.isTechElementTagsFormOpen = false;
   }
 }
