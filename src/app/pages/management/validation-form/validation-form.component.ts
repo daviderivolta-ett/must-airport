@@ -65,7 +65,7 @@ export class ValidationFormComponent {
 
   constructor(private fb: FormBuilder, private dictionaryService: DictionaryService, private reportsService: ReportsService) {
     this.validationForm = this.fb.group({
-      priority: ['medium']
+      priority: ['']
     });
   }
 

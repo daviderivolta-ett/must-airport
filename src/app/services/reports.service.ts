@@ -25,6 +25,7 @@ export interface ReportParentDb {
   lastChildTime: Timestamp;
   location: GeoPoint;
   parentFlowId: string;
+  priority?: string;
   userId: string;
   verticalId: string
 }
@@ -139,6 +140,7 @@ export class ReportsService {
     r.lastChildTime = report.lastChildTime.toDate();
     r.location = report.location;
     r.parentFlowId = report.parentFlowId;
+    report.priority ? r.priority = report.priority : '';
     r.userId = report.userId;
     r.verticalId = report.verticalId;
     r.id = id;

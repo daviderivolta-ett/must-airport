@@ -19,6 +19,7 @@ export class ReportParent {
     lastChildTime: Date;
     location: GeoPoint;
     parentFlowId: string;
+    priority: string;
     userId: string;
     verticalId: string
     id: string;
@@ -38,6 +39,7 @@ export class ReportParent {
         lastChildTime: Timestamp,
         location: GeoPoint,
         parentFlowId: string,
+        priority: string,
         userId: string,
         verticalId: string,
         id: string
@@ -56,6 +58,7 @@ export class ReportParent {
         this.lastChildTime = lastChildTime.toDate();
         this.location = location;
         this.parentFlowId = parentFlowId;
+        this.priority = priority;
         this.userId = userId;
         this.verticalId = verticalId;
         this.id = id;
@@ -76,6 +79,7 @@ export class ReportParent {
             '',
             Timestamp.now(),
             new GeoPoint(44.415229489227684, 8.845336246602141),
+            '',
             '',
             '',
             '',
