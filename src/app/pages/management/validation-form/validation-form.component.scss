@@ -204,6 +204,10 @@ input[type="radio"]:checked + .radio-single-label {
     background-color: var(--bg-subtle);
 }
 
+input[type="radio"]:hover + .radio-single-label {
+    background-color: var(--bg-subtle);
+}
+
 .radio-single-label {
     cursor: pointer;
     padding: 8px;
