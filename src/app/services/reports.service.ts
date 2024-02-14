@@ -52,7 +52,7 @@ export interface ReportChildDb {
 }
 
 export interface ValidationFormData {
-  priority: string;
+  priorityForm: { [key: string]: string };
   techElementTagsForm: { [key: string]: boolean };
   techElementSubTagsForm: { [key: string]: boolean }
 }
@@ -249,7 +249,7 @@ export class ReportsService {
       if (formData.techElementSubTagsForm[key] === true) parentReport.fields.sub_tag_tech_el.push(key);
     }
 
-    parentReport.priority = formData.priority;  
+    parentReport.priority = formData.priorityForm['priority'];
     return parentReport;
   }
 

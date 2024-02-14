@@ -66,7 +66,8 @@
     } -->
 
     <h3 class="priority-title">Priorità</h3>
-    <div class="form-group radio-buttons">
+    @if (priorityForm) {
+    <div class="form-group radio-buttons" formGroupName="priorityForm">
         <div class="radio-single">
             <input type="radio" id="low" value="low" name="priority" formControlName="priority">
             <label class="radio-single-label" for="low">Bassa</label>
@@ -80,6 +81,7 @@
             <label class="radio-single-label" for="high">Alta</label>
         </div>
     </div>
-    <button type="submit">Salva modifiche</button>
+    }
+    <button type="submit" [disabled]="!validationForm.valid">Salva modifiche</button>
 </form>
 }

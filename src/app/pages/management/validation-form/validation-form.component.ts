@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { TechElementTag } from '../../../models/tech-element-tag.model';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReportParent } from '../../../models/report-parent.model';
 import { KeyValuePipe, NgClass, TitleCasePipe } from '@angular/common';
 import { FailureTag } from '../../../models/failure-tag.model';
@@ -27,6 +27,7 @@ export class ValidationFormComponent {
       // console.log('Parent report:', value);
       this.initializeTechElementTagsForm();
       this.initializeTechElementSubTagsForm();
+      this.initializePriorityForm();
     }
   }
 
@@ -64,9 +65,7 @@ export class ValidationFormComponent {
   public priorityForm!: FormGroup;
 
   constructor(private fb: FormBuilder, private dictionaryService: DictionaryService, private reportsService: ReportsService) {
-    this.validationForm = this.fb.group({
-      priority: ['']
-    });
+    this.validationForm = this.fb.group({});
   }
 
   private initializeTechElementTagsForm(): void {
@@ -93,6 +92,12 @@ export class ValidationFormComponent {
     }
 
     this.validationForm.addControl('techElementSubTagsForm', this.techElementSubTagsForm);
+  }
+
+  private initializePriorityForm(): void {
+    this.priorityForm = this.fb.group({});
+    this.priorityForm.addControl('priority', new FormControl(this._parentReport.priority, Validators.required));
+    this.validationForm.addControl('priorityForm', this.priorityForm);
   }
 
   private updateTechElementSubTagsForm(values: any): void {
@@ -146,6 +151,7 @@ export class ValidationFormComponent {
   }
 
   public handleSubmit(): void {
+    console.log(this.validationForm.value);
     let data: any = this.reportsService.parseValidationFormData(this.validationForm.value);
     this.reportsService.setReportById(this._parentReport.id, data);
   }

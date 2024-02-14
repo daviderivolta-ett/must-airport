@@ -193,12 +193,12 @@ input[type="checkbox"]:checked + .checkmark::after {
     width: 100%;
 }
 
-// input[type="radio"] {
-//     position: absolute;
-//     opacity: 0;
-//     height: 0;
-//     width: 0;
-// }
+input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    height: 0;
+    width: 0;
+}
 
 input[type="radio"]:checked + .radio-single-label {
     background-color: var(--bg-subtle);
@@ -244,4 +244,9 @@ button[type="submit"] {
     &:hover {
         background-color: var(--bg-success-emphasis);
     }
+}
+
+button[type="submit"]:disabled {
+    cursor: not-allowed;
+    background-color: var(--bg-success-dull);
 }
