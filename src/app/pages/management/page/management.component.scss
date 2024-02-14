@@ -54,6 +54,10 @@ img {
     color: var(--f-default);
     font-size: 1rem;
     margin: 0;
+
+    &::first-letter {
+        text-transform: uppercase;
+    }
 }
 
 .second-column {

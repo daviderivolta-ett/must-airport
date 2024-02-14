@@ -17,7 +17,7 @@
 
             <div class="info">
                 <p class="info-title">Priorità</p>
-                <p class="info-value">{{parentReport.priority}}</p>
+                <p class="info-value">{{parentReport.priority.length === 0 ? '-' : parentReport.priority | titlecase}}</p>
             </div>
 
             <div class="info">

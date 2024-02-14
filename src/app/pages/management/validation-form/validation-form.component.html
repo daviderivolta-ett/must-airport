@@ -18,7 +18,7 @@
                     <label for="{{tag.id}}" class="checkbox-single-label">
                         <input type="checkbox" id="{{tag.id}}" [formControlName]="tag.id">
                         <span class="checkmark"></span>
-                        {{tag.name.it}}
+                        {{tag.id}} - {{tag.name.it}}
                     </label>
                 </div>
                 }
@@ -44,7 +44,7 @@
                     <label for="{{subTag.id}}" class="checkbox-single-label">
                         <input type="checkbox" id="{{subTag.id}}" [formControlName]="subTag.id">
                         <span class="checkmark"></span>
-                        {{subTag.name.it}}
+                        {{subTag.id}} - {{subTag.name.it}}
                     </label>
                 </div>
                 }

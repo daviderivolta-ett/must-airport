@@ -7,13 +7,13 @@ import { DictionaryService } from '../../../services/dictionary.service';
 import { ValidationFormComponent } from '../validation-form/validation-form.component';
 import { ReportsService } from '../../../services/reports.service';
 import { FailureTag } from '../../../models/failure-tag.model';
-import { DatePipe, NgClass } from '@angular/common';
+import { DatePipe, NgClass, TitleCasePipe } from '@angular/common';
 import { FailureSubTag } from '../../../models/failure-subtag.model';
 
 @Component({
   selector: 'app-management',
   standalone: true,
-  imports: [ValidationFormComponent, DatePipe, NgClass],
+  imports: [ValidationFormComponent, DatePipe, NgClass, TitleCasePipe],
   templateUrl: './management.component.html',
   styleUrl: './management.component.scss'
 })
