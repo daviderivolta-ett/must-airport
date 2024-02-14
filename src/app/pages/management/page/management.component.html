@@ -1,24 +1,55 @@
 <div class="page">
     <div class="column first-column">
+        <h2>Dettagli segnalazione</h2>
         <div class="img-container">
             <img src="{{parentReport.coverImgUrls}}" alt="Immagine della segnalazione">
         </div>
-        <h2>Dettaglio segnalazione</h2>
-        <div>
-            <p class="info">Prima segnalazione: <span class="value">{{parentReport.creationTime | date: 'dd/MM/yyyy'}} -
-                    h. {{parentReport.creationTime| date: 'HH:mm'}}</span></p>
-            <p class="info">Ultimo aggiornamento: <span class="value">{{parentReport.lastChildTime | date:
-                    'dd/MM/yyyy'}} - h. {{parentReport.lastChildTime| date: 'HH:mm'}}</span></p>
-            <p class="info">Oggetto:
+        <div class="report-details">
+            <div class="info">
+                <p class="info-title">Prima segnalazione</p>
+                <p class="info-value">{{parentReport.creationTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.creationTime| date: 'HH:mm'}}</p>
+            </div>
+
+            <div class="info">
+                <p class="info-title">Ultimo aggiornamento</p>
+                <p class="info-value">{{parentReport.lastChildTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.lastChildTime| date: 'HH:mm'}}</p>
+            </div>
+
+            <div class="info">
+                <p class="info-title">Oggetto</p>
+                <div class="info-value-list">
                 @for (tag of parentReport.fields.tagTechElement; track $index; let last = $last) {
-                <span class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</span>
+                    <p class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</p>
                 }
-            </p>
-            <p class="info">Elemento tecnico:
-                @for (tag of parentReport.fields.subTagTechElement; track $index; let last = $last) {
-                <span class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</span>
-                }
-            </p>
+                </div>
+            </div>
+
+            <div class="info">
+                <p class="info-title">Elemento tecnico</p>
+                <div class="info-value-list">
+                    @for (tag of parentReport.fields.subTagTechElement; track $index; let last = $last) {
+                        <p class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</p>
+                    }
+                </div>
+            </div>
+
+            <div class="info">
+                <p class="info-title">Segnale di guasto</p>
+                <div class="info-value-list">
+                    @for (tag of reportFailureTags; track $index; let last = $last) {
+                        <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.it}}</p>
+                    }
+                </div>
+            </div>
+
+            <div class="info">
+                <p class="info-title">Modo di guasto</p>
+                <div class="info-value-list">
+                    @for (tag of reportFailureSubTags; track $index; let last = $last) {
+                        <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.it}}</p>
+                    }
+                </div>
+            </div>
         </div>
     </div>
     <div class="column second-column">

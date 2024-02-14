@@ -34,7 +34,33 @@ img {
     border-right: 1px solid var(--border-default);
 }
 
+.img-container {
+    margin: 0 0 16px 0;
+}
+
+.info {
+    margin: 0 0 16px 0;
+}
+
+.info-title {
+    color: var(--f-muted);
+    font-size: .8rem;
+    font-weight: 600;
+    margin: 0 0 2px 0;
+}
+
+.info-value {
+    display: inline;
+    color: var(--f-default);
+    font-size: 1rem;
+    margin: 0;
+}
+
 .second-column {
+    overflow-y: hidden;
+}
+
+.third-column {
     overflow-y: hidden;
 }
 

@@ -1,6 +1,6 @@
 import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy, setDoc } from 'firebase/firestore';
 import { ReportParent } from '../models/report-parent.model';
 import { ReportParentFields } from '../models/report-parent.fields.model';
 import { ReportChild } from '../models/report-child.model';
@@ -50,6 +50,12 @@ export interface ReportChildDb {
   verticalId: string;
 }
 
+export interface ValidationFormData {
+  priority: string;
+  techElementTagsForm: { [key: string]: boolean };
+  techElementSubTagsForm: { [key: string]: boolean }
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -93,12 +99,17 @@ export class ReportsService {
     );
   }
 
-  public selectReport(id: string) {   
+  public async setReportById(id: string, data: any): Promise<void> {
+    const ref = doc(this.db, 'reportParents', id);
+    await setDoc(ref, data, { merge: true });
+  }
+
+  public selectReport(id: string) {
     this.selectedReportId = id;
-    if(this.reports.length > 0) {
+    if (this.reports.length > 0) {
       const selectedReport = this.reports.find(report => report.id === this.selectedReportId);
       if (selectedReport) this.selectedReportSignal.set(selectedReport);
-    }    
+    }
   }
 
   // public getParentReportById(id: string | null) {
@@ -219,4 +230,25 @@ export class ReportsService {
     report.subTagFailure = failureSubTags;
     return report;
   }
+
+  public parseValidationFormData(formData: ValidationFormData): any {
+    let parentReport: any = {
+      priority: '',
+      fields: {
+        tag_tech_el: [],
+        sub_tag_tech_el: []
+      }
+    };
+    for (const key in formData.techElementTagsForm) {
+      if (formData.techElementTagsForm[key] === true) parentReport.fields.tag_tech_el.push(key);
+    }
+
+    for (const key in formData.techElementSubTagsForm) {
+      if (formData.techElementSubTagsForm[key] === true) parentReport.fields.sub_tag_tech_el.push(key);
+    }
+
+    parentReport.priority = formData.priority;  
+    return parentReport;
+  }
+
 }

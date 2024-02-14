@@ -3,13 +3,13 @@
 
     <div class="dropdown">
         <button type="button" class="dropdown-toggle" (click)="toggleTechElementTagsForm()" [ngClass]="{'dropdown-toggle-open': isTechElementTagsFormOpen}">
-            Elemento tecnico
+            Oggetto
             <span class="material-symbols-outlined expand-more" [ngClass]="{'expand-more-open': isTechElementTagsFormOpen}">expand_more</span>
         </button>
         @if (techElementTagsForm) {
         <div class="form-group form-tech-element-tags dropdown-content" [ngClass]="{'dropdown-open': isTechElementTagsFormOpen}" formGroupName="techElementTagsForm">
             <div class="dropdown-content-header">
-                <h3>Elemento tecnico</h3>
+                <h3>Oggetto</h3>
                 <span class="material-symbols-outlined close" (click)="closeTechElementTagsForm()">close</span>
             </div>
             <div class="dropdown-content-list">
@@ -29,13 +29,13 @@
 
     <div class="dropdown">
         <button type="button" class="dropdown-toggle" (click)="toggleTechElementSubTagsForm()" [ngClass]="{'dropdown-toggle-open': isTechElementSubTagsFormOpen}" [disabled]="_reportTechElementSubTags.length === 0">
-            Sottoelemento tecnico
+            Elemento tecnico
             <span class="material-symbols-outlined expand-more" [ngClass]="{'expand-more-open': isTechElementSubTagsFormOpen}">expand_more</span>
         </button>
         @if (techElementSubTagsForm) {
         <div class="form-group form-tech-element-subtags dropdown-content" [ngClass]="{'dropdown-open': isTechElementSubTagsFormOpen}" formGroupName="techElementSubTagsForm">
             <div class="dropdown-content-header">
-                <h3>Sottoelemento tecnico</h3>
+                <h3>Elemento tecnico</h3>
                 <span class="material-symbols-outlined close" (click)="closeTechElementSubTagsForm()">close</span>
             </div>
             <div class="dropdown-content-list">

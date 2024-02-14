@@ -7,6 +7,7 @@ import { FailureTag } from '../../../models/failure-tag.model';
 import { ReportChild } from '../../../models/report-child.model';
 import { DictionaryService } from '../../../services/dictionary.service';
 import { TechElementSubTag } from '../../../models/tech-element-subtag.model';
+import { ReportsService } from '../../../services/reports.service';
 
 @Component({
   selector: 'app-validation-form',
@@ -23,7 +24,7 @@ export class ValidationFormComponent {
   @Input() set parentReport(value: ReportParent) {
     if (value && value.id.length > 0) {
       this._parentReport = value;
-      console.log('Parent report:', value);
+      // console.log('Parent report:', value);
       this.initializeTechElementTagsForm();
       this.initializeTechElementSubTagsForm();
     }
@@ -33,7 +34,7 @@ export class ValidationFormComponent {
   @Input() set childrenReport(value: ReportChild[]) {
     if (value && value.length > 0) {
       this._childrenReport = value;
-      console.log('Children reports:', value);
+      // console.log('Children reports:', value);
       // this.initializeFailureTagsForm();
     }
   }
@@ -62,7 +63,7 @@ export class ValidationFormComponent {
   public failureTagsForm!: FormGroup;
   public priorityForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private dictionaryService: DictionaryService) {
+  constructor(private fb: FormBuilder, private dictionaryService: DictionaryService, private reportsService: ReportsService) {
     this.validationForm = this.fb.group({
       priority: ['medium']
     });
@@ -145,7 +146,8 @@ export class ValidationFormComponent {
   }
 
   public handleSubmit(): void {
-    console.log(this.validationForm.value);
+    let data: any = this.reportsService.parseValidationFormData(this.validationForm.value);
+    this.reportsService.setReportById(this._parentReport.id, data);
   }
 
   public toggleTechElementTagsForm(): void {

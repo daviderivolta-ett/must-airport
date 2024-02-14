@@ -95,6 +95,18 @@ h3 {
 
 .dropdown-content-list {
     padding: 12px;
+    box-sizing: border-box;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.dropdown-content-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropdown-content-list::-webkit-scrollbar-thumb {
+    background: var(--bg-subtle);
+    border-radius: 8px;
 }
 
 .dropdown-open {
@@ -164,7 +176,7 @@ input[type="checkbox"]:checked + .checkmark::after {
 }
 
 .priority-title {
-    margin: 0 0 4px 0;
+    margin: 16px 0 4px 0;
 }
 
 .radio-buttons {
