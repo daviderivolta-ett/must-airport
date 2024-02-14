@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { TechElementTag } from '../../../models/tech-element-tag.model';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ReportParent } from '../../../models/report-parent.model';
-import { KeyValuePipe, NgClass } from '@angular/common';
+import { KeyValuePipe, NgClass, TitleCasePipe } from '@angular/common';
 import { FailureTag } from '../../../models/failure-tag.model';
 import { ReportChild } from '../../../models/report-child.model';
 import { DictionaryService } from '../../../services/dictionary.service';
@@ -11,7 +11,7 @@ import { TechElementSubTag } from '../../../models/tech-element-subtag.model';
 @Component({
   selector: 'app-validation-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, KeyValuePipe, NgClass],
+  imports: [ReactiveFormsModule, FormsModule, KeyValuePipe, NgClass, TitleCasePipe],
   templateUrl: './validation-form.component.html',
   styleUrl: './validation-form.component.scss'
 })
@@ -23,7 +23,7 @@ export class ValidationFormComponent {
   @Input() set parentReport(value: ReportParent) {
     if (value && value.id.length > 0) {
       this._parentReport = value;
-      // console.log('Parent reports :', value);
+      console.log('Parent report:', value);
       this.initializeTechElementTagsForm();
       this.initializeTechElementSubTagsForm();
     }
@@ -33,7 +33,7 @@ export class ValidationFormComponent {
   @Input() set childrenReport(value: ReportChild[]) {
     if (value && value.length > 0) {
       this._childrenReport = value;
-      // console.log('Children reports: ', value);
+      console.log('Children reports:', value);
       // this.initializeFailureTagsForm();
     }
   }
@@ -153,8 +153,16 @@ export class ValidationFormComponent {
     if (this.isTechElementTagsFormOpen === true) this.isTechElementSubTagsFormOpen = false;
   }
 
+  public closeTechElementTagsForm(): void {
+    this.isTechElementTagsFormOpen = false;
+  }
+
   public toggleTechElementSubTagsForm(): void {
     this.isTechElementSubTagsFormOpen = !this.isTechElementSubTagsFormOpen;
     if (this.isTechElementSubTagsFormOpen === true) this.isTechElementTagsFormOpen = false;
+  }
+
+  public closeTechElementSubTagsForm(): void {
+    this.isTechElementSubTagsFormOpen = false;
   }
 }
