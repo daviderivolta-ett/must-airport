@@ -9,11 +9,12 @@ import { ReportsService } from '../../../services/reports.service';
 import { FailureTag } from '../../../models/failure-tag.model';
 import { DatePipe, NgClass, TitleCasePipe } from '@angular/common';
 import { FailureSubTag } from '../../../models/failure-subtag.model';
+import { ChildReportCardComponent } from '../../../components/child-report-card/child-report-card.component';
 
 @Component({
   selector: 'app-management',
   standalone: true,
-  imports: [ValidationFormComponent, DatePipe, NgClass, TitleCasePipe],
+  imports: [ChildReportCardComponent, ValidationFormComponent, DatePipe, NgClass, TitleCasePipe],
   templateUrl: './management.component.html',
   styleUrl: './management.component.scss'
 })

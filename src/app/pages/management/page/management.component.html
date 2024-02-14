@@ -17,7 +17,22 @@
 
             <div class="info">
                 <p class="info-title">Priorità</p>
-                <p class="info-value">{{parentReport.priority.length === 0 ? '-' : parentReport.priority | titlecase}}</p>
+                @switch (parentReport.priority) {
+                    @case ("high") {
+                        <p class="info-value">Alta</p>
+                    }
+                    @case ("medium") {
+                        <p class="info-value">Media</p>
+                    }                
+                    @case ("low") {
+                        <p class="info-value">Bassa</p>
+                    }
+                    @default {
+                        <p class="info-value">-</p>
+                    }
+
+                }
+                <!-- <p class="info-value">{{parentReport.priority.length === 0 ? '-' : parentReport.priority | titlecase}}</p> -->
             </div>
 
             <div class="info">
@@ -62,7 +77,8 @@
         <div class="children-report">
             @for (report of childrenReport; track $index) {
             <div class="img-container" style="margin-bottom: 40px;">
-                <img src="{{report.detailPics}}">
+                <!-- <img src="{{report.detailPics}}"> -->
+                <app-child-report-card [childReport]="report" />
             </div>
             }
         </div>
