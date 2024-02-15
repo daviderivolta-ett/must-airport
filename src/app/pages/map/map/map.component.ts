@@ -21,9 +21,9 @@ export class MapComponent {
   constructor(private mapService: MapService, private reportsService: ReportsService, private sidebarService: SidebarService, private dialogService: DialogService) {
     effect(() => {
       this.reports = this.reportsService.reportsSignal();
-      this.geoJsonData = this.mapService.createGeoJson(this.reports);     
-      this.populateMap(this.geoJsonData);      
-    }); 
+      this.geoJsonData = this.mapService.createGeoJson(this.reports);
+      this.populateMap(this.geoJsonData);
+    });
   }
 
   ngOnInit(): void {
@@ -54,26 +54,49 @@ export class MapComponent {
 
   private populateMap(geoJsonData: any): void {
     Leaflet.geoJSON(geoJsonData, {
-      pointToLayer: (feature, latLng) => this.createMarker(latLng).on('click', () => this.onMarkerClick(feature))
+      pointToLayer: (feature, latLng) => this.createMarker(feature, latLng).on('click', () => this.onMarkerClick(feature))
     }).addTo(this.map);
   }
 
-  private createMarker(latLng: Leaflet.LatLng): Leaflet.CircleMarker {
+  private createMarker(feature: any, latLng: Leaflet.LatLng): Leaflet.CircleMarker {
+    const color = this.chooseMarkerColor(feature);
     let options = {
       stroke: true,
       radius: 8,
       weight: 2,
-      color: "#b71b28",
+      color: color,
       opacity: 1,
-      fillColor: "#b71b28",
+      fillColor: color,
       fillOpacity: 0.5
     };
 
     return new Leaflet.CircleMarker(latLng, options);
   }
 
+  private chooseMarkerColor(feature: any): string {
+    let color: string;
+    switch (feature.properties.report.priority) {
+      case 'high':
+        color = 'red';
+        break;
+
+      case 'medium':
+        color = 'orange';
+        break;
+
+      case 'low':
+        color = 'green';
+        break;
+
+      default:
+        color = 'grey';
+        break;
+    }
+    return color;
+  }
+
   private onMarkerClick(feature: any): void {
-    let report: ReportParent = feature.properties;
+    let report: ReportParent = feature.properties.report;
     this.dialogService.report.set(report);
     this.dialogService.isOpen.set(true);
   }

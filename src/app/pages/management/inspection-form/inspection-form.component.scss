@@ -11,14 +11,21 @@ input[type="text"] {
     font-family: 'Noto Sans', sans-serif;
     font-size: .9rem;
     color: var(--f-default);
-    background-color: var(--bg-default);
-    border: 1px solid var(--border-default);
-    border-radius: 4px;
+    background-color: var(--bg-inset);
+    border-width: 0 0 1px 0;
+    border-style: solid;
+    border-color: var(--border-default);
+    border-radius: 0px;
     padding: 12px;
     margin: 0 0 8px 0;
+    
+    &::placeholder {
+        color: var(--f-muted);
+    }
 
     &:focus {
         background-color: var(--bg-subtle);
+        border-radius: 4px;
         outline: none;
         outline-style: solid;
         outline-width: 1px;
@@ -34,14 +41,17 @@ input[type="date"] {
     font-family: 'Noto Sans', sans-serif;
     font-size: .9rem;
     color: var(--f-default);
-    background-color: var(--bg-default);
-    border: 1px solid var(--border-default);
-    border-radius: 4px;
+    background-color: var(--bg-inset);
+    border-width: 0 0 1px 0;
+    border-style: solid;
+    border-color: var(--border-default);
+    border-radius: 0px;
     padding: 12px;
     margin: 0 0 8px 0;
 
     &:focus {
         background-color: var(--bg-subtle);
+        border-radius: 4px;
         outline: none;
         outline-style: solid;
         outline-width: 1px;

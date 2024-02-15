@@ -97,7 +97,7 @@ img {
 }
 
 .info-value.priority.low {
-    background-color: var(--bg-accent);
+    background-color: var(--bg-success);
     border-color: var(--border-subtle);
 }
 
@@ -127,8 +127,10 @@ img {
 }
 
 .children-report {
-    height: calc(100% - 56px);
+    height: 100%;
     overflow-y: auto;
+    padding: 0 0 24px 0;
+    box-sizing: border-box;
 }
 
 .children-report::-webkit-scrollbar {

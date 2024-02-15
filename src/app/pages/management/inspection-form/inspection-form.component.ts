@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { InspectionsService } from '../../../services/inspections.service';
 
 @Component({
   selector: 'app-inspection-form',
@@ -15,9 +16,10 @@ export class InspectionFormComponent {
     type: ['inspection', Validators.required]
   });
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private inspectionsService: InspectionsService) { }
 
   public handleSubmit(): void {
-    console.log(this.inspectionForm.value);
+    let operation: any = this.inspectionsService.parseInspectionFormData(this.inspectionForm.value);
+    console.log(operation);
   }
 }
