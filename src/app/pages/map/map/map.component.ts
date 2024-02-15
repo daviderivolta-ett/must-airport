@@ -1,6 +1,6 @@
 import { Component, Input, effect } from '@angular/core';
 import * as Leaflet from 'leaflet';
-import { MapService } from '../../../services/map.service';
+import { GeoJSONFeature, MapService } from '../../../services/map.service';
 import { SidebarService } from '../../../observables/sidebar.service';
 import { ReportParent } from '../../../models/report-parent.model';
 import { ReportsService } from '../../../services/reports.service';
@@ -22,6 +22,7 @@ export class MapComponent {
     effect(() => {
       this.reports = this.reportsService.reportsSignal();
       this.geoJsonData = this.mapService.createGeoJson(this.reports);
+      console.log(this.geoJsonData);
       this.populateMap(this.geoJsonData);
     });
   }
@@ -58,8 +59,8 @@ export class MapComponent {
     }).addTo(this.map);
   }
 
-  private createMarker(feature: any, latLng: Leaflet.LatLng): Leaflet.CircleMarker {
-    const color = this.chooseMarkerColor(feature);
+  private createMarker(feature: GeoJSONFeature, latLng: Leaflet.LatLng): Leaflet.CircleMarker {
+    const color: string = this.chooseMarkerColor(feature);
     let options = {
       stroke: true,
       radius: 8,
@@ -73,9 +74,9 @@ export class MapComponent {
     return new Leaflet.CircleMarker(latLng, options);
   }
 
-  private chooseMarkerColor(feature: any): string {
+  private chooseMarkerColor(feature: GeoJSONFeature): string {
     let color: string;
-    switch (feature.properties.report.priority) {
+    switch (feature.properties['report'].priority) {
       case 'high':
         color = 'red';
         break;

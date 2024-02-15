@@ -1,7 +1,18 @@
 .card {
     cursor: inherit;
+    position: relative;
 }
 
 .comma::after {
     content: ', ';
+}
+
+.delete {
+    cursor: pointer;
+    position: absolute;
+    bottom: 24px;
+    right: 16px;
+    z-index: 999;
+    color: var(--bg-danger);
+    font-size: 1.3rem;
 }

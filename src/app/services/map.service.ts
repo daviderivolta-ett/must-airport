@@ -1,9 +1,24 @@
 import { Injectable } from '@angular/core';
 import { ReportParent } from '../models/report-parent.model';
 
-interface GeoJsonData {
+export interface Geometry {
   type: string;
-  features: any[];
+  coordinates: number[];
+}
+
+export interface FeatureProperties {
+  [key: string]: any;
+}
+
+export interface GeoJSONFeature {
+  type: "Feature";
+  geometry: Geometry;
+  properties: FeatureProperties;
+}
+
+export interface GeoJsonData {
+  type: "FeatureCollection";
+  features: GeoJSONFeature[];
 }
 
 @Injectable({
