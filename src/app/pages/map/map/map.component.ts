@@ -23,7 +23,6 @@ export class MapComponent {
     effect(() => {
       this.reports = this.reportsService.reportsSignal();
       this.geoJsonData = this.mapService.createGeoJson(this.reports);
-      // console.log(this.geoJsonData);
       this.populateMap(this.geoJsonData);
     });
 
@@ -31,7 +30,6 @@ export class MapComponent {
       this.markersLayer.clearLayers();
       this.reports = this.reportsService.filteredReportsSignal();
       this.geoJsonData = this.mapService.createGeoJson(this.reports);
-      // console.log(this.geoJsonData);
       this.populateMap(this.geoJsonData);
     });
 
