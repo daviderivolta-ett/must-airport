@@ -1,0 +1,16 @@
+<form [formGroup]="inspectionForm" (ngSubmit)="handleSubmit()">
+    <input type="text" formControlName="name" placeholder="Nome e cognome operatore">
+    <input type="date" formControlName="date">
+    <h3 class="type-title">Tipologia</h3>
+    <div class="form-group radio-buttons" formGroupName="type">
+        <div class="radio-single">
+            <input type="radio" id="inspection" value="inspection" formControlName="type">
+            <label class="radio-single-label" for="inspection">Ispezione</label>
+        </div>
+        <div class="radio-single">
+            <input type="radio" id="intervention" value="intervention" formControlName="type">
+            <label class="radio-single-label" for="intervention">Intervento</label>
+        </div>
+    </div>
+    <button type="submit" [disabled]="!inspectionForm.valid">Crea</button>
+</form>

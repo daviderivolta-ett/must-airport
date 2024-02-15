@@ -1,5 +1,6 @@
 :root {
     font-size: 14px;
+    color-scheme: only dark;
     
     --f-default: rgb(230, 237, 243);
     --f-muted: rgb(125, 133, 144);
@@ -111,6 +112,7 @@ h3 {
     border: 1px solid var(--border-default);
     padding: 16px;
     border-radius: 0 0 8px 8px;
+    background-color: var(--bg-default);
 }
 
 .card .details .info {
