@@ -1,8 +1,8 @@
 <form [formGroup]="inspectionForm" (ngSubmit)="handleSubmit()">
-    <input type="text" formControlName="name" placeholder="Nome e cognome operatore">
+    <input type="text" formControlName="operator" placeholder="Nome e cognome operatore">
     <input type="date" formControlName="date">
     <h3 class="type-title">Tipologia</h3>
-    <div class="form-group radio-buttons" formGroupName="type">
+    <div class="form-group radio-buttons">
         <div class="radio-single">
             <input type="radio" id="inspection" value="inspection" formControlName="type">
             <label class="radio-single-label" for="inspection">Ispezione</label>

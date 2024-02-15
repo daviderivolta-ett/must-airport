@@ -56,7 +56,7 @@
             </div>
 
             <div class="info">
-                <p class="info-title">Segnale di guasto</p>
+                <p class="info-title">Segnali di guasto</p>
                 <div class="info-value-list">
                     @if (reportFailureTags.length === 0) {
                         <p class="info-value">-</p>
@@ -70,7 +70,7 @@
             </div>
 
             <div class="info">
-                <p class="info-title">Modo di guasto</p>
+                <p class="info-title">Modalità di guasto</p>
                 <div class="info-value-list">
                     @if (reportFailureSubTags.length === 0) {
                         <p class="info-value">-</p>
@@ -101,7 +101,7 @@
             [parentReport]="parentReport" [childrenReport]="childrenReport" />
     </div>
     <div class="column fourth-column">
-        <h2>Segnalazioni ed interventi</h2>
+        <h2>Ispezioni ed interventi</h2>
         <app-inspection-form />
     </div>
 </div>

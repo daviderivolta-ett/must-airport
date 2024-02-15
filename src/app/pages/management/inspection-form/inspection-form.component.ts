@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-inspection-form',
@@ -10,11 +10,9 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 })
 export class InspectionFormComponent {
   public inspectionForm = this.fb.group({
-    name: ['', Validators.required],
+    operator: ['', Validators.required],
     date: [null, Validators.required],
-    type: this.fb.group({
-      type: ['inspection', Validators.required]
-    })
+    type: ['inspection', Validators.required]
   });
 
   constructor(private fb: FormBuilder) { }
