@@ -9,6 +9,7 @@ import { TechElementTag } from '../models/tech-element-tag.model';
 import { TechElementSubTag } from '../models/tech-element-subtag.model';
 import { FailureTag } from '../models/failure-tag.model';
 import { FailureSubTag } from '../models/failure-subtag.model';
+import { PRIORITY, Priority } from '../models/priority.model';
 
 export interface ReportParentDb {
   childFlowId: string;
@@ -140,7 +141,7 @@ export class ReportsService {
     r.lastChildTime = report.lastChildTime.toDate();
     r.location = report.location;
     r.parentFlowId = report.parentFlowId;
-    report.priority ? r.priority = report.priority : '';
+    r.priority = Priority.parsePriorities(report.priority);
     r.userId = report.userId;
     r.verticalId = report.verticalId;
     r.id = id;

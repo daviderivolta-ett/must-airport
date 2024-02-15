@@ -1,6 +1,7 @@
 import { GeoPoint, Timestamp } from 'firebase/firestore';
 import { ReportParentFields } from './report-parent.fields.model';
 import { TechElementSubTag } from './tech-element-subtag.model';
+import { PRIORITY } from './priority.model';
 
 export class ReportParent {
     [key: string]: any;
@@ -19,7 +20,7 @@ export class ReportParent {
     lastChildTime: Date;
     location: GeoPoint;
     parentFlowId: string;
-    priority: string;
+    priority: PRIORITY;
     userId: string;
     verticalId: string
     id: string;
@@ -39,7 +40,7 @@ export class ReportParent {
         lastChildTime: Timestamp,
         location: GeoPoint,
         parentFlowId: string,
-        priority: string,
+        priority: PRIORITY,
         userId: string,
         verticalId: string,
         id: string
@@ -80,7 +81,7 @@ export class ReportParent {
             Timestamp.now(),
             new GeoPoint(44.415229489227684, 8.845336246602141),
             '',
-            '',
+            PRIORITY.NotAssigned,
             '',
             '',
             ''
