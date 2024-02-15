@@ -119,8 +119,7 @@ img {
 }
 
 .info {
-    font-weight: 600;
-    margin: 0 0 4px 0;
+    margin: 0 0 8px 0;
     color: var(--f-subtle);
 }
 
@@ -128,9 +127,18 @@ img {
     margin: 0;
 }
 
+.info-title {
+    font-size: .8rem;
+    font-weight: 600;
+    margin: 0 0 2px 0;
+}
+
 .info-value {
+    font-size: 1rem;
+    display: inline;
     font-weight: 400;
     color: var(--f-default);
+    margin: 0;
 }
 
 .comma::after {

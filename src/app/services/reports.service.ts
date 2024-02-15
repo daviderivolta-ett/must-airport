@@ -207,8 +207,8 @@ export class ReportsService {
     r.detailPics = report.foto_dettaglio;
     r.language = report.language;
     r.parentId = report.parentId;
-    r.subTagFailure = report.sub_tag_failure;
-    r.tagFailure = report.tag_failure;
+    r.subTagFailure = report.sub_tag_failure || [];
+    r.tagFailure = report.tag_failure || [];
     r.userId = report.userId;
     r.verticalId = report.verticalId;
 
@@ -216,7 +216,7 @@ export class ReportsService {
   }
 
   public populateFailureTags(report: ReportChild): ReportChild {
-    let tagIds: string[] = report.tagFailure as string[];
+    let tagIds: string[] = report.tagFailure as string[];   
     let failureTags: FailureTag[] = tagIds.map((id: string) => {
       return this.dictionaryService.getFailureTagById(id);
     });

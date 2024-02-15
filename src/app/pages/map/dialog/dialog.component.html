@@ -10,35 +10,43 @@
                     <div class="img-container">
                         <img src="{{parentReport.coverImgUrls[0]}}" alt="">
                     </div>
-                        <div class="parent-report-title-section">
-                            <h2 class="parent-report-title">Dettaglio segnalazione</h2>
-                            <button type="button" (click)="navigateTo(parentReport.id)">
-                                Gestisci
-                                <span class="material-symbols-outlined">more_horiz</span>
-                            </button>
+                    <div class="parent-report-title-section">
+                        <h2 class="parent-report-title">Dettaglio segnalazione</h2>
+                        <button type="button" (click)="navigateTo(parentReport.id)">
+                            Gestisci
+                            <span class="material-symbols-outlined">more_horiz</span>
+                        </button>
+                    </div>
+                    <div class="parent-report-details">
+                        <div class="info">
+                            <p class="info-title">Prima segnalazione</p>
+                            <p class="info-value">{{parentReport.creationTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.creationTime | date: 'HH:mm'}}</p>
                         </div>
-                        <div class="parent-report-details">
-                        <p class="info">Prima segnalazione: <span class="info-value">{{parentReport.creationTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.creationTime | date: 'HH:mm'}}</span></p>
-                        <p class="info">Ultimo aggiornamento: <span class="info-value">{{parentReport.lastChildTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.lastChildTime | date: 'HH:mm'}}</span></p>
-                        <p class="info">Oggetto:
-                        @for (tag of parentReport.fields.tagTechElement; track $index; let last = $last) {
-                            <span class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</span>
-                        }
-                        </p>
-                        <p class="info">Elemento tecnico:
-                        @for (tag of parentReport.fields.subTagTechElement; track $index; let last = $last) {
-                            <span class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</span>
-                        }
-                        </p>
+                        <div class="info">
+                            <p class="info-title">Ultimo aggiornamento</p>
+                            <p class="info-value">{{parentReport.lastChildTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.lastChildTime | date: 'HH:mm'}}</p>
+                        </div>
+                        <div class="info">
+                            <p class="info-title">Oggetto</p>
+                            @for (tag of parentReport.fields.tagTechElement; track $index; let last = $last) {
+                            <p class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</p>
+                            }
+                        </div>
+                        <div class="info">
+                            <p class="info-title">Elemento tecnico</p>
+                            @for (tag of parentReport.fields.subTagTechElement; track $index; let last = $last) {
+                            <p class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</p>
+                            }
+                        </div>
                     </div>
                 </div>
                 <div class="column children-report-column">
                     <h2 class="children-report-title">Report ({{parentReport.childrenIds.length}})</h2>
                     <div class="children-report">
-                    @for (childReport of childrenReport; track $index) {
-                    <!-- <app-dialog-card [childReport]="childReport"/> -->
-                    <app-child-report-card [childReport]="childReport"/>
-                    }
+                        @for (childReport of childrenReport; track $index) {
+                        <!-- <app-dialog-card [childReport]="childReport"/> -->
+                        <app-child-report-card [childReport]="childReport" />
+                        }
                     </div>
                 </div>
             </div>

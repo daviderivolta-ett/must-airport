@@ -208,6 +208,18 @@ input[type="radio"]:hover + .radio-single-label {
     background-color: var(--bg-subtle);
 }
 
+input[type="radio"]:checked + .radio-single-label.low {
+    background-color: var(--bg-accent);
+}
+
+input[type="radio"]:checked + .radio-single-label.medium {
+    background-color: var(--bg-attention);
+}
+
+input[type="radio"]:checked + .radio-single-label.high {
+    background-color: var(--bg-danger);
+}
+
 .radio-single-label {
     cursor: pointer;
     padding: 8px;

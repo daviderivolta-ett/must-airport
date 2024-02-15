@@ -2,14 +2,6 @@
     cursor: inherit;
 }
 
-img {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 8px;
-    object-fit: contain;
-}
-
 .comma::after {
     content: ', ';
 }
