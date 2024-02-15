@@ -10,6 +10,7 @@ import { TechElementSubTag } from '../models/tech-element-subtag.model';
 import { FailureTag } from '../models/failure-tag.model';
 import { FailureSubTag } from '../models/failure-subtag.model';
 import { PRIORITY, Priority } from '../models/priority.model';
+import { Language } from '../models/language.mode';
 
 export interface ReportParentDb {
   childFlowId: string;
@@ -137,7 +138,7 @@ export class ReportsService {
     r.descriptionSelections = report.descriptionSelections;
     r.descriptionText = report.descriptionText;
     r.fields = this.parseParentReportsFields(report.fields as ReportParentFieldsDb);
-    r.language = report.language;
+    r.language = Language.parseLanguage(report.language);
     r.lastChildTime = report.lastChildTime.toDate();
     r.location = report.location;
     r.parentFlowId = report.parentFlowId;

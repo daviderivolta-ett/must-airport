@@ -2,6 +2,7 @@ import { GeoPoint, Timestamp } from 'firebase/firestore';
 import { ReportParentFields } from './report-parent.fields.model';
 import { TechElementSubTag } from './tech-element-subtag.model';
 import { PRIORITY } from './priority.model';
+import { LANGUAGE } from './language.mode';
 
 export class ReportParent {
     [key: string]: any;
@@ -16,7 +17,7 @@ export class ReportParent {
     descriptionSelections: string[] | TechElementSubTag[];
     descriptionText: string;
     fields: ReportParentFields;
-    language: string;
+    language: LANGUAGE;
     lastChildTime: Date;
     location: GeoPoint;
     parentFlowId: string;
@@ -36,7 +37,7 @@ export class ReportParent {
         descriptionSelections: string[] | TechElementSubTag[],
         descriptionText: string,
         fields: ReportParentFields,
-        language: string,
+        language: LANGUAGE,
         lastChildTime: Timestamp,
         location: GeoPoint,
         parentFlowId: string,
@@ -77,7 +78,7 @@ export class ReportParent {
             [],
             '',
             ReportParentFields.createEmpty(),
-            '',
+            LANGUAGE.Italian,
             Timestamp.now(),
             new GeoPoint(44.415229489227684, 8.845336246602141),
             '',
