@@ -1,0 +1,26 @@
+<div class="dropdown">
+    <button type="button" class="dropdown-toggle" (click)="toggleFilters()">
+        Filtri
+        <span class="material-symbols-outlined expand-more">expand_more</span>
+    </button>
+    <div class="form-group dropdown-content" [ngClass]="{'dropdown-open': isOpen}" [formGroup]="filtersForm">
+        <div>
+            <div>
+                <input type="radio" value="high" id="high" formControlName="priority">
+                <label for="high">Alta</label>
+            </div>
+            <div>
+                <input type="radio" value="medium" id="medium" formControlName="priority">
+                <label for="medium">Media</label>
+            </div>
+            <div>
+                <input type="radio" value="low" id="low" formControlName="priority">
+                <label for="low">Bassa</label>
+            </div>
+            <div>
+                <input type="radio" value="not-assigned" id="not-assigned" formControlName="priority">
+                <label for="not-assigned">Non validata</label>
+            </div>
+        </div>
+    </div>
+</div>

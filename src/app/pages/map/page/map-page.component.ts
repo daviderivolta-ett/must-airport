@@ -22,5 +22,10 @@ export class MapPageComponent {
       this.reports = this.reportsService.reportsSignal();
       // console.log(this.reports);
     });
+
+    effect(() => {
+      this.reports = this.reportsService.filteredReportsSignal();
+      console.log(this.reports);      
+    });
   }
 }

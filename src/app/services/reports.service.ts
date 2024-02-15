@@ -59,17 +59,24 @@ export interface ValidationFormData {
   techElementSubTagsForm: { [key: string]: boolean }
 }
 
+export interface FiltersFormData {
+  priority: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ReportsService {
   public reportsSignal: WritableSignal<ReportParent[]> = signal([]);
   public reports: ReportParent[] = [];
+  public filteredReportsSignal: WritableSignal<ReportParent[]> = signal([]);
+  public filteredReports: ReportParent[] = [];
   public selectedReportSignal: WritableSignal<ReportParent> = signal(ReportParent.createEmpty());
   public selectedReportId: string = '';
 
   constructor(private db: Firestore, private dictionaryService: DictionaryService) {
     effect(() => this.reports = this.reportsSignal());
+    effect(() => this.filteredReports = this.filteredReportsSignal());
   }
 
   public async getAllParentReports() {
@@ -113,6 +120,13 @@ export class ReportsService {
       const selectedReport = this.reports.find(report => report.id === this.selectedReportId);
       if (selectedReport) this.selectedReportSignal.set(selectedReport);
     }
+  }
+
+  public filterReports(filters: FiltersFormData) {
+    let priority = filters.priority;
+    priority === 'not-assigned' ? priority = '' : priority;
+    const filteredReports = this.reports.filter(report => report.priority === priority);
+    this.filteredReportsSignal.set(filteredReports);
   }
 
   // public getParentReportById(id: string | null) {

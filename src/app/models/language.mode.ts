@@ -16,7 +16,7 @@ export class Language {
                 break;
 
             default:
-                language = LANGUAGE.Italian
+                language = LANGUAGE.Italian;
                 break;
         }
         return language;

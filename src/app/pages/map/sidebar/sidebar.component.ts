@@ -3,11 +3,12 @@ import { NgClass } from '@angular/common';
 import { SidebarService } from '../../../observables/sidebar.service';
 import { ReportParent } from '../../../models/report-parent.model';
 import { SidebarCardComponent } from '../sidebar-card/sidebar-card.component';
+import { FiltersComponent } from '../../../components/filters/filters.component';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [NgClass, SidebarCardComponent],
+  imports: [NgClass, SidebarCardComponent, FiltersComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })

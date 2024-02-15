@@ -5,6 +5,7 @@
     <div class="header">
         <h1>Tutte le segnalazioni</h1>
     </div>
+    <app-filters />
     <div class="sidebar-content">
         @for (report of reports; track report.id) {
         <app-sidebar-card [report]="report" />

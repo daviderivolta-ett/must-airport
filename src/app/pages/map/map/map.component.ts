@@ -16,19 +16,30 @@ import { DialogService } from '../../../observables/dialog.service';
 export class MapComponent {
   public reports: ReportParent[] = [];
   private geoJsonData: any;
+  private markersLayer = Leaflet.layerGroup();
   private map!: Leaflet.Map;
 
   constructor(private mapService: MapService, private reportsService: ReportsService, private sidebarService: SidebarService, private dialogService: DialogService) {
     effect(() => {
       this.reports = this.reportsService.reportsSignal();
       this.geoJsonData = this.mapService.createGeoJson(this.reports);
-      console.log(this.geoJsonData);
+      // console.log(this.geoJsonData);
       this.populateMap(this.geoJsonData);
     });
+
+    effect(() => {
+      this.markersLayer.clearLayers();
+      this.reports = this.reportsService.filteredReportsSignal();
+      this.geoJsonData = this.mapService.createGeoJson(this.reports);
+      // console.log(this.geoJsonData);
+      this.populateMap(this.geoJsonData);
+    });
+
   }
 
   ngOnInit(): void {
     this.initMap();
+    this.map.addLayer(this.markersLayer);
   }
 
   private initMap(): void {
@@ -56,7 +67,7 @@ export class MapComponent {
   private populateMap(geoJsonData: any): void {
     Leaflet.geoJSON(geoJsonData, {
       pointToLayer: (feature, latLng) => this.createMarker(feature, latLng).on('click', () => this.onMarkerClick(feature))
-    }).addTo(this.map);
+    }).addTo(this.markersLayer);
   }
 
   private createMarker(feature: GeoJSONFeature, latLng: Leaflet.LatLng): Leaflet.CircleMarker {
