@@ -88,9 +88,6 @@
         <h2>Aggiornamenti</h2>
         <div class="children-report">
             @for (report of childrenReport; track $index) {
-            <!-- <div class="img-container" style="margin-bottom: 40px;">
-                <img src="{{report.detailPics}}">
-            </div> -->
             <app-child-report-card [childReport]="report" />
             }
         </div>

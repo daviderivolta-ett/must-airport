@@ -133,6 +133,15 @@ img {
     box-sizing: border-box;
 }
 
+app-child-report-card {
+    display: block;
+    margin: 0 0 24px 0;
+}
+
+app-child-report-card:last-child {
+    margin: 0;
+}
+
 .children-report::-webkit-scrollbar {
     display: none;
 }
