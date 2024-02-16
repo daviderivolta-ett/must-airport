@@ -1,0 +1,48 @@
+p {
+    margin: 0;
+}
+
+.dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--bg-subtle);
+    z-index: 99999;
+    border: 1px solid var(--border-emphasis);
+    border-radius: 4px;
+    min-width: 360px;
+}
+
+.info {
+    padding: 24px;
+}
+
+button {
+    cursor: pointer;
+    font-family: 'Noto Sans', sans-serif;
+    padding: 8px;
+    width: 50%;
+    background-color: var(--bg-subtle);
+    border-style: solid;
+    border-color: var(--border-emphasis);
+}
+
+.cancel-button {
+    border-radius: 0 0 0 4px;
+    border-width: 1px 1px 0 0;
+
+    &:hover {
+        background-color: var(--bg-default);
+    }
+}
+
+.delete-button {
+    border-radius: 0 0 4px 0;
+    border-width: 1px 0 0 0;
+    color: var(--f-danger);
+
+    &:hover {
+        background-color: var(--bg-danger-dull);
+    }
+}

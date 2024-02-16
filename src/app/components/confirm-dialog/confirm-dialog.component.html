@@ -1,1 +1,10 @@
-<p>confirm-dialog works!</p>
+<div class="dialog">
+    <div class="info">
+        <p>Sicuro di voler eliminare l'aggiornamento?</p>
+        <p>Questa operazione non è reversibile.</p>
+    </div>
+    <div class="buttons">
+        <button (click)="cancel()" class="cancel-button">No, annulla</button>
+        <button (click)="confirm()" class="delete-button">Sì, elimina</button>
+    </div>
+</div>
