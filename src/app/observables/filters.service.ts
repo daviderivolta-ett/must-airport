@@ -5,7 +5,6 @@ import { FiltersFormData } from '../services/reports.service';
   providedIn: 'root'
 })
 export class FiltersService {
-  public isOpen: boolean = false;
   public filtersLastState: FiltersFormData = {
     notAssigned: true,
     low: true,
