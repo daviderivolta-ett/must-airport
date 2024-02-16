@@ -3,7 +3,7 @@ import { NgClass } from '@angular/common';
 import { SidebarService } from '../../../observables/sidebar.service';
 import { ReportParent } from '../../../models/report-parent.model';
 import { SidebarCardComponent } from '../sidebar-card/sidebar-card.component';
-import { FiltersComponent } from '../../../components/filters/filters.component';
+import { FiltersComponent } from '../filters/filters.component';
 
 @Component({
   selector: 'app-sidebar',

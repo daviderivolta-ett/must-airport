@@ -4,14 +4,13 @@ import { ReportParent } from '../../../models/report-parent.model';
 import { ReportChild } from '../../../models/report-child.model';
 import { ReportsService } from '../../../services/reports.service';
 import { DatePipe, NgClass } from '@angular/common';
-import { DialogCardComponent } from '../dialog-card/dialog-card.component';
 import { Router, RouterLink } from '@angular/router';
 import { ChildReportCardComponent } from '../../../components/child-report-card/child-report-card.component';
 
 @Component({
   selector: 'app-dialog',
   standalone: true,
-  imports: [DialogCardComponent, ChildReportCardComponent, DatePipe, NgClass, RouterLink],
+  imports: [ChildReportCardComponent, DatePipe, NgClass, RouterLink],
   templateUrl: './dialog.component.html',
   styleUrl: './dialog.component.scss'
 })
@@ -44,13 +43,7 @@ export class DialogComponent {
   }
 
   public navigateTo(id: string): void {
-    this.router.navigate(['/gestione', id],
-    // {
-    //   state: {
-    //     parentReport: this.parentReport,
-    //     childrenReport: this.childrenReport
-    //   }
-    // }
-    )
+    this.router.navigate(['/gestione', id]);
+    this.closeDialog();
   }
 }
