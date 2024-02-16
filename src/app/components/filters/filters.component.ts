@@ -11,13 +11,16 @@ import { FiltersFormData, ReportsService } from '../../services/reports.service'
   styleUrl: './filters.component.scss'
 })
 export class FiltersComponent {
-  public filtersForm = this.fb.group({
-    priority: ['low']
+  public filterForm = this.fb.group({
+    notAssigned: [true],
+    low: [true],
+    medium: [true],
+    high: [true]
   });
   public isOpen: boolean = false;
 
   constructor(private fb: FormBuilder, private reportsService: ReportsService) {
-    this.filtersForm.valueChanges.subscribe(changes => this.reportsService.filterReports(changes as FiltersFormData));
+    this.filterForm.valueChanges.subscribe(changes =>this.reportsService.filterReports(this.filterForm.value as FiltersFormData));
   }
 
   public toggleFilters(): void {

@@ -60,7 +60,12 @@ export interface ValidationFormData {
 }
 
 export interface FiltersFormData {
-  priority: string;
+  // priority: string;
+  [key: string]: boolean;
+  notAssigned: boolean,
+  low: boolean,
+  medium: boolean,
+  high: boolean
 }
 
 @Injectable({
@@ -123,9 +128,15 @@ export class ReportsService {
   }
 
   public filterReports(filters: FiltersFormData) {
-    let priority = filters.priority;
-    priority === 'not-assigned' ? priority = '' : priority;
-    const filteredReports = this.reports.filter(report => report.priority === priority);
+    let filteredReports: ReportParent[] = [];
+    for (const key in filters) {
+      if (filters[key] === false) continue;
+      if (key === 'notAssigned' && filters[key] === true) {        
+        filteredReports = filteredReports.concat(this.reports.filter(report => report.priority === undefined || report.priority === PRIORITY.NotAssigned));
+      } else if (filters[key] === true) {
+        filteredReports = filteredReports.concat(this.reports.filter(report => report.priority === key));
+      }
+    }
     this.filteredReportsSignal.set(filteredReports);
   }
 
@@ -232,7 +243,7 @@ export class ReportsService {
   }
 
   public populateFailureTags(report: ReportChild): ReportChild {
-    let tagIds: string[] = report.tagFailure as string[];   
+    let tagIds: string[] = report.tagFailure as string[];
     let failureTags: FailureTag[] = tagIds.map((id: string) => {
       return this.dictionaryService.getFailureTagById(id);
     });

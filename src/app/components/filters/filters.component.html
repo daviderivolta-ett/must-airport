@@ -3,24 +3,22 @@
         Filtri
         <span class="material-symbols-outlined expand-more">expand_more</span>
     </button>
-    <div class="form-group dropdown-content" [ngClass]="{'dropdown-open': isOpen}" [formGroup]="filtersForm">
-        <div>
-            <div>
-                <input type="radio" value="high" id="high" formControlName="priority">
-                <label for="high">Alta</label>
-            </div>
-            <div>
-                <input type="radio" value="medium" id="medium" formControlName="priority">
-                <label for="medium">Media</label>
-            </div>
-            <div>
-                <input type="radio" value="low" id="low" formControlName="priority">
-                <label for="low">Bassa</label>
-            </div>
-            <div>
-                <input type="radio" value="not-assigned" id="not-assigned" formControlName="priority">
-                <label for="not-assigned">Non validata</label>
-            </div>
+    <div class="form-group dropdown-content" [ngClass]="{'dropdown-open': isOpen}" [formGroup]="filterForm">
+        <div class="checkbox-single">
+            <input type="checkbox" id="not-assigned2" formControlName="notAssigned">
+            <label for="not-assigned2">Non assegnata</label>
+        </div>
+        <div class="checkbox-single">
+            <input type="checkbox" id="low2" formControlName="low">
+            <label for="low2">Bassa</label>
+        </div>
+        <div class="checkbox-single">
+            <input type="checkbox" id="medium2" formControlName="medium">
+            <label for="medium2">Media</label>
+        </div>
+        <div class="checkbox-single">
+            <input type="checkbox" id="high2" formControlName="high">
+            <label for="high2">Alta</label>
         </div>
     </div>
 </div>

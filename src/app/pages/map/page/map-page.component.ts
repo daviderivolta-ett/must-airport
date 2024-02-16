@@ -25,7 +25,7 @@ export class MapPageComponent {
 
     effect(() => {
       this.reports = this.reportsService.filteredReportsSignal();
-      console.log(this.reports);      
+      // console.log(this.reports);      
     });
   }
 }
