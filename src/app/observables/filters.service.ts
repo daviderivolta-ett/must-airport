@@ -10,6 +10,8 @@ export class FiltersService {
       low: true,
       medium: true,
       high: true,
+      initialDate: null,
+      endingDate: null
   };
 
   constructor() { }

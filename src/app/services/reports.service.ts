@@ -65,8 +65,23 @@ export interface FiltersFormData {
   low: boolean;
   medium: boolean;
   high: boolean;
-  // initialDate: Date | null;
-  // endingDate: Date | null;
+  initialDate: Date | null;
+  endingDate: Date | null;
+}
+
+export interface ParsedFiltersFormData {
+  priority: {
+    [key: string]: any;
+    notAssigned: boolean;
+    low: boolean;
+    medium: boolean;
+    high: boolean;
+  },
+  date: {
+    [key: string]: any;
+    initialDate: Date | null;
+    endingDate: Date | null;
+  }
 }
 
 @Injectable({
@@ -128,29 +143,29 @@ export class ReportsService {
     }
   }
 
-  public filterReports(filters: FiltersFormData) {
-    // console.log(this.reports);
+  public filterReports(filters: ParsedFiltersFormData): void {
     let filteredReports: ReportParent[] = [];
-    for (const key in filters) {
-      if (filters[key] === false || filters[key] === null) continue;
-      if (key === 'notAssigned' && filters[key] === true) {
+    let priorityData = filters.priority;
+    for (const key in priorityData) {
+      if (priorityData[key] === false) continue;
+      if (key === 'notAssigned' && priorityData[key] === true) {
         filteredReports = filteredReports.concat(this.reports.filter(report => report.priority === undefined || report.priority === PRIORITY.NotAssigned));
-      } else if (filters[key] === true) {
+      } else if (priorityData[key] === true) {
         filteredReports = filteredReports.concat(this.reports.filter(report => report.priority === key));
+      }
+    }
+    let dateData = filters.date;
+    for (const key in dateData) {
+      if (dateData[key] === null) continue;
+      if (key === 'initialDate' && dateData[key] !== null) {
+        filteredReports = filteredReports.filter(report => report.creationTime > dateData[key]!)
+      }
+      if (key === 'endingDate' && dateData[key] !== null) {
+        filteredReports = filteredReports.filter(report => report.creationTime < dateData[key]!)
       }
     }
     this.filteredReportsSignal.set(filteredReports);
   }
-
-  // public getParentReportById(id: string | null) {
-  //   let reports = this.reports();
-  //   let report = ReportParent.createEmpty();
-  //   reports.forEach((r: ReportParent) => {    
-  //     if (r.id === id) report = r;
-  //   });
-  //   console.log(reports);
-  //   return report;
-  // }
 
   public parseParentReport(id: string, report: ReportParentDb): ReportParent {
     let r = ReportParent.createEmpty();
