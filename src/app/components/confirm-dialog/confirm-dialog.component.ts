@@ -2,11 +2,12 @@ import { Component, ElementRef, Input } from '@angular/core';
 import { ReportChild } from '../../models/report-child.model';
 import { ConfirmDialogService } from '../../observables/confirm-dialog.service';
 import { ReportsService } from '../../services/reports.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,
-  imports: [],
+  imports: [DatePipe],
   templateUrl: './confirm-dialog.component.html',
   styleUrl: './confirm-dialog.component.scss'
 })
