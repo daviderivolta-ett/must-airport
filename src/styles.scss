@@ -102,7 +102,7 @@ h3 {
     border-bottom: none;
 }
 
-.card .details {
+.card .card-body {
     // font-size: 0.9rem;
     border: 1px solid var(--border-default);
     padding: 16px;
@@ -110,26 +110,62 @@ h3 {
     background-color: var(--bg-default);
 }
 
-.card .details .info {
+.card .card-body .info {
     // font-weight: 600;
-    margin: 0 0 8px 0;
+    margin: 0 0 4px 0;
     color: var(--f-subtle);
 }
 
-.card .details .info:last-child {
+.card .card-body .info:last-child {
     margin: 0;
 }
 
-.card .details .info .info-title {
-    font-size: .8rem;
+.card .card-body .info .info-title {
+    font-size: 1rem;
     font-weight: 600;
     margin: 0 0 2px 0;
 }
 
-.card .details .info .info-value {
+.card .card-body .info .info-value {
     font-size: 1rem;
     display: inline;
     font-weight: 400;
     color: var(--f-default);
     margin: 0;
+}
+
+.card .card-body .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 16px 0 0 0;
+}
+
+.card .card-body .card-footer .icon-wrapper {
+    cursor: pointer;
+      height: 32px;
+      width: 32px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 100px;
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+
+      &:hover {
+        background-color: var(--bg-danger-dull);
+      }
+}
+
+.card .card-body .card-footer .icon-wrapper .delete {
+    color: var(--bg-danger);
+    font-size: 1.1rem;
+}
+
+.card .card-body .card-footer .date {
+    font-size: .9rem;
+    font-style: italic;
+    margin: 0;
+    color: var(--f-default);
 }

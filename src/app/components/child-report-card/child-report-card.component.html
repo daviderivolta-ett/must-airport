@@ -1,38 +1,41 @@
 <div class="card" #card>
-    <span class="material-symbols-outlined delete" (click)="iconClick()">delete</span>
     <div class="img-container">
         <img src="{{childReport.detailPics[0]}}" alt="Immagine del report">
     </div>
-    <div class="details">
-        <div class="info">
-            <p class="info-title">Data</p>
-            <p class="info-value">{{childReport.creationTime | date: 'dd/MM/yyyy'}} - h. {{childReport.creationTime | date: 'HH:mm'}}</p>
-        </div>
-        <div class="info">
-            <p class="info-title">Segnale di guasto</p>
-            @if (childReport.tagFailure.length === 0) {
-                <p class="info-value">-</p>
-            }
-            @else {
-                @for (failureTag of childReport.tagFailure; track $index; let last = $last) {
-                    <p class="info-value" [ngClass]="{'comma': !last}">{{$any(failureTag).name.it}}</p>
+    <div class="card-body">
+        <div class="card-details">
+            <div class="info">
+                <span class="info-title">Segnale di guasto: </span>
+                @if (childReport.tagFailure.length === 0) {
+                <span class="info-value">-</span>
                 }
-            }
-        </div>
-        <div class="info">
-            <p class="info-title">Modo di guasto</p>
-            @if (childReport.subTagFailure.length === 0) {
-                <p class="info-value">-</p>
-            }
-            @else {
-                @for (failureSubTag of childReport.subTagFailure; track $index; let last = $last) {
-                    <p class="info-value" [ngClass]="{'comma': !last}">{{$any(failureSubTag).name.it}}</p>
+                @else {
+                    @for (failureTag of childReport.tagFailure; track $index; let last = $last) {
+                    <span class="info-value" [ngClass]="{'comma': !last}">{{$any(failureTag).name.it}}</span>
+                    }
                 }
-            }
+            </div>
+            <div class="info">
+                <span class="info-title">Modo di guasto: </span>
+                @if (childReport.subTagFailure.length === 0) {
+                <span class="info-value">-</span>
+                }
+                @else {
+                    @for (failureSubTag of childReport.subTagFailure; track $index; let last = $last) {
+                    <span class="info-value" [ngClass]="{'comma': !last}">{{$any(failureSubTag).name.it}}</span>
+                    }
+                }
+            </div>
+            <div class="info">
+                <span class="info-title">Commento: </span>
+                <span class="info-value">{{childReport.comment}}</span>
+            </div>
         </div>
-        <div class="info">
-            <p class="info-title">Commento</p>
-            <p class="info-value">{{childReport.comment}}</p>
+        <div class="card-footer">
+            <p class="date">{{childReport.creationTime | date: 'dd/MM/yyyy'}} - h. {{childReport.creationTime | date: 'HH:mm'}}</p>
+            <div class="icon-wrapper" (click)="iconClick()">
+                <span class="material-symbols-outlined delete">delete</span>
+            </div>
         </div>
     </div>
 </div>
