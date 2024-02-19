@@ -11,6 +11,8 @@ import { FailureTag } from '../models/failure-tag.model';
 import { FailureSubTag } from '../models/failure-subtag.model';
 import { PRIORITY, Priority } from '../models/priority.model';
 import { Language } from '../models/language.mode';
+import { StorageReference, ref } from 'firebase/storage';
+import { Storage } from '@angular/fire/storage';
 
 export interface ReportParentDb {
   childFlowId: string;
@@ -95,7 +97,7 @@ export class ReportsService {
   public selectedReportSignal: WritableSignal<ReportParent> = signal(ReportParent.createEmpty());
   public selectedReportId: string = '';
 
-  constructor(private db: Firestore, private dictionaryService: DictionaryService) {
+  constructor(private db: Firestore, private storage: Storage, private dictionaryService: DictionaryService) {
     effect(() => this.reports = this.reportsSignal());
     effect(() => this.filteredReports = this.filteredReportsSignal());
   }
@@ -165,6 +167,10 @@ export class ReportsService {
       }
     }
     this.filteredReportsSignal.set(filteredReports);
+  }
+
+  public getImageReference(url: string): StorageReference {
+    return ref(this.storage, url);
   }
 
   public parseParentReport(id: string, report: ReportParentDb): ReportParent {
