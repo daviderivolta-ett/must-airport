@@ -19,15 +19,6 @@ export class ConfirmDialogComponent {
   }
 
   public async confirm(): Promise<void> {
-    // this.childReport.detailPics.forEach(url => {
-    //   let imgRef = this.reportsService.getImageReference(url);
-    //   this.reportsService.deleteImage(imgRef);
-    // });
-    
-    // let parentReport = await this.reportsService.getParentReportById(this.childReport.parentId);
-    // parentReport.childrenIds = parentReport.childrenIds.filter(id => id !== this.childReport.id);
-    // this.reportsService.setReportById(this.childReport.parentId, parentReport);
-    // this.reportsService.deleteChildReportBydId(this.childReport.id);
     await this.reportsService.deleteChildReportBydId(this.childReport.id);
     this.close();
   }

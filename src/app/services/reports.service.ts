@@ -286,7 +286,6 @@ export class ReportsService {
       let parentReport = await this.getParentReportById(childReport.parentId);
       parentReport.childrenIds = parentReport.childrenIds.filter(id => id !== childReport.id);
       this.setReportById(childReport.parentId, parentReport);
-      // await this.deleteChildReportBydId(childReport.id);
       await deleteDoc(doc(this.db, 'reportChildren', id))
     } catch (error) {
       console.error(error);

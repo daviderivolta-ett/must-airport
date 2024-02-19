@@ -16,6 +16,8 @@ export class InspectionFormComponent {
     type: ['inspection', Validators.required]
   });
 
+  public today: Date = new Date(Date.now());
+
   constructor(private fb: FormBuilder, private inspectionsService: InspectionsService) { }
 
   public handleSubmit(): void {

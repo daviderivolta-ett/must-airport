@@ -176,7 +176,7 @@ input[type="checkbox"]:checked + .checkmark::after {
 }
 
 .priority-title {
-    margin: 16px 0 4px 0;
+    margin: 16px 0 8px 0;
 }
 
 .radio-buttons {
@@ -210,7 +210,7 @@ input[type="radio"]:hover + .radio-single-label {
 
 .radio-single-label {
     cursor: pointer;
-    padding: 8px;
+    padding: 4px;
     font-size: .9rem;
     display: block;
     text-align: center;
@@ -243,7 +243,7 @@ button[type="submit"] {
     color: var(--f-default);
     background-color: var(--bg-success);
     width: 100%;
-    padding: 12px;
+    padding: 8px;
 
     &:hover {
         background-color: var(--bg-success-emphasis);

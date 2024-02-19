@@ -1,6 +1,6 @@
 <form [formGroup]="inspectionForm" (ngSubmit)="handleSubmit()">
     <input type="text" formControlName="operator" placeholder="Nome e cognome operatore">
-    <input type="date" formControlName="date">
+    <input min="{{today.toISOString().split('T')[0]}}" type="date" formControlName="date">
     <h3 class="type-title">Tipologia</h3>
     <div class="form-group radio-buttons">
         <div class="radio-single">
