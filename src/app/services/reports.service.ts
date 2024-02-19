@@ -1,6 +1,6 @@
 import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy, setDoc } from 'firebase/firestore';
+import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy, setDoc, deleteDoc } from 'firebase/firestore';
 import { ReportParent } from '../models/report-parent.model';
 import { ReportParentFields } from '../models/report-parent.fields.model';
 import { ReportChild } from '../models/report-child.model';
@@ -11,7 +11,7 @@ import { FailureTag } from '../models/failure-tag.model';
 import { FailureSubTag } from '../models/failure-subtag.model';
 import { PRIORITY, Priority } from '../models/priority.model';
 import { Language } from '../models/language.mode';
-import { StorageReference, ref } from 'firebase/storage';
+import { StorageReference, deleteObject, getMetadata, ref } from 'firebase/storage';
 import { Storage } from '@angular/fire/storage';
 
 export interface ReportParentDb {
@@ -173,6 +173,34 @@ export class ReportsService {
     return ref(this.storage, url);
   }
 
+  public deleteImage(imgRef: StorageReference): void {
+    getMetadata(imgRef)
+      .then(() => {
+        deleteObject(imgRef)
+          .then(() => {
+            console.log('Immagine cancellata correttamente.');
+          })
+          .catch(error => {
+            console.log('Errore nella cancellazione dell\'immagine!');
+            console.log(error);
+          });
+      })
+      .catch(error => {
+        console.log('L\'oggetto non esiste.');
+      });
+  }
+  
+
+  public async getParentReportById(id: string): Promise<ReportParentDb> {
+    const q = doc(this.db, 'reportParents', id);
+    const snapshot = await getDoc(q);
+    if (snapshot.exists()) {
+      return snapshot.data() as ReportParentDb;
+    } else {
+      throw new Error('Report non trovato');
+    }
+  }
+
   public parseParentReport(id: string, report: ReportParentDb): ReportParent {
     let r = ReportParent.createEmpty();
 
@@ -240,14 +268,32 @@ export class ReportsService {
     const snapshot = await getDoc(q);
     if (snapshot.exists()) {
       const r = snapshot.data() as ReportChildDb;
-      const report: ReportChild = this.parseChildReport(r);
+      const report: ReportChild = this.parseChildReport(id, r);
       return report;
     } else {
       throw new Error('Report non trovato');
     }
   }
 
-  private parseChildReport(report: ReportChildDb): ReportChild {
+  public async deleteChildReportBydId(id: string): Promise<void> {
+    try {
+      let childReport: ReportChild = await this.getChildReportById(id);
+      childReport.detailPics.forEach(url => {
+        let imgRef = this.getImageReference(url);
+        this.deleteImage(imgRef);
+      });
+
+      let parentReport = await this.getParentReportById(childReport.parentId);
+      parentReport.childrenIds = parentReport.childrenIds.filter(id => id !== childReport.id);
+      this.setReportById(childReport.parentId, parentReport);
+      // await this.deleteChildReportBydId(childReport.id);
+      await deleteDoc(doc(this.db, 'reportChildren', id))
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  private parseChildReport(id: string, report: ReportChildDb): ReportChild {
     let r = ReportChild.createEmpty();
 
     r.closure = report.closure;
@@ -261,6 +307,7 @@ export class ReportsService {
     r.tagFailure = report.tag_failure || [];
     r.userId = report.userId;
     r.verticalId = report.verticalId;
+    r.id = id;
 
     return r;
   }

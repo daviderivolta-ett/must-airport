@@ -14,6 +14,7 @@ export class ReportChild {
     tagFailure: string[] | FailureTag[];
     userId: string;
     verticalId: string;
+    id: string;
 
     constructor(
         closure: boolean,
@@ -26,7 +27,8 @@ export class ReportChild {
         subTagFailure: string[] | FailureSubTag[],
         tagFailure: string[] | FailureTag[],
         userId: string,
-        verticalId: string
+        verticalId: string,
+        id: string
     ) {
         this.closure = closure;
         this.comment = comment || '-';
@@ -39,6 +41,7 @@ export class ReportChild {
         this.tagFailure = tagFailure;
         this.userId = userId;
         this.verticalId = verticalId;
+        this.id = id
     }
 
     static createEmpty(): ReportChild {
@@ -52,6 +55,7 @@ export class ReportChild {
             '',
             [],
             [],
+            '',
             '',
             ''
         )

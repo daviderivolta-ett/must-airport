@@ -36,8 +36,8 @@ export class ManagementComponent {
         if (report.tagFailure != undefined) report = this.reportsService.populateFailureTags(report);
         if (report.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
       });
-      // console.log(this.parentReport);
-      // console.log(this.childrenReport);
+      console.log(this.parentReport);
+      console.log(this.childrenReport);
 
       this.discardDuplicatedReportFailureTags(this.childrenReport);
       this.discardDuplicatedReportFailureSubTags(this.childrenReport);
