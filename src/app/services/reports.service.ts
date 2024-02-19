@@ -60,12 +60,13 @@ export interface ValidationFormData {
 }
 
 export interface FiltersFormData {
-  // priority: string;
-  [key: string]: boolean;
-  notAssigned: boolean,
-  low: boolean,
-  medium: boolean,
-  high: boolean
+  [key: string]: any;
+  notAssigned: boolean;
+  low: boolean;
+  medium: boolean;
+  high: boolean;
+  // initialDate: Date | null;
+  // endingDate: Date | null;
 }
 
 @Injectable({
@@ -128,10 +129,11 @@ export class ReportsService {
   }
 
   public filterReports(filters: FiltersFormData) {
+    // console.log(this.reports);
     let filteredReports: ReportParent[] = [];
     for (const key in filters) {
-      if (filters[key] === false) continue;
-      if (key === 'notAssigned' && filters[key] === true) {        
+      if (filters[key] === false || filters[key] === null) continue;
+      if (key === 'notAssigned' && filters[key] === true) {
         filteredReports = filteredReports.concat(this.reports.filter(report => report.priority === undefined || report.priority === PRIORITY.NotAssigned));
       } else if (filters[key] === true) {
         filteredReports = filteredReports.concat(this.reports.filter(report => report.priority === key));
@@ -279,5 +281,4 @@ export class ReportsService {
     parentReport.priority = formData.priorityForm['priority'];
     return parentReport;
   }
-
 }

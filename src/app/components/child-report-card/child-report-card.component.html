@@ -32,7 +32,7 @@
             </div>
         </div>
         <div class="card-footer">
-            <p class="date">{{childReport.creationTime | date: 'dd/MM/yyyy'}} - h. {{childReport.creationTime | date: 'HH:mm'}}</p>
+            <p class="date">{{childReport.creationTime | date: 'dd/MM/yyyy'}} - h:{{childReport.creationTime | date: 'HH:mm'}}</p>
             <div class="icon-wrapper" (click)="iconClick()">
                 <span class="material-symbols-outlined delete">delete</span>
             </div>

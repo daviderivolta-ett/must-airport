@@ -5,24 +5,33 @@
         <span class="material-symbols-outlined filter">filter_list</span>
     </button>
     <div class="form-group dropdown-content" [ngClass]="{'dropdown-open': isOpen}" [formGroup]="filterForm">
-        <h3 class="priority-title">Priorità</h3>
-        <div class="checkbox-list">
-            <div class="checkbox-single">
-                <input type="checkbox" id="low" formControlName="low">
-                <label for="low" class="checkbox-single-label">Bassa</label>
+        <div class="priority">
+            <h3 class="priority-title">Priorità</h3>
+            <div class="checkbox-list">
+                <div class="checkbox-single">
+                    <input type="checkbox" id="low" formControlName="low">
+                    <label for="low" class="checkbox-single-label">Bassa</label>
+                </div>
+                <div class="checkbox-single">
+                    <input type="checkbox" id="medium" formControlName="medium">
+                    <label for="medium" class="checkbox-single-label">Media</label>
+                </div>
+                <div class="checkbox-single">
+                    <input type="checkbox" id="high" formControlName="high">
+                    <label for="high" class="checkbox-single-label">Alta</label>
+                </div>
             </div>
-            <div class="checkbox-single">
-                <input type="checkbox" id="medium" formControlName="medium">
-                <label for="medium" class="checkbox-single-label">Media</label>
-            </div>
-            <div class="checkbox-single">
-                <input type="checkbox" id="high" formControlName="high">
-                <label for="high" class="checkbox-single-label">Alta</label>
+            <div class="checkbox-single isolated">
+                <input type="checkbox" id="not-assigned" formControlName="notAssigned">
+                <label for="not-assigned" class="checkbox-single-label">Non validate</label>
             </div>
         </div>
-        <div class="checkbox-single isolated">
-            <input type="checkbox" id="not-assigned" formControlName="notAssigned">
-            <label for="not-assigned" class="checkbox-single-label">Non validate</label>
+        <div class="date-selection">
+            <h3 class="date-selection-title">Range date</h3>
+            <div class="date-inputs">
+                <input type="date" min="2024-01-01" max="{{today.toISOString().split('T')[0]}}">
+                <input type="date" min="2024-01-01" max="{{today.toISOString().split('T')[0]}}">
+            </div>
         </div>
     </div>
 </div>

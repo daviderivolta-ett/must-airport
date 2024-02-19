@@ -6,10 +6,10 @@ import { FiltersFormData } from '../services/reports.service';
 })
 export class FiltersService {
   public filtersLastState: FiltersFormData = {
-    notAssigned: true,
-    low: true,
-    medium: true,
-    high: true,
+      notAssigned: true,
+      low: true,
+      medium: true,
+      high: true,
   };
 
   constructor() { }

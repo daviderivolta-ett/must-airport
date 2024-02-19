@@ -19,6 +19,7 @@ export class FiltersComponent {
     high: [true]
   });
   public isOpen: boolean = false;
+  public today: Date = new Date(Date.now());
 
   constructor(private fb: FormBuilder, private filtersService: FiltersService, private reportsService: ReportsService) {
     this.filterForm.valueChanges.subscribe(changes => {
