@@ -5,7 +5,6 @@ import { ReportsService } from '../../../services/reports.service';
 import { ReportParent } from '../../../models/report-parent.model';
 import { TechElementTag } from '../../../models/tech-element-tag.model';
 import { DialogComponent } from '../dialog/dialog.component';
-import { CloseEscapeDirective } from '../../../directives/close-escape.directive';
 
 @Component({
   selector: 'app-map-page',
