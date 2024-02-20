@@ -9,12 +9,12 @@
         <div class="report-details">
             <div class="info">
                 <p class="info-title">Prima segnalazione</p>
-                <p class="info-value">{{parentReport.creationTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.creationTime| date: 'HH:mm'}}</p>
+                <p class="info-value">{{parentReport.creationTime | date: 'dd/MM/yyyy'}} - h:{{parentReport.creationTime| date: 'HH:mm'}}</p>
             </div>
 
             <div class="info">
                 <p class="info-title">Ultimo aggiornamento</p>
-                <p class="info-value">{{parentReport.lastChildTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.lastChildTime| date: 'HH:mm'}}</p>
+                <p class="info-value">{{parentReport.lastChildTime | date: 'dd/MM/yyyy'}} - h:{{parentReport.lastChildTime| date: 'HH:mm'}}</p>
             </div>
 
             <div class="info">
@@ -34,7 +34,6 @@
                     }
 
                 }
-                <!-- <p class="info-value">{{parentReport.priority.length === 0 ? '-' : parentReport.priority | titlecase}}</p> -->
             </div>
 
             <div class="info">
@@ -88,14 +87,13 @@
         <h2>Aggiornamenti</h2>
         <div class="children-report">
             @for (report of childrenReport; track $index) {
-            <app-child-report-card [childReport]="report" />
+            <app-child-report-card [childReport]="report" [parentReport]="parentReport" />
             }
         </div>
     </div>
     <div class="column third-column">
         <h2>Scheda validazione</h2>
-        <app-validation-form [techElementTags]="techElementTags" [failureTags]="failureTags"
-            [parentReport]="parentReport" [childrenReport]="childrenReport" />
+        <app-validation-form [techElementTags]="techElementTags" [failureTags]="failureTags" [parentReport]="parentReport" [childrenReport]="childrenReport" />
     </div>
     <div class="column fourth-column">
         <h2>Ispezioni ed interventi</h2>

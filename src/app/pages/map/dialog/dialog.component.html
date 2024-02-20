@@ -44,8 +44,7 @@
                     <h2 class="children-report-title">Report ({{parentReport.childrenIds.length}})</h2>
                     <div class="children-report">
                         @for (childReport of childrenReport; track $index) {
-                        <!-- <app-dialog-card [childReport]="childReport"/> -->
-                        <app-child-report-card [childReport]="childReport" />
+                        <app-child-report-card [childReport]="childReport" [parentReport]="parentReport"/>
                         }
                     </div>
                 </div>

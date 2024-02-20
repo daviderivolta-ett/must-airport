@@ -3,6 +3,8 @@ import { ApplicationRef, Component, ElementRef, Input, ViewChild, createComponen
 import { ReportChild } from '../../models/report-child.model';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { ConfirmDialogService } from '../../observables/confirm-dialog.service';
+import { ReportParent } from '../../models/report-parent.model';
+import { ReportParentDb, ReportsService } from '../../services/reports.service';
 
 @Component({
   selector: 'app-child-report-card',
@@ -13,9 +15,10 @@ import { ConfirmDialogService } from '../../observables/confirm-dialog.service';
 })
 export class ChildReportCardComponent {
   @ViewChild('card') card: ElementRef | undefined;
-  @Input() childReport: ReportChild = ReportChild.createEmpty();
+  @Input() public childReport: ReportChild = ReportChild.createEmpty();
+  @Input() public parentReport: ReportParent = ReportParent.createEmpty();
 
-  constructor(private applicationRef: ApplicationRef, private confirmDialogService: ConfirmDialogService) { }
+  constructor(private applicationRef: ApplicationRef, private confirmDialogService: ConfirmDialogService, private reportsService: ReportsService) { }
 
   public ngOnInit():void {
     this.card?.nativeElement;
