@@ -3,6 +3,7 @@ import { ReportChild } from '../../models/report-child.model';
 import { ConfirmDialogService } from '../../observables/confirm-dialog.service';
 import { ReportsService } from '../../services/reports.service';
 import { DatePipe } from '@angular/common';
+import { SnackbarService } from '../../observables/snackbar.service';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -15,12 +16,19 @@ export class ConfirmDialogComponent {
   public host: HTMLElement | null = document.querySelector('#confirm-dialog');
   public childReport: ReportChild = ReportChild.createEmpty();
 
-  constructor(private el: ElementRef, private confirmDialogService: ConfirmDialogService, private reportsService: ReportsService) {
+  constructor(private el: ElementRef, private confirmDialogService: ConfirmDialogService, private reportsService: ReportsService, private snackbarService: SnackbarService) {
     this.childReport = this.confirmDialogService.childReport;
   }
 
   public async confirm(): Promise<void> {
-    await this.reportsService.deleteChildReportBydId(this.childReport.id);
+    let msg: string;
+    try {      
+      await this.reportsService.deleteChildReportBydId(this.childReport.id);
+      msg = 'Aggiornamento eliminato con successo';
+    } catch (error) {
+      msg = 'Si è verificato un problema con l\'eliminazione dell\'aggiornamento. Riprovare.';
+      this.snackbarService.createSnackbar(msg, 'error');
+    }
     this.close();
   }
 
