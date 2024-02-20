@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+import { OperationDb } from '../models/operation.model';
+import { Timestamp } from 'firebase/firestore';
 
-export interface inspectionFormData {
+export interface InspectionFormData {
   date: string;
   operator: string;
   type: string;
@@ -13,10 +15,10 @@ export class InspectionsService {
 
   constructor() { }
 
-  public parseInspectionFormData(formData: any): any {
-    let operation: any = {
+  public parseInspectionFormData(formData: any): OperationDb {
+    let operation: OperationDb = {
       operatorName: formData.operator,
-      date: new Date(formData.date).getTime(),
+      date: Timestamp.fromDate(new Date(formData.date)),
       type: formData.type
     }
     return operation;

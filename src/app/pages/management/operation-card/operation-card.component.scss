@@ -1,0 +1,42 @@
+p {
+    margin: 0;
+}
+
+.operation {
+    padding: 16px;
+    background-color: var(--bg-default);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.type {
+    font-weight: 600;
+    margin: 0 0 2px 0;
+}
+
+.info {
+    font-size: .9rem;
+}
+
+button {
+    cursor: pointer;
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+        border-color: var(--border-emphasis);
+    }
+}
+
+.copy {
+    font-size: 1.2rem;
+}

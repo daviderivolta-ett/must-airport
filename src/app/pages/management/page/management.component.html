@@ -97,6 +97,17 @@
     </div>
     <div class="column fourth-column">
         <h2>Ispezioni ed interventi</h2>
-        <app-inspection-form />
+        <app-inspection-form [parentReport]="parentReport" />
+        
+            @if (parentReport.operations.length === 0) {
+                <p>Nessun intervento creato</p>
+            }
+            @else {
+                <div class="operations">
+                @for (operation of parentReport.operations; track $index) {
+                    <app-operation-card [operation]="operation"/>
+                }
+                </div>
+            }
     </div>
 </div>

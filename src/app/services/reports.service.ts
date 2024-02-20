@@ -1,6 +1,6 @@
 import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy, setDoc, deleteDoc } from 'firebase/firestore';
+import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy, setDoc, deleteDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { ReportParent } from '../models/report-parent.model';
 import { ReportParentFields } from '../models/report-parent.fields.model';
 import { ReportChild } from '../models/report-child.model';
@@ -10,9 +10,10 @@ import { TechElementSubTag } from '../models/tech-element-subtag.model';
 import { FailureTag } from '../models/failure-tag.model';
 import { FailureSubTag } from '../models/failure-subtag.model';
 import { PRIORITY, Priority } from '../models/priority.model';
-import { Language } from '../models/language.mode';
+import { Language } from '../models/language.model';
 import { StorageReference, deleteObject, getMetadata, ref } from 'firebase/storage';
 import { Storage } from '@angular/fire/storage';
+import { OPERATIONTYPE, Operation, OperationDb } from '../models/operation.model';
 
 export interface ReportParentDb {
   childFlowId: string;
@@ -31,7 +32,8 @@ export interface ReportParentDb {
   parentFlowId: string;
   priority?: string;
   userId: string;
-  verticalId: string
+  verticalId: string,
+  operations: OperationDb[]
 }
 
 export interface ReportParentFieldsDb {
@@ -133,8 +135,21 @@ export class ReportsService {
   }
 
   public async setReportById(id: string, data: any): Promise<void> {
-      const ref = doc(this.db, 'reportParents', id);
-      await setDoc(ref, data, { merge: true }); 
+    const ref = doc(this.db, 'reportParents', id);
+    await setDoc(ref, data, { merge: true });
+  }
+
+  public async setOperationsByReportId(id: string, operation: OperationDb): Promise<void> {
+    // console.log(await this.getParentReportById(id));
+    // console.log(operation);
+    let parentReport: ReportParentDb = await this.getParentReportById(id);
+    if (!parentReport.operations) parentReport.operations = [];
+    let operations: OperationDb[] = parentReport.operations;
+
+    const ref = doc(this.db, 'reportParents', id);
+    await updateDoc(ref, {
+      operations: arrayUnion(operation)
+    })
   }
 
   public selectReport(id: string) {
@@ -189,7 +204,6 @@ export class ReportsService {
         console.log('L\'oggetto non esiste.');
       });
   }
-  
 
   public async getParentReportById(id: string): Promise<ReportParentDb> {
     const q = doc(this.db, 'reportParents', id);
@@ -223,6 +237,14 @@ export class ReportsService {
     r.verticalId = report.verticalId;
     r.id = id;
 
+    if (report.operations) {
+      r.operations = report.operations.map((operation: OperationDb) => {
+        return this.parseParentReportOperation(operation);
+      });
+    } else {
+      r.operations = [];
+    }
+
     return r;
   }
 
@@ -235,6 +257,28 @@ export class ReportsService {
     if (fields.sub_tag_tech_el !== undefined) f.subTagTechElement = fields.sub_tag_tech_el;
 
     return f;
+  }
+
+  private parseParentReportOperation(operation: OperationDb): Operation {
+    let o = Operation.createEmpty();
+
+    if (operation.date !== undefined) o.date = operation.date.toDate();
+    if (operation.operatorName !== undefined) o.operatorName = operation.operatorName;
+    if (operation.type !== undefined) {
+      switch (operation.type) {
+        case 'intervention':
+          o.type = OPERATIONTYPE.Intervention;
+          break;
+        case 'inspection':
+          o.type = OPERATIONTYPE.Inspection;
+          break;
+        default:
+          o.type = OPERATIONTYPE.Inspection;
+          break;
+      }
+    }
+
+    return o;
   }
 
   public async populateChildrenReports(ids: string[]): Promise<ReportChild[]> {

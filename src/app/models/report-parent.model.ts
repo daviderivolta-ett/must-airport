@@ -2,7 +2,8 @@ import { GeoPoint, Timestamp } from 'firebase/firestore';
 import { ReportParentFields } from './report-parent.fields.model';
 import { TechElementSubTag } from './tech-element-subtag.model';
 import { PRIORITY } from './priority.model';
-import { LANGUAGE } from './language.mode';
+import { LANGUAGE } from './language.model';
+import { Operation } from './operation.model';
 
 export class ReportParent {
     [key: string]: any;
@@ -24,7 +25,9 @@ export class ReportParent {
     priority: PRIORITY;
     userId: string;
     verticalId: string
+
     id: string;
+    operations: Operation[];
 
     constructor(
         childFlowId: string,
@@ -44,7 +47,8 @@ export class ReportParent {
         priority: PRIORITY,
         userId: string,
         verticalId: string,
-        id: string
+        id: string,
+        operations: Operation[]
     ) {
         this.childFlowId = childFlowId;
         this.childrenIds = childrenIds;
@@ -64,6 +68,7 @@ export class ReportParent {
         this.userId = userId;
         this.verticalId = verticalId;
         this.id = id;
+        this.operations = operations;
     }
 
     static createEmpty(): ReportParent {
@@ -85,7 +90,8 @@ export class ReportParent {
             PRIORITY.NotAssigned,
             '',
             '',
-            ''
+            '',
+            []
         )
     }
 }

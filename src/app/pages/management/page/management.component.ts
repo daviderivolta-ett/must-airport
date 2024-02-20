@@ -11,11 +11,12 @@ import { DatePipe, NgClass, TitleCasePipe } from '@angular/common';
 import { FailureSubTag } from '../../../models/failure-subtag.model';
 import { ChildReportCardComponent } from '../../../components/child-report-card/child-report-card.component';
 import { InspectionFormComponent } from '../inspection-form/inspection-form.component';
+import { OperationCardComponent } from '../operation-card/operation-card.component';
 
 @Component({
   selector: 'app-management',
   standalone: true,
-  imports: [ChildReportCardComponent, ValidationFormComponent, InspectionFormComponent, DatePipe, NgClass, TitleCasePipe],
+  imports: [ChildReportCardComponent, ValidationFormComponent, InspectionFormComponent, OperationCardComponent, DatePipe, NgClass, TitleCasePipe],
   templateUrl: './management.component.html',
   styleUrl: './management.component.scss'
 })
@@ -37,7 +38,7 @@ export class ManagementComponent {
         if (report.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
       });
       console.log(this.parentReport);
-      console.log(this.childrenReport);
+      // console.log(this.childrenReport);
 
       this.discardDuplicatedReportFailureTags(this.childrenReport);
       this.discardDuplicatedReportFailureSubTags(this.childrenReport);
