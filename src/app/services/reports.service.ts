@@ -133,8 +133,8 @@ export class ReportsService {
   }
 
   public async setReportById(id: string, data: any): Promise<void> {
-    const ref = doc(this.db, 'reportParents', id);
-    await setDoc(ref, data, { merge: true });
+      const ref = doc(this.db, 'reportParents', id);
+      await setDoc(ref, data, { merge: true }); 
   }
 
   public selectReport(id: string) {

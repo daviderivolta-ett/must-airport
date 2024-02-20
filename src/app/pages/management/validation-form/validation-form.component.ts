@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ApplicationRef, Component, Input, createComponent } from '@angular/core';
 import { TechElementTag } from '../../../models/tech-element-tag.model';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReportParent } from '../../../models/report-parent.model';
@@ -8,6 +8,7 @@ import { ReportChild } from '../../../models/report-child.model';
 import { DictionaryService } from '../../../services/dictionary.service';
 import { TechElementSubTag } from '../../../models/tech-element-subtag.model';
 import { ReportsService } from '../../../services/reports.service';
+import { SnackbarService } from '../../../observables/snackbar.service';
 
 @Component({
   selector: 'app-validation-form',
@@ -64,7 +65,7 @@ export class ValidationFormComponent {
   public failureTagsForm!: FormGroup;
   public priorityForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private dictionaryService: DictionaryService, private reportsService: ReportsService) {
+  constructor(private fb: FormBuilder, private dictionaryService: DictionaryService, private reportsService: ReportsService, private snackbarService: SnackbarService) {
     this.validationForm = this.fb.group({});
   }
 
@@ -136,7 +137,6 @@ export class ValidationFormComponent {
     this.validationForm.setControl('techElementSubTagsForm', this.techElementSubTagsForm);
   }
 
-
   private initializeFailureTagsForm(): void {
     this.failureTagsForm = this.fb.group({});
     for (const failureTag of this._failureTags) {
@@ -153,7 +153,14 @@ export class ValidationFormComponent {
   public handleSubmit(): void {
     console.log(this.validationForm.value);
     let data: any = this.reportsService.parseValidationFormData(this.validationForm.value);
-    this.reportsService.setReportById(this._parentReport.id, data);
+    let msg: string;
+    try {
+      this.reportsService.setReportById(this._parentReport.id, data);
+      msg = 'Modifica salvata con successo';
+    } catch (error) {
+      msg = 'C\'è stato un errore nel salvataggio del report. Riprovare!'
+    }    
+    this.snackbarService.createSnackbar(msg);
   }
 
   public toggleTechElementTagsForm(): void {

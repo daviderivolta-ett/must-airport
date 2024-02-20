@@ -1,7 +1,7 @@
 :root {
     font-size: 14px;
     color-scheme: only dark;
-    
+
     --f-default: rgb(230, 237, 243);
     --f-muted: rgb(125, 133, 144);
     --f-subtle: rgb(110, 118, 129);
@@ -42,7 +42,8 @@
     --border-default: rgb(48, 54, 61);
     --border-subtle: rgba(240, 246, 252, 0.1);
     --border-muted: rgb(33, 38, 45);
-    --border-emphasis: rgba(139, 148, 158);
+    --border-emphasis: rgb(139, 148, 158);
+    --border-success-dull: rgba(46, 160, 67, .4)
 }
 
 body,
@@ -143,19 +144,19 @@ h3 {
 
 .card .card-body .card-footer .icon-wrapper {
     cursor: pointer;
-      height: 32px;
-      width: 32px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 100px;
-      position: absolute;
-      right: 8px;
-      bottom: 8px;
+    height: 32px;
+    width: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100px;
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
 
-      &:hover {
+    &:hover {
         background-color: var(--bg-danger-dull);
-      }
+    }
 }
 
 .card .card-body .card-footer .icon-wrapper .delete {

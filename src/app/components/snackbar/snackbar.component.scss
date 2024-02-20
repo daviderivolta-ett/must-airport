@@ -1,0 +1,42 @@
+.snackbar {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 4px;
+    padding: 16px;
+    min-width: 350px;
+}
+
+:host(.success) {
+    .snackbar {
+        background-color: var(--bg-success-dull);
+        border: 1px solid var(--border-success-dull);
+
+        button {
+            color: var(--f-default);
+            background-color: var(--border-success-dull);
+
+            &:hover {
+                background-color: var(--bg-success);
+            }
+        }
+    }
+}
+
+.content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+p {
+    margin: 0;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 12px;
+}
