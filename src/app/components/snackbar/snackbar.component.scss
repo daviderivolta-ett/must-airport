@@ -24,6 +24,22 @@
     }
 }
 
+:host(.error) {
+    .snackbar {
+        background-color: var(--bg-danger-dull);
+        border: 1px solid var(--border-danger-dull);
+
+        button {
+            color: var(--f-default);
+            background-color: var(--border-danger-dull);
+
+            &:hover {
+                background-color: var(--bg-danger);
+            }
+        }
+    }
+}
+
 .content {
     display: flex;
     justify-content: space-between;

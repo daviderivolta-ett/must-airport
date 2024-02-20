@@ -157,10 +157,11 @@ export class ValidationFormComponent {
     try {
       this.reportsService.setReportById(this._parentReport.id, data);
       msg = 'Modifica salvata con successo';
+      this.snackbarService.createSnackbar(msg);
     } catch (error) {
       msg = 'C\'è stato un errore nel salvataggio del report. Riprovare!'
+      this.snackbarService.createSnackbar(msg, 'error');
     }    
-    this.snackbarService.createSnackbar(msg);
   }
 
   public toggleTechElementTagsForm(): void {
