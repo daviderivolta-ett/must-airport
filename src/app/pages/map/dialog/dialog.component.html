@@ -1,5 +1,5 @@
 @if (isOpen) {
-<div class="dialog">
+<div class="dialog" appCloseEscape (closeEscape)="closeDialog()">
     <div class="backdrop-overlay" (click)="closeDialog()">
         <div class="modal-content" (click)="$event.stopPropagation()">
             <div class="close-icon-wrapper" (click)="closeDialog()">

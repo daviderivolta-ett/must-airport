@@ -6,11 +6,12 @@ import { ReportsService } from '../../../services/reports.service';
 import { DatePipe, NgClass } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ChildReportCardComponent } from '../../../components/child-report-card/child-report-card.component';
+import { CloseEscapeDirective } from '../../../directives/close-escape.directive';
 
 @Component({
   selector: 'app-dialog',
   standalone: true,
-  imports: [ChildReportCardComponent, DatePipe, NgClass, RouterLink],
+  imports: [ChildReportCardComponent, DatePipe, NgClass, RouterLink, CloseEscapeDirective],
   templateUrl: './dialog.component.html',
   styleUrl: './dialog.component.scss'
 })
