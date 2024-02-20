@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
+import { Auth, getAuth, signInAnonymously, onAuthStateChanged, GoogleAuthProvider } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class AuthService {
 
     signInAnonymously(this.auth)
       .then(() => {
-        // console.log('You\'re logged in anonymously!');
+        console.log('You\'re logged in anonymously!');
       })
       .catch(error => {
         const errorCode = error.code;
@@ -24,11 +24,11 @@ export class AuthService {
 
     onAuthStateChanged(this.auth, (user) => {
       if (user) {
-        // console.log('User is signed in!');
-        // console.log('User: ', user);
+        console.log('User is signed in!');
+        console.log('User: ', user);
             
       } else {
-        // console.log('User is signed out!');
+        console.log('User is signed out!');
       }
     });
   }

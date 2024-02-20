@@ -8,6 +8,10 @@ img {
     width: 100%;
 }
 
+h2 {
+    margin: 0 0 16px 0;
+}
+
 .comma::after {
     content: ', ';
 }
@@ -18,7 +22,7 @@ img {
     display: flex;
     // gap: 24px;
     height: 100%;
-    height: calc(100% - 56px);
+    height: calc(100% - 57px);
 }
 
 .column {
@@ -62,6 +66,10 @@ img {
 
 .info {
     margin: 0 0 16px 0;
+
+    &:last-child {
+        margin: 0;
+    }
 }
 
 .info-title {
@@ -121,7 +129,7 @@ img {
     overflow-y: hidden;
 }
 
-.forth-column {
+.fourth-column {
     // width: 20%;
     overflow-y: hidden;
 }
@@ -144,4 +152,45 @@ app-child-report-card:last-child {
 
 .children-report::-webkit-scrollbar {
     display: none;
+}
+
+@media screen and (max-width: 1024px) {
+    .page {
+        height: auto;
+        flex-wrap: wrap;
+    }
+
+    .column {
+        width: 50%;
+        border-bottom: 1px solid var(--border-default);
+    }
+
+    .first-column {
+        order: 1;
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid var(--border-default);
+    }
+
+    .second-column {
+        order: 3;
+    }
+
+    .third-column {
+        order: 2;
+    }
+
+    .fourth-column {
+        order: 4;
+    }
+
+    .children-report {
+        padding: 0;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .column {
+        width: 100%;
+    }
 }
