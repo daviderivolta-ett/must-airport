@@ -1,6 +1,6 @@
 import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy, setDoc, deleteDoc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy, setDoc, deleteDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { ReportParent } from '../models/report-parent.model';
 import { ReportParentFields } from '../models/report-parent.fields.model';
 import { ReportChild } from '../models/report-child.model';
@@ -139,19 +139,6 @@ export class ReportsService {
     await setDoc(ref, data, { merge: true });
   }
 
-  public async setOperationsByReportId(id: string, operation: OperationDb): Promise<void> {
-    // console.log(await this.getParentReportById(id));
-    // console.log(operation);
-    let parentReport: ReportParentDb = await this.getParentReportById(id);
-    if (!parentReport.operations) parentReport.operations = [];
-    let operations: OperationDb[] = parentReport.operations;
-
-    const ref = doc(this.db, 'reportParents', id);
-    await updateDoc(ref, {
-      operations: arrayUnion(operation)
-    })
-  }
-
   public selectReport(id: string) {
     this.selectedReportId = id;
     if (this.reports.length > 0) {
@@ -215,6 +202,27 @@ export class ReportsService {
     }
   }
 
+  public async setOperationsByReportId(id: string, operation: OperationDb): Promise<void> {
+    let parentReport: ReportParentDb = await this.getParentReportById(id);
+    if (!parentReport.operations) parentReport.operations = [];
+
+    const ref = doc(this.db, 'reportParents', id);
+    await updateDoc(ref, {
+      operations: arrayUnion(operation)
+    })
+  }
+
+  public async deleteOperationByReportId(id: string, operation: Operation): Promise<void> {
+    let parentReport: ReportParentDb = await this.getParentReportById(id);
+    let operationDb: any = this.reParseParentReportOperation(operation);
+    console.log(operationDb);
+    const ref = doc(this.db, 'reportParents', id);
+    await updateDoc(ref, {
+      operations: arrayRemove(operationDb)
+    })
+    console.log(parentReport);
+  }
+
   public parseParentReport(id: string, report: ReportParentDb): ReportParent {
     let r = ReportParent.createEmpty();
 
@@ -276,6 +284,18 @@ export class ReportsService {
           o.type = OPERATIONTYPE.Inspection;
           break;
       }
+    }
+    if (operation.id !== undefined) o.id = operation.id;
+
+    return o;
+  }
+
+  private reParseParentReportOperation(operation: Operation): any {
+    let o = {
+      date: Timestamp.fromDate(operation.date),
+      operatorName: operation.operatorName,
+      type: operation.type,
+      id: operation.id
     }
 
     return o;

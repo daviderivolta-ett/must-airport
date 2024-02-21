@@ -19,7 +19,8 @@ export class InspectionsService {
     let operation: OperationDb = {
       operatorName: formData.operator,
       date: Timestamp.fromDate(new Date(formData.date)),
-      type: formData.type
+      type: formData.type,
+      id: new Date(formData.date).valueOf().toString() + new Date(Date.now()).valueOf().toString()
     }
     return operation;
   }

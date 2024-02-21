@@ -21,22 +21,44 @@ p {
     font-size: .9rem;
 }
 
+.call-to-action {
+    display: flex;
+    gap: 8px;
+}
+
 button {
     cursor: pointer;
-    background-color: var(--bg-subtle);
-    border: 1px solid var(--border-default);
-    border-radius: 4px;
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.delete-button {
+    background-color: transparent;
+    border: none;
+    border-radius: 100px;
+
+    &:hover {
+        background-color: var(--bg-danger-dull);
+    }
+}
+
+.copy-button {
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
 
     &:hover {
         border-color: var(--border-emphasis);
     }
 }
 
-.copy {
-    font-size: 1.2rem;
+.icon {
+    font-size: 1.1rem;
+}
+
+.delete-icon {
+    color: var(--f-danger);
 }

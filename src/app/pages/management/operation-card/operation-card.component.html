@@ -1,9 +1,27 @@
 <div class="operation">
     <div class="details">
-        <p class="type">{{operation.type | titlecase}}</p>
-        <p class="info"><span class="operator">{{operation.operatorName}}</span> - <span class="date">{{operation.date | date: 'dd/MM/yyyy'}}</span></p>
+        <p class="type">
+            @switch (operation.type) {
+                @case ("inspection") {
+                    Ispezione
+                }
+                @default {
+                    Intervento
+                }
+            }        
+        </p>
+        <p class="info">
+            <span class="operator">{{operation.operatorName}}</span>
+            -
+            <span class="date">{{operation.date | date: 'dd/MM/yyyy'}}</span>
+        </p>
     </div>
-    <button type="button">
-        <span class="material-symbols-outlined copy" (click)="copyToClipboard()">content_copy</span>
-    </button>
+    <div class="call-to-action">
+        <button type="button" class="delete-button" (click)="deleteOperation()">
+            <span class="material-symbols-outlined icon delete-icon">delete</span>
+        </button>
+        <button type="button" class="copy-button">
+            <span class="material-symbols-outlined icon copy-icon" (click)="copyToClipboard()">content_copy</span>
+        </button>
+    </div>
 </div>
