@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import * as Highstock from 'highcharts/highstock';
-import { chartData } from '../../../services/charts.service';
+import { timeChartData } from '../../../services/charts.service';
 
 @Component({
   selector: 'app-time-chart',
@@ -120,7 +120,7 @@ export class TimeChartComponent {
     this.charts = Highstock.stockChart('chart', this.chartOptions);
   }
 
-  private normalizeData(type: string, data: chartData[]): any {
+  private normalizeData(type: string, data: timeChartData[]): any {
     let normalizeData: any = {
       type: type,
       data: data,
