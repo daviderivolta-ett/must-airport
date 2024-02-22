@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import * as Highstock from 'highcharts/highstock';
 
@@ -10,6 +10,8 @@ import * as Highstock from 'highcharts/highstock';
   styleUrl: './time-chart.component.scss'
 })
 export class TimeChartComponent {
+  @Input() public firstSerie: any;
+
   public Highcharts: typeof Highcharts = Highcharts;
   public charts: any;
   public data = [[1645540200000, 1], [1658151000000, 2], [1668522600000, 3], [1686231000000, 4]];
@@ -21,10 +23,10 @@ export class TimeChartComponent {
         type: 'line',
         data: this.data
       },
-      {
-        type: 'line',
-        data: this.data2
-      }
+      // {
+      //   type: 'line',
+      //   data: this.data2
+      // }
     ],
     credits: {
       enabled: false,
@@ -52,6 +54,7 @@ export class TimeChartComponent {
     //   ]
     // }
   }
+
 
   public ngOnInit(): void {
     this.charts = Highstock.stockChart('chart', this.chartOptions);

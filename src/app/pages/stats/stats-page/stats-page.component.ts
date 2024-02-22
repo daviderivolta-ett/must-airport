@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { TimeChartComponent } from '../time-chart/time-chart.component';
+import { ReportParent } from '../../../models/report-parent.model';
+import { ReportsService } from '../../../services/reports.service';
+import { ChartsService } from '../../../services/charts.service';
 
 
 @Component({
@@ -10,5 +13,14 @@ import { TimeChartComponent } from '../time-chart/time-chart.component';
   styleUrl: './stats-page.component.scss'
 })
 export class StatsPageComponent {
+  public reports: ReportParent[] = [];
+  public reportsNumPerTimeSerie: [number, number][] = [];
 
+  constructor(private reportsService: ReportsService, private chartsService: ChartsService) {
+    effect(() => {
+      this.reports = this.reportsService.reportsSignal();
+      this.reportsNumPerTimeSerie = this.chartsService.createReportsNumPerTimeSerie(this.reports);
+      console.log(this.reportsNumPerTimeSerie);
+    });
+  }
 }
