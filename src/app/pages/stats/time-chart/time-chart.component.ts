@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import * as Highcharts from 'highcharts';
 import * as Highstock from 'highcharts/highstock';
 import { timeChartData } from '../../../services/charts.service';
 
@@ -14,10 +13,10 @@ export class TimeChartComponent {
   @Input() public firstSerie: any;
   public charts: any;
 
-  public chartOptions: Highcharts.Options = {
+  public chartOptions: Highstock.Options = {
     series: [],
     chart: {
-      backgroundColor: 'transparent'
+      backgroundColor: 'transparent',
     },
     xAxis: {
       lineColor: 'rgb(230, 237, 243)',
@@ -121,12 +120,12 @@ export class TimeChartComponent {
   }
 
   private normalizeData(type: string, data: timeChartData[]): any {
-    let normalizeData: any = {
+    let normalizedData: any = {
       type: type,
       data: data,
       name: 'Segnalazioni ricevute',
       color: 'rgb(163, 113, 247)'
     };
-    return normalizeData;
+    return normalizedData;
   }
 }

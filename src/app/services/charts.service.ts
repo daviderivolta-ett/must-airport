@@ -5,7 +5,8 @@ import { PRIORITY } from '../models/priority.model';
 export type timeChartData = [number, number];
 export interface pieChartData {
   name: string,
-  y: number
+  y: number,
+  color: string
 }
 
 @Injectable({
@@ -44,9 +45,17 @@ export class ChartsService {
       priorityFrequencyRaw[priority] = (priorityFrequencyRaw[priority] || 0) + 1;
     });
 
+    const colorMapping: Record<string, string> = {
+      '': 'grey',
+      'low': 'green',
+      'medium': 'orange',
+      'high': 'red'
+    }
+
     serie = Object.entries(priorityFrequencyRaw).map(([name, value]): pieChartData => ({
       name: name,
-      y: value
+      y: value,
+      color: colorMapping[name]
     }));
 
     const nameMapping: Record<string, string> = {

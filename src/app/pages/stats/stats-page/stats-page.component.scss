@@ -4,8 +4,13 @@
     background-color: var(--bg-inset);
 }
 
+h2 {
+    margin: 0;
+}
+
 .charts-section {
     display: flex;
+    gap: 24px;
     padding: 40px;
 }
 

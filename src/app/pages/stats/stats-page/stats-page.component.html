@@ -5,4 +5,10 @@
         <app-time-chart [firstSerie]="reportsNumPerTimeSerie" />
     </div>
     }
+    @if (reportsNumPerPrioritySerie.length !== 0) {
+    <div class="chart-wrapper">
+        <h2 class="chart-title">Segnalazioni per priorità</h2>
+        <app-pie-chart [serie]="reportsNumPerPrioritySerie"/>
+    </div>
+    }
 </div>
