@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import * as Highstock from 'highcharts/highstock';
+import { chartData } from '../../../services/charts.service';
 
 @Component({
   selector: 'app-time-chart',
@@ -11,52 +12,121 @@ import * as Highstock from 'highcharts/highstock';
 })
 export class TimeChartComponent {
   @Input() public firstSerie: any;
-
-  public Highcharts: typeof Highcharts = Highcharts;
   public charts: any;
-  public data = [[1645540200000, 1], [1658151000000, 2], [1668522600000, 3], [1686231000000, 4]];
-  public data2 = [[1679059800000, 4], [1680096600000, 0], [1682602200000, 1], [1684762200000, 3]];
-  // public data2 = [5, 6, 7, 8, 6]
+
   public chartOptions: Highcharts.Options = {
-    series: [
-      {
-        type: 'line',
-        data: this.data
-      },
-      // {
-      //   type: 'line',
-      //   data: this.data2
-      // }
-    ],
+    series: [],
+    chart: {
+      backgroundColor: 'transparent'
+    },
+    xAxis: {
+      lineColor: 'rgb(230, 237, 243)',
+      labels: {
+        style: {
+          color: 'rgb(230, 237, 243)'
+        }
+      }
+    },
+    yAxis: {
+      gridLineColor: 'rgb(39, 45, 52)'
+    },
     credits: {
       enabled: false,
     },
     accessibility: {
       enabled: false
+    },
+    legend: {
+      enabled: true,
+      itemStyle: {
+        color: 'rgb(230, 237, 243)'
+      },
+      itemHoverStyle: {
+        color: 'rgb(125, 133, 144)'
+      }
+    },
+    navigator: {
+      enabled: false
+    },
+    scrollbar: {
+      enabled: false
+    },
+    rangeSelector: {
+      enabled: true,
+      buttonTheme: {
+        fill: 'transparent',
+        style: {
+          color: 'rgb(230, 237, 243)'
+        },
+        states: {
+          select: {
+            fill: 'transparent',
+            style: {
+              color: 'rgb(47, 129, 247)',
+              fontWeight: 'regular'
+            }
+          },
+          hover: {
+            fill: 'transparent'
+          },
+          disabled: {
+            style: {
+              color: 'rgb(125, 133, 144)'
+            }
+          }
+        }
+      },
+      buttons: [
+        {
+          type: 'month',
+          count: 1,
+          text: '1m'
+        },
+        {
+          type: 'month',
+          count: 3,
+          text: '3m'
+        },
+        {
+          type: 'month',
+          count: 6,
+          text: '6m'
+        },
+        {
+          type: 'ytd',
+          text: new Date().getFullYear().toString()
+        },
+        {
+          type: 'year',
+          count: 1,
+          text: '1a'
+        },
+        {
+          type: 'all',
+          text: 'tutto'
+        }
+      ]
     }
-    // rangeSelector: {
-    //   enabled: true,
-    //   buttonTheme: {
-    //     fill: 'none',
-    //     style: {
-    //       color: 'red',
-    //       fontWeight: 'bold',
-    //       fontSize: '16px'
-    //     }
-    //   },
-    //   buttons: [
-    //     {
-    //       type: 'month',
-    //       count: 1,
-    //       text: '1m',
-    //       title: 'pippo'
-    //     }
-    //   ]
-    // }
   }
 
+  constructor() {}
 
   public ngOnInit(): void {
+    this.initChart();
+  }
+
+  private initChart(): void {
+    this.chartOptions.series?.push(this.normalizeData('line', this.firstSerie));
     this.charts = Highstock.stockChart('chart', this.chartOptions);
+  }
+
+  private normalizeData(type: string, data: chartData[]): any {
+    let normalizeData: any = {
+      type: type,
+      data: data,
+      name: 'Segnalazioni ricevute',
+      color: 'rgb(163, 113, 247)'
+    };
+    return normalizeData;
   }
 }

@@ -1,17 +1,24 @@
-import { Injectable } from '@angular/core';
+import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { ReportParent } from '../models/report-parent.model';
-import { Timestamp } from 'firebase/firestore';
 
 export type chartData = [number, number];
+export interface chartSerie {
+  type: string,
+  data: chartData[]
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChartsService {
+  public reportNumPerTimeSerieSignal: WritableSignal<[number, number][]> = signal([]);
+  public reportNumPerTimeSerie: chartData[] = [];
 
-  constructor() { }
+  constructor() {
+    effect(() => this.reportNumPerTimeSerie = this.reportNumPerTimeSerieSignal());
+  }
 
-  public createReportsNumPerTimeSerie(reports: ReportParent[]): any {
+  public createReportsNumPerTimeSerie(reports: ReportParent[]): chartData[] {
     let dates: Date[];
     dates = reports.map(report => report.creationTime);
 
@@ -22,6 +29,7 @@ export class ChartsService {
     });
 
     let serie: [number, number][] = Object.entries(dateFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
+    serie.sort((a, b) => a[0] - b[0]);
     return serie;
   }
 }

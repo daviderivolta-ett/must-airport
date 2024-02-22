@@ -1,9 +1,8 @@
-import { Component, effect } from '@angular/core';
+import { Component, effect} from '@angular/core';
 import { TimeChartComponent } from '../time-chart/time-chart.component';
 import { ReportParent } from '../../../models/report-parent.model';
 import { ReportsService } from '../../../services/reports.service';
 import { ChartsService } from '../../../services/charts.service';
-
 
 @Component({
   selector: 'app-stats-page',
@@ -20,7 +19,6 @@ export class StatsPageComponent {
     effect(() => {
       this.reports = this.reportsService.reportsSignal();
       this.reportsNumPerTimeSerie = this.chartsService.createReportsNumPerTimeSerie(this.reports);
-      console.log(this.reportsNumPerTimeSerie);
     });
   }
 }

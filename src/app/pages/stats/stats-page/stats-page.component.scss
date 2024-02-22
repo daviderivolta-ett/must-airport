@@ -1,0 +1,18 @@
+:host {
+    display: block;
+    min-height: calc(100% - 57px);
+    background-color: var(--bg-inset);
+}
+
+.charts-section {
+    display: flex;
+    padding: 40px;
+}
+
+.chart-wrapper {
+    width: 50%;
+    padding: 24px;
+    background-color: var(--bg-default);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+}

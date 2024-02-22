@@ -1,1 +1,8 @@
-<app-time-chart [firstSerie]="reportsNumPerTimeSerie" />
+<div class="charts-section">
+    @if (reportsNumPerTimeSerie.length !== 0) {
+    <div class="chart-wrapper">
+        <h2 class="chart-title">Segnalazioni totali</h2>
+        <app-time-chart [firstSerie]="reportsNumPerTimeSerie" />
+    </div>
+    }
+</div>
