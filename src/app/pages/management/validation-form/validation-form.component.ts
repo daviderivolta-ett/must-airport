@@ -9,6 +9,7 @@ import { DictionaryService } from '../../../services/dictionary.service';
 import { TechElementSubTag } from '../../../models/tech-element-subtag.model';
 import { ReportsService } from '../../../services/reports.service';
 import { SnackbarService } from '../../../observables/snackbar.service';
+import { Timestamp } from 'firebase/firestore';
 
 @Component({
   selector: 'app-validation-form',
@@ -151,10 +152,11 @@ export class ValidationFormComponent {
   }
 
   public handleSubmit(): void {
-    console.log(this.validationForm.value);
+    // console.log(this.validationForm.value);
     let data: any = this.reportsService.parseValidationFormData(this.validationForm.value);
     let msg: string;
     try {
+      if (!this._parentReport.validationDate) data.validationDate = Timestamp.now();
       this.reportsService.setReportById(this._parentReport.id, data);
       msg = 'Modifica salvata con successo';
       this.snackbarService.createSnackbar(msg);

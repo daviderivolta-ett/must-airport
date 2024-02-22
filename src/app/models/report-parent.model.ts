@@ -24,10 +24,11 @@ export class ReportParent {
     parentFlowId: string;
     priority: PRIORITY;
     userId: string;
-    verticalId: string
+    verticalId: string;
 
     id: string;
     operations: Operation[];
+    validationDate?: Date;
 
     constructor(
         childFlowId: string,
@@ -48,7 +49,8 @@ export class ReportParent {
         userId: string,
         verticalId: string,
         id: string,
-        operations: Operation[]
+        operations: Operation[],
+        validationDate: Timestamp | undefined
     ) {
         this.childFlowId = childFlowId;
         this.childrenIds = childrenIds;
@@ -69,6 +71,7 @@ export class ReportParent {
         this.verticalId = verticalId;
         this.id = id;
         this.operations = operations;
+        this.validationDate = validationDate?.toDate();
     }
 
     static createEmpty(): ReportParent {
@@ -91,7 +94,8 @@ export class ReportParent {
             '',
             '',
             '',
-            []
+            [],
+            undefined
         )
     }
 }

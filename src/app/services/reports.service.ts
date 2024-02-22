@@ -33,7 +33,8 @@ export interface ReportParentDb {
   priority?: string;
   userId: string;
   verticalId: string,
-  operations: OperationDb[]
+  operations: OperationDb[],
+  validationDate: Timestamp
 }
 
 export interface ReportParentFieldsDb {
@@ -253,6 +254,8 @@ export class ReportsService {
       r.operations = [];
     }
 
+    if (report.validationDate) r.validationDate = report.validationDate.toDate();
+
     return r;
   }
 
@@ -401,6 +404,7 @@ export class ReportsService {
         sub_tag_tech_el: []
       }
     };
+
     for (const key in formData.techElementTagsForm) {
       if (formData.techElementTagsForm[key] === true) parentReport.fields.tag_tech_el.push(key);
     }
@@ -410,6 +414,7 @@ export class ReportsService {
     }
 
     parentReport.priority = formData.priorityForm['priority'];
+
     return parentReport;
   }
 }
