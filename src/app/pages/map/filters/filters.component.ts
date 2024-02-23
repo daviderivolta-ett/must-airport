@@ -25,7 +25,7 @@ export class FiltersComponent {
 
   constructor(private fb: FormBuilder, private filtersService: FiltersService, private reportsService: ReportsService) {
     this.filterForm.valueChanges.subscribe(changes => {
-      console.log(this.filterForm.value);
+      // console.log(this.filterForm.value);
       const filtersFormData: FiltersFormData = this.filterForm.value as FiltersFormData;
       const parsedFiltersFormData: ParsedFiltersFormData = this.parseFiltersFormData(filtersFormData);
       this.reportsService.filterReports(parsedFiltersFormData)

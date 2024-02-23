@@ -114,7 +114,7 @@ export class TimeChartComponent {
   constructor() { }
 
   public ngAfterViewInit(): void {
-    this.initChart();
+      this.initChart();
   }
 
   private initChart(): void {

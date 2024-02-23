@@ -1,19 +1,19 @@
 <div class="charts-section">
-    @if (reportsNumPerTimeSerie.data?.length !== 0) {
+    @if (reportsNumPerTimeSerie.data && reportsNumPerTimeSerie.data.length > 0) {
     <div class="chart-wrapper">
         <h2 class="chart-title">Segnalazioni totali</h2>
         <app-time-chart [firstSerie]="reportsNumPerTimeSerie" />
     </div>
     }
 
-    @if (inspectionsPerTimeSerie.data?.length !== 0 && interventionsPerTimeSerie.data?.length !== 0) {
+    @if (inspectionsPerTimeSerie.data && inspectionsPerTimeSerie.data.length !== 0 && interventionsPerTimeSerie.data && interventionsPerTimeSerie.data.length !== 0) {
         <div class="chart-wrapper">
             <h2 class="chart-title">Ispezioni ed interventi</h2>
             <app-time-chart [firstSerie]="inspectionsPerTimeSerie" [secondSerie]="interventionsPerTimeSerie" />
         </div>
     }
 
-    @if (reportsNumPerPrioritySerie.data?.length !== 0) {
+    @if (reportsNumPerPrioritySerie.data && reportsNumPerPrioritySerie.data.length !== 0) {
     <div class="chart-wrapper">
         <h2 class="chart-title">Segnalazioni per priorità</h2>
         <app-pie-chart [serie]="reportsNumPerPrioritySerie"/>
