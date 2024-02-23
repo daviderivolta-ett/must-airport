@@ -47,9 +47,9 @@ export class ChartsService {
 
     const colorMapping: Record<string, string> = {
       '': 'grey',
-      'low': 'rgb(35, 134, 54)',
-      'medium': 'rgb(158, 106, 3)',
-      'high': 'rgb(218, 54, 51)'
+      'low': 'green',
+      'medium': 'orange',
+      'high': 'red'
     }
 
     serie = Object.entries(priorityFrequencyRaw).map(([name, value]): pieChartData => ({

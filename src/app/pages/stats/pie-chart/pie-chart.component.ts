@@ -24,15 +24,16 @@ export class PieChartComponent {
     plotOptions: {
       pie: {
         dataLabels: {
+          format: '<b>{point.name}</b><br>{point.percentage:.1f}%',
           enabled: true,
-          distance: 20,
+          distance: 60,
           style: {
             color: 'white',
             fontWeight: 'regular',
             fontSize: '12px'
           }
         },
-        innerSize: '40%',
+        innerSize: '33%',
         borderRadius: 8,
         borderWidth: 4,
         borderColor: 'rgb(13, 17, 23)'
@@ -51,8 +52,7 @@ export class PieChartComponent {
   }
 
   private initChart(): void {
-    this.chartOptions.series?.push(this.normalizeData(this.serie));
-    console.log(this.chartOptions.series);    
+    this.chartOptions.series?.push(this.normalizeData(this.serie));   
     this.charts = Highcharts.chart('chart-pie', this.chartOptions);
   }
 
