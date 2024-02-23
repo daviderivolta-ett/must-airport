@@ -8,16 +8,13 @@ import { LoggedUser, UserData } from '../models/user.model';
   providedIn: 'root'
 })
 export class AuthService {
-  private auth: Auth;
+  public auth: Auth;
   public userSignal: WritableSignal<User | null> = signal(null);
   public loggedUserSignal: WritableSignal<LoggedUser | null> = signal(null);
   public loggedUser: LoggedUser | null = null;
 
   constructor(private router: Router, private userService: UserService) {
-    effect(() => {
-      this.loggedUser = this.loggedUserSignal();
-      console.log(this.loggedUser);
-    });
+    effect(() => this.loggedUser = this.loggedUserSignal());
 
     this.auth = getAuth();
 
@@ -38,7 +35,7 @@ export class AuthService {
         this.userSignal.set(this.auth.currentUser);
         // console.log('User is signed in!');
         // console.log('User: ', user);
-        let userData: UserData = await this.userService.getUserById(user.uid);       
+        let userData: UserData = await this.userService.getUserById(user.uid);
         this.loggedUserSignal.set(this.userService.parseUserData(user, userData));
       } else {
         this.userSignal.set(null);
