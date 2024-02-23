@@ -10,7 +10,7 @@ import * as Highcharts from 'highcharts';
 })
 export class PieChartComponent {
   @Input() public serie: Highcharts.SeriesPieOptions = { type: 'pie' };
-  public charts: any;
+  public charts!: Highcharts.Chart;
   public chartOptions: Highcharts.Options = {
     series: [],
     chart: {

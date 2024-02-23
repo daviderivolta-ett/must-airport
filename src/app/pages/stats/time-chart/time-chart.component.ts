@@ -10,10 +10,10 @@ import { timeChartData } from '../../../services/charts.service';
   styleUrl: './time-chart.component.scss'
 })
 export class TimeChartComponent {
-  @Input() public firstSerie: Highcharts.SeriesOptionsType = { type: 'line' };
-  @Input() public secondSerie: any;
+  @Input() public firstSerie: Highcharts.SeriesLineOptions = { type: 'line' };
+  @Input() public secondSerie: Highstock.SeriesLineOptions | null = null;
 
-  public charts: any;
+  public charts!: Highcharts.Chart;
   public chartId: string = this.generateChartUniqueId();
 
   public chartOptions: Highstock.Options = {
@@ -119,17 +119,8 @@ export class TimeChartComponent {
 
   private initChart(): void {
     this.chartOptions.series?.push(this.firstSerie);
+    if (this.secondSerie) this.chartOptions.series?.push(this.secondSerie);
     this.charts = Highstock.stockChart(`${this.chartId}`, this.chartOptions);
-  }
-
-  private normalizeData(data: timeChartData[]): Highcharts.SeriesOptionsType {
-    let normalizedData: Highcharts.SeriesOptionsType = {
-      type: 'line',
-      data: data,
-      name: 'Segnalazioni ricevute',
-      color: 'rgb(163, 113, 247)'
-    };
-    return normalizedData;
   }
 
   private generateChartUniqueId(): string {

@@ -10,14 +10,29 @@ h2 {
 
 .charts-section {
     display: flex;
-    gap: 24px;
+    gap: 2%;
     padding: 40px;
+    flex-wrap: wrap;
 }
 
 .chart-wrapper {
-    width: 50%;
+    width: 49%;
+    margin: 0 0 2% 0;
     padding: 24px;
     background-color: var(--bg-default);
     border: 1px solid var(--border-default);
     border-radius: 8px;
+    box-sizing: border-box;
+}
+
+@media screen and (max-width: 1024px) {
+    .charts-section {
+        padding: 24px;
+        gap: 0;
+    }
+
+    .chart-wrapper {
+        width: 100%;
+        margin: 0 0 24px 0;
+    }
 }

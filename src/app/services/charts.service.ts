@@ -33,7 +33,7 @@ export class ChartsService {
 
     let data: [number, number][] = Object.entries(dateFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
     data.sort((a, b) => a[0] - b[0]);
-   
+
     let serie: Highcharts.SeriesOptionsType = {
       type: 'line',
       data: data,
@@ -49,12 +49,13 @@ export class ChartsService {
     const interventions: Operation[] = operations.filter(operation => operation.type === OPERATIONTYPE.Intervention);
     const interventionFrequency = this.calculateDateFrequency(interventions);
     let interventionsSerieData: [number, number][] = Object.entries(interventionFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
+    interventionsSerieData.sort((a, b) => a[0] - b[0]);
 
     let interventionsSerie: Highcharts.SeriesLineOptions = {
       type: 'line',
       data: interventionsSerieData,
       name: 'Interventi',
-      color: 'violet'
+      color: 'rgb(31, 111, 235)'
     }
     return interventionsSerie;
   }
@@ -64,12 +65,13 @@ export class ChartsService {
     const inspections: Operation[] = operations.filter(operation => operation.type === OPERATIONTYPE.Inspection);
     const inspectionFrequency = this.calculateDateFrequency(inspections);
     let inspectionsSerieData: [number, number][] = Object.entries(inspectionFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
-    
+    inspectionsSerieData.sort((a, b) => a[0] - b[0]);
+
     let inspectionsSerie: Highcharts.SeriesLineOptions = {
       type: 'line',
       data: inspectionsSerieData,
       name: 'Ispezioni',
-      color: 'green'
+      color: 'rgb(35, 134, 54)'
     }
     return inspectionsSerie;
   }
