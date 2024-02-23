@@ -14,12 +14,14 @@
                     Report
                 </a>
             </li>
+            @if (loggedUser) {
             <li>
                 <a routerLink="login" (click)="logOut()">
                     <span class="material-symbols-outlined">account_circle</span>
                     Logout
                 </a>
             </li>
+            }
         </ul>
     </div>
 </div>
