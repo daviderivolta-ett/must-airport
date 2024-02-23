@@ -12,6 +12,7 @@ import { timeChartData } from '../../../services/charts.service';
 export class TimeChartComponent {
   @Input() public firstSerie: any;
   @Input() public secondSerie: any;
+
   public charts: any;
   public chartId: string = this.generateChartUniqueId();
 
@@ -117,13 +118,13 @@ export class TimeChartComponent {
   }
 
   private initChart(): void {
-    this.chartOptions.series?.push(this.normalizeData('line', this.firstSerie));
+    this.chartOptions.series?.push(this.normalizeData(this.firstSerie));
     this.charts = Highstock.stockChart(`${this.chartId}`, this.chartOptions);
   }
 
-  private normalizeData(type: string, data: timeChartData[]): any {
-    let normalizedData: any = {
-      type: type,
+  private normalizeData(data: timeChartData[]): Highcharts.SeriesOptionsType {
+    let normalizedData: Highcharts.SeriesOptionsType = {
+      type: 'line',
       data: data,
       name: 'Segnalazioni ricevute',
       color: 'rgb(163, 113, 247)'

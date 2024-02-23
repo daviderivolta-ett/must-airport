@@ -36,18 +36,20 @@ export class ChartsService {
     return serie;
   }
 
-  public createInterventionAndInspectionPerTimeSerie(reports: ReportParent[]) {
+  public createInterventionsPerTimeSerie(reports: ReportParent[]): timeChartData[] {
+    const operations: Operation[] = reports.flatMap(report => report.operations);
+    const interventions: Operation[] = operations.filter(operation => operation.type === OPERATIONTYPE.Intervention);
+    const interventionFrequency = this.calculateDateFrequency(interventions);
+    let interventionsSerie: [number, number][] = Object.entries(interventionFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
+    return interventionsSerie;
+  }
+
+  public createInspectionsPerTimeSerie(reports: ReportParent[]): timeChartData[] {
     const operations: Operation[] = reports.flatMap(report => report.operations);
     const inspections: Operation[] = operations.filter(operation => operation.type === OPERATIONTYPE.Inspection);
-    const interventions: Operation[] = operations.filter(operation => operation.type === OPERATIONTYPE.Intervention);
-
     const inspectionFrequency = this.calculateDateFrequency(inspections);
-    const interventionFrequency = this.calculateDateFrequency(interventions);
-
     let inspectionsSerie: [number, number][] = Object.entries(inspectionFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
-    let interventionsSerie: [number, number][] = Object.entries(interventionFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
-
-    return { inspections: inspectionsSerie, interventions: interventionsSerie }
+    return inspectionsSerie;
   }
 
   private calculateDateFrequency(operations: Operation[]): { [key: string]: number } {
