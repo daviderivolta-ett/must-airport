@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { AuthService } from './services/auth.service';
@@ -16,9 +16,16 @@ export class AppComponent {
   title = 'must';
 
   constructor(private firebaseService: FirebaseService, private authService: AuthService, private reportsService: ReportsService) {
+    effect(() => {
+      if (this.authService.userSignal() !== null) {
+        this.reportsService.getAllParentReports();
+      } else {
+        this.reportsService.reports = [];
+      }
+    });
   }
 
   async ngOnInit() {
-    await this.reportsService.getAllParentReports();   
+    // await this.reportsService.getAllParentReports();   
   }
 }
