@@ -16,12 +16,16 @@ export class StatsPageComponent {
   public reports: ReportParent[] = [];
   public reportsNumPerTimeSerie: [number, number][] = [];
   public reportsNumPerPrioritySerie: pieChartData[] = [];
+  public interventionAndInspectionPerTimeSerie: { inspections: [number, number][]; interventions: [number, number][] } = { inspections: [], interventions: [] };
 
   constructor(private reportsService: ReportsService, private chartsService: ChartsService) {
     effect(() => {
       this.reports = this.reportsService.reportsSignal();
       this.reportsNumPerTimeSerie = this.chartsService.createReportsNumPerTimeSerie(this.reports);
+      this.interventionAndInspectionPerTimeSerie = this.chartsService.createInterventionAndInspectionPerTimeSerie(this.reports);
       this.reportsNumPerPrioritySerie = this.chartsService.createReportsNumPerPrioritySerie(this.reports);
+
+      console.log(this.interventionAndInspectionPerTimeSerie);
     });
   }
 }

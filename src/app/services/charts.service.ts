@@ -1,6 +1,7 @@
 import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { ReportParent } from '../models/report-parent.model';
 import { PRIORITY } from '../models/priority.model';
+import { OPERATIONTYPE, Operation } from '../models/operation.model';
 
 export type timeChartData = [number, number];
 export interface pieChartData {
@@ -33,6 +34,31 @@ export class ChartsService {
     let serie: [number, number][] = Object.entries(dateFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
     serie.sort((a, b) => a[0] - b[0]);
     return serie;
+  }
+
+  public createInterventionAndInspectionPerTimeSerie(reports: ReportParent[]) {
+    const operations: Operation[] = reports.flatMap(report => report.operations);
+    const inspections: Operation[] = operations.filter(operation => operation.type === OPERATIONTYPE.Inspection);
+    const interventions: Operation[] = operations.filter(operation => operation.type === OPERATIONTYPE.Intervention);
+
+    const inspectionFrequency = this.calculateDateFrequency(inspections);
+    const interventionFrequency = this.calculateDateFrequency(interventions);
+
+    let inspectionsSerie: [number, number][] = Object.entries(inspectionFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
+    let interventionsSerie: [number, number][] = Object.entries(interventionFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
+
+    return { inspections: inspectionsSerie, interventions: interventionsSerie }
+  }
+
+  private calculateDateFrequency(operations: Operation[]): { [key: string]: number } {
+    const dates: Date[] = operations.map(operation => operation.date);
+
+    const dateFrequency: { [key: string]: number } = {};
+    dates.forEach(date => {
+      const dateString = date.toISOString().split('T')[0];
+      dateFrequency[dateString] = (dateFrequency[dateString] || 0) + 1;
+    });
+    return dateFrequency;
   }
 
   public createReportsNumPerPrioritySerie(reports: ReportParent[]): pieChartData[] {
@@ -69,7 +95,7 @@ export class ChartsService {
       item.name = nameMapping[item.name] || item.name;
     });
 
-    console.log(serie);    
+    // console.log(serie);    
     return serie;
   }
 }
