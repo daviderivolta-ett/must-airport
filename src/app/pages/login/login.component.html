@@ -1,1 +1,12 @@
 <p>login works!</p>
+<form [formGroup]="loginForm">
+    <div class="input-single">
+        <label for="email"></label>
+        <input type="email" id="email" formControlName="email">
+    </div>
+    <div class="input-single">
+        <label for="password"></label>
+        <input type="password" id="password" formControlName="password">
+    </div>
+    <button type="submit" [disabled]="!loginForm.valid" (click)="handleSubmit()">Login</button>
+</form>
