@@ -10,7 +10,7 @@ import { timeChartData } from '../../../services/charts.service';
   styleUrl: './time-chart.component.scss'
 })
 export class TimeChartComponent {
-  @Input() public firstSerie: any;
+  @Input() public firstSerie: Highcharts.SeriesOptionsType = { type: 'line' };
   @Input() public secondSerie: any;
 
   public charts: any;
@@ -118,7 +118,7 @@ export class TimeChartComponent {
   }
 
   private initChart(): void {
-    this.chartOptions.series?.push(this.normalizeData(this.firstSerie));
+    this.chartOptions.series?.push(this.firstSerie);
     this.charts = Highstock.stockChart(`${this.chartId}`, this.chartOptions);
   }
 
@@ -145,7 +145,7 @@ export class TimeChartComponent {
       let randomNum = Math.floor(Math.random() * 10);
       id = id + randomLetter + randomNum;
     }
-    return id;    
+    return id;
   }
 
   private pickRandomLetter(str: string): string {

@@ -21,7 +21,7 @@ export class ChartsService {
     effect(() => this.reportNumPerTimeSerie = this.reportNumPerTimeSerieSignal());
   }
 
-  public createReportsNumPerTimeSerie(reports: ReportParent[]): timeChartData[] {
+  public createReportsNumPerTimeSerie(reports: ReportParent[]): Highcharts.SeriesLineOptions {
     let dates: Date[];
     dates = reports.map(report => report.creationTime);
 
@@ -31,24 +31,46 @@ export class ChartsService {
       dateFrequency[dateString] = (dateFrequency[dateString] || 0) + 1;
     });
 
-    let serie: [number, number][] = Object.entries(dateFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
-    serie.sort((a, b) => a[0] - b[0]);
+    let data: [number, number][] = Object.entries(dateFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
+    data.sort((a, b) => a[0] - b[0]);
+   
+    let serie: Highcharts.SeriesOptionsType = {
+      type: 'line',
+      data: data,
+      name: 'Segnalazioni ricevute',
+      color: 'rgb(163, 113, 247)',
+    }
+
     return serie;
   }
 
-  public createInterventionsPerTimeSerie(reports: ReportParent[]): timeChartData[] {
+  public createInterventionsPerTimeSerie(reports: ReportParent[]): Highcharts.SeriesLineOptions {
     const operations: Operation[] = reports.flatMap(report => report.operations);
     const interventions: Operation[] = operations.filter(operation => operation.type === OPERATIONTYPE.Intervention);
     const interventionFrequency = this.calculateDateFrequency(interventions);
-    let interventionsSerie: [number, number][] = Object.entries(interventionFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
+    let interventionsSerieData: [number, number][] = Object.entries(interventionFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
+
+    let interventionsSerie: Highcharts.SeriesLineOptions = {
+      type: 'line',
+      data: interventionsSerieData,
+      name: 'Interventi',
+      color: 'violet'
+    }
     return interventionsSerie;
   }
 
-  public createInspectionsPerTimeSerie(reports: ReportParent[]): timeChartData[] {
+  public createInspectionsPerTimeSerie(reports: ReportParent[]): Highcharts.SeriesLineOptions {
     const operations: Operation[] = reports.flatMap(report => report.operations);
     const inspections: Operation[] = operations.filter(operation => operation.type === OPERATIONTYPE.Inspection);
     const inspectionFrequency = this.calculateDateFrequency(inspections);
-    let inspectionsSerie: [number, number][] = Object.entries(inspectionFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
+    let inspectionsSerieData: [number, number][] = Object.entries(inspectionFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
+    
+    let inspectionsSerie: Highcharts.SeriesLineOptions = {
+      type: 'line',
+      data: inspectionsSerieData,
+      name: 'Ispezioni',
+      color: 'green'
+    }
     return inspectionsSerie;
   }
 
@@ -63,8 +85,8 @@ export class ChartsService {
     return dateFrequency;
   }
 
-  public createReportsNumPerPrioritySerie(reports: ReportParent[]): pieChartData[] {
-    let serie: pieChartData[] = [];
+  public createReportsNumPerPrioritySerie(reports: ReportParent[]): Highcharts.SeriesPieOptions {
+    let data: pieChartData[] = [];
     let priorities: PRIORITY[];
     priorities = reports.map(report => report.priority);
 
@@ -80,7 +102,7 @@ export class ChartsService {
       'high': 'red'
     }
 
-    serie = Object.entries(priorityFrequencyRaw).map(([name, value]): pieChartData => ({
+    data = Object.entries(priorityFrequencyRaw).map(([name, value]): pieChartData => ({
       name: name,
       y: value,
       color: colorMapping[name]
@@ -93,11 +115,16 @@ export class ChartsService {
       "high": "Alta"
     }
 
-    serie.forEach(item => {
+    data.forEach(item => {
       item.name = nameMapping[item.name] || item.name;
     });
 
-    // console.log(serie);    
+    let serie: Highcharts.SeriesPieOptions = {
+      type: 'pie',
+      data: data,
+      name: 'Segnalazioni per priorità'
+    }
+
     return serie;
   }
 }

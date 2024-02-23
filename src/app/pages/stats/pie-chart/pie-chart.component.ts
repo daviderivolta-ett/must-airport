@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import * as Highcharts from 'highcharts';
-import { pieChartData } from '../../../services/charts.service';
 
 @Component({
   selector: 'app-pie-chart',
@@ -10,7 +9,7 @@ import { pieChartData } from '../../../services/charts.service';
   styleUrl: './pie-chart.component.scss'
 })
 export class PieChartComponent {
-  @Input() public serie: any;
+  @Input() public serie: Highcharts.SeriesPieOptions = { type: 'pie' };
   public charts: any;
   public chartOptions: Highcharts.Options = {
     series: [],
@@ -52,18 +51,7 @@ export class PieChartComponent {
   }
 
   private initChart(): void {
-    this.chartOptions.series?.push(this.normalizeData(this.serie));   
+    this.chartOptions.series?.push(this.serie);
     this.charts = Highcharts.chart('chart-pie', this.chartOptions);
-  }
-
-  private normalizeData(data: pieChartData[]): any {
-    let normalizedData: any = {
-      animation: {
-        duration : 1000
-      },
-      data: data,
-      name: 'Segnalazioni per priorità'
-    }
-    return normalizedData;
   }
 }

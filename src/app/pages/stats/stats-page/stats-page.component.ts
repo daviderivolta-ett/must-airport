@@ -1,4 +1,4 @@
-import { Component, effect} from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { TimeChartComponent } from '../time-chart/time-chart.component';
 import { ReportParent } from '../../../models/report-parent.model';
 import { ReportsService } from '../../../services/reports.service';
@@ -14,10 +14,10 @@ import { PieChartComponent } from '../pie-chart/pie-chart.component';
 })
 export class StatsPageComponent {
   public reports: ReportParent[] = [];
-  public reportsNumPerTimeSerie: [number, number][] = [];
-  public reportsNumPerPrioritySerie: pieChartData[] = [];
-  public interventionsPerTimeSerie: timeChartData[] = [];
-  public inspectionsPerTimeSerie: timeChartData[] = [];
+  public reportsNumPerTimeSerie: Highcharts.SeriesLineOptions = { type: 'line' };
+  public reportsNumPerPrioritySerie: Highcharts.SeriesPieOptions = { type: 'pie' };
+  public interventionsPerTimeSerie: Highcharts.SeriesLineOptions = { type: 'line' };
+  public inspectionsPerTimeSerie: Highcharts.SeriesLineOptions = { type: 'line' };
 
   constructor(private reportsService: ReportsService, private chartsService: ChartsService) {
     effect(() => {
@@ -27,8 +27,8 @@ export class StatsPageComponent {
       this.interventionsPerTimeSerie = this.chartsService.createInterventionsPerTimeSerie(this.reports);
       this.inspectionsPerTimeSerie = this.chartsService.createInspectionsPerTimeSerie(this.reports);
 
-      console.log('Interventions: ', this.interventionsPerTimeSerie);
-      console.log('Inspections: ', this.inspectionsPerTimeSerie);      
+      // console.log('Interventions: ', this.interventionsPerTimeSerie);
+      // console.log('Inspections: ', this.inspectionsPerTimeSerie);      
     });
   }
 }
