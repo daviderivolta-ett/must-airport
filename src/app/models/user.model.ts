@@ -1,9 +1,12 @@
+import { Timestamp } from "firebase/firestore";
+
 export enum USERLEVEL {
     Admin = 0
 }
 
 export interface UserData {
     userLevel: USERLEVEL;
+    lastLogin: Timestamp;
 }
 
 export class LoggedUser {

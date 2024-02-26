@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Auth, getAuth, signInAnonymously, onAuthStateChanged, User, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, AuthProvider } from 'firebase/auth';
 import { UserService } from './user.service';
 import { LoggedUser, USERLEVEL, UserData } from '../models/user.model';
+import { Timestamp } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class AuthService {
   constructor(private router: Router, private userService: UserService) {
     effect(() => {
       this.loggedUser = this.loggedUserSignal();
-      console.log(this.loggedUser);      
+      console.log(this.loggedUser);
     });
 
     this.auth = getAuth();
@@ -37,11 +38,25 @@ export class AuthService {
 
     onAuthStateChanged(this.auth, async (user) => {
       if (user) {
-        // this.userSignal.set(this.auth.currentUser);
         // console.log('User is signed in!');
-        console.log('User: ', user);
-        let userData: UserData = await this.userService.getUserById(user.uid);
-        this.loggedUserSignal.set(this.userService.parseUserData(user, userData));
+        // console.log('User: ', user);
+
+        try {
+          let userData: UserData = await this.userService.getUserById(user.uid);
+          userData.lastLogin = Timestamp.fromDate(new Date(Date.now()));
+          this.userService.setUserById(user.uid, userData);
+          this.loggedUserSignal.set(this.userService.parseUserData(user, userData));
+        } catch {
+          let data: UserData = {
+            userLevel: USERLEVEL.Admin,
+            lastLogin: Timestamp.fromDate(new Date(Date.now()))
+          }
+
+          this.userService.setUserById(user.uid, data);
+          this.loggedUserSignal.set(this.userService.parseUserData(user, data));
+        }
+
+        this.router.navigate(['/segnalazioni']);       
       } else {
         this.loggedUserSignal.set(null);
         // console.log('User is signed out!');
@@ -52,10 +67,8 @@ export class AuthService {
   public logInWithEmailAndPassword(email: string, password: string): void {
     signInWithEmailAndPassword(this.auth, email, password)
       .then(userCredential => {
-        // this.userSignal.set(userCredential.user);
         console.log(`You\'re logged in with email and password`);
         // console.log('User credentials:', userCredential);
-        this.router.navigate(['/segnalazioni']);
       })
       .catch(error => {
         const errorCode = error.code;
@@ -72,18 +85,7 @@ export class AuthService {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential?.accessToken;
         const user = result.user;
-        // console.log(user);
-        try {
-          let userData: UserData = await this.userService.getUserById(user.uid);
-          this.loggedUserSignal.set(this.userService.parseUserData(user, userData));
-          this.router.navigate(['/segnalazioni']);
-        } catch {
-          let data = { userLevel: USERLEVEL.Admin }
-          this.userService.createUserWithGoogleAccountById(user.uid, data);
-          let userData: UserData = await this.userService.getUserById(user.uid);
-          this.loggedUserSignal.set(this.userService.parseUserData(user, userData));
-          this.router.navigate(['/segnalazioni']);
-        }
+        console.log(`You\'re logged in with Google account`);
       })
       .catch(error => {
         const errorCode = error.code;
@@ -94,5 +96,5 @@ export class AuthService {
 
         const credential = GoogleAuthProvider.credentialFromError(error);
       })
-  }
+  }  
 }
