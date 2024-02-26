@@ -15,7 +15,7 @@
                 </a>
             </li>
             @if (loggedUser) {
-            <li (click)="showAccountMenu()">
+            <li (click)="showAccountMenu($event)">
                 @if (loggedUser.picUrl) {
                     <img src="{{loggedUser.picUrl}}" alt="Immagine profilo" class="profile-pic" referrerpolicy="no-referrer">
                 }

@@ -1,4 +1,4 @@
-<div class="menu" [ngClass]="{'visible': isVisible}">
+<div class="menu" [ngClass]="{'visible': isVisible}" appClickOutside (clickedOutside)="closeAccountMenu()">
     <ul>
         <li class="display-name">{{loggedUser?.displayName}}</li>
         <li (click)="logOut()">

@@ -11,6 +11,6 @@ export class CloseEscapeDirective {
 
   @HostListener('document:keydown.escape', ['$event'])
   keydownEscape(event: KeyboardEvent): void {
-    this.closeEscape.emit();
+    this.closeEscape.emit();    
   }
 }

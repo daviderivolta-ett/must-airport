@@ -3,11 +3,12 @@ import { LoggedUser } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
 import { NgClass } from '@angular/common';
 import { HeaderService } from '../../observables/header.service';
+import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 
 @Component({
   selector: 'app-account-menu',
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, ClickOutsideDirective],
   templateUrl: './account-menu.component.html',
   styleUrl: './account-menu.component.scss'
 })
@@ -26,9 +27,7 @@ export class AccountMenuComponent {
     this.authService.auth.signOut();
   }
 
-  public closeMenu(): void {
-    if (this.isVisible === true) {
-      this.headerService.isAccountMenuVisible.set(false);
-    }   
+  public closeAccountMenu(): void {
+    this.headerService.isAccountMenuVisible.set(false);
   }
 }

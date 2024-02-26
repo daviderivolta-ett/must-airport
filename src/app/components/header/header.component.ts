@@ -21,7 +21,8 @@ export class HeaderComponent {
     })
   }
 
-  public showAccountMenu(): void {
+  public showAccountMenu(event: Event) {
+    event.stopPropagation();
     this.headerService.isAccountMenuVisible.set(!this.headerService.isAccountMenuVisible());   
   }
 
