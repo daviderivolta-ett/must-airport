@@ -1,0 +1,9 @@
+<div class="menu" [ngClass]="{'visible': isVisible}">
+    <ul>
+        <li class="display-name">{{loggedUser?.displayName}}</li>
+        <li (click)="logOut()">
+            Esci
+            <span class="material-symbols-outlined logout-icon">logout</span>
+        </li>
+    </ul>
+</div>

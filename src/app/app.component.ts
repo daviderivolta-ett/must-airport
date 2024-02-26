@@ -17,7 +17,7 @@ export class AppComponent {
 
   constructor(private firebaseService: FirebaseService, private authService: AuthService, private reportsService: ReportsService) {
     effect(() => {
-      if (this.authService.userSignal() !== null) {
+      if (this.authService.loggedUserSignal() !== null) {
         this.reportsService.getAllParentReports();
       } else {
         this.reportsService.reports = [];

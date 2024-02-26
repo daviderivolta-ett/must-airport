@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LoggedUser, UserData } from '../models/user.model';
 import { User } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { Firestore } from '@angular/fire/firestore';
 
 @Injectable({
@@ -21,11 +21,18 @@ export class UserService {
     }
   }
 
+  public async createUserWithGoogleAccountById(id: string, data: UserData): Promise<void> {
+    const ref = doc(this.db, 'demoUsers', id);
+    await setDoc(ref, data);
+  }
+
   public parseUserData(user: User, userData: UserData): LoggedUser {
     let u = LoggedUser.createEmpty();
 
     u.level = userData.userLevel;
     u.email = user.email;
+    user.displayName ? u.displayName = user.displayName : u.displayName = user.email;
+    if (user.photoURL) u.picUrl = user.photoURL;
 
     return u;
   }

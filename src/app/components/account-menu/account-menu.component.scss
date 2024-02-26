@@ -1,0 +1,47 @@
+.menu {
+    position: fixed;
+    right: 24px;
+    top: 57px;
+    width: 160px;
+    z-index: 999999;
+    background-color: var(--bg-inset);
+    border-radius: 4px;
+    font-size: .85rem;
+    visibility: hidden;
+    display: none;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+
+    &:hover {
+        background-color: var(--bg-default);
+    }
+}
+
+li.display-name {
+    cursor: default;
+
+    &:hover {
+        background-color: var(--bg-inset);
+    }
+} 
+
+.material-symbols-outlined {
+    font-size: .85rem;
+}
+
+.visible {
+    visibility: visible;
+    display: block;
+}

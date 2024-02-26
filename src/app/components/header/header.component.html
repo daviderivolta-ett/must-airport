@@ -15,13 +15,16 @@
                 </a>
             </li>
             @if (loggedUser) {
-            <li>
-                <a routerLink="login" (click)="logOut()">
-                    <span class="material-symbols-outlined">account_circle</span>
-                    Logout
-                </a>
+            <li (click)="showAccountMenu()">
+                @if (loggedUser.picUrl) {
+                    <img src="{{loggedUser.picUrl}}" alt="Immagine profilo" class="profile-pic" referrerpolicy="no-referrer">
+                }
+                @else {
+                    <span class="profile-pic profile-pic-alt">{{loggedUser.displayName?.charAt(0)?.toUpperCase()}}</span>
+                }
             </li>
             }
         </ul>
     </div>
 </div>
+<app-account-menu [loggedUser]="loggedUser" />
