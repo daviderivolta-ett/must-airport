@@ -1,4 +1,4 @@
-import { Injectable, WritableSignal, effect, signal } from '@angular/core';
+import { Injectable, WritableSignal, effect, signal, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth, getAuth, signInAnonymously, onAuthStateChanged, User, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, AuthProvider } from 'firebase/auth';
 import { UserService } from './user.service';
@@ -15,7 +15,7 @@ export class AuthService {
   public loggedUserSignal: WritableSignal<LoggedUser | null> = signal(null);
   public loggedUser: LoggedUser | null = null;
 
-  constructor(private router: Router, private userService: UserService) {
+  constructor(private router: Router, private userService: UserService, private ngZone: NgZone) {
     effect(() => {
       this.loggedUser = this.loggedUserSignal();
       console.log(this.loggedUser);
@@ -56,7 +56,7 @@ export class AuthService {
           this.loggedUserSignal.set(this.userService.parseUserData(user, data));
         }
 
-        this.router.navigate(['/segnalazioni']);       
+        this.ngZone.run(() => this.router.navigate(['/segnalazioni']));
       } else {
         this.loggedUserSignal.set(null);
         // console.log('User is signed out!');
