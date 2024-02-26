@@ -18,9 +18,10 @@ export class LoginComponent {
   constructor(private fb: FormBuilder, private authService: AuthService) {}
 
   public handleSubmit(): void {
-    console.log(this.loginForm.value);
+    // console.log(this.loginForm.value);
     if (this.loginForm.value.email && this.loginForm.value.password) {
-      this.authService.logInWithEmailAndPassword(this.loginForm.value.email, this.loginForm.value.password);      
+      this.authService.logInWithEmailAndPassword(this.loginForm.value.email, this.loginForm.value.password);
+      this.loginForm.reset();
     }
   }
 

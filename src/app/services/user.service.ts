@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LoggedUser, UserData } from '../models/user.model';
 import { User } from 'firebase/auth';
-import { Timestamp, doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { Firestore } from '@angular/fire/firestore';
 
 @Injectable({

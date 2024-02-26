@@ -4,6 +4,7 @@ import { Auth, getAuth, signInAnonymously, onAuthStateChanged, User, signInWithE
 import { UserService } from './user.service';
 import { LoggedUser, USERLEVEL, UserData } from '../models/user.model';
 import { Timestamp } from 'firebase/firestore';
+import { SnackbarService } from '../observables/snackbar.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class AuthService {
   public loggedUserSignal: WritableSignal<LoggedUser | null> = signal(null);
   public loggedUser: LoggedUser | null = null;
 
-  constructor(private router: Router, private userService: UserService, private ngZone: NgZone) {
+  constructor(private router: Router, private userService: UserService, private ngZone: NgZone, private snackbarService: SnackbarService) {
     effect(() => {
       this.loggedUser = this.loggedUserSignal();
       console.log(this.loggedUser);
@@ -76,6 +77,7 @@ export class AuthService {
 
         console.log(errorCode);
         console.log(errorMsg);
+        this.snackbarService.createSnackbar(this.translateErrorMessage(errorCode), 'error');
       })
   }
 
@@ -93,8 +95,31 @@ export class AuthService {
 
         console.log(errorCode);
         console.log(errorMsg);
-
+        this.snackbarService.createSnackbar(this.translateErrorMessage(errorCode), 'error');
         const credential = GoogleAuthProvider.credentialFromError(error);
       })
-  }  
+  }
+
+  public translateErrorMessage(error: string): string {
+    let msg: string;
+
+    switch (error) {
+      case 'auth/invalid-email':
+        msg = 'Email non trovata.'
+        break;
+
+      case 'auth/user-not-found':
+        msg = 'Utente non trovato.'
+        break;
+
+      case 'auth/wrong-password':
+        msg = 'Combinazione password/email errata.'
+        break;
+
+      default:
+        msg = 'Errore. Riprovare.'
+        break;
+    }
+    return msg;
+  }
 }
