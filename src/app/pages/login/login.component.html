@@ -1,12 +1,26 @@
-<p>login works!</p>
-<form [formGroup]="loginForm">
-    <div class="input-single">
-        <label for="email"></label>
-        <input type="email" id="email" formControlName="email">
+<div class="page">
+    <div class="login-form">
+        <h1>Effettua il login per continuare</h1>
+        <form [formGroup]="loginForm">
+            <div class="input-single input-email">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Inserisci la tua email" formControlName="email">
+            </div>
+            <div class="input-single input-password">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Inserisci la tua password" formControlName="password">
+            </div>
+            <button type="submit" class="submit" [disabled]="!loginForm.valid" (click)="handleSubmit()">Login</button>
+        </form>
+        <div class="divider">
+            <div class="hr"></div>
+            <p>oppure continua con</p>
+            <div class="hr"></div>
+        </div>
+        <button type="button" class="google">
+            <img src="../../../assets/icons/google_pictogram.svg" alt="Google icon">
+            <span>Continua con Google</span>
+        </button>
+
     </div>
-    <div class="input-single">
-        <label for="password"></label>
-        <input type="password" id="password" formControlName="password">
-    </div>
-    <button type="submit" [disabled]="!loginForm.valid" (click)="handleSubmit()">Login</button>
-</form>
+</div>
