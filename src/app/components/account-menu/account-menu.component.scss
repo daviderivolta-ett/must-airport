@@ -1,5 +1,5 @@
 .menu {
-    position: fixed;
+    position: absolute;
     right: 24px;
     top: 57px;
     width: 160px;
@@ -35,7 +35,7 @@ li.display-name {
     &:hover {
         background-color: var(--bg-inset);
     }
-} 
+}
 
 .material-symbols-outlined {
     font-size: .85rem;
