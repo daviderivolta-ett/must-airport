@@ -19,7 +19,7 @@ export class OperationCardComponent {
   constructor(private reportsService: ReportsService, private snackbarService: SnackbarService) { }
 
   public copyToClipboard(): void {
-    navigator.clipboard.writeText('pippo');
+    navigator.clipboard.writeText('Testo copiato');
   }
 
   public async deleteOperation(): Promise<void> {

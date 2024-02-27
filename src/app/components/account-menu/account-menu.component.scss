@@ -45,3 +45,11 @@ li.display-name {
     visibility: visible;
     display: block;
 }
+
+@media screen and (max-width: 576px) {
+    .menu {
+        right: 0;
+        width: 100%;
+        border-radius: 0 0 4px 4px;
+    }
+}
