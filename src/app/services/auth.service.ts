@@ -5,6 +5,7 @@ import { UserService } from './user.service';
 import { LoggedUser, USERLEVEL, UserData } from '../models/user.model';
 import { Timestamp } from 'firebase/firestore';
 import { SnackbarService } from '../observables/snackbar.service';
+import { APPFLOW } from '../models/app-flow.model';
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +51,8 @@ export class AuthService {
         } catch {
           let data: UserData = {
             userLevel: USERLEVEL.Admin,
-            lastLogin: Timestamp.fromDate(new Date(Date.now()))
+            lastLogin: Timestamp.fromDate(new Date(Date.now())),
+            apps: [APPFLOW.Default]
           }
 
           this.userService.setUserById(user.uid, data);
