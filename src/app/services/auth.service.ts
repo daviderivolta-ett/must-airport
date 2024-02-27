@@ -59,7 +59,6 @@ export class AuthService {
           this.userService.setUserById(user.uid, data);
           this.loggedUserSignal.set(this.userService.parseUserData(user, data));
         }
-
         this.ngZone.run(() => this.router.navigate(['/segnalazioni']));
       } else {
         this.loggedUserSignal.set(null);

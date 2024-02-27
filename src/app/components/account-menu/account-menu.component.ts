@@ -5,11 +5,12 @@ import { NgClass, TitleCasePipe } from '@angular/common';
 import { HeaderService } from '../../observables/header.service';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { SnackbarService } from '../../observables/snackbar.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-account-menu',
   standalone: true,
-  imports: [NgClass, ClickOutsideDirective, TitleCasePipe],
+  imports: [NgClass, ClickOutsideDirective, TitleCasePipe, RouterLink],
   templateUrl: './account-menu.component.html',
   styleUrl: './account-menu.component.scss'
 })
