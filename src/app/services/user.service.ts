@@ -30,10 +30,12 @@ export class UserService {
     let u = LoggedUser.createEmpty();
 
     u.level = userData.userLevel;
-    u.email = user.email;
+    if (userData.lastLogin) u.lastLogin = userData.lastLogin.toDate();
+    u.apps = [...userData.apps];
+    u.lastApp = userData.lastApp;
     user.displayName ? u.displayName = user.displayName : u.displayName = user.email;
     if (user.photoURL) u.picUrl = user.photoURL;
-    if (userData.lastLogin) u.lastLogin = userData.lastLogin.toDate();
+    u.email = user.email;
 
     return u;
   }

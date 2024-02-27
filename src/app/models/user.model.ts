@@ -8,7 +8,8 @@ export enum USERLEVEL {
 export interface UserData {
     userLevel: USERLEVEL;
     lastLogin: Timestamp;
-    apps: APPFLOW[]
+    apps: APPFLOW[],
+    lastApp: APPFLOW
 }
 
 export class LoggedUser {
@@ -17,7 +18,8 @@ export class LoggedUser {
     email: string | null;
     displayName: string | null;
     picUrl: string | null;
-    apps: APPFLOW[]
+    apps: APPFLOW[];
+    lastApp: APPFLOW
 
     constructor(
         level: USERLEVEL,
@@ -25,14 +27,16 @@ export class LoggedUser {
         email: string | null,
         displayName: string | null,
         picUrl: string | null,
-        apps: APPFLOW[]
+        apps: APPFLOW[],
+        lastApp: APPFLOW
     ) {
         this.level = level;
         this.lastLogin = lastLogin;
         this.email = email;
         this.displayName = displayName;
         this.picUrl = picUrl;
-        this.apps = apps
+        this.apps = apps;
+        this.lastApp = lastApp;
     }
 
     static createEmpty(): LoggedUser {
@@ -42,7 +46,8 @@ export class LoggedUser {
             null,
             null,
             null,
-            [APPFLOW.Default]
+            [APPFLOW.Default],
+            APPFLOW.Default
         );
     }
 }

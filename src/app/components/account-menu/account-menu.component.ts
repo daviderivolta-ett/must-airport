@@ -1,7 +1,7 @@
 import { Component, Input, effect } from '@angular/core';
 import { LoggedUser } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
-import { NgClass } from '@angular/common';
+import { NgClass, TitleCasePipe } from '@angular/common';
 import { HeaderService } from '../../observables/header.service';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { SnackbarService } from '../../observables/snackbar.service';
@@ -9,7 +9,7 @@ import { SnackbarService } from '../../observables/snackbar.service';
 @Component({
   selector: 'app-account-menu',
   standalone: true,
-  imports: [NgClass, ClickOutsideDirective],
+  imports: [NgClass, ClickOutsideDirective, TitleCasePipe],
   templateUrl: './account-menu.component.html',
   styleUrl: './account-menu.component.scss'
 })

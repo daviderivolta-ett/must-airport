@@ -1,6 +1,6 @@
 import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy, setDoc, deleteDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy, setDoc, deleteDoc, updateDoc, arrayUnion, arrayRemove, where } from 'firebase/firestore';
 import { ReportParent } from '../models/report-parent.model';
 import { ReportParentFields } from '../models/report-parent.fields.model';
 import { ReportChild } from '../models/report-child.model';
@@ -14,6 +14,7 @@ import { Language } from '../models/language.model';
 import { StorageReference, deleteObject, getMetadata, ref } from 'firebase/storage';
 import { Storage } from '@angular/fire/storage';
 import { OPERATIONTYPE, Operation, OperationDb } from '../models/operation.model';
+import { APPFLOW } from '../models/app-flow.model';
 
 export interface ReportParentDb {
   childFlowId: string;
@@ -105,12 +106,12 @@ export class ReportsService {
     effect(() => this.filteredReports = this.filteredReportsSignal());
   }
 
-  public async getAllParentReports() {
+  public async getAllParentReports(appFlow: APPFLOW) {
     await this.dictionaryService.getAll();
     // console.log(this.dictionaryService.failureTags);
     // console.log(this.dictionaryService.techElementTags);
 
-    const q = query(collection(this.db, 'reportParents'), orderBy('lastChildTime', 'desc'));
+    const q = query(collection(this.db, 'reportParents'), where('parentFlowId', '==', appFlow), orderBy('lastChildTime', 'desc'));
     const unsubscribe = onSnapshot(q,
       (querySnapshot: QuerySnapshot<DocumentData>) => {
         let reports: any[] = [];

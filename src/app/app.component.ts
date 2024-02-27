@@ -4,6 +4,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { AuthService } from './services/auth.service';
 import { FirebaseService } from './services/firebase.service';
 import { ReportsService } from './services/reports.service';
+import { APPFLOW } from './models/app-flow.model';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,8 @@ export class AppComponent {
   constructor(private firebaseService: FirebaseService, private authService: AuthService, private reportsService: ReportsService) {
     effect(() => {
       if (this.authService.loggedUserSignal() !== null) {
-        this.reportsService.getAllParentReports();
+        console.log(this.authService.loggedUser);
+        this.authService.loggedUser && this.authService.loggedUser.lastApp ? this.reportsService.getAllParentReports(this.authService.loggedUser.lastApp) : this.reportsService.getAllParentReports(APPFLOW.Default);
       } else {
         this.reportsService.reports = [];
       }

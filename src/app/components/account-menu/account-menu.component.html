@@ -1,6 +1,9 @@
 <div class="menu" [ngClass]="{'visible': isVisible}" appClickOutside (clickedOutside)="closeAccountMenu()">
     <ul>
         <li class="display-name">{{loggedUser?.displayName}}</li>
+        @for (app of loggedUser?.apps; track $index) {
+            <li>{{app | titlecase}}</li>
+        }
         <li (click)="logOut()">
             Esci
             <span class="material-symbols-outlined logout-icon">logout</span>

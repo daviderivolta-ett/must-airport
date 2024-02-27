@@ -20,7 +20,7 @@ export class AuthService {
   constructor(private router: Router, private userService: UserService, private ngZone: NgZone, private snackbarService: SnackbarService) {
     effect(() => {
       this.loggedUser = this.loggedUserSignal();
-      console.log(this.loggedUser);
+      // console.log(this.loggedUser);
     });
 
     this.auth = getAuth();
@@ -52,7 +52,8 @@ export class AuthService {
           let data: UserData = {
             userLevel: USERLEVEL.Admin,
             lastLogin: Timestamp.fromDate(new Date(Date.now())),
-            apps: [APPFLOW.Default]
+            apps: [APPFLOW.Default],
+            lastApp: APPFLOW.Default
           }
 
           this.userService.setUserById(user.uid, data);
