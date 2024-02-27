@@ -1,0 +1,17 @@
+<form [formGroup]="createCodeForm">
+    <div class="input-single">
+        <label for="code">Codice</label>
+        <input type="text" id="code" formControlName="code">
+        <!-- @if (createCodeForm.value.code && createCodeForm.value.code.length < 10) {
+            <p>troppo corto</p>
+        } -->
+    </div>
+    <div class="select-single">
+        <select name="" id="app" formControlName="app">
+            <option value="">Seleziona un'app</option>
+            <option value="default">Pubblica</option>
+            <option value="airport">Aeroporto</option>
+        </select>
+    </div>
+    <button type="submit" [disabled]="!createCodeForm.valid" (click)="handleSubmit()">Crea codice</button>
+</form>
