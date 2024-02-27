@@ -1,0 +1,4 @@
+<form [formGroup]="useCodeForm">
+    <input type="text" formControlName="code">
+    <button type="submit" [disabled]="!useCodeForm.valid" (click)="handleSubmit()">Usa codice</button>
+</form>

@@ -1,6 +1,7 @@
 <div class="menu" [ngClass]="{'visible': isVisible}" appClickOutside (clickedOutside)="closeAccountMenu()">
     <ul>
         <li class="display-name">{{loggedUser?.displayName}}</li>
+        <li><a routerLink="use-code">Usa codice</a></li>
         @for (app of loggedUser?.apps; track $index) {
             <li>{{app | titlecase}}</li>
         }

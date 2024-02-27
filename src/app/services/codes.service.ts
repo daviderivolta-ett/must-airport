@@ -9,6 +9,10 @@ export interface CreateCodeFormData {
   app: APPFLOW;
 }
 
+export interface UseCodeFormData {
+  code: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,7 +20,9 @@ export class CodesService {
   public codes: Code[] = [];
   public codesSignal: WritableSignal<Code[]> = signal([]);
 
-  constructor(private db: Firestore) { }
+  constructor(private db: Firestore) {
+    effect(() => this.codes = this.codesSignal());
+  }
 
   public async setCodeById(id: string, data: CodeDb): Promise<void> {
     const ref = doc(this.db, 'codes', id);
@@ -86,5 +92,10 @@ export class CodesService {
     }
 
     return code;
+  }
+
+  public checkIfCodeIsValid(formCode: string): boolean {
+    let found : Code | undefined = this.codes.find(item => item.code === formCode);
+    return found && found.isValid === true ? true : false;
   }
 }

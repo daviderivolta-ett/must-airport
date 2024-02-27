@@ -5,6 +5,7 @@ import { AuthService } from './services/auth.service';
 import { FirebaseService } from './services/firebase.service';
 import { ReportsService } from './services/reports.service';
 import { APPFLOW } from './models/app-flow.model';
+import { CodesService } from './services/codes.service';
 
 @Component({
   selector: 'app-root',
@@ -16,11 +17,12 @@ import { APPFLOW } from './models/app-flow.model';
 export class AppComponent {
   title = 'must';
 
-  constructor(private firebaseService: FirebaseService, private authService: AuthService, private reportsService: ReportsService) {
+  constructor(private firebaseService: FirebaseService, private authService: AuthService, private reportsService: ReportsService, private codesService: CodesService) {
     effect(() => {
       if (this.authService.loggedUserSignal() !== null) {
         console.log(this.authService.loggedUser);
         this.authService.loggedUser && this.authService.loggedUser.lastApp ? this.reportsService.getAllParentReports(this.authService.loggedUser.lastApp) : this.reportsService.getAllParentReports(APPFLOW.Default);
+        this.codesService.getAllCodes()
       } else {
         this.reportsService.reports = [];
       }

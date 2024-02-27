@@ -17,11 +17,10 @@ export class AdminDashboardComponent {
   constructor(private codesService: CodesService) {
     effect(() => {
       this.allCodes = this.codesService.codesSignal();
-      console.log(this.allCodes);
     });
   }
 
   async ngOnInit(): Promise<void> {
-    await this.codesService.getAllCodes();
+    // await this.codesService.getAllCodes();
   }
 }
