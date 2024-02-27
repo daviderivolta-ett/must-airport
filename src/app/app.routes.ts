@@ -5,6 +5,7 @@ import { StatsPageComponent } from './pages/stats/stats-page/stats-page.componen
 import { LoginComponent } from './pages/login/login.component';
 import { authGuard } from './guards/auth.guard';
 import { AdminDashboardComponent } from './pages/admin-dashboard/page/admin-dashboard.component';
+import { superuserGuard } from './guards/superuser.guard';
 
 export const routes: Routes = [
     {
@@ -43,6 +44,7 @@ export const routes: Routes = [
     {
         path: 'admin-dashboard',
         title: 'MUST - Admin dashboard',
-        component: AdminDashboardComponent
+        component: AdminDashboardComponent,
+        canActivate: [authGuard, superuserGuard]
     }
 ];

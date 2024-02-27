@@ -5,9 +5,7 @@
             <li>{{app | titlecase}}</li>
         }
         @if (loggedUser?.level === 0) {
-            <li>
-                <a routerLink="admin-dashboard">Dashboard</a>
-            </li>
+            <li><a routerLink="admin-dashboard">Dashboard</a></li>
         }
         <li (click)="logOut()">
             Esci

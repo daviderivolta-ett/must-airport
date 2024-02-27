@@ -2,7 +2,9 @@ import { Timestamp } from "firebase/firestore";
 import { APPFLOW } from "./app-flow.model";
 
 export enum USERLEVEL {
-    Admin = 0
+    Superuser = 0,
+    Admin = 1,
+    User = 2
 }
 
 export interface UserData {
@@ -41,7 +43,7 @@ export class LoggedUser {
 
     static createEmpty(): LoggedUser {
         return new LoggedUser(
-            USERLEVEL.Admin,
+            USERLEVEL.User,
             new Date(Date.now()),
             null,
             null,
