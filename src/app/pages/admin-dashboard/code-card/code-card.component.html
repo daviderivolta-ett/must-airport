@@ -1,0 +1,6 @@
+@if (code) {
+<div class="code-card" [ngClass]="{'isNoMoreValid': !code.isValid}">
+    <p class="code">{{code.code}}</p>
+    <p class="app">{{code.vertId}}</p>
+</div>
+}

@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { Timestamp, doc, setDoc } from 'firebase/firestore';
+import { DocumentData, QuerySnapshot, Timestamp, collection, doc, getDocs, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
 import { Code, CodeDb } from '../models/code.model';
 import { APPFLOW } from '../models/app-flow.model';
 
@@ -13,6 +13,8 @@ export interface CreateCodeFormData {
   providedIn: 'root'
 })
 export class CodesService {
+  public codes: Code[] = [];
+  public codesSignal: WritableSignal<Code[]> = signal([]);
 
   constructor(private db: Firestore) { }
 
@@ -21,21 +23,34 @@ export class CodesService {
     await setDoc(ref, data);
   }
 
+  public async getAllCodes(): Promise<void> {
+    const q = query(collection(this.db, 'codes'), orderBy('creationDate', 'desc'));
+    const unsubscribe = onSnapshot(q, (querySnapshot: QuerySnapshot<DocumentData>) => {
+      let codesDb: Code[] = [];
+      querySnapshot.forEach(doc => {
+        codesDb.push(this.parseCodeDb(doc.data() as CodeDb))
+      });
+      this.codesSignal.set(codesDb);
+    },
+      (error: Error) => console.log(error)
+    );
+  }
+
   public parseCodeDb(codeDb: CodeDb): Code {
     let c: Code = Code.createEmpty();
 
     c.code = codeDb.code;
     c.isValid = codeDb.isValid;
 
-    switch (codeDb.app) {
+    switch (codeDb.vertId) {
       case 'default':
-        c.app = APPFLOW.Default;
+        c.vertId = APPFLOW.Default;
         break;
       case 'airport':
-        c.app = APPFLOW.Airport
+        c.vertId = APPFLOW.Airport
         break;
       default:
-        c.app = APPFLOW.Default;
+        c.vertId = APPFLOW.Default;
         break;
     }
 
@@ -48,8 +63,9 @@ export class CodesService {
   public parseCode(code: Code): CodeDb {
     let c: CodeDb = {
       code: code.code,
+      creationDate: Timestamp.fromDate(code.creationDate),
       isValid: code.isValid,
-      app: code.app,
+      vertId: code.vertId,
       usedOn: Timestamp.now(),
       userId: code.userId
     }
@@ -62,8 +78,9 @@ export class CodesService {
   public parseCreateCodeFormData(formData: CreateCodeFormData): any {
     let code = {
       code: formData.code,
-      isValid: false,
-      app: formData.app,
+      creationDate: Timestamp.now(),
+      isValid: true,
+      vertId: formData.app,
       usedOn: null,
       userId: null
     }

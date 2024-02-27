@@ -1,0 +1,16 @@
+.page {
+    max-width: 768px;
+    margin: auto;
+}
+
+.codes-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2%;
+}
+
+app-code-card {
+    display: block;
+    width: 48%;
+    margin: 0 0 2% 0;
+}

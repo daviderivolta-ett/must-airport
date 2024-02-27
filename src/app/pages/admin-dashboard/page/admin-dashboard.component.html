@@ -1,1 +1,8 @@
-<app-create-code />
+<div class="page">
+    <app-create-code />
+    <div class="codes-section">
+        @for (code of allCodes; track $index) {
+        <app-code-card [code]="code" />
+        }
+    </div>
+</div>

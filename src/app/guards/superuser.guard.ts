@@ -9,7 +9,7 @@ export const superuserGuard: CanActivateFn = (route, state) => {
     if (authService.loggedUser && authService.loggedUser.level === 0) {
       resolve(true);
     } else {
-      // router.navigate(['/segnalazioni']);
+      router.navigate(['/segnalazioni']);
       resolve(false);
     }
   });

@@ -1,0 +1,25 @@
+p {
+    margin: 0;
+}
+
+.code-card {
+    background-color: var(--bg-default);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.code {
+    color: var(--f-default);
+    margin: 0 0 4px 0;
+}
+
+.app {
+    color: var(--f-muted);
+    font-size: .8rem;
+}
+
+.isNoMoreValid {
+    background-color: var(--bg-danger-dull);
+    border-color: var(--bg-danger);
+}

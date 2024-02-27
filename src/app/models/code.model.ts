@@ -3,21 +3,24 @@ import { APPFLOW } from "./app-flow.model";
 
 export class Code {
     code: string;
+    creationDate: Date;
     isValid: boolean;
-    app: APPFLOW;
+    vertId: APPFLOW;
     usedOn: Date | null;
     userId: string | null
 
     constructor(
         code: string,
+        creationDate: Date,
         isValid: boolean,
-        app: APPFLOW,
+        vertId: APPFLOW,
         usedOn: Date | null,
         userId: string | null
     ) {
         this.code = code;
+        this.creationDate = creationDate;
         this.isValid = isValid;
-        this.app = app;
+        this.vertId = vertId;
         this.usedOn = usedOn;
         this.userId = userId;
     }
@@ -25,6 +28,7 @@ export class Code {
     static createEmpty(): Code {
         return new Code(
             '',
+            new Date(Date.now()),
             true,
             APPFLOW.Default,
             null,
@@ -35,21 +39,24 @@ export class Code {
 
 export class CodeDb {
     code: string;
+    creationDate: Timestamp;
     isValid: boolean;
-    app: string;
+    vertId: string;
     usedOn: Timestamp | null;
     userId: string | null;
 
     constructor(
         code: string,
+        creationDate: Timestamp,
         isValid: boolean,
-        app: string,
+        vertId: string,
         usedOn: Timestamp | null,
         userId: string | null
     ) {
         this.code = code;
+        this.creationDate = creationDate;
         this.isValid = isValid;
-        this.app = app;
+        this.vertId = vertId;
         this.usedOn = usedOn;
         this.userId = userId;
     }
@@ -57,7 +64,8 @@ export class CodeDb {
     static createEmpty() {
         return new CodeDb(
             '',
-            false,
+            Timestamp.now(),
+            true,
             'default',
             null,
             null

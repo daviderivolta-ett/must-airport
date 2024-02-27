@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Code, CodeDb } from '../../../models/code.model';
 import { CodesService, CreateCodeFormData } from '../../../services/codes.service';
 
 @Component({
