@@ -17,23 +17,6 @@ p {
     margin: 0;
 }
 
-// ul {
-//     list-style-type: none;
-//     padding: 0;
-//     margin: 0;
-// }
-
-// li {
-//     cursor: pointer;
-//     display: flex;
-//     justify-content: space-between;
-//     align-items: center;
-
-//     &:hover {
-//         background-color: var(--bg-default);
-//     }
-// }
-
 .list-section {
     border-width: 1px 0 0 0;
     border-style: solid;
@@ -93,6 +76,24 @@ a.list-text {
 .visible {
     visibility: visible;
     display: block;
+}
+
+.current-app {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.current-app::after {
+    content: 'ATTUALE';
+    position: absolute;
+    right: 16px;
+    font-size: .6rem;
+    color: var(--f-accent);
+    background-color: var(--bg-accent-dull);
+    padding: 4px;
+    border-radius: 2px;
 }
 
 @media screen and (max-width: 576px) {
