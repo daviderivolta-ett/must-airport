@@ -3,6 +3,9 @@ import { Firestore } from '@angular/fire/firestore';
 import { DocumentData, QuerySnapshot, Timestamp, collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
 import { Code, CodeDb } from '../models/code.model';
 import { APPFLOW } from '../models/app-flow.model';
+import { AuthService } from './auth.service';
+import { UserService } from './user.service';
+import { LoggedUser, UserData } from '../models/user.model';
 
 export interface CreateCodeFormData {
   code: string;
@@ -20,7 +23,7 @@ export class CodesService {
   public codes: Code[] = [];
   public codesSignal: WritableSignal<Code[]> = signal([]);
 
-  constructor(private db: Firestore) {
+  constructor(private db: Firestore, private authService: AuthService, private userService: UserService) {
     effect(() => this.codes = this.codesSignal());
   }
 
@@ -107,5 +110,39 @@ export class CodesService {
   public checkIfCodeIsValid(formCode: string): boolean {
     let found: Code | undefined = this.codes.find(item => item.code === formCode);
     return found && found.isValid === true ? true : false;
+  }
+
+  public async consumeCode(code: string): Promise<void> {
+    const loggedUser: LoggedUser | null = this.authService.loggedUser;
+    if (!loggedUser) return;
+
+    const isCodeValid = this.checkIfCodeIsValid(code);
+    if (!isCodeValid) return;
+
+    let codeDb: CodeDb = await this.getCodeByCode(code);
+    codeDb.usedOn = Timestamp.now();
+    codeDb.userId = loggedUser.id;
+    codeDb.isValid = false;
+
+    const isUserAlreadyAbilitated = this.userService.checkIfUserIsAlreadyAbilitated(loggedUser, codeDb.vertId);
+    if (isUserAlreadyAbilitated) return;
+
+    const codeObj: Code = this.parseCodeDb(codeDb);
+    loggedUser.apps.push(codeObj.vertId);
+    loggedUser.lastApp = codeObj.vertId;
+
+    // console.log(codeDb);
+    // console.log(loggedUser);
+
+    let userData: UserData = {
+      userLevel: loggedUser.level,
+      lastLogin: Timestamp.fromDate(loggedUser.lastLogin),
+      apps: loggedUser.apps,
+      lastApp: loggedUser.lastApp
+    }
+
+    // console.log(userData);
+    this.setCodeById(codeDb.code, codeDb);
+    await this.userService.setUserDataById(loggedUser.id, userData);
   }
 }

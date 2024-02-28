@@ -20,7 +20,6 @@ export class CreateCodeComponent {
 
   public handleSubmit(): void {
     let ref = this.codesService.parseCreateCodeFormData(this.createCodeForm.value as CreateCodeFormData);
-    console.log(ref);
     this.codesService.setCodeById(ref.code, ref);
     this.createCodeForm.reset();
     this.generateCode();

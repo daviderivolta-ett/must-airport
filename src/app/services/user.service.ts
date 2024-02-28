@@ -21,7 +21,7 @@ export class UserService {
     }
   }
 
-  public async setUserById(id: string, data: UserData): Promise<void> {
+  public async setUserDataById(id: string, data: UserData): Promise<void> {
     const ref = doc(this.db, 'demoUsers', id);
     await setDoc(ref, data);
   }
@@ -39,5 +39,9 @@ export class UserService {
     u.id = id;
 
     return u;
+  }
+
+  public checkIfUserIsAlreadyAbilitated(user: LoggedUser, app: string): boolean {
+    return user.apps.some(item => item === app);
   }
 }

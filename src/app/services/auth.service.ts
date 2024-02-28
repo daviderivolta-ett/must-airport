@@ -46,7 +46,7 @@ export class AuthService {
         try {
           let userData: UserData = await this.userService.getUserDataById(user.uid);
           userData.lastLogin = Timestamp.fromDate(new Date(Date.now()));
-          this.userService.setUserById(user.uid, userData);
+          this.userService.setUserDataById(user.uid, userData);
           this.loggedUserSignal.set(this.userService.parseUserData(user.uid, user, userData));
         } catch {
           let data: UserData = {
@@ -56,7 +56,7 @@ export class AuthService {
             lastApp: APPFLOW.Default
           }
 
-          this.userService.setUserById(user.uid, data);
+          this.userService.setUserDataById(user.uid, data);
           this.loggedUserSignal.set(this.userService.parseUserData(user.uid, user, data));
         }
         // this.ngZone.run(() => this.router.navigate(['/segnalazioni']));

@@ -20,17 +20,7 @@ export class UseCodeComponent {
   constructor(private fb: FormBuilder, private codesService: CodesService, private authService: AuthService) { }
 
   public async handleSubmit(): Promise<void> {
-    console.log(this.useCodeForm.value);
-    if (this.useCodeForm.value.code) {
-      let isCodeValid = this.codesService.checkIfCodeIsValid(this.useCodeForm.value.code);
-      let code: Code;
-      if (isCodeValid) {
-        let codeDb: CodeDb = await this.codesService.getCodeByCode(this.useCodeForm.value.code);
-        codeDb.usedOn = Timestamp.now();
-        if (this.authService.loggedUser) codeDb.userId = this.authService.loggedUser.id;
-        codeDb.isValid = false;
-        this.codesService.setCodeById(codeDb.code, codeDb);
-      }
-    }
+    const formCode = this.useCodeForm.get('code');
+    if (formCode && formCode.value) this.codesService.consumeCode(formCode.value);
   }
 }

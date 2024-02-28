@@ -3,7 +3,7 @@
         <li class="display-name">{{loggedUser?.displayName}}</li>
         <li><a routerLink="use-code">Usa codice</a></li>
         @for (app of loggedUser?.apps; track $index) {
-            <li>{{app | titlecase}}</li>
+            <li><a routerLink="segnalazioni" (click)="reloadApp(app)">{{app | titlecase}}</a></li>
         }
         @if (loggedUser?.level === 0) {
             <li><a routerLink="admin-dashboard">Dashboard</a></li>
