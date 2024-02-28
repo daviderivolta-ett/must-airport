@@ -11,4 +11,10 @@ import { NgClass } from '@angular/common';
 })
 export class CodeCardComponent {
   @Input() public code: Code | null = null;
+
+  public copyToClipboard(): void {
+    if (this.code) {
+      navigator.clipboard.writeText(this.code.code);
+    }
+  }
 }

@@ -7,6 +7,9 @@ p {
     border: 1px solid var(--border-default);
     border-radius: 8px;
     padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .code {
@@ -22,4 +25,27 @@ p {
 .isNoMoreValid {
     background-color: var(--bg-danger-dull);
     border-color: var(--bg-danger);
+}
+
+button {
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.copy-button {
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
+
+    &:hover {
+        border-color: var(--border-emphasis);
+    }
+}
+
+.icon {
+    font-size: 1.1rem;
 }

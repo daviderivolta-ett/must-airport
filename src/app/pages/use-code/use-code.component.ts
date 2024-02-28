@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CodesService } from '../../services/codes.service';
 import { AuthService } from '../../services/auth.service';
+import { Code, CodeDb } from '../../models/code.model';
+import { Timestamp } from 'firebase/firestore';
 
 @Component({
   selector: 'app-use-code',
@@ -17,11 +19,18 @@ export class UseCodeComponent {
 
   constructor(private fb: FormBuilder, private codesService: CodesService, private authService: AuthService) { }
 
-  public handleSubmit(): void {
+  public async handleSubmit(): Promise<void> {
     console.log(this.useCodeForm.value);
     if (this.useCodeForm.value.code) {
-      let p = this.codesService.checkIfCodeIsValid(this.useCodeForm.value.code);
-      console.log(p);
+      let isCodeValid = this.codesService.checkIfCodeIsValid(this.useCodeForm.value.code);
+      let code: Code;
+      if (isCodeValid) {
+        let codeDb: CodeDb = await this.codesService.getCodeByCode(this.useCodeForm.value.code);
+        codeDb.usedOn = Timestamp.now();
+        if (this.authService.loggedUser) codeDb.userId = this.authService.loggedUser.id;
+        codeDb.isValid = false;
+        this.codesService.setCodeById(codeDb.code, codeDb);
+      }
     }
   }
 }

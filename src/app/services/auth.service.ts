@@ -44,10 +44,10 @@ export class AuthService {
         // console.log('User: ', user);
 
         try {
-          let userData: UserData = await this.userService.getUserById(user.uid);
+          let userData: UserData = await this.userService.getUserDataById(user.uid);
           userData.lastLogin = Timestamp.fromDate(new Date(Date.now()));
           this.userService.setUserById(user.uid, userData);
-          this.loggedUserSignal.set(this.userService.parseUserData(user, userData));
+          this.loggedUserSignal.set(this.userService.parseUserData(user.uid, user, userData));
         } catch {
           let data: UserData = {
             userLevel: USERLEVEL.Admin,
@@ -57,7 +57,7 @@ export class AuthService {
           }
 
           this.userService.setUserById(user.uid, data);
-          this.loggedUserSignal.set(this.userService.parseUserData(user, data));
+          this.loggedUserSignal.set(this.userService.parseUserData(user.uid, user, data));
         }
         // this.ngZone.run(() => this.router.navigate(['/segnalazioni']));
       } else {

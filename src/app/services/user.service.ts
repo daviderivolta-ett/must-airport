@@ -11,7 +11,7 @@ export class UserService {
 
   constructor(private db: Firestore) { }
 
-  public async getUserById(id: string): Promise<UserData> {
+  public async getUserDataById(id: string): Promise<UserData> {
     const q = doc(this.db, 'demoUsers', id);
     const snapshot = await getDoc(q);
     if (snapshot.exists()) {
@@ -26,7 +26,7 @@ export class UserService {
     await setDoc(ref, data);
   }
 
-  public parseUserData(user: User, userData: UserData): LoggedUser {
+  public parseUserData(id: string, user: User, userData: UserData): LoggedUser {
     let u = LoggedUser.createEmpty();
 
     u.level = userData.userLevel;
@@ -36,6 +36,7 @@ export class UserService {
     user.displayName ? u.displayName = user.displayName : u.displayName = user.email;
     if (user.photoURL) u.picUrl = user.photoURL;
     u.email = user.email;
+    u.id = id;
 
     return u;
   }

@@ -1,6 +1,6 @@
 import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { DocumentData, QuerySnapshot, Timestamp, collection, doc, getDocs, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
+import { DocumentData, QuerySnapshot, Timestamp, collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
 import { Code, CodeDb } from '../models/code.model';
 import { APPFLOW } from '../models/app-flow.model';
 
@@ -40,6 +40,16 @@ export class CodesService {
     },
       (error: Error) => console.log(error)
     );
+  }
+
+  public async getCodeByCode(code: string): Promise<CodeDb> {
+    const q = doc(this.db, 'codes', code);
+    const snapshot = await getDoc(q);
+    if (snapshot.exists()) {
+      return snapshot.data() as CodeDb;
+    } else {
+      throw new Error('Codice non trovato.');
+    }
   }
 
   public parseCodeDb(codeDb: CodeDb): Code {
@@ -95,7 +105,7 @@ export class CodesService {
   }
 
   public checkIfCodeIsValid(formCode: string): boolean {
-    let found : Code | undefined = this.codes.find(item => item.code === formCode);
+    let found: Code | undefined = this.codes.find(item => item.code === formCode);
     return found && found.isValid === true ? true : false;
   }
 }

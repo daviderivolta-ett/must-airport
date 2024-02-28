@@ -200,7 +200,7 @@ export class ReportsService {
     if (snapshot.exists()) {
       return snapshot.data() as ReportParentDb;
     } else {
-      throw new Error('Report non trovato');
+      throw new Error('Report non trovato.');
     }
   }
 

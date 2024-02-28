@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CodesService, CreateCodeFormData } from '../../../services/codes.service';
+import { DICTIONARY } from '../../../dictionaries/dictionary';
 
 @Component({
   selector: 'app-create-code',
@@ -11,7 +12,7 @@ import { CodesService, CreateCodeFormData } from '../../../services/codes.servic
 })
 export class CreateCodeComponent {
   public createCodeForm = this.fb.group({
-    code: ['', [Validators.required, Validators.minLength(10)]],
+    code: ['', Validators.required],
     app: ['', Validators.required]
   });
 
@@ -19,7 +20,24 @@ export class CreateCodeComponent {
 
   public handleSubmit(): void {
     let ref = this.codesService.parseCreateCodeFormData(this.createCodeForm.value as CreateCodeFormData);
+    console.log(ref);
     this.codesService.setCodeById(ref.code, ref);
     this.createCodeForm.reset();
+    this.generateCode();
+  }
+
+  public generateCode(): void {
+    let code: string = '';
+    for (let i = 1; i <= 3; i++) {
+      const randomNum: number = Math.floor(Math.random() * DICTIONARY.length);
+      const randomWord: string = DICTIONARY[randomNum];
+      code = code + randomWord;
+      if (i < 3) code = code + '-';
+    }
+    this.createCodeForm.get('code')?.setValue(code);
+  }
+
+  public ngOnInit(): void {
+    this.generateCode();
   }
 }

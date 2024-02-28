@@ -21,7 +21,8 @@ export class LoggedUser {
     displayName: string | null;
     picUrl: string | null;
     apps: APPFLOW[];
-    lastApp: APPFLOW
+    lastApp: APPFLOW;
+    id: string;
 
     constructor(
         level: USERLEVEL,
@@ -30,7 +31,8 @@ export class LoggedUser {
         displayName: string | null,
         picUrl: string | null,
         apps: APPFLOW[],
-        lastApp: APPFLOW
+        lastApp: APPFLOW,
+        id: string
     ) {
         this.level = level;
         this.lastLogin = lastLogin;
@@ -39,6 +41,7 @@ export class LoggedUser {
         this.picUrl = picUrl;
         this.apps = apps;
         this.lastApp = lastApp;
+        this.id = id;
     }
 
     static createEmpty(): LoggedUser {
@@ -49,7 +52,8 @@ export class LoggedUser {
             null,
             null,
             [APPFLOW.Default],
-            APPFLOW.Default
+            APPFLOW.Default,
+            ''
         );
     }
 }

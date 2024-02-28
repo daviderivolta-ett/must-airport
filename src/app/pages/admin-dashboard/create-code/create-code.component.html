@@ -1,10 +1,11 @@
 <form [formGroup]="createCodeForm">
     <div class="input-single">
         <label for="code">Codice</label>
-        <input type="text" id="code" formControlName="code">
+        <input type="text" id="code" formControlName="code" readonly>
         <!-- @if (createCodeForm.value.code && createCodeForm.value.code.length < 10) {
             <p>troppo corto</p>
         } -->
+        <button type="button" class="generate-code" (click)="generateCode()">Genera</button>
     </div>
     <div class="select-single">
         <label for="app">Scegli l'app</label>
