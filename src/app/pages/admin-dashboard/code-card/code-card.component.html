@@ -5,8 +5,8 @@
         <p class="app">{{code.vertId}}</p>
     </div>
     <div class="call-to-action">
-        <button type="button" class="copy-button">
-            <span class="material-symbols-outlined icon copy-icon" (click)="copyToClipboard()">content_copy</span>
+        <button type="button" class="copy-button" [disabled]="!code.isValid" (click)="copyToClipboard()">
+            <span class="material-symbols-outlined icon copy-icon">content_copy</span>
         </button>
     </div>
 </div>

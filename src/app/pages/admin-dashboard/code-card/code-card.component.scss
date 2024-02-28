@@ -44,6 +44,14 @@ button {
     &:hover {
         border-color: var(--border-emphasis);
     }
+
+    &:disabled {
+        cursor: not-allowed;
+
+        &:hover {
+            border-color: var(--border-default);
+        }
+    }
 }
 
 .icon {

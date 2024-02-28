@@ -8,7 +8,14 @@
         <p class="section-title">LE MIE APP</p>
         @for (app of loggedUser?.apps; track $index) {
         <div class="list-element" [ngClass]="{'current-app': app === loggedUser?.lastApp}">
-            <a class="list-text" routerLink="segnalazioni" (click)="reloadApp(app)">{{app | titlecase}}</a>
+            <a class="list-text" routerLink="segnalazioni" (click)="reloadApp(app)">
+                @if (app === 'default') {
+                    Pubblica
+                }
+                @else {
+                    {{app | titlecase}}
+                }
+            </a>
         </div>
         }
     </div>
