@@ -1,8 +1,12 @@
 <div class="page">
-    <app-create-code />
+    <h1>Elenco codici</h1>
     <div class="codes-section">
         @for (code of allCodes; track $index) {
-        <app-code-card [code]="code" />
+            <app-code-card [code]="code" />
         }
     </div>
+    <button type="button" class="add-code-btn" (click)="toggleDialog($event)">
+        <span class="material-symbols-outlined add-icon">add</span>
+    </button>
+    <app-create-code />
 </div>

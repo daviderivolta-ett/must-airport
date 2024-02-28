@@ -1,27 +1,58 @@
-import { Component } from '@angular/core';
+import { Component, Input, effect } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CodesService, CreateCodeFormData } from '../../../services/codes.service';
 import { DICTIONARY } from '../../../dictionaries/dictionary';
+import { NgClass } from '@angular/common';
+import { CreateCodeDialogService } from '../../../observables/create-code-dialog.service';
+import { ClickOutsideDirective } from '../../../directives/click-outside.directive';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-create-code',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [NgClass, ReactiveFormsModule, ClickOutsideDirective],
   templateUrl: './create-code.component.html',
-  styleUrl: './create-code.component.scss'
+  styleUrl: './create-code.component.scss',
+  animations: [
+    trigger('openClose', [
+      state('open', style({
+        // display: 'block',
+        visibility: 'visible',
+        transform: 'scale(1)',
+        transformOrigin: 'bottom right'
+      })),
+      state('closed', style({
+        // display: 'none',
+        visibility: 'hidden',
+        transform: 'scale(0)',
+        transformOrigin: 'bottom right'
+      })),
+      transition('closed => open', [
+        animate('0.25s cubic-bezier(.47,1.64,.41,.8)')
+      ]),
+      transition('open => closed', [
+        animate('0.1s')
+      ])
+    ])
+  ]
 })
 export class CreateCodeComponent {
+  public isOpen: boolean = false;
   public createCodeForm = this.fb.group({
     code: ['', Validators.required],
-    app: ['', Validators.required]
+    app: ['', Validators.required],
+    type: ['', Validators.required]
   });
 
-  constructor(private fb: FormBuilder, private codesService: CodesService) { }
+  constructor(private fb: FormBuilder, private codesService: CodesService, private createCodeDialogService: CreateCodeDialogService) {
+    effect(() => this.isOpen = this.createCodeDialogService.isOpenSignal());
+  }
 
   public handleSubmit(): void {
     let ref = this.codesService.parseCreateCodeFormData(this.createCodeForm.value as CreateCodeFormData);
     this.codesService.setCodeById(ref.code, ref);
-    this.createCodeForm.reset();
+    this.createCodeForm.reset({ app: '', type: '' });
+    this.createCodeDialogService.isOpenSignal.set(false);
     this.generateCode();
   }
 
@@ -38,6 +69,10 @@ export class CreateCodeComponent {
     } else {
       this.generateCode();
     }
+  }
+
+  public closeDialog(): void {
+    this.createCodeDialogService.isOpenSignal.set(false);
   }
 
   public ngOnInit(): void {

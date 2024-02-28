@@ -3,6 +3,7 @@ import { CreateCodeComponent } from '../create-code/create-code.component';
 import { CodesService } from '../../../services/codes.service';
 import { Code } from '../../../models/code.model';
 import { CodeCardComponent } from '../code-card/code-card.component';
+import { CreateCodeDialogService } from '../../../observables/create-code-dialog.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -13,14 +14,16 @@ import { CodeCardComponent } from '../code-card/code-card.component';
 })
 export class AdminDashboardComponent {
   public allCodes: Code[] = [];
+  public isDialogOpen: boolean = false;
 
-  constructor(private codesService: CodesService) {
+  constructor(private codesService: CodesService, private createCodeDialogService: CreateCodeDialogService) {
     effect(() => {
       this.allCodes = this.codesService.codesSignal();
     });
   }
 
-  async ngOnInit(): Promise<void> {
-    // await this.codesService.getAllCodes();
+  public toggleDialog(event: Event): void {
+    event.stopPropagation();
+    this.createCodeDialogService.isOpenSignal.set(!this.createCodeDialogService.isOpenSignal());
   }
 }

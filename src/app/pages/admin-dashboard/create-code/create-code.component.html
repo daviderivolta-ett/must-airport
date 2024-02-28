@@ -1,17 +1,26 @@
-<form [formGroup]="createCodeForm">
-    <div class="input-single">
-        <p>{{this.createCodeForm.get('code')?.value}}</p>
-        <!-- @if (createCodeForm.value.code && createCodeForm.value.code.length < 10) {
-            <p>troppo corto</p>
-        } -->
-        <button type="button" class="generate-code" (click)="generateCode()">Genera</button>
-    </div>
-    <div class="select-single">
-        <label for="app">Scegli l'app</label>
-        <select name="" id="app" formControlName="app">
-            <option value="">Seleziona un'app</option>
-            <option value="airport">Aeroporto</option>
-        </select>
-    </div>
-    <button type="submit" [disabled]="!createCodeForm.valid" (click)="handleSubmit()">Crea codice</button>
-</form>
+<div class="dialog" appClickOutside (clickedOutside)="closeDialog()" [@openClose]="isOpen ? 'open' : 'closed'">
+    <form [formGroup]="createCodeForm">
+        <div class="generate-code">
+            <button type="button" class="generate-code-btn" (click)="generateCode()">
+                <span class="material-symbols-outlined refresh-icon">refresh</span>
+            </button>
+            <p class="generate-code-preview">{{this.createCodeForm.get('code')?.value}}</p>
+        </div>
+        <div class="select-single">
+            <label for="app">Scegli l'app</label>
+            <select id="app" formControlName="app">
+                <option value="">Seleziona un'app</option>
+                <option value="airport">Aeroporto</option>
+            </select>
+        </div>
+        <div class="select-single">
+            <label for="type">Scegli il tipo</label>
+            <select id="type" formControlName="type">
+                <option value="">Seleziona il tipo dell'app</option>
+                <option value="web">Web</option>
+                <option value="mobile">Mobile</option>
+            </select>
+        </div>
+        <button type="submit" [disabled]="!createCodeForm.valid" (click)="handleSubmit()">Crea codice</button>
+    </form>
+</div>

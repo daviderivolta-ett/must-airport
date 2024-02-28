@@ -1,6 +1,12 @@
 .page {
     max-width: 768px;
-    margin: auto;
+    margin: 40px auto;
+}
+
+h1 {
+    text-align: center;
+    font-size: 1.4rem;
+    margin: 0 0 40px 0;
 }
 
 .codes-section {
@@ -13,4 +19,32 @@ app-code-card {
     display: block;
     width: 48%;
     margin: 0 0 2% 0;
+}
+
+.add-code-btn {
+    cursor: pointer;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    border: 1px solid var(--border-subtle);
+    background-color: var(--bg-default);
+    z-index: 999;
+}
+
+app-create-code {
+    position: fixed;
+    bottom: 80px;
+    right: 80px;
+}
+
+@media screen and (max-width: 576px) {
+    app-create-code {
+        right: 24px;
+    }
 }

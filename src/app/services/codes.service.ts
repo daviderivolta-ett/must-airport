@@ -6,10 +6,12 @@ import { APPFLOW } from '../models/app-flow.model';
 import { AuthService } from './auth.service';
 import { UserService } from './user.service';
 import { LoggedUser, UserData } from '../models/user.model';
+import { APPTYPE } from '../models/app-type.mode';
 
 export interface CreateCodeFormData {
   code: string;
   app: APPFLOW;
+  type: APPTYPE;
 }
 
 export interface UseCodeFormData {
@@ -85,6 +87,7 @@ export class CodesService {
       creationDate: Timestamp.fromDate(code.creationDate),
       isValid: code.isValid,
       vertId: code.vertId,
+      appType: code.appType,
       usedOn: Timestamp.now(),
       userId: code.userId,
       userEmail: code.userEmail
@@ -101,6 +104,7 @@ export class CodesService {
       creationDate: Timestamp.now(),
       isValid: true,
       vertId: formData.app,
+      appType: formData.type,
       usedOn: null,
       userId: null,
       userEmail: null
