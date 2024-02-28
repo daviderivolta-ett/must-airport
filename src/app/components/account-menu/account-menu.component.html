@@ -1,16 +1,31 @@
 <div class="menu" [ngClass]="{'visible': isVisible}" appClickOutside (clickedOutside)="closeAccountMenu()">
-    <ul>
-        <li class="display-name">{{loggedUser?.displayName}}</li>
-        <li><a routerLink="use-code">Usa codice</a></li>
+    <div class="list-section">
+        <div class="list-element display-name">
+            <p class="list-text">{{loggedUser?.displayName}}</p>
+        </div>
+    </div>
+    <div class="list-section">
+        <p class="section-title">LE MIE APP</p>
         @for (app of loggedUser?.apps; track $index) {
-            <li><a routerLink="segnalazioni" (click)="reloadApp(app)">{{app | titlecase}}</a></li>
+        <div class="list-element">
+            <a class="list-text" routerLink="segnalazioni" (click)="reloadApp(app)">{{app | titlecase}}</a>
+        </div>
         }
+    </div>
+    <div class="list-section">
+        <div class="list-element">
+            <a class="list-text" routerLink="use-code">Usa codice</a>
+        </div>
         @if (loggedUser?.level === 0) {
-            <li><a routerLink="admin-dashboard">Dashboard</a></li>
+        <div class="list-element">
+            <a class="list-text" routerLink="admin-dashboard">Dashboard</a>
+        </div>
         }
-        <li (click)="logOut()">
-            Esci
+    </div>
+    <div class="list-section">
+        <div class="list-element icon-element" (click)="logOut()">
+            <p class="list-text">Esci</p>
             <span class="material-symbols-outlined logout-icon">logout</span>
-        </li>
-    </ul>
+        </div>
+    </div>
 </div>
