@@ -1,7 +1,6 @@
 <form [formGroup]="createCodeForm">
     <div class="input-single">
-        <label for="code">Codice</label>
-        <input type="text" id="code" formControlName="code" readonly>
+        <p>{{this.createCodeForm.get('code')?.value}}</p>
         <!-- @if (createCodeForm.value.code && createCodeForm.value.code.length < 10) {
             <p>troppo corto</p>
         } -->

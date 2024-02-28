@@ -34,7 +34,11 @@ export class CreateCodeComponent {
       code = code + randomWord;
       if (i < 3) code = code + '-';
     }
-    this.createCodeForm.get('code')?.setValue(code);
+    if (!this.codesService.codes.find(item => item.code === code)) {
+      this.createCodeForm.get('code')?.setValue(code);
+    } else {
+      this.generateCode();
+    }
   }
 
   public ngOnInit(): void {
