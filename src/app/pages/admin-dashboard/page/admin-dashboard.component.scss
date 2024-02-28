@@ -1,12 +1,13 @@
 .page {
     max-width: 768px;
     margin: 40px auto;
+    padding: 0 4%;
 }
 
 h1 {
     text-align: center;
     font-size: 1.4rem;
-    margin: 0 0 40px 0;
+    margin: 0 0 24px 0;
 }
 
 .codes-section {
@@ -35,12 +36,22 @@ app-code-card {
     border: 1px solid var(--border-subtle);
     background-color: var(--bg-default);
     z-index: 999;
+
+    &:hover {
+        border-color: var(--border-emphasis);
+    }
 }
 
 app-create-code {
     position: fixed;
     bottom: 80px;
     right: 80px;
+}
+
+@media screen and (max-width: 768px) {
+    app-code-card {
+        width: 100%;
+    }
 }
 
 @media screen and (max-width: 576px) {
