@@ -86,7 +86,8 @@ export class CodesService {
       isValid: code.isValid,
       vertId: code.vertId,
       usedOn: Timestamp.now(),
-      userId: code.userId
+      userId: code.userId,
+      userEmail: code.userEmail
     }
 
     code.usedOn ? c.usedOn = Timestamp.fromDate(code.usedOn) : null;
@@ -101,7 +102,8 @@ export class CodesService {
       isValid: true,
       vertId: formData.app,
       usedOn: null,
-      userId: null
+      userId: null,
+      userEmail: null
     }
 
     return code;
@@ -123,6 +125,7 @@ export class CodesService {
     codeDb.usedOn = Timestamp.now();
     codeDb.userId = loggedUser.id;
     codeDb.isValid = false;
+    codeDb.userEmail = loggedUser.email;
 
     const isUserAlreadyAbilitated = this.userService.checkIfUserIsAlreadyAbilitated(loggedUser, codeDb.vertId);
     if (isUserAlreadyAbilitated) return;

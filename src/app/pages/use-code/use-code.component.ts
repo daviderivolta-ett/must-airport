@@ -2,8 +2,6 @@ import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CodesService } from '../../services/codes.service';
 import { AuthService } from '../../services/auth.service';
-import { Code, CodeDb } from '../../models/code.model';
-import { Timestamp } from 'firebase/firestore';
 
 @Component({
   selector: 'app-use-code',
@@ -22,5 +20,6 @@ export class UseCodeComponent {
   public async handleSubmit(): Promise<void> {
     const formCode = this.useCodeForm.get('code');
     if (formCode && formCode.value) this.codesService.consumeCode(formCode.value);
+    this.useCodeForm.reset();
   }
 }

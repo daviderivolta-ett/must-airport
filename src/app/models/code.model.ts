@@ -7,7 +7,8 @@ export class Code {
     isValid: boolean;
     vertId: APPFLOW;
     usedOn: Date | null;
-    userId: string | null
+    userId: string | null;
+    userEmail: string | null;
 
     constructor(
         code: string,
@@ -15,7 +16,8 @@ export class Code {
         isValid: boolean,
         vertId: APPFLOW,
         usedOn: Date | null,
-        userId: string | null
+        userId: string | null,
+        userEmail: string | null
     ) {
         this.code = code;
         this.creationDate = creationDate;
@@ -23,6 +25,7 @@ export class Code {
         this.vertId = vertId;
         this.usedOn = usedOn;
         this.userId = userId;
+        this.userEmail = userEmail;
     }
 
     static createEmpty(): Code {
@@ -31,6 +34,7 @@ export class Code {
             new Date(Date.now()),
             true,
             APPFLOW.Default,
+            null,
             null,
             null
         );
@@ -44,6 +48,7 @@ export class CodeDb {
     vertId: string;
     usedOn: Timestamp | null;
     userId: string | null;
+    userEmail: string | null;
 
     constructor(
         code: string,
@@ -51,7 +56,8 @@ export class CodeDb {
         isValid: boolean,
         vertId: string,
         usedOn: Timestamp | null,
-        userId: string | null
+        userId: string | null,
+        userEmail: string | null
     ) {
         this.code = code;
         this.creationDate = creationDate;
@@ -59,6 +65,7 @@ export class CodeDb {
         this.vertId = vertId;
         this.usedOn = usedOn;
         this.userId = userId;
+        this.userEmail = userEmail;
     }
 
     static createEmpty() {
@@ -67,6 +74,7 @@ export class CodeDb {
             Timestamp.now(),
             true,
             'default',
+            null,
             null,
             null
         )
