@@ -1,4 +1,11 @@
-<form [formGroup]="useCodeForm">
-    <input type="text" formControlName="code">
-    <button type="submit" [disabled]="!useCodeForm.valid" (click)="handleSubmit()">Usa codice</button>
-</form>
+<div class="page">
+    <form [formGroup]="useCodeForm">
+        <div class="input-code">
+            <input type="text" placeholder="Inserire codice di attivazione" formControlName="code">
+            <button type="button" class="paste-btn" (click)="pasteFromClipboard()">
+                <span class="material-symbols-outlined paste-icon">content_paste</span>
+            </button>
+        </div>
+        <button type="submit" [disabled]="!useCodeForm.valid" (click)="handleSubmit()">Usa codice</button>
+    </form>
+</div>

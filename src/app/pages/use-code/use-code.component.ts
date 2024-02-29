@@ -22,4 +22,9 @@ export class UseCodeComponent {
     if (formCode && formCode.value) this.codesService.consumeCode(formCode.value);
     this.useCodeForm.reset();
   }
+
+  public async pasteFromClipboard(): Promise<void> {
+    const clipboardText: string = await navigator.clipboard.readText();
+    this.useCodeForm.setValue({ code: clipboardText });
+  }
 }
