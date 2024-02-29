@@ -5,6 +5,9 @@
         @for (code of allCodes; track $index) {
             <app-code-card [code]="code" />
         }
+        @if (allCodes.length === 0) {
+            <p class="not-found-msg">Non è stato trovato alcun codice</p>
+        }
     </div>
     <button type="button" class="add-code-btn" (click)="toggleDialog($event)">
         <span class="material-symbols-outlined add-icon" [ngClass]="{'rotate': isDialogOpen}">add</span>

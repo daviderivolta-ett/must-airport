@@ -7,6 +7,8 @@ import { DatePipe, NgClass } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ChildReportCardComponent } from '../../../components/child-report-card/child-report-card.component';
 import { CloseEscapeDirective } from '../../../directives/close-escape.directive';
+import { LoggedUser } from '../../../models/user.model';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-dialog',
@@ -19,11 +21,11 @@ export class DialogComponent {
   public isOpen: boolean = false;
   public parentReport: ReportParent = ReportParent.createEmpty();
   public childrenReport: ReportChild[] = [];
+  public loggedUser: LoggedUser | null = null;
 
-  constructor(private dialogService: DialogService, private reportsService: ReportsService, private router: Router) {
-    effect(() => {
-      this.isOpen = this.dialogService.isOpen();
-    });
+  constructor(private dialogService: DialogService, private reportsService: ReportsService, private router: Router, private authService: AuthService) {
+    effect(() => this.isOpen = this.dialogService.isOpen());
+    effect(() => this.loggedUser = this.authService.loggedUserSignal());
 
     effect(async () => {
       this.parentReport = this.dialogService.report();

@@ -1,10 +1,12 @@
 import { DatePipe, NgClass } from '@angular/common';
-import { ApplicationRef, Component, ElementRef, Input, ViewChild, createComponent } from '@angular/core';
+import { ApplicationRef, Component, ElementRef, Input, ViewChild, createComponent, effect } from '@angular/core';
 import { ReportChild } from '../../models/report-child.model';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { ConfirmDialogService } from '../../observables/confirm-dialog.service';
 import { ReportParent } from '../../models/report-parent.model';
 import { ReportParentDb, ReportsService } from '../../services/reports.service';
+import { LoggedUser } from '../../models/user.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-child-report-card',
@@ -17,8 +19,11 @@ export class ChildReportCardComponent {
   @ViewChild('card') card: ElementRef | undefined;
   @Input() public childReport: ReportChild = ReportChild.createEmpty();
   @Input() public parentReport: ReportParent = ReportParent.createEmpty();
+  public loggedUser: LoggedUser | null = null;
 
-  constructor(private applicationRef: ApplicationRef, private confirmDialogService: ConfirmDialogService, private reportsService: ReportsService) { }
+  constructor(private applicationRef: ApplicationRef, private confirmDialogService: ConfirmDialogService, private reportsService: ReportsService, private authService: AuthService) {
+    effect(() => this.loggedUser = this.authService.loggedUserSignal());
+  }
 
   public ngOnInit():void {
     this.card?.nativeElement;

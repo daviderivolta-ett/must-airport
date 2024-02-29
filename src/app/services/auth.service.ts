@@ -59,7 +59,7 @@ export class AuthService {
           this.userService.setUserDataById(user.uid, data);
           this.loggedUserSignal.set(this.userService.parseUserData(user.uid, user, data));
         }
-        // this.ngZone.run(() => this.router.navigate(['/segnalazioni']));
+        this.ngZone.run(() => this.router.navigate(['/segnalazioni']));
       } else {
         this.loggedUserSignal.set(null);
         // console.log('User is signed out!');

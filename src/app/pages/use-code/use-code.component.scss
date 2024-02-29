@@ -84,3 +84,9 @@ button[type="submit"]:disabled {
     cursor: not-allowed;
     background-color: var(--bg-success-dull);
 }
+
+@media screen and (max-width: 576px) {
+    form {
+        max-width: 576px;
+    }
+}

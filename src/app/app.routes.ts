@@ -7,6 +7,7 @@ import { authGuard } from './guards/auth.guard';
 import { AdminDashboardComponent } from './pages/admin-dashboard/page/admin-dashboard.component';
 import { superuserGuard } from './guards/superuser.guard';
 import { UseCodeComponent } from './pages/use-code/use-code.component';
+import { userGuard } from './guards/user.guard';
 
 export const routes: Routes = [
     {
@@ -23,13 +24,13 @@ export const routes: Routes = [
     {
         path: 'gestione',
         redirectTo: '/segnalazioni',
-        pathMatch: 'full'
+        pathMatch: 'full',
     },
     {
         path: 'gestione/:id',
         title: 'MUST - Gestione',
         component: ManagementComponent,
-        canActivate: [authGuard]
+        canActivate: [authGuard, userGuard]
     },
     {
         path: 'report',

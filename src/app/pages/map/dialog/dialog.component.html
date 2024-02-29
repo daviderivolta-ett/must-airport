@@ -12,10 +12,12 @@
                     </div>
                     <div class="parent-report-title-section">
                         <h2 class="parent-report-title">Dettaglio segnalazione</h2>
+                        @if (loggedUser && (loggedUser.level === 0 || loggedUser.level === 1)) {
                         <button type="button" (click)="navigateTo(parentReport.id)">
                             Gestisci
                             <span class="material-symbols-outlined">more_horiz</span>
                         </button>
+                        }
                     </div>
                     <div class="parent-report-details">
                         <div class="info">
