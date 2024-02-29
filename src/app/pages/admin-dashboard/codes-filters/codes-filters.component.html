@@ -1,0 +1,27 @@
+<div class="filters">
+    <form [formGroup]="filterForm">
+        <div class="select-single">
+            <label for="vertId">App</label>
+            <select id="vertId" formControlName="vertId">
+                <option value="all">Tutti</option>
+                <option value="airport">Aeroporto</option>
+            </select>
+        </div>
+        <div class="select-single">
+            <label for="appType">Tipologia app</label>
+            <select id="appType" formControlName="appType">
+                <option value="all">Tutti</option>
+                <option value="web">Web</option>
+                <option value="mobile">Mobile</option>
+            </select>
+        </div>
+        <div class="select-single">
+            <label for="isValid">Validità</label>
+            <select id="isValid" formControlName="isValid">
+                <option value="all">Tutti</option>
+                <option value="true">Non ancora utilizzato</option>
+                <option value="false">Codice utilizzato</option>
+            </select>
+        </div>
+    </form>
+</div>

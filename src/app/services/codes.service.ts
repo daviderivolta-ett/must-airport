@@ -19,12 +19,27 @@ export interface UseCodeFormData {
   code: string;
 }
 
+export interface CodesFiltersFormData {
+  appType: string,
+  isValid: string,
+  vertId: string;
+}
+
+export interface ParsedCodesFiltersFormData {
+  appType: APPTYPE | string,
+  isValid: boolean | string,
+  vertId: APPFLOW | string
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class CodesService {
   public codes: Code[] = [];
   public codesSignal: WritableSignal<Code[]> = signal([]);
+
+  public filteredCodes: Code[] = [];
+  public filteredCodesSignal: WritableSignal<Code[]> = signal([]);
 
   constructor(private db: Firestore, private authService: AuthService, private userService: UserService, private snackbarService: SnackbarService) {
     effect(() => this.codes = this.codesSignal());
@@ -73,6 +88,15 @@ export class CodesService {
         break;
       default:
         c.vertId = APPFLOW.Default;
+        break;
+    }
+
+    switch (codeDb.appType) {
+      case 'mobile':
+        c.appType = APPTYPE.Mobile;
+        break;
+      default:
+        c.appType = APPTYPE.Web;
         break;
     }
 
@@ -164,5 +188,69 @@ export class CodesService {
     // console.log(userData);
     this.setCodeById(codeDb.code, codeDb);
     await this.userService.setUserDataById(loggedUser.id, userData);
+  }
+
+  public parseCodesFiltersFormData(formData: CodesFiltersFormData): ParsedCodesFiltersFormData {
+    let data: ParsedCodesFiltersFormData = {
+      appType: 'all',
+      vertId: 'all',
+      isValid: 'all'
+    }
+
+    switch (formData.appType) {
+      case 'mobile':
+        data.appType = APPTYPE.Mobile;
+        break;
+      case 'web':
+        data.appType = APPTYPE.Web;
+        break;
+      default:
+        data.appType = 'all';
+        break;
+    }
+
+    switch (formData.vertId) {
+      case 'airport':
+        data.vertId = APPFLOW.Airport;
+        break;
+      case 'default':
+        data.vertId = APPFLOW.Default;
+        break;
+      default:
+        data.vertId = 'all';
+        break;
+    }
+
+    switch (formData.isValid) {
+      case 'true':
+        data.isValid = true;
+        break;
+      case 'false':
+        data.isValid = false;
+        break;
+      default:
+        data.isValid = 'all';
+        break;
+    }
+
+    return data;
+  }
+
+  public filterCodes(filters: ParsedCodesFiltersFormData) {
+    let filteredCodes: Code[] = this.codes.slice();
+    for (const key in filters) {
+      if (key === 'isValid') {
+        if (filters[key] !== 'all') filteredCodes = filteredCodes.filter(code => code.isValid === filters[key]);
+      }
+
+      if (key === 'appType') {
+        if (filters[key] !== 'all') filteredCodes = filteredCodes.filter(code => code.appType === filters[key]);
+      }
+
+      if (key === 'vertId') {
+        if (filters[key] !== 'all') filteredCodes = filteredCodes.filter(code => code.vertId === filters[key]);
+      }
+    }
+    this.filteredCodesSignal.set(filteredCodes);
   }
 }

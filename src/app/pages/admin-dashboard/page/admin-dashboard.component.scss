@@ -12,13 +12,14 @@ h1 {
 
 .codes-section {
     display: flex;
+    justify-content: space-between;
     flex-wrap: wrap;
     gap: 2%;
 }
 
 app-code-card {
     display: block;
-    width: 48%;
+    width: 49%;
     margin: 0 0 2% 0;
 }
 

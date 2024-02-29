@@ -28,7 +28,7 @@ export class FiltersComponent {
       // console.log(this.filterForm.value);
       const filtersFormData: FiltersFormData = this.filterForm.value as FiltersFormData;
       const parsedFiltersFormData: ParsedFiltersFormData = this.parseFiltersFormData(filtersFormData);
-      this.reportsService.filterReports(parsedFiltersFormData)
+      this.reportsService.filterReports(parsedFiltersFormData);
       this.filtersService.filtersLastState = filtersFormData;
     });
   }
