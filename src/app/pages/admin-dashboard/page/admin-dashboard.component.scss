@@ -48,6 +48,15 @@ app-create-code {
     right: 80px;
 }
 
+.add-icon {
+    transition: .25s cubic-bezier(.47,1.64,.41,.8);
+}
+
+.rotate {
+    transform: rotateZ(45deg);
+    transition: .25s cubic-bezier(.47,1.64,.41,.8);
+}
+
 @media screen and (max-width: 768px) {
     app-code-card {
         width: 100%;

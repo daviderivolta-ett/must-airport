@@ -6,7 +6,7 @@
         }
     </div>
     <button type="button" class="add-code-btn" (click)="toggleDialog($event)">
-        <span class="material-symbols-outlined add-icon">add</span>
+        <span class="material-symbols-outlined add-icon" [ngClass]="{'rotate': isDialogOpen}">add</span>
     </button>
     <app-create-code />
 </div>

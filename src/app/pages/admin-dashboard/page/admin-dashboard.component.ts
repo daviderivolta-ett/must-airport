@@ -4,11 +4,12 @@ import { CodesService } from '../../../services/codes.service';
 import { Code } from '../../../models/code.model';
 import { CodeCardComponent } from '../code-card/code-card.component';
 import { CreateCodeDialogService } from '../../../observables/create-code-dialog.service';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CreateCodeComponent, CodeCardComponent],
+  imports: [NgClass, CreateCodeComponent, CodeCardComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss'
 })
@@ -20,6 +21,8 @@ export class AdminDashboardComponent {
     effect(() => {
       this.allCodes = this.codesService.codesSignal();
     });
+
+    effect(() => this.isDialogOpen = this.createCodeDialogService.isOpenSignal());
   }
 
   public toggleDialog(event: Event): void {
