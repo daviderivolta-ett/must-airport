@@ -4,6 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { LoggedUser } from '../../models/user.model';
 import { AccountMenuComponent } from '../account-menu/account-menu.component';
 import { HeaderService } from '../../observables/header.service';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-header',
@@ -14,10 +15,14 @@ import { HeaderService } from '../../observables/header.service';
 })
 export class HeaderComponent {
   public loggedUser: LoggedUser | null = null;
+  public settings: any;
 
-  constructor(private headerService: HeaderService, private authService: AuthService) {
+  constructor(private headerService: HeaderService, private authService: AuthService, private settingsService: SettingsService) {
     effect(() => {
       this.loggedUser = this.authService.loggedUserSignal();
+    })
+    effect(() => {
+      this.settings = this.settingsService.settingsSignal();
     })
   }
 

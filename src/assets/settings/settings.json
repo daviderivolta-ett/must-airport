@@ -1,0 +1,16 @@
+{
+    "apps": [
+        {
+            "name": "default",
+            "assets": {
+                "logoUrl": "../images/logo.png"                
+            }
+        },
+        {
+            "name": "airport",
+            "assets": {
+                "logoUrl": "../images/aeroporto_genova_logo.svg"                
+            }
+        }
+    ]
+}
