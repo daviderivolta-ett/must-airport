@@ -136,8 +136,16 @@ export class CodesService {
     codeDb.isValid = false;
     codeDb.userEmail = loggedUser.email;
 
+    if (codeDb.appType !== APPTYPE.Web) {
+      this.snackbarService.createSnackbar('Il codice non è valido per la versione web.', 'error');
+      return;
+    }
+
     const isUserAlreadyAbilitated = this.userService.checkIfUserIsAlreadyAbilitated(loggedUser, codeDb.vertId);
-    if (isUserAlreadyAbilitated) return;
+    if (isUserAlreadyAbilitated) {
+      this.snackbarService.createSnackbar(`Sei già abilitato per l\'app ${codeDb.vertId}.`, 'error');
+      return;
+    }
 
     const codeObj: Code = this.parseCodeDb(codeDb);
     loggedUser.apps.push(codeObj.vertId);

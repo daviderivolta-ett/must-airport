@@ -172,3 +172,10 @@ h3 {
     margin: 0;
     color: var(--f-default);
 }
+
+.tooltip {
+    width: max-content;
+    background-color: var(--bg-subtle);
+    padding: 8px;
+    border-radius: 4px;
+}

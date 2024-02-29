@@ -17,13 +17,13 @@ import { SnackbarService } from '../../../observables/snackbar.service';
   animations: [
     trigger('openClose', [
       state('open', style({
-        // display: 'block',
+        display: 'block',
         visibility: 'visible',
         transform: 'scale(1)',
         transformOrigin: 'bottom right'
       })),
       state('closed', style({
-        // display: 'none',
+        display: 'none',
         visibility: 'hidden',
         transform: 'scale(0)',
         transformOrigin: 'bottom right'
