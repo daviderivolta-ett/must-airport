@@ -77,6 +77,7 @@ export class CodesService {
 
     codeDb.usedOn ? c.usedOn = codeDb.usedOn.toDate() : null;
     codeDb.userId ? c.userId = codeDb.userId : null;
+    codeDb.userEmail ? c.userEmail = codeDb.userEmail : null;
 
     return c;
   }

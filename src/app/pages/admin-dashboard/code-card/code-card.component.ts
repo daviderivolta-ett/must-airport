@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { Code } from '../../../models/code.model';
-import { NgClass } from '@angular/common';
+import { NgClass, TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-code-card',
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, TitleCasePipe],
   templateUrl: './code-card.component.html',
   styleUrl: './code-card.component.scss'
 })

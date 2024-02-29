@@ -2,7 +2,19 @@
 <div class="code-card" [ngClass]="{'isNoMoreValid': !code.isValid}">
     <div class="info">
         <p class="code">{{code.code}}</p>
-        <p class="app">{{code.vertId}} - {{code.appType}}</p>
+        <p class="app secondary-text">{{code.vertId | titlecase}} &#8226; {{code.appType | titlecase}}</p>
+        @if (code.isValid) {
+            <p class="validity secondary-text">
+                <span class="material-symbols-outlined icon check-icon">check</span>
+                Codice non utilizzato
+            </p>
+        }
+        @else {
+            <p class="validity secondary-text">
+                <span class="material-symbols-outlined icon stop-icon">do_not_disturb_on</span>
+                Codice usato da <span class="email">{{code.userEmail}}</span>
+            </p>
+        }
     </div>
     <div class="call-to-action">
         <button type="button" class="copy-button" [disabled]="!code.isValid" (click)="copyToClipboard()">

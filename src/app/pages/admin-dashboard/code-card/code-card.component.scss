@@ -18,8 +18,39 @@ p {
 }
 
 .app {
+    margin: 0 0 4px 0;
+}
+
+.secondary-text {
     color: var(--f-muted);
     font-size: .9rem;
+}
+
+.validity {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.check-icon,
+.stop-icon {
+    font-size: 1rem;
+    margin: 0 4px 0 0;
+}
+
+.check-icon {
+    color: var(--f-success);
+}
+
+.stop-icon {
+    color: var(--f-danger);
+}
+
+.email {
+    margin: 0 0 0 4px;
+    color: var(--f-danger);
+    font-style: italic;
+    font-weight: 600;
 }
 
 .isNoMoreValid {
