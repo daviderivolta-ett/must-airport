@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 import { UserService } from './user.service';
 import { LoggedUser, UserData } from '../models/user.model';
 import { APPTYPE } from '../models/app-type.mode';
+import { SnackbarService } from '../observables/snackbar.service';
 
 export interface CreateCodeFormData {
   code: string;
@@ -25,7 +26,7 @@ export class CodesService {
   public codes: Code[] = [];
   public codesSignal: WritableSignal<Code[]> = signal([]);
 
-  constructor(private db: Firestore, private authService: AuthService, private userService: UserService) {
+  constructor(private db: Firestore, private authService: AuthService, private userService: UserService, private snackbarService: SnackbarService) {
     effect(() => this.codes = this.codesSignal());
   }
 
@@ -124,7 +125,10 @@ export class CodesService {
     if (!loggedUser) return;
 
     const isCodeValid = this.checkIfCodeIsValid(code);
-    if (!isCodeValid) return;
+    if (!isCodeValid) {
+      this.snackbarService.createSnackbar('Il codice inserito non è valido.', 'error');
+      return;
+    }
 
     let codeDb: CodeDb = await this.getCodeByCode(code);
     codeDb.usedOn = Timestamp.now();

@@ -6,6 +6,7 @@ import { NgClass } from '@angular/common';
 import { CreateCodeDialogService } from '../../../observables/create-code-dialog.service';
 import { ClickOutsideDirective } from '../../../directives/click-outside.directive';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { SnackbarService } from '../../../observables/snackbar.service';
 
 @Component({
   selector: 'app-create-code',
@@ -44,7 +45,7 @@ export class CreateCodeComponent {
     type: ['', Validators.required]
   });
 
-  constructor(private fb: FormBuilder, private codesService: CodesService, private createCodeDialogService: CreateCodeDialogService) {
+  constructor(private fb: FormBuilder, private codesService: CodesService, private createCodeDialogService: CreateCodeDialogService, private snackbarService: SnackbarService) {
     effect(() => this.isOpen = this.createCodeDialogService.isOpenSignal());
   }
 
@@ -54,6 +55,7 @@ export class CreateCodeComponent {
     this.createCodeForm.reset({ app: '', type: '' });
     this.createCodeDialogService.isOpenSignal.set(false);
     this.generateCode();
+    this.snackbarService.createSnackbar('Codice creato con successo.');
   }
 
   public generateCode(): void {
