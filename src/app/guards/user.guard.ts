@@ -9,10 +9,10 @@ export const userGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   return new Promise((resolve, reject) => {
     onAuthStateChanged(getAuth(), user => {
-      if (authService.loggedUser && authService.loggedUser.level === USERLEVEL.User) {
-        router.navigate(['/segnalazioni']);
+      if (authService.loggedUser && authService.loggedUser.level !== USERLEVEL.User) {
         resolve(true);
       } else {
+        router.navigate(['/segnalazioni']);    
         resolve(false);
       }
     });

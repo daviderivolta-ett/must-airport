@@ -78,11 +78,11 @@ button {
 }
 
 button.submit {    
-    background-color: var(--bg-success);
+    background-color: var(--bg-accent);
     border: none;
 
     &:hover {
-        background-color: var(--bg-success-emphasis);
+        background-color: var(--bg-accent-emphasis);
     }
 }
 

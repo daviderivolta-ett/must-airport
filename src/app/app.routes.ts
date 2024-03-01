@@ -31,6 +31,7 @@ export const routes: Routes = [
         title: 'MUST - Gestione',
         component: ManagementComponent,
         canActivate: [authGuard, userGuard]
+        // canActivate: [authGuard]
     },
     {
         path: 'report',

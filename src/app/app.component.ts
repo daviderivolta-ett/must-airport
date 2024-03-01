@@ -7,6 +7,8 @@ import { ReportsService } from './services/reports.service';
 import { APPFLOW } from './models/app-flow.model';
 import { CodesService } from './services/codes.service';
 import { SettingsService } from './services/settings.service';
+import { ThemeService } from './services/theme.service';
+import { AppSettings } from './models/settings.model';
 
 @Component({
   selector: 'app-root',
@@ -18,14 +20,18 @@ import { SettingsService } from './services/settings.service';
 export class AppComponent {
   title = 'must';
 
-  constructor(private firebaseService: FirebaseService, private authService: AuthService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService) {
+  constructor(private firebaseService: FirebaseService, private authService: AuthService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService, private themeService: ThemeService) {
     effect(() => {
       if (this.authService.loggedUserSignal() !== null) {
         if (!this.authService.loggedUser) return;
         // console.log(this.authService.loggedUser);
         this.authService.loggedUser && this.authService.loggedUser.lastApp ? this.reportsService.getAllParentReports(this.authService.loggedUser.lastApp) : this.reportsService.getAllParentReports(APPFLOW.Default);
         this.codesService.getAllCodes();
-        this.settingsService.updateSettings(this.authService.loggedUser.lastApp);
+
+        this.settingsService.getAllSettings(this.authService.loggedUser.lastApp).subscribe((settings: AppSettings) => {
+          this.settingsService.settingsSignal.set(settings);
+          // this.themeService.setTheme(settings.styles);
+        });
       } else {
         this.reportsService.reports = [];
       }

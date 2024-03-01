@@ -241,16 +241,16 @@ button[type="submit"] {
     border: none;
     border-radius: 4px;
     color: var(--f-default);
-    background-color: var(--bg-success);
+    background-color: var(--bg-accent);
     width: 100%;
     padding: 8px;
 
     &:hover {
-        background-color: var(--bg-success-emphasis);
+        background-color: var(--bg-accent-emphasis);
     }
 }
 
 button[type="submit"]:disabled {
     cursor: not-allowed;
-    background-color: var(--bg-success-dull);
+    background-color: var(--bg-accent-dull);
 }

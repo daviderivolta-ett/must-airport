@@ -24,7 +24,6 @@ export class HeaderComponent {
     });
     effect(() => {
       this.settings = this.settingsService.settingsSignal();
-      console.log(this.settings);
     });
   }
 
