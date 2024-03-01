@@ -4,6 +4,7 @@ import { DatePipe, TitleCasePipe } from '@angular/common';
 import { ReportsService } from '../../../services/reports.service';
 import { ReportParent } from '../../../models/report-parent.model';
 import { SnackbarService } from '../../../observables/snackbar.service';
+import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 
 @Component({
   selector: 'app-operation-card',
@@ -37,11 +38,11 @@ export class OperationCardComponent {
           break;
       }
       await this.reportsService.deleteOperationByReportId(this.parentReport.id, this.operation);
-      this.snackbarService.createSnackbar(msg);
+      this.snackbarService.createSnackbar(msg, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
 
     } catch (error) {
       msg = 'Si è verificato un errore. Riprovare.'
-      this.snackbarService.createSnackbar(msg, 'error');
+      this.snackbarService.createSnackbar(msg, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
     }
   }
 }

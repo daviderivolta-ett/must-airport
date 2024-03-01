@@ -8,6 +8,7 @@ import { UserService } from './user.service';
 import { LoggedUser, UserData } from '../models/user.model';
 import { APPTYPE } from '../models/app-type.mode';
 import { SnackbarService } from '../observables/snackbar.service';
+import { SNACKBAROUTCOME, SNACKBARTYPE } from '../models/snackbar.model';
 
 export interface CreateCodeFormData {
   code: string;
@@ -150,7 +151,7 @@ export class CodesService {
 
     const isCodeValid = this.checkIfCodeIsValid(code);
     if (!isCodeValid) {
-      this.snackbarService.createSnackbar('Il codice inserito non è valido.', 'error');
+      this.snackbarService.createSnackbar('Il codice inserito non è valido.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
       return;
     }
 
@@ -161,13 +162,13 @@ export class CodesService {
     codeDb.userEmail = loggedUser.email;
 
     if (codeDb.appType !== APPTYPE.Web) {
-      this.snackbarService.createSnackbar('Il codice non è valido per la versione web.', 'error');
+      this.snackbarService.createSnackbar('Il codice non è valido per la versione web.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
       return;
     }
 
     const isUserAlreadyAbilitated = this.userService.checkIfUserIsAlreadyAbilitated(loggedUser, codeDb.vertId);
     if (isUserAlreadyAbilitated) {
-      this.snackbarService.createSnackbar(`Sei già abilitato per l\'app ${codeDb.vertId}.`, 'error');
+      this.snackbarService.createSnackbar(`Sei già abilitato per l\'app ${codeDb.vertId}.`, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
       return;
     }
 

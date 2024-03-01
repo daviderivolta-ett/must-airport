@@ -5,6 +5,7 @@ import { OperationDb } from '../../../models/operation.model';
 import { ReportParent } from '../../../models/report-parent.model';
 import { ReportsService } from '../../../services/reports.service';
 import { SnackbarService } from '../../../observables/snackbar.service';
+import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 
 @Component({
   selector: 'app-inspection-form',
@@ -42,10 +43,10 @@ export class InspectionFormComponent {
           break;
       }
       await this.reportsService.setOperationsByReportId(this.parentReport.id, operation);
-      this.snackbarService.createSnackbar(msg);
+      this.snackbarService.createSnackbar(msg, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
     } catch (error) {
       msg = 'Si è verificato un errore. Riprovare.'
-      this.snackbarService.createSnackbar(msg, 'error');
+      this.snackbarService.createSnackbar(msg, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
     }
     this.inspectionForm.reset();
   }

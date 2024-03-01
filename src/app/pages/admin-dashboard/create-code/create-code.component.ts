@@ -7,6 +7,7 @@ import { CreateCodeDialogService } from '../../../observables/create-code-dialog
 import { ClickOutsideDirective } from '../../../directives/click-outside.directive';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SnackbarService } from '../../../observables/snackbar.service';
+import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 
 @Component({
   selector: 'app-create-code',
@@ -55,7 +56,7 @@ export class CreateCodeComponent {
     this.createCodeForm.reset({ app: '', type: '' });
     this.createCodeDialogService.isOpenSignal.set(false);
     this.generateCode();
-    this.snackbarService.createSnackbar('Codice creato con successo.');
+    this.snackbarService.createSnackbar('Codice creato con successo.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
   }
 
   public generateCode(): void {

@@ -15,6 +15,7 @@ export class ThemeService {
     this.document.documentElement.style.setProperty('--bg-accent', colorShade.regular.hex);
     this.document.documentElement.style.setProperty('--bg-accent-dull', colorShade.dull.hex);
     this.document.documentElement.style.setProperty('--bg-accent-emphasis', colorShade.emphasis.hex);
+    this.document.documentElement.style.setProperty('--f-accent', colorShade.regular.hex);
   }
 
   public generateColorShade(colorString: string): MyColorShade {

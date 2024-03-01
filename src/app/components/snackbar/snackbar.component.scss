@@ -6,6 +6,7 @@
     border-radius: 4px;
     padding: 16px;
     min-width: 350px;
+    z-index: 99999999;
 }
 
 :host(.success) {
@@ -35,6 +36,22 @@
 
             &:hover {
                 background-color: var(--bg-danger);
+            }
+        }
+    }
+}
+
+:host(.info) {
+    .snackbar {
+        background-color: var(--bg-accent-dull);
+        border: 1px solid var(--border-accent-dull);
+
+        button {
+            color: var(--f-default);
+            background-color: var(--border-accent-dull);
+
+            &:hover {
+                background-color: var(--bg-accent);
             }
         }
     }

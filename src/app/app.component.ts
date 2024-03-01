@@ -9,6 +9,7 @@ import { CodesService } from './services/codes.service';
 import { SettingsService } from './services/settings.service';
 import { ThemeService } from './services/theme.service';
 import { AppSettings } from './models/settings.model';
+import { SplashService } from './observables/splash.service';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +21,7 @@ import { AppSettings } from './models/settings.model';
 export class AppComponent {
   title = 'must';
 
-  constructor(private firebaseService: FirebaseService, private authService: AuthService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService, private themeService: ThemeService) {
+  constructor(private firebaseService: FirebaseService, private authService: AuthService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService, private themeService: ThemeService, private splashService: SplashService) {
     effect(() => {
       if (this.authService.loggedUserSignal() !== null) {
         if (!this.authService.loggedUser) return;
@@ -30,12 +31,13 @@ export class AppComponent {
 
         this.settingsService.getAllSettings(this.authService.loggedUser.lastApp).subscribe((settings: AppSettings) => {
           this.settingsService.settingsSignal.set(settings);
-          // this.themeService.setTheme(settings.styles);
+          this.themeService.setTheme(settings.styles);
         });
+        this.splashService.isAppReadySignal.set(true);
       } else {
         this.reportsService.reports = [];
       }
-    });
+    }, { allowSignalWrites: true });
   }
 
   async ngOnInit() {

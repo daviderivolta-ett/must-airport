@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { SnackbarService } from '../../observables/snackbar.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { SNACKBARTYPE } from '../../models/snackbar.model';
 
 @Component({
   selector: 'app-snackbar',
@@ -28,7 +29,7 @@ export class SnackbarComponent {
 
   constructor(private snackbarService: SnackbarService) {
     this.msg = this.snackbarService.msg;
-    // setTimeout(() => { this.close() }, 2000);
+    if (this.snackbarService.type === SNACKBARTYPE.Loader) setTimeout(() => { this.close() }, 1000);
   }
 
   public close(): void {

@@ -9,6 +9,7 @@ import { Router, RouterLink } from '@angular/router';
 import { Timestamp } from 'firebase/firestore';
 import { APPFLOW } from '../../models/app-flow.model';
 import { UserService } from '../../services/user.service';
+import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../models/snackbar.model';
 
 @Component({
   selector: 'app-account-menu',
@@ -30,7 +31,7 @@ export class AccountMenuComponent {
   public logOut(): void {
     this.headerService.isAccountMenuVisible.set(false);
     this.authService.auth.signOut();
-    this.snackbarService.createSnackbar('Logout avvenuto con successo');
+    this.snackbarService.createSnackbar('Logout avvenuto con successo', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
     this.router.navigate(['/login']);
   }
 

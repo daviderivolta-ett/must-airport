@@ -4,6 +4,7 @@ import { ConfirmDialogService } from '../../observables/confirm-dialog.service';
 import { ReportsService } from '../../services/reports.service';
 import { DatePipe } from '@angular/common';
 import { SnackbarService } from '../../observables/snackbar.service';
+import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../models/snackbar.model';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -27,7 +28,7 @@ export class ConfirmDialogComponent {
       msg = 'Aggiornamento eliminato con successo';
     } catch (error) {
       msg = 'Si è verificato un problema con l\'eliminazione dell\'aggiornamento. Riprovare.';
-      this.snackbarService.createSnackbar(msg, 'error');
+      this.snackbarService.createSnackbar(msg, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
     }
     this.close();
   }

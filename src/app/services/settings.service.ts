@@ -16,7 +16,7 @@ export class SettingsService {
   }
 
   public getAllSettings(app: APPFLOW): Observable<any> {
-    return this.http.get<any>('/assets/settings/settings.json').pipe(
+    return this.http.get<any>('./assets/settings/settings.json').pipe(
       map(res => {
         let allSettings: AppSettings[] = res.apps as AppSettings[];
         let appSettings: AppSettings | undefined = allSettings.find((item: AppSettings) => item.name === app);

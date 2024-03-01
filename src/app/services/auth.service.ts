@@ -6,6 +6,7 @@ import { LoggedUser, USERLEVEL, UserData } from '../models/user.model';
 import { Timestamp } from 'firebase/firestore';
 import { SnackbarService } from '../observables/snackbar.service';
 import { APPFLOW } from '../models/app-flow.model';
+import { SNACKBAROUTCOME, SNACKBARTYPE } from '../models/snackbar.model';
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +51,7 @@ export class AuthService {
           this.loggedUserSignal.set(this.userService.parseUserData(user.uid, user, userData));
         } catch {
           let data: UserData = {
-            userLevel: USERLEVEL.Admin,
+            userLevel: USERLEVEL.User,
             lastLogin: Timestamp.fromDate(new Date(Date.now())),
             apps: [APPFLOW.Default],
             lastApp: APPFLOW.Default
@@ -80,7 +81,7 @@ export class AuthService {
 
         console.log(errorCode);
         console.log(errorMsg);
-        this.snackbarService.createSnackbar(this.translateErrorMessage(errorCode), 'error');
+        this.snackbarService.createSnackbar(this.translateErrorMessage(errorCode), SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
       })
   }
 
@@ -99,7 +100,7 @@ export class AuthService {
 
         console.log(errorCode);
         console.log(errorMsg);
-        this.snackbarService.createSnackbar(this.translateErrorMessage(errorCode), 'error');
+        this.snackbarService.createSnackbar(this.translateErrorMessage(errorCode), SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
         const credential = GoogleAuthProvider.credentialFromError(error);
       })
   }

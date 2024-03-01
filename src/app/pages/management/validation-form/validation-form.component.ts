@@ -10,6 +10,7 @@ import { TechElementSubTag } from '../../../models/tech-element-subtag.model';
 import { ReportsService } from '../../../services/reports.service';
 import { SnackbarService } from '../../../observables/snackbar.service';
 import { Timestamp } from 'firebase/firestore';
+import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 
 @Component({
   selector: 'app-validation-form',
@@ -159,10 +160,10 @@ export class ValidationFormComponent {
       if (!this._parentReport.validationDate) data.validationDate = Timestamp.now();
       this.reportsService.setReportById(this._parentReport.id, data);
       msg = 'Modifica salvata con successo';
-      this.snackbarService.createSnackbar(msg);
+      this.snackbarService.createSnackbar(msg, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
     } catch (error) {
       msg = 'C\'è stato un errore nel salvataggio del report. Riprovare!'
-      this.snackbarService.createSnackbar(msg, 'error');
+      this.snackbarService.createSnackbar(msg, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
     }    
   }
 
