@@ -3,13 +3,19 @@
         {
             "name": "default",
             "assets": {
-                "logoUrl": "../images/logo.png"                
+                "logoUrl": "/assets/images/logo.png"
+            },
+            "styles": {
+                "accent": "rgb(16, 207, 36)"
             }
         },
         {
             "name": "airport",
             "assets": {
-                "logoUrl": "../images/aeroporto_genova_logo.svg"                
+                "logoUrl": "/assets/images/aeroporto_genova_logo.svg"
+            },
+            "styles": {
+                "accent": "rgb(191, 64, 191)"
             }
         }
     ]

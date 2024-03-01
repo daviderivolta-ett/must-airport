@@ -1,5 +1,10 @@
 <div class="header">
-    <img src="../../../../assets/images/logo.png" alt="Logo di MUST" class="logo">
+    @if (settings && settings.assets) {
+        <img [src]="settings.assets.logoUrl" alt="Logo" class="logo">
+    }
+    @else {
+        <img src="../../../../assets/images/logo.png" alt="Logo di MUST" class="logo">
+    }
     <div class="menu">
         <ul>
             <li>
