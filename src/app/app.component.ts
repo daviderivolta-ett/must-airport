@@ -24,6 +24,7 @@ export class AppComponent {
   constructor(private firebaseService: FirebaseService, private authService: AuthService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService, private themeService: ThemeService, private splashService: SplashService) {
     effect(() => {
       if (this.authService.loggedUserSignal() !== null) {
+        this.splashService.createSplash();
         if (!this.authService.loggedUser) return;
         // console.log(this.authService.loggedUser);
         this.authService.loggedUser && this.authService.loggedUser.lastApp ? this.reportsService.getAllParentReports(this.authService.loggedUser.lastApp) : this.reportsService.getAllParentReports(APPFLOW.Default);
@@ -33,11 +34,11 @@ export class AppComponent {
           this.settingsService.settingsSignal.set(settings);
           this.themeService.setTheme(settings.styles);
         });
-        this.splashService.isAppReadySignal.set(true);
+        this.splashService.removeSplash();
       } else {
         this.reportsService.reports = [];
       }
-    }, { allowSignalWrites: true });
+    });
   }
 
   async ngOnInit() {

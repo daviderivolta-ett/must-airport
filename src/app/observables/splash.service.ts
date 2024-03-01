@@ -5,15 +5,7 @@ import { SplashComponent } from '../components/splash/splash.component';
   providedIn: 'root'
 })
 export class SplashService {
-  public isAppReady: boolean = false;
-  public isAppReadySignal: WritableSignal<boolean> = signal(false);
-
-  constructor(private applicationRef: ApplicationRef) {
-    effect(() => {
-      this.isAppReady = this.isAppReadySignal();
-      this.isAppReady === false ? this.createSplash() : this.removeSplash();
-    })
-  }
+  constructor(private applicationRef: ApplicationRef) { }
 
   public createSplash() {
     const div = document.createElement('div');
