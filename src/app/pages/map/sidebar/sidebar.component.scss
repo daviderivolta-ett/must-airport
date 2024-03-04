@@ -39,6 +39,7 @@ app-filters {
     padding: 24px;
     box-sizing: border-box;
     scrollbar-width: thin;
+    scrollbar-color: var(--bg-subtle) var(--bg-default);
 }
 
 .sidebar-content::-webkit-scrollbar {

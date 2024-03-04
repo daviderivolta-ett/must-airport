@@ -54,6 +54,7 @@ html {
     font-family: 'Noto Sans', sans-serif;
     background-color: var(--bg-inset);
     scrollbar-width: thin;
+    scrollbar-color: var(--bg-subtle) var(--bg-default);
     // overflow: hidden;
 }
 
