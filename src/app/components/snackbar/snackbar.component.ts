@@ -29,7 +29,8 @@ export class SnackbarComponent {
 
   constructor(private snackbarService: SnackbarService) {
     this.msg = this.snackbarService.msg;
-    if (this.snackbarService.type === SNACKBARTYPE.Loader) setTimeout(() => { this.close() }, 1000);
+    // if (this.snackbarService.type === SNACKBARTYPE.Loader) setTimeout(() => this.close(), 1000);
+    setTimeout(() => this.close(), 2000);
   }
 
   public close(): void {

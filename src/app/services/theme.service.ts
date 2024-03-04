@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { SettingsStyles } from '../models/settings.model';
-import { MyColor, MyColorShade } from '../models/color.model';
+import { MYCOLORTYPE, MyColor, MyColorShade } from '../models/color.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class ThemeService {
 
   public generateColorShade(colorString: string): MyColorShade {
 
-    let color = colorString.includes('#') ? new MyColor('hex', colorString) : new MyColor('rgb', colorString);
+    let color = colorString.includes('#') ? new MyColor(MYCOLORTYPE.Hex, colorString) : new MyColor(MYCOLORTYPE.Rgb, colorString);
     let dullColor = this.generateDullColor(color);
     let emphasisColor = this.generateEmphasisColor(color);
 

@@ -21,7 +21,7 @@ export class OperationCardComponent {
   constructor(private reportsService: ReportsService, private snackbarService: SnackbarService) { }
 
   public copyToClipboard(): void {
-    navigator.clipboard.writeText('Testo copiato');
+    navigator.clipboard.writeText('Link non ancora disponibile');
   }
 
   public async deleteOperation(): Promise<void> {

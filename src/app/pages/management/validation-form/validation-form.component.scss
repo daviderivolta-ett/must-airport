@@ -98,6 +98,8 @@ h3 {
     box-sizing: border-box;
     max-height: 300px;
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-subtle) var(--bg-default);
 }
 
 .dropdown-content-list::-webkit-scrollbar {

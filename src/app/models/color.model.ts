@@ -1,3 +1,8 @@
+export enum MYCOLORTYPE {
+    Rgb = 'rgb',
+    Hex = 'hex'
+}
+
 export interface MyColorShade {
     dull: MyColor,
     regular: MyColor,
@@ -9,42 +14,46 @@ export class MyColor {
     hex: string;
     hsl: number[];
 
-    constructor(type: string, color: string) {
-        if (type ==='rgb') {
+    constructor(type: MYCOLORTYPE, color: string) {
+        if (type === MYCOLORTYPE.Rgb) {
             this.rgb = MyColor.isValidRgb(color) ? color : 'rgb(31, 111, 235)';
             this.hex = MyColor.rgbToHex(this.rgb);
             this.hsl = MyColor.rgbToHsl(this.rgb);
-        } else {
+        } else if (type === MYCOLORTYPE.Hex) {
             this.hex = MyColor.isValidHex(color) ? color : '#1f6feb';
             this.rgb = MyColor.hexToRgb(this.hex);
             this.hsl = MyColor.rgbToHsl(this.rgb);
+        } else {
+            this.rgb = 'rgb(31, 111, 235)';
+            this.hex = '#1f6feb';
+            this.hsl = [216, 84, 52];
         }
     }
 
     static createEmpty() {
         return new MyColor(
-            'rgb',
+            MYCOLORTYPE.Rgb,
             'rgb(31, 111, 235)'
         )
     }
 
-    static fromRgb(rgb: string): MyColor {
-        if (!MyColor.isValidRgb(rgb)) {
-            throw new Error('Invalid RGB format');
-        }
+    // static fromRgb(rgb: string): MyColor {
+    //     if (!MyColor.isValidRgb(rgb)) {
+    //         throw new Error('Invalid RGB format');
+    //     }
 
-        const hex = MyColor.rgbToHex(rgb);
-        return new MyColor(rgb, hex);
-    }
+    //     const hex = MyColor.rgbToHex(rgb);
+    //     return new MyColor(rgb, hex);
+    // }
 
-    static fromHex(hex: string): MyColor {
-        if (!MyColor.isValidHex(hex)) {
-            throw new Error('Invalid HEX format');
-        }
+    // static fromHex(hex: string): MyColor {
+    //     if (!MyColor.isValidHex(hex)) {
+    //         throw new Error('Invalid HEX format');
+    //     }
 
-        const rgb = MyColor.hexToRgb(hex);
-        return new MyColor(rgb, hex);
-    }
+    //     const rgb = MyColor.hexToRgb(hex);
+    //     return new MyColor(rgb, hex);
+    // }
 
     private static isValidRgb(rgb: string): boolean {
         return /^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)$/i.test(rgb);

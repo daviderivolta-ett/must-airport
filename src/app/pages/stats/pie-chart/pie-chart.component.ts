@@ -17,7 +17,15 @@ export class PieChartComponent {
     chart: {
       type: 'pie',
       backgroundColor: 'transparent',
-      height: '300px'
+      height: '300px',
+    },
+    legend : {
+      itemStyle: {
+        color: 'rgb(230, 237, 243)'
+      },
+      itemHoverStyle: {
+        color: 'rgb(125, 133, 144)'
+      }
     },
     title: {
       text: undefined
