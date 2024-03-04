@@ -12,11 +12,13 @@ import { FailureSubTag } from '../../../models/failure-subtag.model';
 import { ChildReportCardComponent } from '../../../components/child-report-card/child-report-card.component';
 import { InspectionFormComponent } from '../inspection-form/inspection-form.component';
 import { OperationCardComponent } from '../operation-card/operation-card.component';
+import { MiniMapComponent } from '../../../components/mini-map/mini-map.component';
+import { MiniMapData } from '../../../services/map.service';
 
 @Component({
   selector: 'app-management',
   standalone: true,
-  imports: [ChildReportCardComponent, ValidationFormComponent, InspectionFormComponent, OperationCardComponent, DatePipe, NgClass, TitleCasePipe],
+  imports: [MiniMapComponent, ChildReportCardComponent, ValidationFormComponent, InspectionFormComponent, OperationCardComponent, DatePipe, NgClass, TitleCasePipe],
   templateUrl: './management.component.html',
   styleUrl: './management.component.scss'
 })
@@ -28,6 +30,8 @@ export class ManagementComponent {
   public failureTags: FailureTag[] = [];
   public reportFailureTags: FailureTag[] = [];
   public reportFailureSubTags: FailureSubTag[] = [];
+  // public miniMapData: MiniMapData = { location: new GeoPoint(0.0, 0.0), priority: PRIORITY.NotAssigned }
+  public miniMapData!: MiniMapData;
 
   constructor(private route: ActivatedRoute, private dictionaryService: DictionaryService, private reportsService: ReportsService) {
     effect(async () => {
@@ -37,6 +41,7 @@ export class ManagementComponent {
         if (report.tagFailure != undefined) report = this.reportsService.populateFailureTags(report);
         if (report.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
       });
+      this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
       console.log(this.parentReport);
       // console.log(this.childrenReport);
 
@@ -71,7 +76,7 @@ export class ManagementComponent {
         uniqueReportFailureTags.push(tag);
       }
     });
-    this.reportFailureTags = [...uniqueReportFailureTags];  
+    this.reportFailureTags = [...uniqueReportFailureTags];
   }
 
   private discardDuplicatedReportFailureSubTags(childrenReport: ReportChild[]): void {
@@ -91,6 +96,6 @@ export class ManagementComponent {
         uniqueReportFailureSubTags.push(tag);
       }
     });
-    this.reportFailureSubTags = [...uniqueReportFailureSubTags];    
+    this.reportFailureSubTags = [...uniqueReportFailureSubTags];
   }
 }

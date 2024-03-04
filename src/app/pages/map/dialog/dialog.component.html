@@ -43,6 +43,9 @@
                     </div>
                 </div>
                 <div class="column children-report-column">
+                    <div class="map-wrapper">
+                        <app-mini-map [miniMapData]="miniMapData" />
+                    </div>
                     <h2 class="children-report-title">Report ({{parentReport.childrenIds.length}})</h2>
                     <div class="children-report">
                         @for (childReport of childrenReport; track $index) {

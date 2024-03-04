@@ -39,6 +39,7 @@ h2 {
     height: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     flex-shrink: 0;
     padding: 0;
 }
@@ -55,6 +56,7 @@ h2 {
     box-sizing: border-box;
     scrollbar-width: thin;
     scrollbar-color: var(--bg-subtle) var(--bg-default);
+    flex-grow: 1
 }
 
 .report-details::-webkit-scrollbar {
@@ -119,6 +121,11 @@ h2 {
 .info-value.priority.high {
     background-color: var(--bg-danger);
     border-color: var(--border-subtle);
+}
+
+.map-wrapper {
+    height: 196px;
+    width: 100%;
 }
 
 .second-column {

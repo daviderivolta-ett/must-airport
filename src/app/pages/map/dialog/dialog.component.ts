@@ -9,11 +9,13 @@ import { ChildReportCardComponent } from '../../../components/child-report-card/
 import { CloseEscapeDirective } from '../../../directives/close-escape.directive';
 import { LoggedUser } from '../../../models/user.model';
 import { AuthService } from '../../../services/auth.service';
+import { MiniMapComponent } from '../../../components/mini-map/mini-map.component';
+import { MiniMapData } from '../../../services/map.service';
 
 @Component({
   selector: 'app-dialog',
   standalone: true,
-  imports: [ChildReportCardComponent, DatePipe, NgClass, RouterLink, CloseEscapeDirective],
+  imports: [MiniMapComponent, ChildReportCardComponent, DatePipe, NgClass, RouterLink, CloseEscapeDirective],
   templateUrl: './dialog.component.html',
   styleUrl: './dialog.component.scss'
 })
@@ -22,6 +24,7 @@ export class DialogComponent {
   public parentReport: ReportParent = ReportParent.createEmpty();
   public childrenReport: ReportChild[] = [];
   public loggedUser: LoggedUser | null = null;
+  public miniMapData!: MiniMapData;
 
   constructor(private dialogService: DialogService, private reportsService: ReportsService, private router: Router, private authService: AuthService) {
     effect(() => this.isOpen = this.dialogService.isOpen());
@@ -34,6 +37,7 @@ export class DialogComponent {
         if (report.tagFailure != undefined) report = this.reportsService.populateFailureTags(report);
         if (report.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
       });
+      this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
       // console.log(this.parentReport);
       // console.log(this.childrenReport);
     });

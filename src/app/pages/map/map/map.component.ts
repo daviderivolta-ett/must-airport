@@ -1,4 +1,4 @@
-import { Component, Input, effect } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import * as Leaflet from 'leaflet';
 import { GeoJSONFeature, MapService } from '../../../services/map.service';
 import { SidebarService } from '../../../observables/sidebar.service';
