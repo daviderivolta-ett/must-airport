@@ -5,11 +5,12 @@ import { ReportsService } from '../../../services/reports.service';
 import { ReportParent } from '../../../models/report-parent.model';
 import { SnackbarService } from '../../../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
+import { TooltipDirective } from '../../../directives/tooltip.directive';
 
 @Component({
   selector: 'app-operation-card',
   standalone: true,
-  imports: [DatePipe, TitleCasePipe],
+  imports: [DatePipe, TitleCasePipe, TooltipDirective],
   templateUrl: './operation-card.component.html',
   styleUrl: './operation-card.component.scss'
 })

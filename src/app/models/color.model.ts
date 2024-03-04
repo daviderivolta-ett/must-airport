@@ -9,20 +9,23 @@ export class MyColor {
     hex: string;
     hsl: number[];
 
-    constructor(rgb?: string, hex?: string) {
-        if (rgb) {
-            this.rgb = MyColor.isValidRgb(rgb) ? rgb : 'rgb(31, 111, 235)';
+    constructor(type: string, color: string) {
+        if (type ==='rgb') {
+            this.rgb = MyColor.isValidRgb(color) ? color : 'rgb(31, 111, 235)';
             this.hex = MyColor.rgbToHex(this.rgb);
             this.hsl = MyColor.rgbToHsl(this.rgb);
-        } else if (hex) {
-            this.hex = MyColor.isValidHex(hex) ? hex : '#1f6feb';
+        } else {
+            this.hex = MyColor.isValidHex(color) ? color : '#1f6feb';
             this.rgb = MyColor.hexToRgb(this.hex);
             this.hsl = MyColor.rgbToHsl(this.rgb);
-        } else {
-            this.rgb = 'rgb(31, 111, 235)';
-            this.hex = '#1f6feb';
-            this.hsl = [216, 84, 52];
         }
+    }
+
+    static createEmpty() {
+        return new MyColor(
+            'rgb',
+            'rgb(31, 111, 235)'
+        )
     }
 
     static fromRgb(rgb: string): MyColor {

@@ -51,6 +51,7 @@
     flex: 0 0 60%;
     height: 100%;
     overflow-y: auto;
+    scrollbar-width: none;
 }
 
 .parent-report-column::-webkit-scrollbar {
@@ -153,6 +154,7 @@ img {
     overflow-y: auto;
     height: calc(100% - 48px);
     padding: 0 16px 0 0;
+    scrollbar-width: thin;
 }
 
 .children-report::-webkit-scrollbar {

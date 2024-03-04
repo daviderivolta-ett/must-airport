@@ -46,6 +46,7 @@ button {
 }
 
 .copy-button {
+    position: relative;
     background-color: var(--bg-subtle);
     border: 1px solid var(--border-default);
     border-radius: 4px;

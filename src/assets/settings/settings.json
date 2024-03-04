@@ -15,7 +15,7 @@
                 "logoUrl": "./assets/images/aeroporto_genova_logo.svg"
             },
             "styles": {
-                "accent": "rgb(31, 111, 235);"
+                "accent": "#B41312"
             }
         }
     ]

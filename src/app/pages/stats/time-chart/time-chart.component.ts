@@ -20,6 +20,7 @@ export class TimeChartComponent {
     series: [],
     chart: {
       backgroundColor: 'transparent',
+      height: '300px'
     },
     xAxis: {
       lineColor: 'rgb(230, 237, 243)',

@@ -16,7 +16,8 @@ export class PieChartComponent {
     series: [],
     chart: {
       type: 'pie',
-      backgroundColor: 'transparent'
+      backgroundColor: 'transparent',
+      height: '300px'
     },
     title: {
       text: undefined
@@ -26,13 +27,14 @@ export class PieChartComponent {
         dataLabels: {
           format: '<b>{point.name}</b><br>{point.percentage:.1f}%',
           enabled: true,
-          distance: 60,
+          distance: 20,
           style: {
             color: 'white',
             fontWeight: 'regular',
-            fontSize: '12px'
-          }
+            fontSize: '12px',
+          },
         },
+        showInLegend: true,
         innerSize: '33%',
         borderRadius: 8,
         borderWidth: 4,

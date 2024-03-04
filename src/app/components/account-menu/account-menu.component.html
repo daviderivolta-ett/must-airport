@@ -8,7 +8,7 @@
         <p class="section-title">LE MIE APP</p>
         @for (app of loggedUser?.apps; track $index) {
         <div class="list-element" [ngClass]="{'current-app': app === loggedUser?.lastApp}">
-            <a class="list-text" routerLink="segnalazioni" (click)="reloadApp(app)">
+            <a class="list-text" routerLink="segnalazioni" (click)="reloadApp(app)" (click)="closeAccountMenu()">
                 @if (app === 'default') {
                     Pubblica
                 }
@@ -21,16 +21,16 @@
     </div>
     <div class="list-section">
         <div class="list-element">
-            <a class="list-text" routerLink="use-code">Usa codice</a>
+            <a class="list-text" routerLink="use-code" (click)="closeAccountMenu()">Usa codice</a>
         </div>
         @if (loggedUser?.level === 0) {
         <div class="list-element">
-            <a class="list-text" routerLink="admin-dashboard">Dashboard</a>
+            <a class="list-text" routerLink="admin-dashboard" (click)="closeAccountMenu()">Dashboard</a>
         </div>
         }
     </div>
     <div class="list-section">
-        <div class="list-element icon-element" (click)="logOut()">
+        <div class="list-element icon-element" (click)="logOut()" (click)="closeAccountMenu()">
             <p class="list-text">Esci</p>
             <span class="material-symbols-outlined logout-icon">logout</span>
         </div>

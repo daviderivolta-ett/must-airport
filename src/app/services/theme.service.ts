@@ -19,7 +19,8 @@ export class ThemeService {
   }
 
   public generateColorShade(colorString: string): MyColorShade {
-    let color = new MyColor(colorString);
+
+    let color = colorString.includes('#') ? new MyColor('hex', colorString) : new MyColor('rgb', colorString);
     let dullColor = this.generateDullColor(color);
     let emphasisColor = this.generateEmphasisColor(color);
 
@@ -31,25 +32,25 @@ export class ThemeService {
     return colorShade;
   }
 
-  public generateDullColor(color: MyColor): MyColor {   
+  public generateDullColor(color: MyColor): MyColor {
     let newHsl = [...color.hsl];
     newHsl[2] = Math.min(100, newHsl[2] - 20);
-    let dullColor = new MyColor();
+    let dullColor = MyColor.createEmpty();
     dullColor.hsl = [...newHsl];
     dullColor.rgb = MyColor.hslToRgb(dullColor.hsl);
     dullColor.hex = MyColor.rgbToHex(dullColor.rgb);
-    
+
     return dullColor;
   }
 
   public generateEmphasisColor(color: MyColor): MyColor {
     let newHsl = [...color.hsl];
     newHsl[2] = Math.min(100, newHsl[2] + 20);
-    let emphasisColor = new MyColor();
+    let emphasisColor = MyColor.createEmpty();
     emphasisColor.hsl = [...newHsl];
     emphasisColor.rgb = MyColor.hslToRgb(emphasisColor.hsl);
     emphasisColor.hex = MyColor.rgbToHex(emphasisColor.rgb);
-    
+
     return emphasisColor;
   }
 }
