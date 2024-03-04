@@ -21,3 +21,10 @@ img {
 .comma::after {
     content: ', ';
 }
+
+.date {
+    font-size: 0.9rem;
+    font-style: italic;
+    margin: 8px 0 0 0;
+    color: var(--f-muted);
+}

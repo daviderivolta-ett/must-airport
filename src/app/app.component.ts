@@ -22,9 +22,9 @@ export class AppComponent {
   title = 'must';
 
   constructor(private firebaseService: FirebaseService, private authService: AuthService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService, private themeService: ThemeService, private splashService: SplashService) {
+    this.splashService.createSplash();
     effect(() => {
       if (this.authService.loggedUserSignal() !== null) {
-        this.splashService.createSplash();
         if (!this.authService.loggedUser) return;
         // console.log(this.authService.loggedUser);
         this.authService.loggedUser && this.authService.loggedUser.lastApp ? this.reportsService.getAllParentReports(this.authService.loggedUser.lastApp) : this.reportsService.getAllParentReports(APPFLOW.Default);

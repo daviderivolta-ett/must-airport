@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ReportParent } from '../../../models/report-parent.model';
-import { NgClass } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { DialogComponent } from '../dialog/dialog.component';
 import { DialogService } from '../../../observables/dialog.service';
 import { SidebarService } from '../../../observables/sidebar.service';
@@ -8,7 +8,7 @@ import { SidebarService } from '../../../observables/sidebar.service';
 @Component({
   selector: 'app-sidebar-card',
   standalone: true,
-  imports: [NgClass, DialogComponent],
+  imports: [NgClass, DatePipe, DialogComponent],
   templateUrl: './sidebar-card.component.html',
   styleUrl: './sidebar-card.component.scss'
 })

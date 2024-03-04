@@ -33,10 +33,15 @@ p {
     align-items: center;
     width: 28px;
     height: 28px;
-    border: none;
+    border: 1px solid var(--border-default);
     border-radius: 4px;
     background-color: var(--bg-subtle);
     margin: 0 16px 0 0;
+
+    &:hover {
+        background-color: var(--bg-subtle);
+        border-color: var(--border-emphasis);
+    }
 }
 
 .material-symbols-outlined {
