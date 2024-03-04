@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { CodesFiltersFormData, CodesService, ParsedCodesFiltersFormData } from '../../../services/codes.service';
+import { CodesFiltersFormData, CodesService } from '../../../services/codes.service';
+import { Code } from '../../../models/code.model';
 
 @Component({
   selector: 'app-codes-filters',
@@ -10,13 +11,16 @@ import { CodesFiltersFormData, CodesService, ParsedCodesFiltersFormData } from '
   styleUrl: './codes-filters.component.scss'
 })
 export class CodesFiltersComponent {
+  @Input() public allCodes: Code[] = [];
   public filterForm = this.fb.group({
     vertId: ['all'],
     appType: ['all'],
     isValid: ['all']
   });
 
-  constructor(private fb: FormBuilder, private codesService: CodesService) {
+  constructor(private fb: FormBuilder, private codesService: CodesService) { }
+
+  public ngOnInit(): void {
     this.filterForm.valueChanges.subscribe(changes => {
       const filtersFormData: CodesFiltersFormData = this.filterForm.value as CodesFiltersFormData;
       const parsedFormData = this.codesService.parseCodesFiltersFormData(filtersFormData);

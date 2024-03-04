@@ -1,6 +1,6 @@
 <div class="page">
     <h1>Elenco codici</h1>
-    <app-codes-filters />
+    <app-codes-filters [allCodes]="allCodes" />
     <div class="codes-section">
         @for (code of allCodes; track $index) {
             <app-code-card [code]="code" />
