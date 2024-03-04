@@ -45,8 +45,6 @@ export class DialogComponent {
 
   public closeDialog(): void {
     this.dialogService.isOpen.set(false);
-    this.parentReport = ReportParent.createEmpty();
-    this.childrenReport = [];
   }
 
   public navigateTo(id: string): void {
