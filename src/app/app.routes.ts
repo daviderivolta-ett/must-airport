@@ -7,6 +7,7 @@ import { authGuard } from './guards/auth.guard';
 import { AdminDashboardComponent } from './pages/admin-dashboard/page/admin-dashboard.component';
 import { superuserGuard } from './guards/superuser.guard';
 import { UseCodeComponent } from './pages/use-code/use-code.component';
+import { adminGuard } from './guards/admin.guard';
 import { userGuard } from './guards/user.guard';
 
 export const routes: Routes = [
@@ -30,8 +31,7 @@ export const routes: Routes = [
         path: 'gestione/:id',
         title: 'MUST - Gestione',
         component: ManagementComponent,
-        canActivate: [authGuard, userGuard]
-        // canActivate: [authGuard]
+        canActivate: [adminGuard]
     },
     {
         path: 'report',
@@ -48,12 +48,12 @@ export const routes: Routes = [
         path: 'admin-dashboard',
         title: 'MUST - Admin dashboard',
         component: AdminDashboardComponent,
-        canActivate: [authGuard, superuserGuard]
+        canActivate: [superuserGuard]
     },
     {
         path: 'use-code',
         title: 'MUST - Usa codice',
         component: UseCodeComponent,
-        canActivate: [authGuard]
+        canActivate: [userGuard]
     }
 ];

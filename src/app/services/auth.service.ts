@@ -21,28 +21,16 @@ export class AuthService {
   constructor(private router: Router, private userService: UserService, private ngZone: NgZone, private snackbarService: SnackbarService) {
     effect(() => {
       this.loggedUser = this.loggedUserSignal();
-      // console.log(this.loggedUser);
+      console.log(this.loggedUser);
     });
 
     this.auth = getAuth();
     this.provider = new GoogleAuthProvider();
 
-    // signInAnonymously(this.auth)
-    //   .then(() => {
-    //     console.log('You\'re logged in anonymously!');
-    //   })
-    //   .catch(error => {
-    //     const errorCode = error.code;
-    //     const errorMsg = error.message;
-
-    //     console.log(errorCode);
-    //     console.log(errorMsg);
-    //   });
-
     onAuthStateChanged(this.auth, async (user) => {
       if (user) {
         // console.log('User is signed in!');
-        // console.log('User: ', user);
+        console.log('User: ', user);
 
         try {
           let userData: UserData = await this.userService.getUserDataById(user.uid);
@@ -57,15 +45,29 @@ export class AuthService {
             lastApp: APPFLOW.Default
           }
 
-          this.userService.setUserDataById(user.uid, data);
+          if (!user.isAnonymous) this.userService.setUserDataById(user.uid, data);
           this.loggedUserSignal.set(this.userService.parseUserData(user.uid, user, data));
         }
         this.ngZone.run(() => this.router.navigate(['/segnalazioni']));
       } else {
         this.loggedUserSignal.set(null);
-        // console.log('User is signed out!');
+        this.logInAnonymously();
       }
     });
+  }
+
+  public logInAnonymously(): void {
+    signInAnonymously(this.auth)
+      .then(() => {
+        console.log('You\'re logged in anonymously');
+      })
+      .catch(error => {
+        const errorCode = error.code;
+        const errorMsg = error.message;
+
+        console.log(errorCode);
+        console.log(errorMsg);
+      });
   }
 
   public logInWithEmailAndPassword(email: string, password: string): void {

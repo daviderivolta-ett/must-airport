@@ -62,3 +62,9 @@
 .menu ul li .profile-pic-alt {
     background-color: darkorchid;
 }
+
+@media screen and (max-width: 576px) {
+    .header-label {
+        display: none;
+    }
+}

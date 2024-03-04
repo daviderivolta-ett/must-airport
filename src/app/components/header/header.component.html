@@ -10,16 +10,16 @@
             <li>
                 <a routerLink="segnalazioni" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
                     <span class="material-symbols-outlined">location_on</span>
-                    Segnalazioni
+                    <span class="header-label">Segnalazioni</span>
                 </a>
             </li>
             <li>
                 <a routerLink="report">
                     <span class="material-symbols-outlined">equalizer</span>
-                    Report
+                    <span class="header-label">Report</span>
                 </a>
             </li>
-            @if (loggedUser) {
+            @if (loggedUser && loggedUser.email) {
             <li (click)="showAccountMenu($event)">
                 @if (loggedUser.picUrl) {
                     <img src="{{loggedUser.picUrl}}" alt="Immagine profilo" class="profile-pic" referrerpolicy="no-referrer">
@@ -27,6 +27,14 @@
                 @else {
                     <span class="profile-pic profile-pic-alt">{{loggedUser.displayName?.charAt(0)?.toUpperCase()}}</span>
                 }
+            </li>
+            }
+            @else {
+            <li>
+                <a routerLink="login">
+                    <span class="material-symbols-outlined">login</span>
+                    <span class="header-label">Accedi</span>
+                </a>
             </li>
             }
         </ul>

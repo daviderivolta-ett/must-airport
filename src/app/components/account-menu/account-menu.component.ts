@@ -32,7 +32,7 @@ export class AccountMenuComponent {
     this.headerService.isAccountMenuVisible.set(false);
     this.authService.auth.signOut();
     this.snackbarService.createSnackbar('Logout avvenuto con successo', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/segnalazioni']);
   }
 
   public closeAccountMenu(): void {
