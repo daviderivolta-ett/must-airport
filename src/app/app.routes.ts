@@ -20,7 +20,7 @@ export const routes: Routes = [
         path: 'segnalazioni',
         title: 'MUST - Segnalazioni',
         component: MapPageComponent,
-        canActivate: [authGuard]
+        // canActivate: [authGuard]
     },
     {
         path: 'gestione',

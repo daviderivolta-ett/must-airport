@@ -27,7 +27,7 @@ export class AuthService {
     this.auth = getAuth();
     this.provider = new GoogleAuthProvider();
 
-    onAuthStateChanged(this.auth, async (user) => {
+    onAuthStateChanged(this.auth, async (user) => {    
       if (user) {
         // console.log('User is signed in!');
         // console.log('User: ', user);

@@ -1,14 +1,10 @@
 import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { DocumentData, QuerySnapshot, Timestamp, collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
+import { DocumentData, QuerySnapshot, Timestamp, collection, doc, getDoc, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
 import { Code, CodeDb } from '../models/code.model';
 import { APPFLOW } from '../models/app-flow.model';
-import { AuthService } from './auth.service';
-import { UserService } from './user.service';
-import { LoggedUser, USERLEVEL, UserData } from '../models/user.model';
+import { LoggedUser } from '../models/user.model';
 import { APPTYPE } from '../models/app-type.mode';
-import { SnackbarService } from '../observables/snackbar.service';
-import { SNACKBAROUTCOME, SNACKBARTYPE } from '../models/snackbar.model';
 
 export interface CreateCodeFormData {
   code: string;
@@ -42,7 +38,7 @@ export class CodesService {
   public filteredCodes: Code[] = [];
   public filteredCodesSignal: WritableSignal<Code[]> = signal([]);
 
-  constructor(private db: Firestore, private authService: AuthService, private userService: UserService, private snackbarService: SnackbarService) {
+  constructor(private db: Firestore) {
     effect(() => this.codes = this.codesSignal());
   }
 
@@ -146,52 +142,6 @@ export class CodesService {
     return found && found.isValid === true ? true : false;
   }
 
-  public async consumeCode(code: string): Promise<void> {
-    const loggedUser: LoggedUser | null = this.authService.loggedUser;
-    if (!loggedUser) return;
-
-    const isCodeValid = this.checkIfCodeIsValid(code);
-    if (!isCodeValid) {
-      this.snackbarService.createSnackbar('Il codice inserito non è valido.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
-      return;
-    }
-
-    let codeDb: CodeDb = await this.getCodeByCode(code);
-    codeDb.associatedOn = Timestamp.now();
-    codeDb.user = loggedUser.id;
-    codeDb.isValid = false;
-    codeDb.userEmail = loggedUser.email;
-
-    if (codeDb.appType !== APPTYPE.Web) {
-      this.snackbarService.createSnackbar('Il codice non è valido per la versione web.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
-      return;
-    }
-
-    const isUserAlreadyAbilitated = this.userService.checkIfUserIsAlreadyAbilitated(loggedUser, codeDb.vertId);
-    if (isUserAlreadyAbilitated) {
-      this.snackbarService.createSnackbar(`Sei già abilitato per l\'app ${codeDb.vertId}.`, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
-      return;
-    }
-
-    const codeObj: Code = this.parseCodeDb(codeDb);
-    loggedUser.apps.push(codeObj.vertId);
-    loggedUser.lastApp = codeObj.vertId;
-
-    // console.log(codeDb);
-    // console.log(loggedUser);
-
-    let userData: UserData = {
-      userLevel: USERLEVEL.Admin,
-      lastLogin: Timestamp.fromDate(loggedUser.lastLogin),
-      apps: loggedUser.apps,
-      lastApp: loggedUser.lastApp
-    }
-
-    // console.log(userData);
-    this.setCodeById(codeDb.code, codeDb);
-    await this.userService.setUserDataById(loggedUser.id, userData);
-  }
-
   public parseCodesFiltersFormData(formData: CodesFiltersFormData): ParsedCodesFiltersFormData {
     let data: ParsedCodesFiltersFormData = {
       appType: 'all',
@@ -259,7 +209,12 @@ export class CodesService {
   public checkIfUserIsAuthorized(user: LoggedUser, app: APPFLOW): boolean {
     let codesUsedByUser: Code[] = this.codes.filter(code => code.userId === user.id);
     let isAuthorized: boolean = codesUsedByUser.some(code => code.vertId === app);
-    console.log(isAuthorized);
     return isAuthorized;
+  }
+
+  public getAppsByUserId(id: string): APPFLOW[] {
+    let filteredCodes: Code[] = this.codes.filter(code => code.userId === id)
+    let apps: APPFLOW[] = filteredCodes.map(code => code.vertId);
+    return apps;
   }
 }

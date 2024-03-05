@@ -27,14 +27,13 @@ export class AppComponent {
     this.splashService.createSplash();
     this.codesService.getAllCodes();
     effect(() => {
-      //
-      // console.log(this.codesService.codes); 
-      //
-      
       if (this.authService.loggedUserSignal() !== null) {
         if (!this.authService.loggedUser) return;
-        // this.codesService.checkIfUserIsAuthorized(this.authService.loggedUser, APPFLOW.Airport);
-        // console.log(this.authService.loggedUser);
+        
+        console.log(codesService.codes);
+        this.codesService.getAppsByUserId(this.authService.loggedUser.id);
+        this.codesService.checkIfUserIsAuthorized(this.authService.loggedUser, APPFLOW.Airport);
+
         this.authService.loggedUser && this.authService.loggedUser.lastApp ? this.reportsService.getAllParentReports(this.authService.loggedUser.lastApp) : this.reportsService.getAllParentReports(APPFLOW.Default);
 
         this.settingsService.getAllSettings(this.authService.loggedUser.lastApp).subscribe((settings: AppSettings) => {
@@ -44,6 +43,7 @@ export class AppComponent {
         this.splashService.removeSplash();
       } else {
         this.reportsService.reports = [];
+        this.splashService.removeSplash();
       }
     });
   }
