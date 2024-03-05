@@ -5,7 +5,7 @@ import { Code, CodeDb } from '../models/code.model';
 import { APPFLOW } from '../models/app-flow.model';
 import { AuthService } from './auth.service';
 import { UserService } from './user.service';
-import { LoggedUser, UserData } from '../models/user.model';
+import { LoggedUser, USERLEVEL, UserData } from '../models/user.model';
 import { APPTYPE } from '../models/app-type.mode';
 import { SnackbarService } from '../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../models/snackbar.model';
@@ -180,7 +180,7 @@ export class CodesService {
     // console.log(loggedUser);
 
     let userData: UserData = {
-      userLevel: loggedUser.level,
+      userLevel: USERLEVEL.Admin,
       lastLogin: Timestamp.fromDate(loggedUser.lastLogin),
       apps: loggedUser.apps,
       lastApp: loggedUser.lastApp

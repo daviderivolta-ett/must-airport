@@ -2,12 +2,13 @@ import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { ReportParent } from '../models/report-parent.model';
 import { PRIORITY } from '../models/priority.model';
 import { OPERATIONTYPE, Operation } from '../models/operation.model';
+import { TechElementTag } from '../models/tech-element-tag.model';
 
 export type timeChartData = [number, number];
 export interface pieChartData {
   name: string,
   y: number,
-  color: string
+  color?: string
 }
 
 @Injectable({
@@ -127,6 +128,46 @@ export class ChartsService {
       name: 'Segnalazioni per priorità'
     }
 
+    return serie;
+  }
+
+  public createTechElementTagsNumSerie(reports: ReportParent[]): Highcharts.SeriesPieOptions {
+    let techElementTags: TechElementTag[] = [];
+    let idFrequency: { [key: string]: number } = {};
+    let data: pieChartData[] = [];
+
+    techElementTags = reports.flatMap(report =>
+      report.fields.tagTechElement
+        .filter(tag => typeof tag !== 'string')
+        .map(tag => tag as TechElementTag)
+    );
+
+    // console.log(techElementTags);
+
+    techElementTags.forEach(tag => {
+      const id = tag.id;
+      idFrequency[id] = (idFrequency[id] || 0) + 1;
+    });
+
+    // console.log(idFrequency);
+
+    data = Object.entries(idFrequency).map(([name, value]): pieChartData => ({
+      name: name,
+      y: value
+    }));
+
+    // console.log(data);
+
+    // data.forEach(item => {
+    //   const matchingTag = techElementTags.find(tag => tag.id === item.name);
+    //   if (matchingTag) item.name = matchingTag.name;
+    // })
+
+    let serie: Highcharts.SeriesPieOptions = {
+      type: 'pie',
+      name: 'Elementi tecnici',
+      data: data
+    }
     return serie;
   }
 }

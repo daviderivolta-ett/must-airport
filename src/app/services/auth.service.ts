@@ -21,7 +21,7 @@ export class AuthService {
   constructor(private router: Router, private userService: UserService, private ngZone: NgZone, private snackbarService: SnackbarService) {
     effect(() => {
       this.loggedUser = this.loggedUserSignal();
-      console.log(this.loggedUser);
+      // console.log(this.loggedUser);
     });
 
     this.auth = getAuth();
@@ -30,7 +30,7 @@ export class AuthService {
     onAuthStateChanged(this.auth, async (user) => {
       if (user) {
         // console.log('User is signed in!');
-        console.log('User: ', user);
+        // console.log('User: ', user);
 
         try {
           let userData: UserData = await this.userService.getUserDataById(user.uid);
