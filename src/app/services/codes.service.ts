@@ -79,6 +79,7 @@ export class CodesService {
 
     c.code = codeDb.code;
     c.isValid = codeDb.isValid;
+    c.creationDate = codeDb.creationDate.toDate();
 
     switch (codeDb.vertId) {
       case 'default':
@@ -101,8 +102,8 @@ export class CodesService {
         break;
     }
 
-    codeDb.usedOn ? c.usedOn = codeDb.usedOn.toDate() : null;
-    codeDb.userId ? c.userId = codeDb.userId : null;
+    codeDb.associatedOn ? c.usedOn = codeDb.associatedOn.toDate() : null;
+    codeDb.user ? c.userId = codeDb.user : null;
     codeDb.userEmail ? c.userEmail = codeDb.userEmail : null;
 
     return c;
@@ -115,12 +116,12 @@ export class CodesService {
       isValid: code.isValid,
       vertId: code.vertId,
       appType: code.appType,
-      usedOn: Timestamp.now(),
-      userId: code.userId,
+      associatedOn: Timestamp.now(),
+      user: code.userId,
       userEmail: code.userEmail
     }
 
-    code.usedOn ? c.usedOn = Timestamp.fromDate(code.usedOn) : null;
+    code.usedOn ? c.associatedOn = Timestamp.fromDate(code.usedOn) : null;
 
     return c;
   }
@@ -132,8 +133,8 @@ export class CodesService {
       isValid: true,
       vertId: formData.app,
       appType: formData.type,
-      usedOn: null,
-      userId: null,
+      associatedOn: null,
+      user: null,
       userEmail: null
     }
 
@@ -156,8 +157,8 @@ export class CodesService {
     }
 
     let codeDb: CodeDb = await this.getCodeByCode(code);
-    codeDb.usedOn = Timestamp.now();
-    codeDb.userId = loggedUser.id;
+    codeDb.associatedOn = Timestamp.now();
+    codeDb.user = loggedUser.id;
     codeDb.isValid = false;
     codeDb.userEmail = loggedUser.email;
 
@@ -253,5 +254,12 @@ export class CodesService {
       }
     }
     this.filteredCodesSignal.set(filteredCodes);
+  }
+
+  public checkIfUserIsAuthorized(user: LoggedUser, app: APPFLOW): boolean {
+    let codesUsedByUser: Code[] = this.codes.filter(code => code.userId === user.id);
+    let isAuthorized: boolean = codesUsedByUser.some(code => code.vertId === app);
+    console.log(isAuthorized);
+    return isAuthorized;
   }
 }

@@ -52,8 +52,8 @@ export class CodeDb {
     isValid: boolean;
     vertId: string;
     appType: string;
-    usedOn: Timestamp | null;
-    userId: string | null;
+    associatedOn: Timestamp | null;
+    user: string | null;
     userEmail: string | null;
 
     constructor(
@@ -62,8 +62,8 @@ export class CodeDb {
         isValid: boolean,
         vertId: string,
         appType: string,
-        usedOn: Timestamp | null,
-        userId: string | null,
+        associatedOn: Timestamp | null,
+        user: string | null,
         userEmail: string | null
     ) {
         this.code = code;
@@ -71,8 +71,8 @@ export class CodeDb {
         this.isValid = isValid;
         this.vertId = vertId;
         this.appType = appType;
-        this.usedOn = usedOn;
-        this.userId = userId;
+        this.associatedOn = associatedOn;
+        this.user = user;
         this.userEmail = userEmail;
     }
 

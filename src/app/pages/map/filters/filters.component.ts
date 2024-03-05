@@ -25,9 +25,8 @@ export class FiltersComponent {
 
   constructor(private fb: FormBuilder, private filtersService: FiltersService, private reportsService: ReportsService) {
     this.filterForm.valueChanges.subscribe(changes => {
-      // console.log(this.filterForm.value);
       const filtersFormData: FiltersFormData = this.filterForm.value as FiltersFormData;
-      const parsedFiltersFormData: ParsedFiltersFormData = this.parseFiltersFormData(filtersFormData);
+      const parsedFiltersFormData: ParsedFiltersFormData = this.parseFiltersFormData(filtersFormData);      
       this.reportsService.filterReports(parsedFiltersFormData);
       this.filtersService.filtersLastState = filtersFormData;
     });
@@ -54,8 +53,12 @@ export class FiltersComponent {
         endingDate: null
       }
     }
-    if (value.initialDate !== null) parsedValue.date.initialDate = new Date(value.initialDate);
-    if (value.endingDate !== null) parsedValue.date.endingDate = new Date(value.endingDate);
+    if (value.initialDate !== null) {
+      typeof value.initialDate === 'string' && value.initialDate === '' ? parsedValue.date.initialDate = null : parsedValue.date.initialDate = new Date(value.initialDate);
+    }
+    if (value.endingDate !== null) {
+      typeof value.endingDate === 'string' && value.endingDate === '' ? parsedValue.date.endingDate = null : parsedValue.date.endingDate = new Date(value.endingDate);
+    }
     return parsedValue;
   }
 }
