@@ -15,9 +15,11 @@ import { CodesService } from './codes.service';
 export class AuthService {
   public auth: Auth;
   private provider: AuthProvider;
-  // public userSignal: WritableSignal<User | null> = signal(null);
+
   public loggedUserSignal: WritableSignal<LoggedUser | null> = signal(null);
   public loggedUser: LoggedUser | null = null;
+
+  public isAuthorized: boolean = false;
 
   constructor(private router: Router, private userService: UserService, private codesService: CodesService, private ngZone: NgZone, private snackbarService: SnackbarService) {
     effect(() => {
@@ -30,6 +32,7 @@ export class AuthService {
 
     onAuthStateChanged(this.auth, async (user) => {    
       if (user) {
+        console.log('authstatechanged');        
         // console.log('User is signed in!');
         // console.log('User: ', user);
 
@@ -37,20 +40,18 @@ export class AuthService {
           let userData: UserData = await this.userService.getUserDataById(user.uid);
           userData.lastLogin = Timestamp.fromDate(new Date(Date.now()));
           this.userService.setUserDataById(user.uid, userData);
-          userData.apps = [APPFLOW.Default, ...this.codesService.getAppsByUserId(user.uid)];
+          userData.userLevel !== USERLEVEL.Superuser ? userData.apps = [APPFLOW.Default, ...this.codesService.getAppsByUserId(user.uid)] : userData.apps = Object.values(APPFLOW);
           this.loggedUserSignal.set(this.userService.parseUserData(user.uid, user, userData));
         } catch {
           let data: UserData = {
             userLevel: USERLEVEL.User,
             lastLogin: Timestamp.fromDate(new Date(Date.now())),
-            // apps: [APPFLOW.Default],
+            apps: [APPFLOW.Default],
             lastApp: APPFLOW.Default
-          }
-
+          }      
           if (!user.isAnonymous) this.userService.setUserDataById(user.uid, data);
           this.loggedUserSignal.set(this.userService.parseUserData(user.uid, user, data));
-        }
-        // console.log(this.loggedUser);        
+        }      
         this.ngZone.run(() => this.router.navigate(['/segnalazioni']));
       } else {
         this.loggedUserSignal.set(null);

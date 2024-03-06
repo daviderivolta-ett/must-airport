@@ -52,6 +52,11 @@ export class UseCodeComponent {
     codeDb.isValid = true;
     codeDb.userEmail = loggedUser.email;
 
+    if (loggedUser.level === USERLEVEL.Superuser) {
+      this.snackbarService.createSnackbar(`Sei già abilitato per l\'app ${codeDb.vertId}.`, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
+      return;
+    }
+
     // if (codeDb.appType !== APPTYPE.Web) {
     //   this.snackbarService.createSnackbar(`Sei già abilitato per l\'app ${codeDb.vertId}.`, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
     //   return;

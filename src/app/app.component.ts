@@ -10,7 +10,9 @@ import { SettingsService } from './services/settings.service';
 import { ThemeService } from './services/theme.service';
 import { AppSettings } from './models/settings.model';
 import { SplashService } from './observables/splash.service';
-import { USERLEVEL } from './models/user.model';
+import { LoggedUser, USERLEVEL, UserData } from './models/user.model';
+import { UserService } from './services/user.service';
+import { Timestamp } from 'firebase/firestore';
 
 @Component({
   selector: 'app-root',
@@ -22,21 +24,31 @@ import { USERLEVEL } from './models/user.model';
 export class AppComponent {
   public title: string = 'must';
 
-  constructor(private firebaseService: FirebaseService, private authService: AuthService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService, private themeService: ThemeService, private splashService: SplashService) {
+  constructor(private firebaseService: FirebaseService, private authService: AuthService, private usersService: UserService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService, private themeService: ThemeService, private splashService: SplashService) {
     this.splashService.createSplash();
     effect(() => this.codesService.getAllCodes());
     effect(() => {
       if (this.authService.loggedUserSignal() !== null) {
         if (!this.authService.loggedUser) return;
-        // console.log(this.authService.loggedUser);
-        // console.log(this.codesService.codes);
 
         let isAuthorized: boolean = false;
-        this.authService.loggedUser.level === USERLEVEL.Superuser ? isAuthorized = true : isAuthorized = this.codesService.checkIfUserIsAuthorized(this.authService.loggedUser, this.authService.loggedUser.lastApp);
+        if (this.authService.loggedUser.level === USERLEVEL.Superuser) {
+          isAuthorized = true;
+        } else {
+          isAuthorized = this.codesService.checkIfUserIsAuthorized(this.authService.loggedUser, this.authService.loggedUser.lastApp);
+        }
+
         if (isAuthorized) {
           this.reportsService.getAllParentReports(this.authService.loggedUser.lastApp);
         } else {
           this.authService.loggedUser.lastApp = APPFLOW.Default;
+          let userData: UserData = {
+            userLevel: this.authService.loggedUser.level,
+            lastLogin: Timestamp.fromDate(this.authService.loggedUser.lastLogin),
+            lastApp: APPFLOW.Default
+          }
+
+          if (this.authService.loggedUser.email) this.usersService.setUserDataById(this.authService.loggedUser.id, userData);
           this.reportsService.getAllParentReports(APPFLOW.Default);
         }
 
