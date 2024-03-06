@@ -10,7 +10,7 @@ export enum USERLEVEL {
 export interface UserData {
     userLevel: USERLEVEL;
     lastLogin: Timestamp;
-    apps: APPFLOW[],
+    apps?: APPFLOW[],
     lastApp: APPFLOW
 }
 

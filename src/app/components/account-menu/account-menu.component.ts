@@ -45,7 +45,7 @@ export class AccountMenuComponent {
     let userData: UserData = {
       userLevel: user.level,
       lastLogin: Timestamp.fromDate(user.lastLogin),
-      apps: user.apps,
+      // apps: user.apps,
       lastApp: selectedApp
     }
     this.userService.setUserDataById(user.id, userData);

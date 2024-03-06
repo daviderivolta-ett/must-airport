@@ -51,7 +51,6 @@ export class CodeDb {
     creationDate: Timestamp;
     isValid: boolean;
     vertId: string;
-    appType: string;
     associatedOn: Timestamp | null;
     user: string | null;
     userEmail: string | null;
@@ -61,7 +60,6 @@ export class CodeDb {
         creationDate: Timestamp,
         isValid: boolean,
         vertId: string,
-        appType: string,
         associatedOn: Timestamp | null,
         user: string | null,
         userEmail: string | null
@@ -70,7 +68,6 @@ export class CodeDb {
         this.creationDate = creationDate;
         this.isValid = isValid;
         this.vertId = vertId;
-        this.appType = appType;
         this.associatedOn = associatedOn;
         this.user = user;
         this.userEmail = userEmail;
@@ -82,7 +79,6 @@ export class CodeDb {
             Timestamp.now(),
             true,
             'default',
-            'web',
             null,
             null,
             null

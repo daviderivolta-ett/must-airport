@@ -8,6 +8,7 @@ import { ClickOutsideDirective } from '../../../directives/click-outside.directi
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SnackbarService } from '../../../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
+import { APPTYPE } from '../../../models/app-type.mode';
 
 @Component({
   selector: 'app-create-code',
@@ -52,7 +53,9 @@ export class CreateCodeComponent {
 
   public handleSubmit(): void {
     let ref = this.codesService.parseCreateCodeFormData(this.createCodeForm.value as CreateCodeFormData);
-    this.codesService.setCodeById(ref.code, ref);
+    const appTypeControl = this.createCodeForm.get('type');
+    const appType: APPTYPE = appTypeControl ? (appTypeControl.value as APPTYPE) : APPTYPE.Web;
+    this.codesService.setCodeById(appType, ref.code, ref);
     this.createCodeForm.reset({ app: '', type: '' });
     this.createCodeDialogService.isOpenSignal.set(false);
     this.generateCode();

@@ -43,13 +43,14 @@ export class AuthService {
           let data: UserData = {
             userLevel: USERLEVEL.User,
             lastLogin: Timestamp.fromDate(new Date(Date.now())),
-            apps: [APPFLOW.Default],
+            // apps: [APPFLOW.Default],
             lastApp: APPFLOW.Default
           }
 
           if (!user.isAnonymous) this.userService.setUserDataById(user.uid, data);
           this.loggedUserSignal.set(this.userService.parseUserData(user.uid, user, data));
         }
+        // console.log(this.loggedUser);        
         this.ngZone.run(() => this.router.navigate(['/segnalazioni']));
       } else {
         this.loggedUserSignal.set(null);
