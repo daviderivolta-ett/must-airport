@@ -29,9 +29,9 @@ export class AppComponent {
         if (!this.authService.loggedUser) return;
         console.log(this.authService.loggedUser);
         // this.codesService.checkIfUserIsAuthorized(this.authService.loggedUser, APPFLOW.Airport);
-        
+
         this.authService.loggedUser && this.authService.loggedUser.lastApp ? this.reportsService.getAllParentReports(this.authService.loggedUser.lastApp) : this.reportsService.getAllParentReports(APPFLOW.Default);
-        
+
         this.settingsService.getAllSettings(this.authService.loggedUser.lastApp).subscribe((settings: AppSettings) => {
           this.settingsService.settingsSignal.set(settings);
           this.themeService.setTheme(settings.styles);
@@ -44,7 +44,7 @@ export class AppComponent {
     });
   }
 
-  async ngOnInit() {
-    // await this.reportsService.getAllParentReports();   
-  }
+  // async ngOnInit() {
+  // await this.reportsService.getAllParentReports();   
+  // }
 }
