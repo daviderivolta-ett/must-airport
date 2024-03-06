@@ -7,6 +7,7 @@ import { Timestamp } from 'firebase/firestore';
 import { SnackbarService } from '../observables/snackbar.service';
 import { APPFLOW } from '../models/app-flow.model';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../models/snackbar.model';
+import { CodesService } from './codes.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class AuthService {
   public loggedUserSignal: WritableSignal<LoggedUser | null> = signal(null);
   public loggedUser: LoggedUser | null = null;
 
-  constructor(private router: Router, private userService: UserService, private ngZone: NgZone, private snackbarService: SnackbarService) {
+  constructor(private router: Router, private userService: UserService, private codesService: CodesService, private ngZone: NgZone, private snackbarService: SnackbarService) {
     effect(() => {
       this.loggedUser = this.loggedUserSignal();
       // console.log(this.loggedUser);
@@ -36,6 +37,7 @@ export class AuthService {
           let userData: UserData = await this.userService.getUserDataById(user.uid);
           userData.lastLogin = Timestamp.fromDate(new Date(Date.now()));
           this.userService.setUserDataById(user.uid, userData);
+          userData.apps = [APPFLOW.Default, ...this.codesService.getAppsByUserId(user.uid)];
           this.loggedUserSignal.set(this.userService.parseUserData(user.uid, user, userData));
         } catch {
           let data: UserData = {
@@ -89,7 +91,7 @@ export class AuthService {
 
   public signInWithGoogle(): void {
     signInWithPopup(this.auth, this.provider)
-      .then(async result => {
+      .then(async result => {              
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential?.accessToken;
         const user = result.user;

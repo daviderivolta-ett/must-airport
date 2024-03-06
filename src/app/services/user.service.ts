@@ -3,7 +3,6 @@ import { LoggedUser, UserData } from '../models/user.model';
 import { User } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { Firestore } from '@angular/fire/firestore';
-import { CodesService } from './codes.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,14 +31,13 @@ export class UserService {
   
     u.level = userData.userLevel;
     if (userData.lastLogin) u.lastLogin = userData.lastLogin.toDate();
-    u.apps = [...userData.apps];
-    // u.apps = this.codesService.getAppsByUserId(id);
+    u.apps = userData.apps;
     u.lastApp = userData.lastApp;
     user.displayName ? u.displayName = user.displayName : u.displayName = user.email;
     if (user.photoURL) u.picUrl = user.photoURL;
     u.email = user.email;
     u.id = id;
-    console.log(u);    
+
     return u;
   }
 

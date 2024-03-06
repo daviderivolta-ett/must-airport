@@ -39,8 +39,8 @@ export class AccountMenuComponent {
     this.headerService.isAccountMenuVisible.set(false);
   }
 
-  public reloadApp(selectedApp: APPFLOW): void {
-    const user: LoggedUser | null = this.authService.loggedUser;
+  public reloadApp(selectedApp: APPFLOW = APPFLOW.Default): void {
+    const user: LoggedUser | null = this.authService.loggedUser;    
     if (!user) return;
     let userData: UserData = {
       userLevel: user.level,
