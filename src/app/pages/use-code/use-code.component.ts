@@ -39,10 +39,26 @@ export class UseCodeComponent {
     if (!this.authService.loggedUser) return;
     const loggedUser: LoggedUser = this.authService.loggedUser;
 
-    const isCodeValid = this.codesService.checkIfCodeIsValid(code);
-    console.log(isCodeValid);
-    if (isCodeValid) {
+    const foundCode: Code | null = this.codesService.checkIfCodeExists(code);
+    if (!foundCode) {
       this.snackbarService.createSnackbar('Il codice inserito non è valido.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
+      return;
+    }
+
+    if (loggedUser.level === USERLEVEL.Superuser || foundCode.userId === loggedUser.id) {
+      this.snackbarService.createSnackbar(`Sei già abilitato per l\'app ${foundCode.vertId}.`, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
+      return;
+    }
+
+    const isWebValid: boolean = this.codesService.checkIfCodeIsWebValid(foundCode);
+    if (!isWebValid) {
+      this.snackbarService.createSnackbar('Il codice inserito non è valido.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
+      return;
+    }
+
+    const isAlreadyAssociated: boolean = this.codesService.checkIfCodesIsAlreadyAssociated(foundCode);
+    if (isAlreadyAssociated) {
+      this.snackbarService.createSnackbar('Il codice inserito è già stato usato.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
       return;
     }
 
@@ -51,16 +67,6 @@ export class UseCodeComponent {
     codeDb.user = loggedUser.id;
     codeDb.isValid = true;
     codeDb.userEmail = loggedUser.email;
-
-    if (loggedUser.level === USERLEVEL.Superuser) {
-      this.snackbarService.createSnackbar(`Sei già abilitato per l\'app ${codeDb.vertId}.`, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
-      return;
-    }
-
-    // if (codeDb.appType !== APPTYPE.Web) {
-    //   this.snackbarService.createSnackbar(`Sei già abilitato per l\'app ${codeDb.vertId}.`, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
-    //   return;
-    // }
 
     const codeObj: Code = this.codesService.parseCodeDb(codeDb);
     loggedUser.apps.push(codeObj.vertId);
@@ -73,6 +79,6 @@ export class UseCodeComponent {
 
     this.codesService.setCodeById(APPTYPE.Web, codeDb.code, codeDb);
     await this.userService.setUserDataById(loggedUser.id, userData);
-    this.snackbarService.createSnackbar(`Sei ora abilitato per l\'app ${codeDb.vertId}.`, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success); 
+    this.snackbarService.createSnackbar(`Sei ora abilitato per l\'app ${codeDb.vertId}.`, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
   }
 }

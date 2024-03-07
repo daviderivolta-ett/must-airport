@@ -167,9 +167,17 @@ export class CodesService {
     return code;
   }
 
-  public checkIfCodeIsValid(formCode: string): boolean {
+  public checkIfCodeExists(formCode: string): Code | null {
     let found: Code | undefined = this.codes.find(item => item.code === formCode);
-    return found && found.usedOn !== null ? true : false;
+    return found || null;
+  }
+
+  public checkIfCodeIsWebValid(code: Code): boolean {
+    return code.appType === APPTYPE.Web;
+  }
+
+  public checkIfCodesIsAlreadyAssociated(code: Code): boolean {
+    return code.usedOn !== null;
   }
 
   public parseCodesFiltersFormData(formData: CodesFiltersFormData): ParsedCodesFiltersFormData {
