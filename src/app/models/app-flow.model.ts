@@ -1,4 +1,4 @@
 export enum APPFLOW {
-    Default = 'default',
+    Default = 'generic',
     Airport = 'airport'
 }

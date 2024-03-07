@@ -9,7 +9,7 @@
         @for (app of loggedUser?.apps; track $index) {
         <div class="list-element" [ngClass]="{'current-app': app === loggedUser?.lastApp}">
             <a class="list-text" routerLink="segnalazioni" (click)="reloadApp(app)" (click)="closeAccountMenu()">
-                @if (app === 'default') {
+                @if (app === 'generic') {
                     Pubblica
                 }
                 @else {
