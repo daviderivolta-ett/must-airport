@@ -111,7 +111,7 @@ export class ReportsService {
     // console.log(this.dictionaryService.failureTags);
     // console.log(this.dictionaryService.techElementTags);
 
-    const q = query(collection(this.db, 'reportParents'), where('parentFlowId', '==', appFlow), orderBy('lastChildTime', 'desc'));
+    const q = query(collection(this.db, 'reportParents'), where('verticalId', '==', appFlow), orderBy('lastChildTime', 'desc'));
     const unsubscribe = onSnapshot(q,
       (querySnapshot: QuerySnapshot<DocumentData>) => {
         let reports: any[] = [];

@@ -1,7 +1,7 @@
 {
     "apps": [
         {
-            "name": "default",
+            "name": "generic",
             "assets": {
                 "logoUrl": "./assets/images/logo.png"
             },
