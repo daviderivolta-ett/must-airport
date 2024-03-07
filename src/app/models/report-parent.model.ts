@@ -12,7 +12,7 @@ export class ReportParent {
     childrenIds: string[];
     closed: boolean;
     closingChildId: string;
-    closingTime: Date;
+    closingTime: Date | null;
     coverImgUrls: string[];
     creationTime: Date;
     descriptionSelections: string[] | TechElementSubTag[];
@@ -35,7 +35,7 @@ export class ReportParent {
         childrenIds: string[],
         closed: boolean,
         closingChildId: string,
-        closingTime: Timestamp,
+        closingTime: Timestamp | null,
         coverImgUrls: string[],
         creationTime: Timestamp,
         descriptionSelections: string[] | TechElementSubTag[],
@@ -56,7 +56,7 @@ export class ReportParent {
         this.childrenIds = childrenIds;
         this.closed = closed;
         this.closingChildId = closingChildId;
-        this.closingTime = closingTime.toDate();
+        closingTime ? this.closingTime = closingTime.toDate() : this.closingTime = null;
         this.coverImgUrls = coverImgUrls;
         this.creationTime = creationTime.toDate();
         this.descriptionSelections = descriptionSelections;
@@ -80,7 +80,7 @@ export class ReportParent {
             [],
             false,
             '',
-            Timestamp.now(),
+            null,
             [],
             Timestamp.now(),
             [],

@@ -21,7 +21,7 @@ export interface ReportParentDb {
   childrenIds: string[];
   closed: boolean;
   closingChildId: string;
-  closingTime: Timestamp;
+  closingTime: Timestamp | null;
   coverImgUrls: string[];
   creationTime: Timestamp;
   descriptionSelections: string[];
@@ -232,7 +232,7 @@ export class ReportsService {
     r.childrenIds = report.childrenIds;
     r.closed = report.closed;
     r.closingChildId = report.closingChildId;
-    r.closingTime = report.closingTime.toDate();
+    report.closingTime ? r.closingTime = report.closingTime.toDate() : r.closingTime = null;
     r.coverImgUrls = report.coverImgUrls;
     r.creationTime = report.creationTime.toDate();
     r.descriptionSelections = report.descriptionSelections;
