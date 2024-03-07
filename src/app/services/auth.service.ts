@@ -15,11 +15,13 @@ import { CodesService } from './codes.service';
 export class AuthService {
   public auth: Auth;
   private provider: AuthProvider;
+  
+  public user: User | null = null;
+  public userSignal: WritableSignal<User | null> = signal(null);
 
   public loggedUserSignal: WritableSignal<LoggedUser | null> = signal(null);
   public loggedUser: LoggedUser | null = null;
 
-  public isAuthorized: boolean = false;
 
   constructor(private router: Router, private userService: UserService, private codesService: CodesService, private ngZone: NgZone, private snackbarService: SnackbarService) {
     effect(() => {
@@ -27,36 +29,44 @@ export class AuthService {
       // console.log(this.loggedUser);
     });
 
+    effect(() => {
+      this.user = this.userSignal();
+      // console.log(this.loggedUser);
+    });
+
     this.auth = getAuth();
     this.provider = new GoogleAuthProvider();
 
-    onAuthStateChanged(this.auth, async (user) => {    
-      if (user) {  
-        console.log('authstatechanged');        
+    onAuthStateChanged(this.auth, async (user: User | null) => {
+      if (user) {       
         // console.log('User is signed in!');
         // console.log('User: ', user);
 
-        try {
-          let userData: UserData = await this.userService.getUserDataById(user.uid);
-          userData.lastLogin = Timestamp.fromDate(new Date(Date.now()));
-          this.userService.setUserDataById(user.uid, userData);
-          userData.userLevel !== USERLEVEL.Superuser ? userData.apps = [APPFLOW.Default, ...this.codesService.getAppsByUserId(user.uid)] : userData.apps = Object.values(APPFLOW);
-          this.loggedUserSignal.set(this.userService.parseUserData(user.uid, user, userData));
-        } catch {
-          let data: UserData = {
-            userLevel: USERLEVEL.User,
-            lastLogin: Timestamp.fromDate(new Date(Date.now())),
-            apps: [APPFLOW.Default],
-            lastApp: APPFLOW.Default
-          }      
-          if (!user.isAnonymous) this.userService.setUserDataById(user.uid, data);
-          this.loggedUserSignal.set(this.userService.parseUserData(user.uid, user, data));
-        }      
-        this.ngZone.run(() => this.router.navigate(['/segnalazioni']));
+        // try {
+        //   let userData: UserData = await this.userService.getUserDataById(user.uid);
+        //   userData.lastLogin = Timestamp.fromDate(new Date(Date.now()));
+        //   this.userService.setUserDataById(user.uid, userData);
+        //   userData.userLevel !== USERLEVEL.Superuser ? userData.apps = [APPFLOW.Default, ...this.codesService.getAppsByUserId(user.uid)] : userData.apps = Object.values(APPFLOW);
+        //   this.loggedUserSignal.set(this.userService.parseUserData(user.uid, user, userData));
+        // } catch {
+        //   let data: UserData = {
+        //     userLevel: USERLEVEL.User,
+        //     lastLogin: Timestamp.fromDate(new Date(Date.now())),
+        //     apps: [APPFLOW.Default],
+        //     lastApp: APPFLOW.Default
+        //   }      
+        //   if (!user.isAnonymous) this.userService.setUserDataById(user.uid, data);
+        //   this.loggedUserSignal.set(this.userService.parseUserData(user.uid, user, data));
+        // }
+        
+        this.userSignal.set(user);
       } else {
-        this.loggedUserSignal.set(null);
+        // this.loggedUserSignal.set(null);
+        // this.logInAnonymously();
+        this.userSignal.set(user);
         this.logInAnonymously();
       }
+      this.ngZone.run(() => this.router.navigate(['/segnalazioni']));
     });
   }
 
