@@ -31,7 +31,7 @@ export class AuthService {
     this.provider = new GoogleAuthProvider();
 
     onAuthStateChanged(this.auth, async (user) => {    
-      if (user) {
+      if (user) {  
         console.log('authstatechanged');        
         // console.log('User is signed in!');
         // console.log('User: ', user);
@@ -78,7 +78,7 @@ export class AuthService {
     signInWithEmailAndPassword(this.auth, email, password)
       .then(userCredential => {
         console.log(`You\'re logged in with email and password`);
-        this.ngZone.run(() => this.router.navigate(['/segnalazioni']));
+        // this.ngZone.run(() => this.router.navigate(['/segnalazioni']));
         // console.log('User credentials:', userCredential);
       })
       .catch(error => {
@@ -98,7 +98,7 @@ export class AuthService {
         const token = credential?.accessToken;
         const user = result.user;
         console.log(`You\'re logged in with Google account`);
-        this.ngZone.run(() => this.router.navigate(['/segnalazioni']));
+        // this.ngZone.run(() => this.router.navigate(['/segnalazioni']));
       })
       .catch(error => {
         const errorCode = error.code;

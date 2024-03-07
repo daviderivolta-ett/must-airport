@@ -28,7 +28,7 @@ export class AppComponent {
     this.splashService.createSplash();
     effect(() => this.codesService.getAllCodes());
     effect(() => {
-      if (this.authService.loggedUserSignal() !== null) {
+      if (this.authService.loggedUserSignal() !== null) {       
         if (!this.authService.loggedUser) return;
 
         let isAuthorized: boolean = false;
