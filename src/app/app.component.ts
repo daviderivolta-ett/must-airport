@@ -48,7 +48,15 @@ export class AppComponent {
         }
 
         if (isAuthorized) {
-          this.reportsService.getAllParentReports(this.authService.loggedUser.lastApp);
+          if (this.authService.loggedUser.level === USERLEVEL.Superuser) {
+            this.reportsService.getAllParentReports(this.authService.loggedUser.lastApp, true);
+          } else {
+            if (this.authService.loggedUser.lastApp === APPFLOW.Default) {
+              this.reportsService.getAllParentReports(this.authService.loggedUser.lastApp, false);
+            } else {
+              this.reportsService.getAllParentReports(this.authService.loggedUser.lastApp, true);
+            }
+          }
         } else {
           this.authService.loggedUser.lastApp = APPFLOW.Default;
           let userData: UserData = {
@@ -58,7 +66,7 @@ export class AppComponent {
           }
 
           if (this.authService.loggedUser.email) this.usersService.setUserDataById(this.authService.loggedUser.id, userData);
-          this.reportsService.getAllParentReports(APPFLOW.Default);
+          this.reportsService.getAllParentReports(APPFLOW.Default, false);
         }
 
         this.settingsService.getAllSettings(this.authService.loggedUser.lastApp).subscribe((settings: AppSettings) => {

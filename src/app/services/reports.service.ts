@@ -1,6 +1,6 @@
 import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy, setDoc, deleteDoc, updateDoc, arrayUnion, arrayRemove, where } from 'firebase/firestore';
+import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy, setDoc, deleteDoc, updateDoc, arrayUnion, arrayRemove, where, or, Query } from 'firebase/firestore';
 import { ReportParent } from '../models/report-parent.model';
 import { ReportParentFields } from '../models/report-parent.fields.model';
 import { ReportChild } from '../models/report-child.model';
@@ -15,6 +15,7 @@ import { StorageReference, deleteObject, getMetadata, ref } from 'firebase/stora
 import { Storage } from '@angular/fire/storage';
 import { OPERATIONTYPE, Operation, OperationDb } from '../models/operation.model';
 import { APPFLOW } from '../models/app-flow.model';
+import { USERLEVEL } from '../models/user.model';
 
 export interface ReportParentDb {
   childFlowId: string;
@@ -106,12 +107,18 @@ export class ReportsService {
     effect(() => this.filteredReports = this.filteredReportsSignal());
   }
 
-  public async getAllParentReports(appFlow: APPFLOW) {
+  public async getAllParentReports(appFlow: APPFLOW, validated: boolean) {
     await this.dictionaryService.getAll();
     // console.log(this.dictionaryService.failureTags);
     // console.log(this.dictionaryService.techElementTags);
 
-    const q = query(collection(this.db, 'reportParents'), where('verticalId', '==', appFlow), orderBy('lastChildTime', 'desc'));
+    let q: Query;
+    if (validated) {
+      q = query(collection(this.db, 'reportParents'), where('verticalId', '==', appFlow));
+    } else {
+      q = query(collection(this.db, 'reportParents'), where('verticalId', '==', appFlow), where('priority', '!=', null));
+    }
+
     const unsubscribe = onSnapshot(q,
       (querySnapshot: QuerySnapshot<DocumentData>) => {
         let reports: any[] = [];
@@ -125,6 +132,7 @@ export class ReportsService {
           return report;
         });
 
+        reports = reports.sort((a, b) => b.lastChildTime.getTime() - a.lastChildTime.getTime());
         this.reportsSignal.set(reports);
 
         if (this.selectedReportId) {
