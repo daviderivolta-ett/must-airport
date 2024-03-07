@@ -20,6 +20,6 @@ export class SplashService {
     setTimeout(() => {
       const splash = document.querySelector('#splash');
       if (splash) splash.remove();
-    }, 1000);
+    }, 500);
   }
 }

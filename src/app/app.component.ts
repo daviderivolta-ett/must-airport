@@ -13,6 +13,7 @@ import { SplashService } from './observables/splash.service';
 import { LoggedUser, USERLEVEL, UserData } from './models/user.model';
 import { UserService } from './services/user.service';
 import { Timestamp } from 'firebase/firestore';
+import { User } from 'firebase/auth';
 
 @Component({
   selector: 'app-root',
@@ -26,64 +27,12 @@ export class AppComponent {
 
   constructor(private firebaseService: FirebaseService, private authService: AuthService, private usersService: UserService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService, private themeService: ThemeService, private splashService: SplashService) {
     this.splashService.createSplash();
-    effect(() => this.codesService.getAllCodes());
-    // effect(() => {
-    //   if (this.authService.loggedUserSignal() !== null) {       
-    //     if (!this.authService.loggedUser) return;
-
-    //     let isAuthorized: boolean = false;
-    //     if (this.authService.loggedUser.level === USERLEVEL.Superuser) {
-    //       isAuthorized = true;
-    //     } else {
-    //       isAuthorized = this.codesService.checkIfUserIsAuthorized(this.authService.loggedUser, this.authService.loggedUser.lastApp);
-    //     }
-
-    //     if (isAuthorized) {
-    //       this.reportsService.getAllParentReports(this.authService.loggedUser.lastApp);
-    //     } else {
-    //       this.authService.loggedUser.lastApp = APPFLOW.Default;
-    //       let userData: UserData = {
-    //         userLevel: this.authService.loggedUser.level,
-    //         lastLogin: Timestamp.fromDate(this.authService.loggedUser.lastLogin),
-    //         lastApp: APPFLOW.Default
-    //       }
-
-    //       if (this.authService.loggedUser.email) this.usersService.setUserDataById(this.authService.loggedUser.id, userData);
-    //       this.reportsService.getAllParentReports(APPFLOW.Default);
-    //     }
-
-    //     this.settingsService.getAllSettings(this.authService.loggedUser.lastApp).subscribe((settings: AppSettings) => {
-    //       this.settingsService.settingsSignal.set(settings);
-    //       this.themeService.setTheme(settings.styles);
-    //     });
-    //     this.splashService.removeSplash();
-    //   } else {
-    //     this.reportsService.reports = [];
-    //     this.splashService.removeSplash();
-    //   }
-    // });
-
+    this.codesService.getAllCodes();
     effect(async () => {
       if (this.authService.userSignal() === null) return;
       if (this.authService.user === null) return;
-
-      try {
-        let userData: UserData = await this.usersService.getUserDataById(this.authService.user.uid);
-        userData.lastLogin = Timestamp.now();
-        this.usersService.setUserDataById(this.authService.user.uid, userData);
-        userData.userLevel !== USERLEVEL.Superuser ? userData.apps = [APPFLOW.Default, ...this.codesService.getAppsByUserId(this.authService.user.uid)] : userData.apps = Object.values(APPFLOW);
-        this.authService.loggedUserSignal.set(this.usersService.parseUserData(this.authService.user.uid, this.authService.user, userData));
-      } catch (error) {
-        let data: UserData = {
-          userLevel: USERLEVEL.User,
-          lastLogin: Timestamp.fromDate(new Date(Date.now())),
-          apps: [APPFLOW.Default],
-          lastApp: APPFLOW.Default
-        }
-
-        if (!this.authService.user.isAnonymous) this.usersService.setUserDataById(this.authService.user.uid, data);
-        this.authService.loggedUserSignal.set(this.usersService.parseUserData(this.authService.user.uid, this.authService.user, data));
-      }
+      const loggedUser = await this.createLoggedUser(this.authService.user);
+      this.authService.loggedUserSignal.set(loggedUser);
     });
 
     effect(() => {
@@ -118,8 +67,34 @@ export class AppComponent {
         this.splashService.removeSplash();
       } else {
         this.reportsService.reports = [];
+        this.settingsService.getAllSettings(APPFLOW.Default).subscribe((settings: AppSettings) => {
+          this.settingsService.settingsSignal.set(settings);
+          this.themeService.setTheme(settings.styles);
+        });
         this.splashService.removeSplash();
       }
     })
+  }
+
+  private async createLoggedUser(user: User): Promise<LoggedUser> {
+    let loggedUser: LoggedUser;
+    try {
+      let userData: UserData = await this.usersService.getUserDataById(user.uid);
+      userData.lastLogin = Timestamp.now();
+      this.usersService.setUserDataById(user.uid, userData);
+      userData.userLevel !== USERLEVEL.Superuser ? userData.apps = [APPFLOW.Default, ...this.codesService.getAppsByUserId(user.uid)] : userData.apps = Object.values(APPFLOW);
+      loggedUser = this.usersService.parseUserData(user.uid, user, userData);
+    } catch (error) {
+      let data: UserData = {
+        userLevel: USERLEVEL.User,
+        lastLogin: Timestamp.fromDate(new Date(Date.now())),
+        apps: [APPFLOW.Default],
+        lastApp: APPFLOW.Default
+      }
+
+      if (!user.isAnonymous) this.usersService.setUserDataById(user.uid, data);
+      loggedUser = this.usersService.parseUserData(user.uid, user, data);
+    }
+    return loggedUser;
   }
 }

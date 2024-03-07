@@ -1,13 +1,9 @@
 import { Injectable, WritableSignal, effect, signal, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth, getAuth, signInAnonymously, onAuthStateChanged, User, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, AuthProvider } from 'firebase/auth';
-import { UserService } from './user.service';
-import { LoggedUser, USERLEVEL, UserData } from '../models/user.model';
-import { Timestamp } from 'firebase/firestore';
+import { LoggedUser } from '../models/user.model';
 import { SnackbarService } from '../observables/snackbar.service';
-import { APPFLOW } from '../models/app-flow.model';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../models/snackbar.model';
-import { CodesService } from './codes.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,10 +19,10 @@ export class AuthService {
   public loggedUser: LoggedUser | null = null;
 
 
-  constructor(private router: Router, private userService: UserService, private codesService: CodesService, private ngZone: NgZone, private snackbarService: SnackbarService) {
+  constructor(private router: Router, private ngZone: NgZone, private snackbarService: SnackbarService) {
     effect(() => {
       this.loggedUser = this.loggedUserSignal();
-      // console.log(this.loggedUser);
+      console.log(this.loggedUser);
     });
 
     effect(() => {
@@ -38,31 +34,9 @@ export class AuthService {
     this.provider = new GoogleAuthProvider();
 
     onAuthStateChanged(this.auth, async (user: User | null) => {
-      if (user) {       
-        // console.log('User is signed in!');
-        // console.log('User: ', user);
-
-        // try {
-        //   let userData: UserData = await this.userService.getUserDataById(user.uid);
-        //   userData.lastLogin = Timestamp.fromDate(new Date(Date.now()));
-        //   this.userService.setUserDataById(user.uid, userData);
-        //   userData.userLevel !== USERLEVEL.Superuser ? userData.apps = [APPFLOW.Default, ...this.codesService.getAppsByUserId(user.uid)] : userData.apps = Object.values(APPFLOW);
-        //   this.loggedUserSignal.set(this.userService.parseUserData(user.uid, user, userData));
-        // } catch {
-        //   let data: UserData = {
-        //     userLevel: USERLEVEL.User,
-        //     lastLogin: Timestamp.fromDate(new Date(Date.now())),
-        //     apps: [APPFLOW.Default],
-        //     lastApp: APPFLOW.Default
-        //   }      
-        //   if (!user.isAnonymous) this.userService.setUserDataById(user.uid, data);
-        //   this.loggedUserSignal.set(this.userService.parseUserData(user.uid, user, data));
-        // }
-        
+      if (user) {        
         this.userSignal.set(user);
       } else {
-        // this.loggedUserSignal.set(null);
-        // this.logInAnonymously();
         this.userSignal.set(user);
         this.logInAnonymously();
       }
@@ -88,7 +62,6 @@ export class AuthService {
     signInWithEmailAndPassword(this.auth, email, password)
       .then(userCredential => {
         console.log(`You\'re logged in with email and password`);
-        // this.ngZone.run(() => this.router.navigate(['/segnalazioni']));
         // console.log('User credentials:', userCredential);
       })
       .catch(error => {
@@ -108,7 +81,6 @@ export class AuthService {
         const token = credential?.accessToken;
         const user = result.user;
         console.log(`You\'re logged in with Google account`);
-        // this.ngZone.run(() => this.router.navigate(['/segnalazioni']));
       })
       .catch(error => {
         const errorCode = error.code;
