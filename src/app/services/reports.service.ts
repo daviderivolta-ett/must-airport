@@ -109,7 +109,7 @@ export class ReportsService {
 
   public async getAllParentReports(appFlow: APPFLOW, validated: boolean) {
     await this.dictionaryService.getAll();
-    // console.log(this.dictionaryService.failureTags);
+    // console.log(this.dictionaryService.failureTagsSignal());
     // console.log(this.dictionaryService.techElementTags);
 
     let q: Query;
