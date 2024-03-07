@@ -1,0 +1,303 @@
+[
+    {
+        "id": "cte02.01.03",
+        "DOCID": "2UZrjDLzjfZI5Q6pEpnz",
+        "subTags": [
+            {
+                "name": "muro di contenimento ",
+                "id": "cte02.01.03.01"
+            }
+        ],
+        "name": "strutture di contenimento",
+        "categoryID": "cte02",
+        "descriptionEN": "",
+        "nameEN": "containment structure",
+        "description": "",
+        "subCategoryID": "cte02.01"
+    },
+    {
+        "description": "",
+        "descriptionEN": "",
+        "categoryID": "cte02",
+        "nameEN": "public green",
+        "DOCID": "3dWlBV9oTfpuDUpqU6Xy",
+        "subTags": [
+            {
+                "descriptionEN": "",
+                "description": "",
+                "id": "cte02.02.02.01",
+                "name": "prato",
+                "imageUrls": [],
+                "nameEN": "grass"
+            },
+            {
+                "nameEN": "flower beds",
+                "name": "aiuole",
+                "imageUrls": [],
+                "descriptionEN": "",
+                "description": "",
+                "id": "cte02.02.02.02"
+            },
+            {
+                "id": "cte02.02.02.00",
+                "name": "altro",
+                "nameEN": "other"
+            }
+        ],
+        "name": "verde pubblico",
+        "subCategoryID": "cte02.03",
+        "imageUrls": [],
+        "id": "cte02.02.02"
+    },
+    {
+        "descriptionEN": "",
+        "DOCID": "7MjPmg9uXnAzWU39eqFn",
+        "id": "cte02.03.02",
+        "nameEN": "urban furniture",
+        "description": "",
+        " categoryID": "cte02",
+        "imageUrls": [],
+        "name": "arredo urbano",
+        "subTags": [
+            {
+                "name": "fontane",
+                "nameEN": "fountains",
+                "descriptionEN": "",
+                "imageUrls": [],
+                "description": "",
+                "id": "cte02.03.02.01"
+            },
+            {
+                "descriptionEN": "",
+                "id": "cte02.03.02.02",
+                "nameEN": "play equipments",
+                "name": "giochi",
+                "imageUrls": [],
+                "description": ""
+            },
+            {
+                "nameEN": "bike racks",
+                "id": "cte.02.03.02.05",
+                "description": "",
+                "descriptionEN": "",
+                "name": "portabici",
+                "imageUrls": []
+            },
+            {
+                "descriptionEN": "",
+                "imageUrls": [],
+                "name": "panchine",
+                "description": "",
+                "nameEN": "benches",
+                "id": "cte02.03.02.03"
+            },
+            {
+                "description": "",
+                "name": "altro",
+                "id": "cte02.03.02.00",
+                "nameEN": "other"
+            },
+            {
+                "name": "stand",
+                "descriptionEN": "",
+                "description": "",
+                "id": "cte02.03.02.04",
+                "nameEN": "stand"
+            }
+        ],
+        "subCategoryID": "cte02.03"
+    },
+    {
+        "imageUrls": [],
+        "DOCID": "7qdMyswZtT9E4IyIYR8B",
+        "categoryID": "cte02",
+        "id": "cte02.03.01",
+        "nameEN": "urban spaces utilities",
+        "subTags": [
+            {
+                "id": "cte02.03.01.01",
+                "imageUrls": [],
+                "nameEN": "conduit",
+                "name": "canaline",
+                "descriptionEN": "",
+                "description": ""
+            },
+            {
+                "description": "",
+                "nameEN": "downspout",
+                "id": "cte02.03.01.02",
+                "name": "pluviali",
+                "imageUrls": [],
+                "descriptionEN": ""
+            },
+            {
+                "name": "corpi illuminanti",
+                "description": "",
+                "id": "cte02.03.01.03",
+                "imageUrls": [],
+                "descriptionEN": "",
+                "nameEN": " lighting fixtures"
+            },
+            {
+                "id": "cte02.03.01.04",
+                "name": "semafori",
+                "descriptionEN": "",
+                "imageUrls": [],
+                "nameEN": "traffic light",
+                "description": ""
+            },
+            {
+                "descriptionEN": "",
+                "id": "cte02.03.01.05",
+                "imageUrls": [],
+                "description": "",
+                "nameEN": "bright table",
+                "name": "tabelle luminose"
+            },
+            {
+                "imageUrls": [],
+                "name": "telecamere di video sorveglianza",
+                "description": "",
+                "nameEN": "Video Surveillance Systems",
+                "id": "cte02.03.01.06",
+                "descriptionEN": ""
+            },
+            {
+                "descriptionEN": "",
+                "imageUrls": [],
+                "description": "",
+                "name": "segnaletica stradale verticale",
+                "id": "cte02.03.01.07",
+                "nameEN": "vertical road signs "
+            },
+            {
+                "nameEn": "manhole",
+                "id": "cte02.03.01.08",
+                "description": "",
+                "descriptionEN": "",
+                "imageUrls": [],
+                "name": "tombini"
+            },
+            {
+                "nameEN": "storm drain",
+                "id": "cte02.03.01.09",
+                "imageUrls": [],
+                "name": "caditoie",
+                "descriptionEN": "",
+                "description": ""
+            },
+            {
+                "id": "cte02.03.01.00",
+                "nameEN": "other",
+                "name": "altro"
+            },
+            {
+                "id": "cte02.03.01.10",
+                "imgUrls": [],
+                "descriptionEN": "",
+                "description": "",
+                "name": "pedane copricavi",
+                "nameEN": "cable cover"
+            }
+        ],
+        "subCategoryID": "cte02.03",
+        "name": "impianti spazio pubblico",
+        "description": "",
+        "descriptionEN": ""
+    },
+    {
+        "id": "cte02.02.01",
+        "DOCID": "8alyRvsYaznTJ7FjNLuE",
+        "subTags": [
+            {
+                "imageUrls": [],
+                "description": "",
+                "nameEN": "continue",
+                "descriptionEN": "",
+                "name": "pavimentazione continua ",
+                "id": "cte02.02.01.01"
+            },
+            {
+                "dsecription": "",
+                "id": "cte02.02.01.02",
+                "name": "pavimentazione discontinua",
+                "nameEN": "discontinous",
+                "imageUrls": [],
+                "descriptionEN": ""
+            }
+        ],
+        "name": "pavimentazione",
+        "imageUrls": [],
+        "categoryID": "cte02",
+        "subCategoryID": "cte02.02",
+        "nameEN": "pavement",
+        "description": "",
+        "descriptionEN": ""
+    },
+    {
+        "DOCID": "BjJrHXPSjm0Emr1DHu0D",
+        "decsription": "",
+        "id": "cte02.01.01",
+        "name": "ringhiere e parapetti",
+        "subCategoryID": "cte02.01",
+        "nameEN": "railings and parapets",
+        "imageUrls": [],
+        "categoryID": "cte02",
+        "descriptionEN": "",
+        "subTags": [
+            {
+                "imageUrls": [],
+                "name": "rivestimento ceramico",
+                "description": "",
+                "nameEN": "ceramic coating",
+                "id": "cte02.01.01.01",
+                "descriptionEN": ""
+            },
+            {
+                "description": "",
+                "id": "cte02.01.01.02",
+                "descriptionEN": "",
+                "imageUrls": [],
+                "nameEN": "stone cladding",
+                "name": "rivestimento lapideo"
+            },
+            {
+                "nameEN": "plastered coating",
+                "id": "cte02.01.01.03",
+                "descriptionEN": "",
+                "name": "rivestimento intonacato",
+                "description": "",
+                "imageUrls": []
+            },
+            {
+                "name": "rivestimento in calcestruzzo",
+                "description": "",
+                "descriptionEN": "",
+                "id": "cte02.01.01.04",
+                "imageUrls": [],
+                "nameEN": "concrete coating"
+            },
+            {
+                "description": "",
+                "nameEN": "iron elements",
+                "id": "cte02.01.01.06",
+                "name": "elementi in ferro",
+                "descriptionEN": "",
+                "imageUrls": []
+            },
+            {
+                "name": "altro",
+                "id": "cte02.01.01.00",
+                "nameEN": "other"
+            },
+            {
+                "imageUrls": [],
+                "descriptionEN": "",
+                "nameEN": "brick veneer",
+                "id": "cte02.01.01.05",
+                "description": "",
+                "name": "rivestimento in laterizio"
+            }
+        ]
+    }
+]

@@ -1,0 +1,435 @@
+[
+    {
+        "DOCID": "2iMR0YS6UnjR7qGpdk1a",
+        "name": "parete perimetrale verticale",
+        "nameEN": "external wall",
+        "descriptionEN": "Commonly associated with the facade of the building, it is the set of vertical technical elements of the building system with the function of separating the interior spaces of the building system itself from the outside",
+        "subCategoryID": "cte01.01",
+        "imageUrls": [],
+        "categoryID": "cte01",
+        "id": "cte01.01.01",
+        "description": "Comunemente associata alla facciata dell'edificio, è l'insieme degli elementi tecnici verticali del sistema edilizio aventi funzione di separare gli spazi interni del sistema edilizio stesso rispetto all'esterno. ",
+        "subTags": [
+            {
+                "description": "",
+                "id": "cte01.01.01.01",
+                "descriptionEN": "",
+                "nameEN": "ceramic coating",
+                "imageUrls": [],
+                "name": "rivestimento ceramico"
+            },
+            {
+                "imageUrls": [],
+                "nameEN": "stone cladding",
+                "description": "",
+                "descriptionEN": "",
+                "name": "rivestimento lapideo",
+                "id": "cte01.01.01.02"
+            },
+            {
+                "descriptionEN": "",
+                "name": "rivestimento intonacato",
+                "nameEN": "plastered coating",
+                "id": "cte01.01.01.03",
+                "description": "",
+                "imageUrls": []
+            },
+            {
+                "nameEN": "concrete coating",
+                "name": "rivestimento in calcestruzzo",
+                "descriptionEN": "",
+                "imageUrls": [],
+                "description": "",
+                "id": "cte01.01.01.04"
+            },
+            {
+                "name": "rivestimento in laterizio",
+                "description": "",
+                "id": "cte01.01.01.05",
+                "nameEN": "brick veneer",
+                "descriptionEN": "",
+                "imageUrls": []
+            },
+            {
+                "name": "muratura faccia vista",
+                "descriptionEN": "",
+                "description": "",
+                "id": "cte01.01.01.06",
+                "nameEN": "exposed masonry",
+                "imageUrls": []
+            },
+            {
+                "nameEN": "other",
+                "name": "altro",
+                "id": "cte01.01.01.00"
+            },
+            {
+                "nameEN": " glass curtain wall",
+                "description": "",
+                "id": "cte01.01.01.07",
+                "name": "facciata continua in vetro",
+                "descriptionEN": "",
+                "imageUrls": []
+            }
+        ]
+    },
+    {
+        "DOCID": "678ndAqdBrdVfzvQtGP9",
+        "categoryID": "cte01",
+        "name": "balconi",
+        "nameEN": "balcony",
+        "subCategoryID": "cte01.02",
+        "description": "",
+        "id": "cte01.02.01",
+        "subTags": [
+            {
+                "description": "",
+                "imageUrls": [],
+                "id": "cte01.02.01.01",
+                "nameEN": "plaster coated face board ",
+                "name": "frontalino intonacato",
+                "descriptionEN": ""
+            },
+            {
+                "nameEN": "marble face board",
+                "id": "cte01.02.01.02",
+                "name": "frontalino in marmo",
+                "decsriptionEN": "",
+                "description": "",
+                "imageUrls": []
+            },
+            {
+                "descriptionEN": "",
+                "name": "frontalino lapideo",
+                "imageUrls": [],
+                "description": "",
+                "id": "cte01.02.01.03",
+                "nameEN": "stone face board"
+            },
+            {
+                "nameEN": "plaster coated balcony ceiling",
+                "description": "",
+                "imageUrls": [],
+                "id": "cte01.02.01.04",
+                "name": "sottobalcone intonacato",
+                "descriptionEN": ""
+            },
+            {
+                "nameEN": "other",
+                "id": "cte01.02.01.00",
+                "name": "altro"
+            }
+        ],
+        "descriptionEN": ""
+    },
+    {
+        "DOCID": "C1nd2YZos4AAq6G6CYsW",
+        "description": "",
+        "descriptionEN": "",
+        "subCategoryID": "cte01.01",
+        "id": "cte01.01.02",
+        "categoryID": "cte01",
+        "imgUrls": [],
+        "nameEN": "doors and gates",
+        "subTags": [
+            {
+                "id": "cte01.01.02.01",
+                "name": "parte opaca",
+                "description": "",
+                "nameEN": "opaque portion",
+                "descriptionEN": "",
+                "imgUrls": []
+            },
+            {
+                "descriptionEN": "",
+                "id": "cte01.01.02.02",
+                "description": "",
+                "imageUrls": [],
+                "name": "parte trasparente",
+                "nameEN": "transparent portion"
+            },
+            {
+                "name": "elementi di movimentazione e manovra",
+                "nameEN": "handling and manoeuvring elements",
+                "imageUrls": [],
+                "id": "cte01.01.02.03",
+                "descriptionEN": "",
+                "description": ""
+            },
+            {
+                "name": "altro",
+                "nameEN": "other",
+                "id": "cte01.01.02.00"
+            }
+        ],
+        "name": "porte e portoni"
+    },
+    {
+        "DOCID": "WB0HuqRURC6fqMrcZSM1",
+        "categoryID": "cte01",
+        "description": "",
+        "nameEN": " railings and parapets",
+        "subTags": [
+            {
+                "id": "cte01.01.04.01",
+                "description": "",
+                "nameEN": "ceramic coating",
+                "name": "rivestimento ceramico",
+                "imageUrls": [],
+                "descriptionEN": ""
+            },
+            {
+                "descriptionEN": "",
+                "name": "rivestimento in calcestruzzo",
+                "id": "cte01.01.04.04",
+                "imgUrls": [],
+                "descriprion": "",
+                "nameEN": "concrete coating"
+            },
+            {
+                "nameEN": "stone cladding",
+                "descriptionEN": "",
+                "imageUrls": [],
+                "name": "rivestimento lapideo",
+                "id": "cte01.01.04.02",
+                "description": ""
+            },
+            {
+                "nameEN": "plastered coating",
+                "name": "rivestimento intonacato",
+                "imageUrls": [],
+                "descriptionEN": "",
+                "description": "",
+                "id": "cte01.01.04.03"
+            },
+            {
+                "description": "",
+                "name": "rivestimento laterizio",
+                "descriptionEN": "",
+                "id": "cte01.01.04.05",
+                "imageUrls": [],
+                "nameEN": "brick veneer"
+            },
+            {
+                "nameEN": "iron elements",
+                "name": "elementi in ferro",
+                "id": "cte01.01.04.06",
+                "imageUrls": [],
+                "description": "",
+                "descriptionEN": ""
+            },
+            {
+                "name": "altro",
+                "id": "cte01.01.04.00",
+                "nameEN": "other"
+            }
+        ],
+        "name": "ringhiere e parapetti",
+        "subCategoryID": "cte01.01",
+        "imageUrls": [],
+        "descriptionEN": "",
+        "id": "cte01.01.04"
+    },
+    {
+        "DOCID": "anJjJlkZPrIH8sbPVDRp",
+        "categoryID": "cte01",
+        "description": "",
+        "descriptionEN": "",
+        "subCategoryID": "cte01.02",
+        "nameEN": "eaves",
+        "imageUrls": [],
+        "name": "cornicioni",
+        "id": "cte01.02.02",
+        "subTags": [
+            {
+                "imageUrls": [],
+                "nameEN": "plastered coating",
+                "name": "rivestimento intonacato",
+                "id": "cte01.02.02.01",
+                "descriptionEN": "",
+                "description": ""
+            },
+            {
+                "imageUrls": [],
+                "descriptionEN": "",
+                "id": "cte01.02.02.02",
+                "description": "",
+                "nameEN": "stone cladding",
+                "name": "rivestimento lapideo"
+            },
+            {
+                "name": "altro",
+                "id": "cte01.02.02.00",
+                "nameEN": "other"
+            }
+        ]
+    },
+    {
+        "DOCID": "ct0g7wYIX8WT48ET1ncW",
+        "subCat": "furniture and equipment",
+        "category": "vertical plane",
+        "imageUrls": [],
+        "categoryID": "cte01",
+        "name": "impianti edificio",
+        "subCategoryID": "cte01.03",
+        "id": "cte01.03.01",
+        "subTags": [
+            {
+                "imageUrls": [],
+                "name": "canali di gronda",
+                "id": "cte01.03.01.01",
+                "descriptionEN": "",
+                "nameEN": "gutter",
+                "description": ""
+            },
+            {
+                "nameEN": "downspout",
+                "descriptionEN": "",
+                "name": "pluviali",
+                "description": "",
+                "imageUrls": [],
+                "id": "cte01.03.01.02"
+            },
+            {
+                "description": "",
+                "descriptionEN": "",
+                "imageUrls": [],
+                "name": "tubi di distribuzione gas",
+                "nameEN": "gas distribution pipes",
+                "id": "cte01.03.01.03"
+            },
+            {
+                "imageUrls": [],
+                "name": "cavi elettrici",
+                "id": "cte01.03.01.04",
+                "description": "",
+                "descriptionEN": "",
+                "nameEN": "electric cables"
+            },
+            {
+                "name": "cassette",
+                "id": "cte01.03.01.05",
+                "nameEN": "control boxes",
+                "description": "",
+                "imageUrls": [],
+                "descriptionEN": ""
+            },
+            {
+                "description": "",
+                "name": "corpi illuminanti",
+                "descriptionEN": "",
+                "imageUrls": [],
+                "id": "cte01.03.01.06",
+                "nameEN": "lighting fixtures"
+            },
+            {
+                "id": "cte01.03.01.00",
+                "name": "altro",
+                "nameEN": "other"
+            }
+        ],
+        "descriptionEN": "",
+        "nameEN": "building utilities",
+        "description": ""
+    },
+    {
+        "DOCID": "v8N4sNUMTzQDCWQCCUP6",
+        "subTags": [
+            {
+                "nameEN": "wood frame",
+                "id": "cte01.01.03.01",
+                "description": "",
+                "descriptionEN": "",
+                "name": "telaio in legno",
+                "imageUrls": []
+            },
+            {
+                "descriptionEN": "",
+                "imageUrls": [],
+                "descriprion": "",
+                "id": "cte01.01.03.02",
+                "name": "telaio in PVC",
+                "nameEN": "PVC frame"
+            },
+            {
+                "name": "telaio in alluminio",
+                "nameEN": "aluminum frame",
+                "description": "",
+                "imageUrls": [],
+                "id": "cte01.01.03.03",
+                "descriptionEN": ""
+            },
+            {
+                "id": "cte01.01.03.04",
+                "imageUrls": [],
+                "description": "",
+                "name": "tamponamento opaco",
+                "descriptionEN": "",
+                "nameEN": "opaque components"
+            },
+            {
+                "imageUrls": [],
+                "nameEN": "glass",
+                "name": "vetro",
+                "id": "cte01.01.03.05",
+                "descriptionEN": "",
+                "description": ""
+            },
+            {
+                "descriptionEN": "",
+                "description": "",
+                "name": "dispositivi di oscuramento in legno",
+                "id": "cte01.01.03.06",
+                "imageUrls": [],
+                "nameEN": "wood shading devices"
+            },
+            {
+                "description": "",
+                "name": "dispositivi di oscuramento in alluminio",
+                "imageUrls": [],
+                "nameEN": "aluminum shading devices",
+                "id": "cte01.01.03.07",
+                "descriptionEN": ""
+            },
+            {
+                "descriptionEN": "",
+                "nameEN": "PVC shading devices",
+                "imageUrls": [],
+                "description": "",
+                "id": "cte01.01.03.08",
+                "name": "dispositivi di oscuramento in PVC"
+            },
+            {
+                "descriptionEN": "",
+                "imageUrls": [],
+                "nameEN": "handling and manoeuvring elements",
+                "id": "cte01.01.03.10",
+                "name": "elementi di movimentazione e manovra",
+                "description": ""
+            },
+            {
+                "nameEN": "other",
+                "name": "altro",
+                "id": "cte01.01.03.00"
+            },
+            {
+                "id": "cte01.01.03.09",
+                "description": "",
+                "descriptionEN": "",
+                "imageUrls": [],
+                "nameEN": "windowsill",
+                "name": "davanzale"
+            }
+        ],
+        "name": "finestre",
+        "imageUrls": [],
+        "description": "lorem ipsum",
+        "id": "cte01.01.03",
+        "subCategoryID": "cte01.01",
+        "category": "vertical plane",
+        "categoryID": "cte01",
+        "subCat": "vertical elements",
+        "nameEN": "windows",
+        "descriptionEN": ""
+    }
+]

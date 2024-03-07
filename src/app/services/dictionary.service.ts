@@ -86,7 +86,7 @@ export class DictionaryService {
 
   public async getAllTechElementTags() {
     const qv = query(collection(this.db, 'tagsTechElement'));
-    const qh = query(collection(this.db, 'tagsTechElementOriz'));
+    const qh = query(collection(this.db, 'tagsTechElementOriz'));    
 
     try {
       const [snapshotV, snapshotH] = await Promise.all([getDocs(qv), getDocs(qh)]);

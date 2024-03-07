@@ -14,6 +14,7 @@ import { LoggedUser, USERLEVEL, UserData } from './models/user.model';
 import { UserService } from './services/user.service';
 import { Timestamp } from 'firebase/firestore';
 import { User } from 'firebase/auth';
+import { SeedService } from './services/seed.service';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,7 @@ import { User } from 'firebase/auth';
 export class AppComponent {
   public title: string = 'must';
 
-  constructor(private firebaseService: FirebaseService, private authService: AuthService, private usersService: UserService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService, private themeService: ThemeService, private splashService: SplashService) {
+  constructor(private firebaseService: FirebaseService, private authService: AuthService, private usersService: UserService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService, private themeService: ThemeService, private splashService: SplashService, private seedService: SeedService) {
     this.splashService.createSplash();
     this.codesService.getAllCodes();
     effect(async () => {
