@@ -39,6 +39,7 @@ export class AppComponent {
       if (this.authService.loggedUserSignal() === null) return;
 
       if (this.authService.loggedUser !== null) {
+        console.log(this.authService.loggedUser);
         let isAuthorized: boolean = false;
         if (this.authService.loggedUser.level === USERLEVEL.Superuser) {
           isAuthorized = true;

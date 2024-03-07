@@ -1,8 +1,10 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FiltersFormData, ParsedFiltersFormData, ReportsService } from '../../../services/reports.service';
 import { FiltersService } from '../../../observables/filters.service';
+import { LoggedUser } from '../../../models/user.model';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-filters',
@@ -22,8 +24,10 @@ export class FiltersComponent {
   });
   public isOpen: boolean = false;
   public today: Date = new Date(Date.now());
+  public loggedUser: LoggedUser | null = null;
 
-  constructor(private fb: FormBuilder, private filtersService: FiltersService, private reportsService: ReportsService) {
+  constructor(private fb: FormBuilder, private filtersService: FiltersService, private reportsService: ReportsService, private authService: AuthService) {
+    effect(() => this.loggedUser = this.authService.loggedUserSignal());
     this.filterForm.valueChanges.subscribe(changes => {
       const filtersFormData: FiltersFormData = this.filterForm.value as FiltersFormData;
       const parsedFiltersFormData: ParsedFiltersFormData = this.parseFiltersFormData(filtersFormData);      

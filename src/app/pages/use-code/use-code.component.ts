@@ -45,7 +45,7 @@ export class UseCodeComponent {
       return;
     }
 
-    if (loggedUser.level === USERLEVEL.Superuser || foundCode.userId === loggedUser.id) {
+    if (loggedUser.level === USERLEVEL.Superuser || foundCode.userId === loggedUser.id || loggedUser.apps.find(app => app === foundCode.vertId)) {
       this.snackbarService.createSnackbar(`Sei già abilitato per l\'app ${foundCode.vertId}.`, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
       return;
     }
