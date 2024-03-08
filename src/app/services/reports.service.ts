@@ -121,7 +121,7 @@ export class ReportsService {
     if (validated) {
       q = query(collection(this.db, 'reportParents'), where('verticalId', '==', VERTICAL));
     } else {
-      q = query(collection(this.db, 'reportParents'), where('verticalId', '==', VERTICAL), where('priority', '!=', null));
+      q = query(collection(this.db, 'reportParents'), where('verticalId', '==', VERTICAL), where('validated', '==', true));
     }
 
     const unsubscribe = onSnapshot(q,

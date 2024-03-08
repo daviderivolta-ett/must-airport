@@ -43,7 +43,7 @@ export class ManagementComponent {
       });
       this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
       // console.log(this.parentReport);
-      console.log(this.childrenReport);
+      // console.log(this.childrenReport);
 
       this.discardDuplicatedReportFailureTags(this.childrenReport);
       this.discardDuplicatedReportFailureSubTags(this.childrenReport);
