@@ -38,12 +38,12 @@ export class ManagementComponent {
       this.parentReport = this.reportsService.selectedReportSignal();
       this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
       this.childrenReport.map((report: ReportChild) => {
-        if (report.tagFailure != undefined) report = this.reportsService.populateFailureTags(report);
-        if (report.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
+        if (report.fields.tagFailure != undefined) report = this.reportsService.populateFailureTags(report);
+        if (report.fields.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
       });
       this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
       // console.log(this.parentReport);
-      // console.log(this.childrenReport);
+      console.log(this.childrenReport);
 
       this.discardDuplicatedReportFailureTags(this.childrenReport);
       this.discardDuplicatedReportFailureSubTags(this.childrenReport);
@@ -62,8 +62,8 @@ export class ManagementComponent {
   private discardDuplicatedReportFailureTags(childrenReport: ReportChild[]): void {
     let reportFailureTags: FailureTag[] = [];
     childrenReport.forEach((childReport: ReportChild) => {
-      if (!childReport.tagFailure || childReport.tagFailure.length === 0) return;
-      childReport.tagFailure.forEach((failureTag: FailureTag | string) => {
+      if (!childReport.fields.tagFailure || childReport.fields.tagFailure.length === 0) return;
+      childReport.fields.tagFailure.forEach((failureTag: FailureTag | string) => {
         if (typeof failureTag === 'string') return;
         reportFailureTags.push(failureTag);
       });
@@ -82,8 +82,8 @@ export class ManagementComponent {
   private discardDuplicatedReportFailureSubTags(childrenReport: ReportChild[]): void {
     let reportFailureSubTags: FailureSubTag[] = [];
     childrenReport.forEach((childReport: ReportChild) => {
-      if (!childReport.subTagFailure || childReport.subTagFailure.length === 0) return;
-      childReport.subTagFailure.forEach((failureSubTag: FailureSubTag | string) => {
+      if (!childReport.fields.subTagFailure || childReport.fields.subTagFailure.length === 0) return;
+      childReport.fields.subTagFailure.forEach((failureSubTag: FailureSubTag | string) => {
         if (typeof failureSubTag === 'string') return;
         reportFailureSubTags.push(failureSubTag);
       });

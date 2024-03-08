@@ -143,7 +143,7 @@ export class ValidationFormComponent {
     this.failureTagsForm = this.fb.group({});
     for (const failureTag of this._failureTags) {
       this.failureTagsForm.addControl(failureTag.id, new FormControl(this._childrenReport.some(report => {
-        return report.tagFailure && report.tagFailure.some((r: FailureTag | string) => {
+        return report.fields.tagFailure && report.fields.tagFailure.some((r: FailureTag | string) => {
           return typeof r === 'string' ? r : r.id === failureTag.id
         });
       })));

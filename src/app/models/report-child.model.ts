@@ -1,44 +1,37 @@
 import { Timestamp } from "firebase/firestore";
 import { FailureTag } from "./failure-tag.model";
 import { FailureSubTag } from "./failure-subtag.model";
+import { ReportChildFields } from "./report-child.fields.model";
+import { LANGUAGE } from "./language.model";
 
 export class ReportChild {
-    closure: boolean;
-    comment?: string;
+    isClosed: boolean;
     creationTime: Date;
+    fields: ReportChildFields;
     flowId: string;
-    detailPics: string[];
-    language: string;
+    language: LANGUAGE;
     parentId: string;
-    subTagFailure: string[] | FailureSubTag[];
-    tagFailure: string[] | FailureTag[];
     userId: string;
     verticalId: string;
     id: string;
 
     constructor(
-        closure: boolean,
-        comment: string,
+        isClosed: boolean,
         creationTime: Timestamp,
+        fields: ReportChildFields,
         flowId: string,
-        detailPics: string[],
-        language: string,
+        language: LANGUAGE,
         parentId: string,
-        subTagFailure: string[] | FailureSubTag[],
-        tagFailure: string[] | FailureTag[],
         userId: string,
         verticalId: string,
         id: string
     ) {
-        this.closure = closure;
-        this.comment = comment || '-';
+        this.isClosed = isClosed;
         this.creationTime = creationTime.toDate();
+        this.fields = fields;
         this.flowId = flowId;
-        this.detailPics = detailPics;
         this.language = language;
         this.parentId = parentId;
-        this.subTagFailure = subTagFailure;
-        this.tagFailure = tagFailure;
         this.userId = userId;
         this.verticalId = verticalId;
         this.id = id
@@ -47,14 +40,11 @@ export class ReportChild {
     static createEmpty(): ReportChild {
         return new ReportChild(
             false,
-            '-',
             Timestamp.now(),
+            ReportChildFields.createEmpty(),
             '',
-            [],
+            LANGUAGE.Italian,
             '',
-            '',
-            [],
-            [],
             '',
             '',
             ''

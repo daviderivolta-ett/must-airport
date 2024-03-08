@@ -34,8 +34,8 @@ export class DialogComponent {
       this.parentReport = this.dialogService.report();
       this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
       this.childrenReport.map((report: ReportChild) => {
-        if (report.tagFailure != undefined) report = this.reportsService.populateFailureTags(report);
-        if (report.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
+        if (report.fields.tagFailure != undefined) report = this.reportsService.populateFailureTags(report);
+        if (report.fields.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
       });
       this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
       // console.log(this.parentReport);
