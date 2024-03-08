@@ -20,7 +20,7 @@ export class Code {
         appType: APPTYPE,
         usedOn: Date | null,
         userId: string | null,
-        userEmail: string | null
+        userEmail: string | null,
     ) {
         this.code = code;
         this.creationDate = creationDate;
