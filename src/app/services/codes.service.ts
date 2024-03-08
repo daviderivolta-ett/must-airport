@@ -2,13 +2,13 @@ import { Injectable, Signal, WritableSignal, computed, effect, signal } from '@a
 import { Firestore } from '@angular/fire/firestore';
 import { DocumentData, QuerySnapshot, Timestamp, Unsubscribe, collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
 import { Code, CodeDb } from '../models/code.model';
-import { APPFLOW } from '../models/app-flow.model';
+import { VERTICAL } from '../models/app-flow.model';
 import { LoggedUser } from '../models/user.model';
 import { APPTYPE } from '../models/app-type.mode';
 
 export interface CreateCodeFormData {
   code: string;
-  app: APPFLOW;
+  app: VERTICAL;
   type: APPTYPE;
 }
 
@@ -25,7 +25,7 @@ export interface CodesFiltersFormData {
 export interface ParsedCodesFiltersFormData {
   appType: APPTYPE | string,
   isValid: boolean | string,
-  vertId: APPFLOW | string
+  vertId: VERTICAL | string
 }
 
 @Injectable({
@@ -109,13 +109,13 @@ export class CodesService {
 
     switch (codeDb.vertId) {
       case 'default':
-        c.vertId = APPFLOW.Default;
+        c.vertId = VERTICAL.Default;
         break;
       case 'airport':
-        c.vertId = APPFLOW.Airport
+        c.vertId = VERTICAL.Airport
         break;
       default:
-        c.vertId = APPFLOW.Default;
+        c.vertId = VERTICAL.Default;
         break;
     }
 
@@ -201,10 +201,10 @@ export class CodesService {
 
     switch (formData.vertId) {
       case 'airport':
-        data.vertId = APPFLOW.Airport;
+        data.vertId = VERTICAL.Airport;
         break;
       case 'default':
-        data.vertId = APPFLOW.Default;
+        data.vertId = VERTICAL.Default;
         break;
       default:
         data.vertId = 'all';
@@ -244,15 +244,15 @@ export class CodesService {
     this.filteredCodesSignal.set(filteredCodes);
   }
 
-  public checkIfUserIsAuthorized(user: LoggedUser, app: APPFLOW): boolean {
+  public checkIfUserIsAuthorized(user: LoggedUser, app: VERTICAL): boolean {
     let codesUsedByUser: Code[] = this.codes.filter(code => code.userId === user.id);
     let code: Code | undefined = codesUsedByUser.find(code => code.vertId === app);
     return (code && code.isValid === true) ? true : false;
   }
 
-  public getAppsByUserId(id: string): APPFLOW[] {
+  public getAppsByUserId(id: string): VERTICAL[] {
     let filteredCodes: Code[] = this.codes.filter(code => code.userId === id && code.isValid === true);
-    let apps: APPFLOW[] = filteredCodes.map(code => code.vertId);
+    let apps: VERTICAL[] = filteredCodes.map(code => code.vertId);
     return apps;
   }
 }

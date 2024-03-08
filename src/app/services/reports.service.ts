@@ -14,14 +14,13 @@ import { Language } from '../models/language.model';
 import { StorageReference, deleteObject, getMetadata, ref } from 'firebase/storage';
 import { Storage } from '@angular/fire/storage';
 import { OPERATIONTYPE, Operation, OperationDb } from '../models/operation.model';
-import { APPFLOW } from '../models/app-flow.model';
-import { USERLEVEL } from '../models/user.model';
+import { VERTICAL } from '../models/app-flow.model';
 
 export interface ReportParentDb {
-  childFlowId: string;
+  childFlowsIds: string[];
   childrenIds: string[];
   closed: boolean;
-  closingChildId: string;
+  closingChildId: string | null;
   closingTime: Timestamp | null;
   coverImgUrls: string[];
   creationTime: Timestamp;
@@ -34,9 +33,10 @@ export interface ReportParentDb {
   parentFlowId: string;
   priority?: string;
   userId: string;
+  validated: boolean
+  validationDate: Timestamp,
   verticalId: string,
   operations: OperationDb[],
-  validationDate: Timestamp
 }
 
 export interface ReportParentFieldsDb {
@@ -107,25 +107,25 @@ export class ReportsService {
     effect(() => this.filteredReports = this.filteredReportsSignal());
   }
 
-  public async getAllParentReports(appFlow: APPFLOW, validated: boolean) {
+  public async getAllParentReports(VERTICAL: VERTICAL, validated: boolean) {
     await this.dictionaryService.getAll();
     // console.log(this.dictionaryService.failureTagsSignal());
     // console.log(this.dictionaryService.techElementTags);
 
     let q: Query;
     if (validated) {
-      q = query(collection(this.db, 'reportParents'), where('verticalId', '==', appFlow));
+      q = query(collection(this.db, 'reportParents'), where('verticalId', '==', VERTICAL));
     } else {
-      q = query(collection(this.db, 'reportParents'), where('verticalId', '==', appFlow), where('priority', '!=', null));
+      q = query(collection(this.db, 'reportParents'), where('verticalId', '==', VERTICAL), where('priority', '!=', null));
     }
 
     const unsubscribe = onSnapshot(q,
       (querySnapshot: QuerySnapshot<DocumentData>) => {
         let reports: any[] = [];
-        querySnapshot.forEach(doc => {
+        querySnapshot.forEach(doc => {               
           reports.push(this.parseParentReport(doc.id, doc.data() as ReportParentDb));
         });
-
+       
         reports = reports.map((report: ReportParent) => {
           report = this.populateTechElementTags(report);
           report = this.populateTechElementSubTags(report);
@@ -235,11 +235,11 @@ export class ReportsService {
 
   public parseParentReport(id: string, report: ReportParentDb): ReportParent {
     let r = ReportParent.createEmpty();
-
-    r.childFlowId = report.childFlowId;
+    console.log(report);
+    r.childFlowIds = report.childFlowsIds;
     r.childrenIds = report.childrenIds;
-    r.closed = report.closed;
-    r.closingChildId = report.closingChildId;
+    r.isClosed = report.closed;
+    report.closingChildId ? r.closingChildId = report.closingChildId : r.closingChildId = null;
     report.closingTime ? r.closingTime = report.closingTime.toDate() : r.closingTime = null;
     r.coverImgUrls = report.coverImgUrls;
     r.creationTime = report.creationTime.toDate();
@@ -252,6 +252,7 @@ export class ReportsService {
     r.parentFlowId = report.parentFlowId;
     r.priority = Priority.parsePriorities(report.priority);
     r.userId = report.userId;
+    r.isValidated = report.validated;
     r.verticalId = report.verticalId;
     r.id = id;
 
@@ -326,6 +327,7 @@ export class ReportsService {
       return this.dictionaryService.getTechElementTagById(id);
     });
     report.fields.tagTechElement = techElementTags;
+    report.descriptionSelections = techElementTags;
     return report;
   }
 
@@ -334,7 +336,6 @@ export class ReportsService {
     let techElementSubTags: TechElementSubTag[] = subTagIds.map((id: string) => {
       return this.dictionaryService.getTechElementSubTagById(id);
     });
-    report.descriptionSelections = techElementSubTags;
     report.fields.subTagTechElement = techElementSubTags;
     return report;
   }

@@ -1,12 +1,12 @@
 import { Timestamp } from "firebase/firestore";
-import { APPFLOW } from "./app-flow.model";
+import { VERTICAL } from "./app-flow.model";
 import { APPTYPE } from "./app-type.mode";
 
 export class Code {
     code: string;
     creationDate: Date;
     isValid: boolean;
-    vertId: APPFLOW;
+    vertId: VERTICAL;
     appType: APPTYPE;
     usedOn: Date | null;
     userId: string | null;
@@ -16,7 +16,7 @@ export class Code {
         code: string,
         creationDate: Date,
         isValid: boolean,
-        vertId: APPFLOW,
+        vertId: VERTICAL,
         appType: APPTYPE,
         usedOn: Date | null,
         userId: string | null,
@@ -37,7 +37,7 @@ export class Code {
             '',
             new Date(Date.now()),
             true,
-            APPFLOW.Default,
+            VERTICAL.Default,
             APPTYPE.Web,
             null,
             null,

@@ -8,10 +8,10 @@ import { Operation } from './operation.model';
 export class ReportParent {
     [key: string]: any;
 
-    childFlowId: string;
+    childFlowIds: string[];
     childrenIds: string[];
-    closed: boolean;
-    closingChildId: string;
+    isClosed: boolean;
+    closingChildId: string | null;
     closingTime: Date | null;
     coverImgUrls: string[];
     creationTime: Date;
@@ -24,6 +24,7 @@ export class ReportParent {
     parentFlowId: string;
     priority: PRIORITY;
     userId: string;
+    isValidated: boolean;
     verticalId: string;
 
     id: string;
@@ -31,9 +32,9 @@ export class ReportParent {
     validationDate?: Date;
 
     constructor(
-        childFlowId: string,
+        childFlowIds: string[],
         childrenIds: string[],
-        closed: boolean,
+        isClosed: boolean,
         closingChildId: string,
         closingTime: Timestamp | null,
         coverImgUrls: string[],
@@ -47,14 +48,15 @@ export class ReportParent {
         parentFlowId: string,
         priority: PRIORITY,
         userId: string,
+        isValidated: boolean,
         verticalId: string,
         id: string,
         operations: Operation[],
         validationDate: Timestamp | undefined
     ) {
-        this.childFlowId = childFlowId;
+        this.childFlowIds = childFlowIds;
         this.childrenIds = childrenIds;
-        this.closed = closed;
+        this.isClosed = isClosed;
         this.closingChildId = closingChildId;
         closingTime ? this.closingTime = closingTime.toDate() : this.closingTime = null;
         this.coverImgUrls = coverImgUrls;
@@ -68,15 +70,16 @@ export class ReportParent {
         this.parentFlowId = parentFlowId;
         this.priority = priority;
         this.userId = userId;
+        this.isValidated = isValidated;
         this.verticalId = verticalId;
         this.id = id;
         this.operations = operations;
-        this.validationDate = validationDate?.toDate();
+        if (validationDate) this.validationDate = validationDate.toDate();
     }
 
     static createEmpty(): ReportParent {
         return new ReportParent(
-            '',
+            [],
             [],
             false,
             '',
@@ -92,6 +95,7 @@ export class ReportParent {
             '',
             PRIORITY.NotAssigned,
             '',
+            false,
             '',
             '',
             [],

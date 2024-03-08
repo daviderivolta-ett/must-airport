@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, WritableSignal, effect, signal } from '@angular/core';
-import { APPFLOW } from '../models/app-flow.model';
+import { VERTICAL } from '../models/app-flow.model';
 import { Observable, map } from 'rxjs';
 import { AppSettings } from '../models/settings.model';
 
@@ -15,7 +15,7 @@ export class SettingsService {
     effect(() => this.settings = this.settingsSignal());
   }
 
-  public getAllSettings(app: APPFLOW): Observable<any> {
+  public getAllSettings(app: VERTICAL): Observable<any> {
     return this.http.get<any>('./assets/settings/settings.json').pipe(
       map(res => {
         let allSettings: AppSettings[] = res.apps as AppSettings[];

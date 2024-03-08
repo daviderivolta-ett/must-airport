@@ -3,7 +3,7 @@ import { LoggedUser, UserData } from '../models/user.model';
 import { User } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { Firestore } from '@angular/fire/firestore';
-import { APPFLOW } from '../models/app-flow.model';
+import { VERTICAL } from '../models/app-flow.model';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +32,7 @@ export class UserService {
 
     u.level = userData.userLevel;
     if (userData.lastLogin) u.lastLogin = userData.lastLogin.toDate();
-    userData.apps ? u.apps = userData.apps : u.apps = [APPFLOW.Default];
+    userData.apps ? u.apps = userData.apps : u.apps = [VERTICAL.Default];
     u.lastApp = userData.lastApp;
     user.displayName ? u.displayName = user.displayName : u.displayName = user.email;
     if (user.photoURL) u.picUrl = user.photoURL;

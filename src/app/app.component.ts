@@ -4,7 +4,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { AuthService } from './services/auth.service';
 import { FirebaseService } from './services/firebase.service';
 import { ReportsService } from './services/reports.service';
-import { APPFLOW } from './models/app-flow.model';
+import { VERTICAL } from './models/app-flow.model';
 import { CodesService } from './services/codes.service';
 import { SettingsService } from './services/settings.service';
 import { ThemeService } from './services/theme.service';
@@ -52,22 +52,22 @@ export class AppComponent {
           if (this.authService.loggedUser.level === USERLEVEL.Superuser) {
             this.reportsService.getAllParentReports(this.authService.loggedUser.lastApp, true);
           } else {
-            if (this.authService.loggedUser.lastApp === APPFLOW.Default) {
+            if (this.authService.loggedUser.lastApp === VERTICAL.Default) {
               this.reportsService.getAllParentReports(this.authService.loggedUser.lastApp, false);
             } else {
               this.reportsService.getAllParentReports(this.authService.loggedUser.lastApp, true);
             }
           }
         } else {
-          this.authService.loggedUser.lastApp = APPFLOW.Default;
+          this.authService.loggedUser.lastApp = VERTICAL.Default;
           let userData: UserData = {
             userLevel: this.authService.loggedUser.level,
             lastLogin: Timestamp.fromDate(this.authService.loggedUser.lastLogin),
-            lastApp: APPFLOW.Default
+            lastApp: VERTICAL.Default
           }
 
           if (this.authService.loggedUser.email) this.usersService.setUserDataById(this.authService.loggedUser.id, userData);
-          this.reportsService.getAllParentReports(APPFLOW.Default, false);
+          this.reportsService.getAllParentReports(VERTICAL.Default, false);
         }
 
         this.settingsService.getAllSettings(this.authService.loggedUser.lastApp).subscribe((settings: AppSettings) => {
@@ -77,7 +77,7 @@ export class AppComponent {
         this.splashService.removeSplash();
       } else {
         this.reportsService.reports = [];
-        this.settingsService.getAllSettings(APPFLOW.Default).subscribe((settings: AppSettings) => {
+        this.settingsService.getAllSettings(VERTICAL.Default).subscribe((settings: AppSettings) => {
           this.settingsService.settingsSignal.set(settings);
           this.themeService.setTheme(settings.styles);
         });
@@ -92,14 +92,14 @@ export class AppComponent {
       let userData: UserData = await this.usersService.getUserDataById(user.uid);
       userData.lastLogin = Timestamp.now();
       this.usersService.setUserDataById(user.uid, userData);
-      userData.userLevel !== USERLEVEL.Superuser ? userData.apps = [APPFLOW.Default, ...this.codesService.getAppsByUserId(user.uid)] : userData.apps = Object.values(APPFLOW);
+      userData.userLevel !== USERLEVEL.Superuser ? userData.apps = [VERTICAL.Default, ...this.codesService.getAppsByUserId(user.uid)] : userData.apps = Object.values(VERTICAL);
       loggedUser = this.usersService.parseUserData(user.uid, user, userData);
     } catch (error) {
       let data: UserData = {
         userLevel: USERLEVEL.User,
         lastLogin: Timestamp.fromDate(new Date(Date.now())),
-        apps: [APPFLOW.Default],
-        lastApp: APPFLOW.Default
+        apps: [VERTICAL.Default],
+        lastApp: VERTICAL.Default
       }
 
       if (!user.isAnonymous) this.usersService.setUserDataById(user.uid, data);

@@ -7,7 +7,7 @@ import { ClickOutsideDirective } from '../../directives/click-outside.directive'
 import { SnackbarService } from '../../observables/snackbar.service';
 import { Router, RouterLink } from '@angular/router';
 import { Timestamp } from 'firebase/firestore';
-import { APPFLOW } from '../../models/app-flow.model';
+import { VERTICAL } from '../../models/app-flow.model';
 import { UserService } from '../../services/user.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../models/snackbar.model';
 
@@ -39,7 +39,7 @@ export class AccountMenuComponent {
     this.headerService.isAccountMenuVisible.set(false);
   }
 
-  public reloadApp(selectedApp: APPFLOW = APPFLOW.Default): void {
+  public reloadApp(selectedApp: VERTICAL = VERTICAL.Default): void {
     const user: LoggedUser | null = this.authService.loggedUser;    
     if (!user) return;
     let userData: UserData = {

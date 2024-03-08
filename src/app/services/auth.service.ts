@@ -4,7 +4,7 @@ import { Auth, getAuth, signInAnonymously, onAuthStateChanged, User, signInWithE
 import { LoggedUser } from '../models/user.model';
 import { SnackbarService } from '../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../models/snackbar.model';
-import { APPFLOW } from '../models/app-flow.model';
+import { VERTICAL } from '../models/app-flow.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class AuthService {
   public loggedUserSignal: WritableSignal<LoggedUser | null> = signal(null);
   public loggedUser: LoggedUser | null = null;
 
-  public currentApp: APPFLOW = APPFLOW.Default;
+  public currentApp: VERTICAL = VERTICAL.Default;
 
   constructor(private router: Router, private ngZone: NgZone, private snackbarService: SnackbarService) {
     effect(() => {
