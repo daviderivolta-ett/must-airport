@@ -19,7 +19,8 @@ export class AuthService {
   public loggedUserSignal: WritableSignal<LoggedUser | null> = signal(null);
   public loggedUser: LoggedUser | null = null;
 
-  public currentApp: VERTICAL = VERTICAL.Default;
+  public currentAppSignal: WritableSignal<VERTICAL | null> = signal(null);
+  public currentApp: VERTICAL | null = null;
 
   constructor(private router: Router, private ngZone: NgZone, private snackbarService: SnackbarService) {
     effect(() => {
@@ -31,6 +32,8 @@ export class AuthService {
       this.user = this.userSignal();
       // console.log(this.loggedUser);
     });
+
+    effect(() => this.currentApp = this.currentAppSignal());
 
     this.auth = getAuth();
     this.provider = new GoogleAuthProvider();

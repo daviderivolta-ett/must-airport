@@ -48,7 +48,8 @@ export class AccountMenuComponent {
       // apps: user.apps,
       lastApp: selectedApp
     }
-    this.userService.setUserDataById(user.id, userData);
-    window.location.reload();
+    // this.userService.setUserDataById(user.id, userData);
+    // window.location.reload();
+    this.authService.currentAppSignal.set(selectedApp);
   }
 }

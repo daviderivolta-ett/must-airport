@@ -112,13 +112,13 @@ export class ReportsService {
     effect(() => this.filteredReports = this.filteredReportsSignal());
   }
 
-  public async getAllParentReports(VERTICAL: VERTICAL, validated: boolean) {
+  public async getAllParentReports(VERTICAL: VERTICAL, getAll: boolean) {
     await this.dictionaryService.getAll();
     // console.log(this.dictionaryService.failureTagsSignal());
     // console.log(this.dictionaryService.techElementTags);
 
     let q: Query;
-    if (validated) {
+    if (getAll) {
       q = query(collection(this.db, 'reportParents'), where('verticalId', '==', VERTICAL));
     } else {
       q = query(collection(this.db, 'reportParents'), where('verticalId', '==', VERTICAL), where('validated', '==', true));

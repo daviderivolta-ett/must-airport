@@ -1,4 +1,4 @@
-import { inject } from '@angular/core';
+import { NgZone, inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -6,6 +6,7 @@ import { USERLEVEL } from '../models/user.model';
 
 export const adminGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
+  const ngZone = inject(NgZone);
   const authService = inject(AuthService);
 
   return new Promise((resolve, reject) => {
@@ -13,7 +14,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
       if (authService.loggedUser && authService.loggedUser.level <= USERLEVEL.Admin) {
         resolve(true);
       } else {
-        router.navigate(['/segnalazioni']);
+        ngZone.run(() => router.navigate(['/segnalazioni']));
         resolve(false);
       }
     })
