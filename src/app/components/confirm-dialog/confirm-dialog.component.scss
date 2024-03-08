@@ -2,14 +2,23 @@ p {
     margin: 0;
 }
 
-.dialog {
+.backdrop {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: var(--bg-subtle);
-    z-index: 99999;
-    border: 1px solid var(--border-emphasis);
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, .75);
+    backdrop-filter: blur(2px);
+}
+
+.dialog {
+    background-color: var(--bg-default);
+    border: 1px solid var(--border-default);
     border-radius: 4px;
     min-width: 360px;
 }
@@ -23,9 +32,9 @@ button {
     font-family: 'Noto Sans', sans-serif;
     padding: 8px;
     width: 50%;
-    background-color: var(--bg-subtle);
+    background-color: var(--bg-default);
     border-style: solid;
-    border-color: var(--border-emphasis);
+    border-color: var(--border-default);
 }
 
 .cancel-button {
@@ -33,7 +42,7 @@ button {
     border-width: 1px 1px 0 0;
 
     &:hover {
-        background-color: var(--bg-default);
+        background-color: var(--bg-subtle);
     }
 }
 

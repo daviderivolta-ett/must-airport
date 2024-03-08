@@ -2,8 +2,13 @@
     <div class="column first-column">
         <div class="header">
             <h2>Dettagli segnalazione</h2>
+            <button class="archive-btn">
+                <span class="material-symbols-outlined archive-icon">archive</span>
+            </button>
+        </div>
+        <div class="image-section">
             <div class="img-container">
-                <img src="{{parentReport.coverImgUrls}}" alt="Immagine della segnalazione">
+                <img src="{{parentReport.coverImgUrls[0]}}" alt="Immagine della segnalazione">
             </div>
         </div>
         <div class="report-details">

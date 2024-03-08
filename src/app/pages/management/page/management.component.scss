@@ -45,14 +45,38 @@ h2 {
 }
 
 .header {
-    padding: 24px;
+    padding: 24px 24px 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.first-column h2 {
+    margin: 0;
+}
+
+.archive-btn {
+    cursor: pointer;
+    height: 32px;
+    width: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.archive-icon {
+    font-size: 1.1rem;
+}
+
+.image-section {
+    padding: 0 24px;
 }
 
 .report-details {
     display: flex;
     flex-direction: column;
     overflow: auto;
-    padding: 0 24px 24px 24px;
+    padding: 24px;
     box-sizing: border-box;
     scrollbar-width: thin;
     scrollbar-color: var(--bg-subtle) var(--bg-default);
