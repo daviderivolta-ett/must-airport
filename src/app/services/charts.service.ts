@@ -187,7 +187,6 @@ export class ChartsService {
     if (techElementTagsNumSerie.data) {
       techElementTagsNumSerie.data.map((item: any) => {
         let techElementSubtagsPerTechElementTag: TechElementSubTag[] = techElementSubtags.filter(subTag => subTag.id.includes(item.drilldown));
-        console.log(techElementSubtagsPerTechElementTag);
 
         let idFrequency: { [key: string]: number } = {};
         techElementSubtagsPerTechElementTag.forEach(tag => {
@@ -202,12 +201,11 @@ export class ChartsService {
           y: value
         }));
 
-        const serie: Highcharts.SeriesPieOptions = {
+        const serie: any = {
           id: item.drilldown,
           data: data,
           type: 'pie'
         }
-
         series.push(serie);
       });
     }  

@@ -19,7 +19,7 @@ export class StatsPageComponent {
   public interventionsPerTimeSerie: Highcharts.SeriesLineOptions = { type: 'line' };
   public inspectionsPerTimeSerie: Highcharts.SeriesLineOptions = { type: 'line' };
   public techElementTagsNumSerie: Highcharts.SeriesPieOptions = { type: 'pie' };
-  public techElementSubTagsDrilldownNumSeries: Highcharts.SeriesPieOptions = { type: 'pie' };
+  public techElementSubTagsDrilldownNumSeries: Highcharts.SeriesPieOptions[] = [];
 
   constructor(private reportsService: ReportsService, private chartsService: ChartsService) {
     effect(() => {
@@ -30,7 +30,7 @@ export class StatsPageComponent {
       this.inspectionsPerTimeSerie = this.chartsService.createInspectionsPerTimeSerie(this.reports);
       this.techElementTagsNumSerie = this.chartsService.createTechElementTagsNumSerie(this.reports);
 
-      this.chartsService.createTechElementSubTagsDrilldownNumSeries(this.reports, this.techElementTagsNumSerie);
+      this.techElementSubTagsDrilldownNumSeries = this.chartsService.createTechElementSubTagsDrilldownNumSeries(this.reports, this.techElementTagsNumSerie);
     });
   }
 }

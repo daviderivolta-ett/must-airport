@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import { ChartsService } from '../../../services/charts.service';
+import Drilldown from 'highcharts/modules/drilldown';
 
 @Component({
   selector: 'app-pie-chart',
@@ -11,6 +12,7 @@ import { ChartsService } from '../../../services/charts.service';
 })
 export class PieChartComponent {
   @Input() public serie: Highcharts.SeriesPieOptions = { type: 'pie' };
+  @Input() public drilldown: Highcharts.SeriesPieOptions[] = [];
 
   public charts!: Highcharts.Chart;
   public chartId: string = this.chartsService.generateChartUniqueId();
@@ -18,14 +20,35 @@ export class PieChartComponent {
   public chartOptions: Highcharts.Options = {
     series: [],
     drilldown: {
-      series: []
+      series: [],
+      activeDataLabelStyle: {
+        color: 'rgb(230, 237, 243)',
+        textDecoration: 'none',
+        textOutline: 'none',
+      },
+      breadcrumbs: {
+        showFullPath: false,
+        buttonTheme: {
+            style: {
+              color: 'rgb(230, 237, 243)',
+            },
+            states: {
+              hover: {
+                fill: 'transparent',
+                style: {
+                  color: 'rgb(110, 118, 129)'
+                }
+              }
+            }
+        }
+      }
     },
     chart: {
       type: 'pie',
       backgroundColor: 'transparent',
-      height: '300px',
+      height: '300px'
     },
-    legend : {
+    legend: {
       itemStyle: {
         color: 'rgb(230, 237, 243)'
       },
@@ -63,14 +86,19 @@ export class PieChartComponent {
     }
   }
 
-  constructor(private chartsService: ChartsService) {}
+  constructor(private chartsService: ChartsService) { }
 
   public ngAfterViewInit(): void {
     this.initChart();
   }
 
-  private initChart(): void {  
+  private initChart(): void {
     this.chartOptions.series?.push(this.serie);
+    if (this.drilldown && this.chartOptions.drilldown) {
+      Drilldown(Highcharts);
+      this.chartOptions.drilldown.series = this.drilldown;
+    }
+    console.log(this.chartOptions);
     this.charts = Highcharts.chart(`${this.chartId}`, this.chartOptions);
   }
 }
