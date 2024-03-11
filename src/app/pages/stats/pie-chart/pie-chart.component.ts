@@ -98,7 +98,6 @@ export class PieChartComponent {
       Drilldown(Highcharts);
       this.chartOptions.drilldown.series = this.drilldown;
     }
-    console.log(this.chartOptions);
     this.charts = Highcharts.chart(`${this.chartId}`, this.chartOptions);
   }
 }

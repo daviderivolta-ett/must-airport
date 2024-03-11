@@ -112,16 +112,16 @@ export class ReportsService {
     effect(() => this.filteredReports = this.filteredReportsSignal());
   }
 
-  public async getAllParentReports(VERTICAL: VERTICAL, getAll: boolean) {
+  public async getAllParentReports(verticalId: VERTICAL, getAll: boolean) {
     await this.dictionaryService.getAll();
     // console.log(this.dictionaryService.failureTagsSignal());
     // console.log(this.dictionaryService.techElementTags);
 
     let q: Query;
     if (getAll) {
-      q = query(collection(this.db, 'reportParents'), where('verticalId', '==', VERTICAL));
+      q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId));
     } else {
-      q = query(collection(this.db, 'reportParents'), where('verticalId', '==', VERTICAL), where('validated', '==', true));
+      q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId), where('validated', '==', true));
     }
 
     const unsubscribe = onSnapshot(q,
@@ -319,6 +319,24 @@ export class ReportsService {
     return o;
   }
 
+  public async getAllChildrenReports(verticalId: VERTICAL): Promise<ReportChild[]> {
+    let q: Query = query(collection(this.db, 'reportChildren'));
+
+    try {
+      const querySnapshot: QuerySnapshot = await getDocs(q);
+      const childrenReport: ReportChild[] = querySnapshot.docs.map(doc => {
+        let childReport: ReportChild = this.parseChildReport(doc.id, doc.data() as ReportChildDb);
+        childReport = this.populateFailureTags(childReport);
+        childReport = this.populateFailureSubtags(childReport);
+        return childReport;
+      });
+      return childrenReport;
+    } catch (error) {
+      console.error('Errore durante il recupero dei dati:', error);
+      throw error;
+    }
+  }
+
   public async populateChildrenReports(ids: string[]): Promise<ReportChild[]> {
     let reports: ReportChild[] = await Promise.all(ids.map(async id => {
       return await this.getChildReportById(id);
@@ -379,13 +397,13 @@ export class ReportsService {
 
     r.isClosed = report.closure;
     r.creationTime = report.creationTime.toDate();
-    r.fields = this.pareChildReportFields(report.fields);
+    r.fields = this.parseChildReportFields(report.fields);
     r.flowId = report.flowId;
 
     switch (report.language) {
       case 'en':
         r.language = LANGUAGE.English
-        break;    
+        break;
       default:
         r.language = LANGUAGE.Italian
         break;
@@ -399,7 +417,7 @@ export class ReportsService {
     return r;
   }
 
-  private pareChildReportFields(fields: ReportChildFieldsDb): ReportChildFields {
+  private parseChildReportFields(fields: ReportChildFieldsDb): ReportChildFields {
     let f = ReportChildFields.createEmpty();
 
     if (fields.foto_dettaglio) f.detailShots = fields.foto_dettaglio;

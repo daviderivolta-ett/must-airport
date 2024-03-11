@@ -26,4 +26,11 @@
         <app-pie-chart [serie]="techElementTagsNumSerie" [drilldown]="techElementSubTagsDrilldownNumSeries" />
     </div>
     }
+
+    @if (failureTagsNumSerie.data && failureTagsNumSerie.data.length !== 0 && failureSubTagsDrilldownNumSeries && failureSubTagsDrilldownNumSeries.length !== 0) {
+    <div class="chart-wrapper">
+        <h2 class="chart-title">Segnali di guasto</h2>
+        <app-pie-chart [serie]="failureTagsNumSerie" [drilldown]="failureSubTagsDrilldownNumSeries" />
+    </div>
+    }
 </div>

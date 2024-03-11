@@ -4,6 +4,10 @@ import { PRIORITY } from '../models/priority.model';
 import { OPERATIONTYPE, Operation } from '../models/operation.model';
 import { TechElementTag } from '../models/tech-element-tag.model';
 import { TechElementSubTag } from '../models/tech-element-subtag.model';
+import { FailureTag } from '../models/failure-tag.model';
+import { ReportChild } from '../models/report-child.model';
+import { SeriesPieOptions } from 'highcharts';
+import { FailureSubTag } from '../models/failure-subtag.model';
 
 export type timeChartData = [number, number];
 export interface pieChartData {
@@ -144,14 +148,10 @@ export class ChartsService {
         .map(tag => tag as TechElementTag)
     );
 
-    // console.log(techElementTags);
-
     techElementTags.forEach(tag => {
       const id = tag.id;
       idFrequency[id] = (idFrequency[id] || 0) + 1;
     });
-
-    // console.log(idFrequency);
 
     data = Object.entries(idFrequency).map(([name, value]): pieChartData => ({
       name: ((techElementTags.find(tag => tag.id === name))?.name.it || name) as string,
@@ -159,19 +159,53 @@ export class ChartsService {
       drilldown: name
     }));
 
-    // console.log(data);
-
-    // data.forEach(item => {
-    //   const matchingTag = techElementTags.find(tag => tag.id === item.name);
-    //   if (matchingTag) item.name = matchingTag.name;
-    // })
-
     let serie: Highcharts.SeriesPieOptions = {
       type: 'pie',
       name: 'Elementi tecnici',
       data: data,
     }
     return serie;
+  }
+
+  public createFailureSubTagsDrilldownNumSeries(reports: ReportChild[], failureTagsNumSerie: Highcharts.SeriesPieOptions): Highcharts.SeriesPieOptions[] {
+    let failureSubTags: FailureSubTag[] = [];
+    let series: Highcharts.SeriesPieOptions[] = [];
+
+    failureSubTags = reports.flatMap(report => {
+      return report.fields.subTagFailure
+        .filter(tag => typeof tag !== 'string')
+        .map(tag => tag as FailureSubTag)
+    });
+   
+    if (failureTagsNumSerie.data) {
+      failureTagsNumSerie.data.map((item: any) => {
+        let failureSubTagsPerFailureTag: FailureSubTag[] = failureSubTags.filter(subTag => subTag.id.includes(item.drilldown));
+
+        if (failureSubTagsPerFailureTag.length === 0) return;
+        
+        let idFrequency: { [key: string]: number } = {};
+        failureSubTagsPerFailureTag.forEach(tag => {
+          const id = tag.id;
+          idFrequency[id] = (idFrequency[id] || 0) + 1;
+        });
+
+        let data: pieChartData[] = [];
+        data = Object.entries(idFrequency).map(([name, value]): pieChartData => ({
+          name: ((failureSubTagsPerFailureTag.find(tag => tag.id === name))?.name.it || name) as string,
+          y: value
+        }));
+
+        const serie: Highcharts.SeriesPieOptions = {
+          id: item.drilldown,
+          data: data,
+          type: 'pie'
+        }
+
+        series.push(serie);
+      });
+    }
+
+    return series;
   }
 
   public createTechElementSubTagsDrilldownNumSeries(reports: ReportParent[], techElementTagsNumSerie: Highcharts.SeriesPieOptions): Highcharts.SeriesPieOptions[] {
@@ -194,22 +228,52 @@ export class ChartsService {
           idFrequency[id] = (idFrequency[id] || 0) + 1;
         });
 
-
         let data: pieChartData[] = [];
         data = Object.entries(idFrequency).map(([name, value]): pieChartData => ({
           name: ((techElementSubtagsPerTechElementTag.find(tag => tag.id === name))?.name.it || name) as string,
           y: value
         }));
 
-        const serie: any = {
+        const serie: Highcharts.SeriesPieOptions = {
           id: item.drilldown,
           data: data,
           type: 'pie'
         }
         series.push(serie);
       });
-    }  
+    }
     return series;
+  }
+
+  public createFailureTagsNumSerie(reports: ReportChild[]): Highcharts.SeriesPieOptions {
+    // console.log(reports);    
+    let failureTags: FailureTag[] = [];
+    let idFrequency: { [key: string]: number } = {};
+    let data: pieChartData[] = [];
+
+    failureTags = reports.flatMap(report => {
+      return report.fields.tagFailure
+        .filter(tag => typeof tag !== 'string')
+        .map(tag => tag as FailureTag)
+    });
+
+    failureTags.forEach(tag => {
+      const id = tag.id;
+      idFrequency[id] = (idFrequency[id] || 0) + 1;
+    });
+
+    data = Object.entries(idFrequency).map(([name, value]): pieChartData => ({
+      name: ((failureTags.find(tag => tag.id === name))?.name.it || name) as string,
+      y: value,
+      drilldown: name
+    }));
+
+    let serie: SeriesPieOptions = {
+      type: 'pie',
+      name: 'Segnali di guasto',
+      data: data
+    }
+    return serie;
   }
 
   public generateChartUniqueId(): string {
