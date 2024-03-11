@@ -11,6 +11,7 @@ import { LoggedUser } from '../../../models/user.model';
 import { AuthService } from '../../../services/auth.service';
 import { MiniMapComponent } from '../../../components/mini-map/mini-map.component';
 import { MiniMapData } from '../../../services/map.service';
+import { VERTICAL } from '../../../models/app-flow.model';
 
 @Component({
   selector: 'app-dialog',
@@ -25,10 +26,12 @@ export class DialogComponent {
   public childrenReport: ReportChild[] = [];
   public loggedUser: LoggedUser | null = null;
   public miniMapData!: MiniMapData;
+  public currentApp: VERTICAL | null = null;
 
   constructor(private dialogService: DialogService, private reportsService: ReportsService, private router: Router, private authService: AuthService) {
     effect(() => this.isOpen = this.dialogService.isOpen());
     effect(() => this.loggedUser = this.authService.loggedUserSignal());
+    effect(() => this.currentApp = this.authService.currentAppSignal());
 
     effect(async () => {
       this.parentReport = this.dialogService.report();
