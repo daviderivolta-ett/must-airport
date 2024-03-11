@@ -46,6 +46,10 @@ export class ChartsService {
       data: data,
       name: 'Segnalazioni ricevute',
       color: 'rgb(163, 113, 247)',
+      marker: {
+        enabled: true,
+        radius: 4
+      }
     }
 
     return serie;
@@ -62,7 +66,11 @@ export class ChartsService {
       type: 'line',
       data: interventionsSerieData,
       name: 'Interventi',
-      color: 'rgb(31, 111, 235)'
+      color: 'rgb(31, 111, 235)',
+      marker: {
+        enabled: true,
+        radius: 4
+      }
     }
     return interventionsSerie;
   }
@@ -78,7 +86,11 @@ export class ChartsService {
       type: 'line',
       data: inspectionsSerieData,
       name: 'Ispezioni',
-      color: 'rgb(35, 134, 54)'
+      color: 'rgb(35, 134, 54)',
+      marker: {
+        enabled: true,
+        radius: 4
+      }
     }
     return inspectionsSerie;
   }
