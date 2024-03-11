@@ -152,7 +152,7 @@ export class ChartsService {
     // console.log(idFrequency);
 
     data = Object.entries(idFrequency).map(([name, value]): pieChartData => ({
-      name: name,
+      name: ((techElementTags.find(tag => tag.id === name))?.name.it || name) as string,
       y: value
     }));
 
@@ -169,5 +169,25 @@ export class ChartsService {
       data: data
     }
     return serie;
+  }
+
+  public generateChartUniqueId(): string {
+    const alphabet: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let isLowerCase: boolean = false;
+
+    let id: string = '';
+
+    for (let i = 0; i <= 9; i++) {
+      Math.floor(Math.random() * 10) % 2 === 0 ? isLowerCase = true : isLowerCase = false;
+      let randomLetter: string;
+      isLowerCase === true ? randomLetter = this.pickRandomLetter(alphabet).toLocaleLowerCase() : randomLetter = this.pickRandomLetter(alphabet);
+      let randomNum = Math.floor(Math.random() * 10);
+      id = id + randomLetter + randomNum;
+    }
+    return id;
+  }
+
+  private pickRandomLetter(str: string): string {
+    return str[Math.floor(Math.random() * (str.length - 1))];
   }
 }

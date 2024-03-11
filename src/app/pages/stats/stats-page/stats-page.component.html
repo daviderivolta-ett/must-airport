@@ -19,4 +19,11 @@
         <app-pie-chart [serie]="reportsNumPerPrioritySerie"/>
     </div>
     }
+
+    @if (techElementTagsNumSerie.data && techElementTagsNumSerie.data.length !== 0) {
+    <div class="chart-wrapper">
+        <h2 class="chart-title">Elementi tecnici</h2>
+        <app-pie-chart [serie]="techElementTagsNumSerie" />
+    </div>
+    }
 </div>

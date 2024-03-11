@@ -18,17 +18,16 @@ export class StatsPageComponent {
   public reportsNumPerPrioritySerie: Highcharts.SeriesPieOptions = { type: 'pie' };
   public interventionsPerTimeSerie: Highcharts.SeriesLineOptions = { type: 'line' };
   public inspectionsPerTimeSerie: Highcharts.SeriesLineOptions = { type: 'line' };
+  public techElementTagsNumSerie: Highcharts.SeriesPieOptions = { type: 'pie' };
 
   constructor(private reportsService: ReportsService, private chartsService: ChartsService) {
     effect(() => {
-      this.reports = this.reportsService.reportsSignal();     
+      this.reports = this.reportsService.reportsSignal();
       this.reportsNumPerTimeSerie = this.chartsService.createReportsNumPerTimeSerie(this.reports);
       this.reportsNumPerPrioritySerie = this.chartsService.createReportsNumPerPrioritySerie(this.reports);
       this.interventionsPerTimeSerie = this.chartsService.createInterventionsPerTimeSerie(this.reports);
       this.inspectionsPerTimeSerie = this.chartsService.createInspectionsPerTimeSerie(this.reports);
-
-      let pippo = this.chartsService.createTechElementTagsNumSerie(this.reports);
-      // console.log(pippo);
+      this.techElementTagsNumSerie = this.chartsService.createTechElementTagsNumSerie(this.reports);
     });
   }
 }

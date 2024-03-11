@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import * as Highcharts from 'highcharts';
+import { ChartsService } from '../../../services/charts.service';
 
 @Component({
   selector: 'app-pie-chart',
@@ -12,6 +13,8 @@ export class PieChartComponent {
   @Input() public serie: Highcharts.SeriesPieOptions = { type: 'pie' };
 
   public charts!: Highcharts.Chart;
+  public chartId: string = this.chartsService.generateChartUniqueId();
+
   public chartOptions: Highcharts.Options = {
     series: [],
     chart: {
@@ -57,12 +60,14 @@ export class PieChartComponent {
     }
   }
 
-  public ngOnInit(): void {
+  constructor(private chartsService: ChartsService) {}
+
+  public ngAfterViewInit(): void {
     this.initChart();
   }
 
-  private initChart(): void {
+  private initChart(): void {  
     this.chartOptions.series?.push(this.serie);
-    this.charts = Highcharts.chart('chart-pie', this.chartOptions);
+    this.charts = Highcharts.chart(`${this.chartId}`, this.chartOptions);
   }
 }
