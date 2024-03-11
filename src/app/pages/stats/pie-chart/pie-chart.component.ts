@@ -17,6 +17,9 @@ export class PieChartComponent {
 
   public chartOptions: Highcharts.Options = {
     series: [],
+    drilldown: {
+      series: []
+    },
     chart: {
       type: 'pie',
       backgroundColor: 'transparent',
