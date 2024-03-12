@@ -41,7 +41,7 @@ export class AuthService {
     onAuthStateChanged(this.auth, async (user: User | null) => {
       if (user) {        
         this.userSignal.set(user);
-      } else {
+      } else {        
         this.userSignal.set(user);
         this.logInAnonymously();
       }

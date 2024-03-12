@@ -98,15 +98,15 @@ export class PieChartComponent {
     if (this.drilldown && this.chartOptions.drilldown) {
       Drilldown(Highcharts);
       this.chartOptions.drilldown.series = this.drilldown;
-      if (this.chartOptions.plotOptions && this.chartOptions.plotOptions.pie) {
-        this.chartOptions.plotOptions.pie.colors = Highcharts.getOptions().colors?.map((c, i) => {
-          return Highcharts.color('#d568fb')
-            .brighten((i - 3) / 7)
-            .get()
-        });
-      }
+      // if (this.chartOptions.plotOptions && this.chartOptions.plotOptions.pie) {
+      //   this.chartOptions.plotOptions.pie.colors = Highcharts.getOptions().colors?.map((c, i) => {
+      //     return Highcharts.color('#d568fb')
+      //       .brighten((i - 3) / 7)
+      //       .get()
+      //   });
+      // }
     }
-    
+
     this.charts = Highcharts.chart(`${this.chartId}`, this.chartOptions);
   }
 }

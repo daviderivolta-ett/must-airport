@@ -29,7 +29,7 @@ export class AppComponent {
   constructor(private firebaseService: FirebaseService, private authService: AuthService, private userService: UserService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService, private themeService: ThemeService, private splashService: SplashService, private seedService: SeedService) {
     this.splashService.createSplash();
     this.codesService.getAllCodes();
-    effect(async () => {    
+    effect(async () => {
       if (this.authService.userSignal() === null) return;
       if (this.authService.user === null) return;
       const loggedUser = await this.createLoggedUser(this.authService.user);
@@ -65,7 +65,7 @@ export class AppComponent {
       if (this.authService.currentAppSignal() === null) return;
       const currentApp: VERTICAL | null = this.authService.currentApp;
       const loggedUser = this.authService.loggedUser;
-      
+
       if (!currentApp || !loggedUser) return;
 
       this.splashService.createSplash();
@@ -100,7 +100,7 @@ export class AppComponent {
         lastLogin: Timestamp.fromDate(loggedUser.lastLogin),
         lastApp: currentApp
       }
-      this.userService.setUserDataById(loggedUser.id, userData);
+      if (loggedUser.email) this.userService.setUserDataById(loggedUser.id, userData);
       this.settingsService.getAllSettings(currentApp).subscribe((settings: AppSettings) => {
         this.settingsService.settingsSignal.set(settings);
         this.themeService.setTheme(settings.styles);
