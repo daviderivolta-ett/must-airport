@@ -29,15 +29,31 @@ export class StatsPageComponent {
   constructor(private authService: AuthService, private reportsService: ReportsService, private chartsService: ChartsService) {
     effect(async () => {
       this.parentReports = this.reportsService.reportsSignal();
-      if (this.authService.currentApp) this.childrenReports = await this.reportsService.getAllChildrenReports(this.authService.currentApp);
+
+      const childReportsPromises = this.parentReports.map(async (report) => {
+        const childIds = report.childrenIds;
+        const childReports = await Promise.all(childIds.map(async (id) => {
+          return await this.reportsService.getChildReportById(id);
+        }));
+        return childReports;
+      });
+
+      this.childrenReports = (await Promise.all(childReportsPromises)).flat();
+      this.childrenReports = this.childrenReports.map(report => this.reportsService.populateFailureTags(report));
+      this.childrenReports = this.childrenReports.map(report => this.reportsService.populateFailureSubtags(report));
+
       this.reportsNumPerTimeSerie = this.chartsService.createReportsNumPerTimeSerie(this.parentReports);
       this.reportsNumPerPrioritySerie = this.chartsService.createReportsNumPerPrioritySerie(this.parentReports);
       this.interventionsPerTimeSerie = this.chartsService.createInterventionsPerTimeSerie(this.parentReports);
       this.inspectionsPerTimeSerie = this.chartsService.createInspectionsPerTimeSerie(this.parentReports);
-      this.techElementTagsNumSerie = this.chartsService.createTechElementTagsNumSerie(this.parentReports);
-      this.techElementSubTagsDrilldownNumSeries = this.chartsService.createTechElementSubTagsDrilldownNumSeries(this.parentReports, this.techElementTagsNumSerie);
-      this.failureTagsNumSerie = this.chartsService.createFailureTagsNumSerie(this.childrenReports);
-      this.failureSubTagsDrilldownNumSeries = this.chartsService.createFailureSubTagsDrilldownNumSeries(this.childrenReports, this.failureTagsNumSerie);
+
+      let techElementTagsNumSerie = this.chartsService.createTechElementTagsNumSerie(this.parentReports);
+      this.techElementSubTagsDrilldownNumSeries = this.chartsService.createTechElementSubTagsDrilldownNumSeries(this.parentReports, techElementTagsNumSerie);
+      this.techElementTagsNumSerie = this.chartsService.recalculateSerieBasedOnDrilldownSeries(techElementTagsNumSerie, this.techElementSubTagsDrilldownNumSeries);
+
+      let failureTagsNumSerie = this.chartsService.createFailureTagsNumSerie(this.childrenReports);
+      this.failureSubTagsDrilldownNumSeries = this.chartsService.createFailureSubTagsDrilldownNumSeries(this.childrenReports, failureTagsNumSerie);
+      this.failureTagsNumSerie = this.chartsService.recalculateSerieBasedOnDrilldownSeries(failureTagsNumSerie, this.failureSubTagsDrilldownNumSeries);
     });
   }
 }

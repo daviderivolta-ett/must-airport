@@ -325,7 +325,7 @@ export class ReportsService {
     try {
       const querySnapshot: QuerySnapshot = await getDocs(q);
       const childrenReport: ReportChild[] = querySnapshot.docs.map(doc => {
-        let childReport: ReportChild = this.parseChildReport(doc.id, doc.data() as ReportChildDb);
+        let childReport: ReportChild = this.parseChildReport(doc.id, doc.data() as ReportChildDb);       
         childReport = this.populateFailureTags(childReport);
         childReport = this.populateFailureSubtags(childReport);
         return childReport;

@@ -188,13 +188,13 @@ export class ChartsService {
         .filter(tag => typeof tag !== 'string')
         .map(tag => tag as FailureSubTag)
     });
-   
+
     if (failureTagsNumSerie.data) {
       failureTagsNumSerie.data.map((item: any) => {
         let failureSubTagsPerFailureTag: FailureSubTag[] = failureSubTags.filter(subTag => subTag.id.includes(item.drilldown));
 
         if (failureSubTagsPerFailureTag.length === 0) return;
-        
+
         let idFrequency: { [key: string]: number } = {};
         failureSubTagsPerFailureTag.forEach(tag => {
           const id = tag.id;
@@ -210,47 +210,10 @@ export class ChartsService {
         const serie: Highcharts.SeriesPieOptions = {
           id: item.drilldown,
           data: data,
-          type: 'pie'
+          type: 'pie',
+          name: item.name
         }
 
-        series.push(serie);
-      });
-    }
-
-    return series;
-  }
-
-  public createTechElementSubTagsDrilldownNumSeries(reports: ReportParent[], techElementTagsNumSerie: Highcharts.SeriesPieOptions): Highcharts.SeriesPieOptions[] {
-    let techElementSubtags: TechElementSubTag[] = [];
-    let series: Highcharts.SeriesPieOptions[] = [];
-
-    techElementSubtags = reports.flatMap(report => {
-      return report.fields.subTagTechElement
-        .filter(tag => typeof tag !== 'string')
-        .map(tag => tag as TechElementSubTag)
-    });
-
-    if (techElementTagsNumSerie.data) {
-      techElementTagsNumSerie.data.map((item: any) => {
-        let techElementSubtagsPerTechElementTag: TechElementSubTag[] = techElementSubtags.filter(subTag => subTag.id.includes(item.drilldown));
-
-        let idFrequency: { [key: string]: number } = {};
-        techElementSubtagsPerTechElementTag.forEach(tag => {
-          const id = tag.id;
-          idFrequency[id] = (idFrequency[id] || 0) + 1;
-        });
-
-        let data: pieChartData[] = [];
-        data = Object.entries(idFrequency).map(([name, value]): pieChartData => ({
-          name: ((techElementSubtagsPerTechElementTag.find(tag => tag.id === name))?.name.it || name) as string,
-          y: value
-        }));
-
-        const serie: Highcharts.SeriesPieOptions = {
-          id: item.drilldown,
-          data: data,
-          type: 'pie'
-        }
         series.push(serie);
       });
     }
@@ -287,6 +250,58 @@ export class ChartsService {
     }
     return serie;
   }
+
+  public createTechElementSubTagsDrilldownNumSeries(reports: ReportParent[], techElementTagsNumSerie: Highcharts.SeriesPieOptions): Highcharts.SeriesPieOptions[] {
+    let techElementSubtags: TechElementSubTag[] = [];
+    let series: Highcharts.SeriesPieOptions[] = [];
+
+    techElementSubtags = reports.flatMap(report => {
+      return report.fields.subTagTechElement
+        .filter(tag => typeof tag !== 'string')
+        .map(tag => tag as TechElementSubTag)
+    });
+
+    if (techElementTagsNumSerie.data) {
+      techElementTagsNumSerie.data.map((item: any) => {
+        let techElementSubtagsPerTechElementTag: TechElementSubTag[] = techElementSubtags.filter(subTag => subTag.id.includes(item.drilldown));
+
+        let idFrequency: { [key: string]: number } = {};
+        techElementSubtagsPerTechElementTag.forEach(tag => {
+          const id = tag.id;
+          idFrequency[id] = (idFrequency[id] || 0) + 1;
+        });
+
+        let data: pieChartData[] = [];
+        data = Object.entries(idFrequency).map(([name, value]): pieChartData => ({
+          name: ((techElementSubtagsPerTechElementTag.find(tag => tag.id === name))?.name.it || name) as string,
+          y: value
+        }));
+
+        const serie: Highcharts.SeriesPieOptions = {
+          id: item.drilldown,
+          data: data,
+          type: 'pie',
+          name: item.name
+        }
+        series.push(serie);
+      });
+    }
+    return series;
+  }
+
+  public recalculateSerieBasedOnDrilldownSeries(serie: Highcharts.SeriesPieOptions, drilldownSeries: Highcharts.SeriesPieOptions[]): Highcharts.SeriesPieOptions {
+    if (!serie.data) return serie;
+
+    serie.data.forEach((data: any) => {
+      const matchingDrilldown = drilldownSeries.find(drilldownSerie => data.drilldown === drilldownSerie.id);
+
+      if (matchingDrilldown && matchingDrilldown.data) {
+        data.y = matchingDrilldown.data.length;
+      }
+    });
+    return serie;
+  }
+
 
   public generateChartUniqueId(): string {
     const alphabet: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';

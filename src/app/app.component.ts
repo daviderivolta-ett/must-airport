@@ -42,6 +42,7 @@ export class AppComponent {
 
       if (!loggedUser) return;
       if (!loggedUser.email) {
+        this.authService.currentAppSignal.set(null);
         this.authService.currentAppSignal.set(VERTICAL.Default);
         return;
       }
@@ -53,9 +54,10 @@ export class AppComponent {
           lastApp: VERTICAL.Default
         }
         this.userService.setUserDataById(loggedUser.id, data);
+        this.authService.currentAppSignal.set(null);
         this.authService.currentAppSignal.set(VERTICAL.Default);
       }
-
+      this.authService.currentAppSignal.set(null);
       this.authService.currentAppSignal.set(loggedUser.lastApp);
     }, { allowSignalWrites: true });
 
