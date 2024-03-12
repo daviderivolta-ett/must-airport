@@ -6,6 +6,7 @@ import { AccountMenuComponent } from '../account-menu/account-menu.component';
 import { HeaderService } from '../../observables/header.service';
 import { SettingsService } from '../../services/settings.service';
 import { AppSettings } from '../../models/settings.model';
+import { VERTICAL } from '../../models/app-flow.model';
 
 @Component({
   selector: 'app-header',
@@ -16,6 +17,7 @@ import { AppSettings } from '../../models/settings.model';
 })
 export class HeaderComponent {
   public loggedUser: LoggedUser | null = null;
+  public currentApp: VERTICAL | null = null;
   public settings: AppSettings | null = null;
 
   constructor(private headerService: HeaderService, private authService: AuthService, private settingsService: SettingsService) {
@@ -25,6 +27,9 @@ export class HeaderComponent {
     effect(() => {
       this.settings = this.settingsService.settingsSignal();
     });
+    effect(() => {
+      this.currentApp = this.authService.currentAppSignal();
+    })
   }
 
   public showAccountMenu(event: Event) {

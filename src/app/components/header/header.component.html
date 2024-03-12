@@ -21,6 +21,16 @@
                     <span class="header-label">Report</span>
                 </a>
             </li>
+            @if (loggedUser && loggedUser.level <= 1) {
+                @if (loggedUser.level === 0 || currentApp !== 'generic') {
+                <li>
+                    <a routerLink="archivio">
+                        <span class="material-symbols-outlined">archive</span>
+                        <span class="header-label">Archivio</span>
+                    </a>
+                </li>
+                }
+            }
             @if (loggedUser && loggedUser.email) {
             <li (click)="showAccountMenu($event)">
                 @if (loggedUser.picUrl) {
