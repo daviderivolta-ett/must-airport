@@ -15,7 +15,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
       if (authService.loggedUser && authService.loggedUser.level <= USERLEVEL.Admin) {
         if (authService.loggedUser.level === USERLEVEL.Superuser) {
           resolve(true);
-        } else {
+        } else {         
           authService.currentApp !== VERTICAL.Default ? resolve(true) : resolve(false);
         }
       } else {

@@ -78,6 +78,7 @@ export class UseCodeComponent {
     }
 
     this.codesService.setCodeById(APPTYPE.Web, codeDb.code, codeDb);
+    this.authService.loggedUser.level = USERLEVEL.Admin;
     await this.userService.setUserDataById(loggedUser.id, userData);
     this.snackbarService.createSnackbar(`Sei ora abilitato per l\'app ${codeDb.vertId}.`, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
   }
