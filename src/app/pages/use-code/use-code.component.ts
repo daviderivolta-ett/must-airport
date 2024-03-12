@@ -66,7 +66,7 @@ export class UseCodeComponent {
     codeDb.associatedOn = Timestamp.now();
     codeDb.user = loggedUser.id;
     codeDb.isValid = true;
-    // codeDb.userEmail = loggedUser.email;
+    codeDb.userEmail = loggedUser.email;
 
     const codeObj: Code = this.codesService.parseCodeDb(codeDb);
     loggedUser.apps.push(codeObj.vertId);

@@ -1,0 +1,11 @@
+<div class="backdrop" (click)="close()">
+    <div class="dialog" (click)="$event.stopPropagation()">
+        <div class="info">
+            <p>Vuoi archiviare la segnalazione?</p>
+        </div>
+        <div class="buttons">
+            <button type="button" class="cancel-button" (click)="cancel()">No, annulla</button>
+            <button type="button" class="delete-button" (click)="confirm()">Sì, archivia</button>
+        </div>
+    </div>
+</div>

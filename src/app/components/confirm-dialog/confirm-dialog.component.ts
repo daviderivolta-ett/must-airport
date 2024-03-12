@@ -38,6 +38,6 @@ export class ConfirmDialogComponent {
   }
 
   public close(): void {
-    this.host?.remove();
+    if(this.host) this.host.remove();
   }
 }

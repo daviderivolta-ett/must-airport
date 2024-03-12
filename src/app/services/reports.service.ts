@@ -126,7 +126,7 @@ export class ReportsService {
 
     const unsubscribe = onSnapshot(q,
       (querySnapshot: QuerySnapshot<DocumentData>) => {
-        let reports: any[] = [];
+        let reports: ReportParent[] = [];
         querySnapshot.forEach(doc => {
           reports.push(this.parseParentReport(doc.id, doc.data() as ReportParentDb));
         });
@@ -138,6 +138,7 @@ export class ReportsService {
         });
 
         reports = reports.sort((a, b) => b.lastChildTime.getTime() - a.lastChildTime.getTime());
+        reports = reports.filter(report => report.isClosed === false);
         this.reportsSignal.set(reports);
 
         if (this.selectedReportId) {
