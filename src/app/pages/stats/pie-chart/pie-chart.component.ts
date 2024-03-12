@@ -29,17 +29,17 @@ export class PieChartComponent {
       breadcrumbs: {
         showFullPath: false,
         buttonTheme: {
-            style: {
-              color: 'rgb(230, 237, 243)',
-            },
-            states: {
-              hover: {
-                fill: 'transparent',
-                style: {
-                  color: 'rgb(110, 118, 129)'
-                }
+          style: {
+            color: 'rgb(230, 237, 243)',
+          },
+          states: {
+            hover: {
+              fill: 'transparent',
+              style: {
+                color: 'rgb(110, 118, 129)'
               }
             }
+          }
         }
       }
     },
@@ -73,7 +73,7 @@ export class PieChartComponent {
         },
         showInLegend: true,
         innerSize: '33%',
-        borderRadius: 8,
+        borderRadius: 4,
         borderWidth: 4,
         borderColor: 'rgb(13, 17, 23)'
       }
@@ -94,10 +94,19 @@ export class PieChartComponent {
 
   private initChart(): void {
     this.chartOptions.series?.push(this.serie);
+
     if (this.drilldown && this.chartOptions.drilldown) {
       Drilldown(Highcharts);
       this.chartOptions.drilldown.series = this.drilldown;
+      if (this.chartOptions.plotOptions && this.chartOptions.plotOptions.pie) {
+        this.chartOptions.plotOptions.pie.colors = Highcharts.getOptions().colors?.map((c, i) => {
+          return Highcharts.color('#d568fb')
+            .brighten((i - 3) / 7)
+            .get()
+        });
+      }
     }
+    
     this.charts = Highcharts.chart(`${this.chartId}`, this.chartOptions);
   }
 }
