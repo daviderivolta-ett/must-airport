@@ -180,7 +180,29 @@ h3 {
 
 .tooltip {
     width: max-content;
+    max-width: 200px;
+    text-wrap: wrap;
     background-color: var(--bg-subtle);
     padding: 8px;
     border-radius: 4px;
+}
+
+.hover-tooltip {
+    width: max-content;
+    max-width: 200px;
+    text-wrap: wrap;
+    background-color: var(--bg-subtle);
+    padding: 8px;
+    border-radius: 4px;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: -16px;
+        left: 50%;
+        border-width: 10px;
+        border-style: solid;
+        border-color: var(--bg-subtle) transparent transparent transparent;
+        transform: rotate(180deg) translateX(50%);
+    }
 }

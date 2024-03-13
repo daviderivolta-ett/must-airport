@@ -6,13 +6,19 @@ import { Directive, ElementRef, HostListener, Input, Renderer2 } from '@angular/
 })
 export class HoverTooltipDirective {
   @Input() public appTooltip: string = '';
+  @Input() public set _data(value: any) {
+    if (!value || value.length === 0) return;
+    this.data = value;   
+    this.createTooltip();
+  }
+  public data: any = [];
   private tooltipElement: HTMLDivElement = this.renderer.createElement('div');
   private isVisible: boolean = false;
 
   constructor(private el: ElementRef, private renderer: Renderer2) { }
 
   public ngOnInit(): void {
-    this.createTooltip();
+    // this.createTooltip();
   }
 
   @HostListener('mouseenter')
@@ -27,15 +33,19 @@ export class HoverTooltipDirective {
 
   private createTooltip(): void {
     this.tooltipElement = this.renderer.createElement('div');
-    this.renderer.addClass(this.tooltipElement, 'tooltip');
-    this.tooltipElement.innerHTML = this.appTooltip;
+    this.renderer.addClass(this.tooltipElement, 'hover-tooltip');
+    this.tooltipElement.innerHTML = this.arrayToString(this.data);
     this.renderer.setStyle(this.tooltipElement, 'display', 'none');
     this.renderer.setStyle(this.tooltipElement, 'position', 'fixed');
     const hostRect: DOMRect = this.el.nativeElement.getBoundingClientRect();
-    const top = hostRect.top;
-    const right = window.innerWidth - hostRect.right;
+    const top: number = hostRect.top + 24;
+    const right: number = window.innerWidth - hostRect.right + hostRect.width / 2;    
+    
+    
     this.renderer.setStyle(this.tooltipElement, 'top', `${top}px`);
     this.renderer.setStyle(this.tooltipElement, 'right', `${right}px`);
+    this.renderer.setStyle(this.tooltipElement, 'transform', `translateX(50%)`);
+    this.renderer.setStyle(this.tooltipElement, 'z-index', '999');
     this.renderer.appendChild(this.el.nativeElement, this.tooltipElement);
   }
 
@@ -49,4 +59,12 @@ export class HoverTooltipDirective {
     this.isVisible = false;
   }
 
+  private arrayToString(tags: any): string {
+    let stringTags: string[] = [];
+    tags.forEach((tag: any) => {
+      stringTags.push(tag.name.it);
+    })
+    let tooltip: string = stringTags.join(', ');
+    return tooltip;
+  }
 }
