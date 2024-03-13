@@ -1,5 +1,6 @@
 <div class="archive">
     <div class="archive-table">
+        @if (archivedReports.length !== 0) {
         <div class="archive-table-head">
             <div class="archive-table-head-cell creation-time-cell"><span>Data creazione</span></div>
             <div class="archive-table-head-cell closing-time-cell"><span>Data chiusura</span></div>
@@ -10,11 +11,13 @@
             <div class="archive-table-head-cell actions-cell"><span>Azioni</span></div>
         </div>
         <div class="archive-table-content">
-            @if (archivedReports.length !== 0) {
-                @for (report of archivedReports; track $index) {
-                <app-archive-card [_parentReport]="report" />
-                }
-            }
+            @for (report of archivedReports; track $index) {
+            <app-archive-card [_parentReport]="report" />
+            }            
         </div>
+        }
+        @else {
+            <p class="empty-msg">Non sono presenti segnalazioni archiviate</p>
+        }
     </div>
 </div>

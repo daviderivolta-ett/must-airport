@@ -47,6 +47,11 @@ export interface ReportParentFieldsDb {
   sub_tag_tech_el: string[]
 }
 
+export interface ReportParentClosingDataDb {
+  closed: boolean,
+  closingTime: Timestamp | null
+}
+
 export interface ReportChildDb {
   closure: boolean;
   creationTime: Timestamp;

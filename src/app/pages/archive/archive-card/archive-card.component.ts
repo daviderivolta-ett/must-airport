@@ -1,8 +1,8 @@
-import { Component, Input, effect } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ReportParent } from '../../../models/report-parent.model';
 import { DatePipe, NgClass } from '@angular/common';
 import { ReportChild } from '../../../models/report-child.model';
-import { ReportsService } from '../../../services/reports.service';
+import { ReportParentClosingDataDb, ReportsService } from '../../../services/reports.service';
 import { FailureSubTag } from '../../../models/failure-subtag.model';
 import { FailureTag } from '../../../models/failure-tag.model';
 import { HoverTooltipDirective } from '../../../directives/hover-tooltip.directive';
@@ -33,6 +33,15 @@ export class ArchiveCardComponent {
   public failureSubTags: FailureSubTag[] = [];
 
   constructor(private reportsService: ReportsService) { }
+
+  public async restoreReport(): Promise<void> {
+    let data: ReportParentClosingDataDb = {
+      closed: false,
+      closingTime: null
+    }  
+
+    await this.reportsService.setReportById(this.parentReport.id, data);
+  }
 
   private async loadChildrenReports(childrenIds: string[]): Promise<void> {
     this.childrenReport = await this.reportsService.populateChildrenReports(childrenIds);

@@ -5,6 +5,7 @@ import { ArchiveDialogService } from '../../observables/archive-dialog.service';
 import { Timestamp } from 'firebase/firestore';
 import { SnackbarService } from '../../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../models/snackbar.model';
+import { Router } from '@angular/router';
 
 interface closingReportData {
   closed: boolean,
@@ -22,7 +23,7 @@ export class ArchiveDialogComponent {
   public host: HTMLElement | null = document.querySelector('#archive-dialog');
   public parentReport: ReportParent = ReportParent.createEmpty();
 
-  constructor(private el: ElementRef, private reportsService: ReportsService, private archiveDialogService: ArchiveDialogService, private snackbarService: SnackbarService) {
+  constructor(private el: ElementRef, private router: Router, private reportsService: ReportsService, private archiveDialogService: ArchiveDialogService, private snackbarService: SnackbarService) {
     this.parentReport = this.archiveDialogService.parentReport;
   }
 
@@ -35,6 +36,7 @@ export class ArchiveDialogComponent {
     try {
       await this.reportsService.setReportById(this.parentReport.id, reportDb);
       this.snackbarService.createSnackbar('Segnalazione archiviata con successo.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
+      this.router.navigate(['/archivio']);
     } catch (error) {
       this.snackbarService.createSnackbar('Errore nell\'archiviazione della segnalazione.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
     }
