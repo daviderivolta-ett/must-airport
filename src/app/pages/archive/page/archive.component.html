@@ -1,1 +1,20 @@
-<p>archive works!</p>
+<div class="archive">
+    <div class="archive-table">
+        <div class="archive-table-head">
+            <div class="archive-table-head-cell creation-time-cell"><span>Data creazione</span></div>
+            <div class="archive-table-head-cell closing-time-cell"><span>Data chiusura</span></div>
+            <div class="archive-table-head-cell tech-element-tags-cell"><span>Oggetto</span></div>
+            <div class="archive-table-head-cell tech-element-subtags-cell"><span>Elemento tecnico</span></div>
+            <div class="archive-table-head-cell failure-tags-cell"><span>Segnale di guasto</span></div>
+            <div class="archive-table-head-cell failure-subtags-cell"><span>Modo di guasto</span></div>
+            <div class="archive-table-head-cell actions-cell"><span>Azioni</span></div>
+        </div>
+        <div class="archive-table-content">
+            @if (parentReports.length !== 0) {
+                @for (report of parentReports; track $index) {
+                <app-archive-card [_parentReport]="report" />
+                }
+            }
+        </div>
+    </div>
+</div>
