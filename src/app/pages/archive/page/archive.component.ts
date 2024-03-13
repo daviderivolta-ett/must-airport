@@ -11,12 +11,12 @@ import { ArchiveCardComponent } from '../archive-card/archive-card.component';
   styleUrl: './archive.component.scss'
 })
 export class ArchiveComponent {
-  public parentReports: ReportParent[] = [];
+  public archivedReports: ReportParent[] = [];
 
   constructor(private reportsService: ReportsService) {
     effect(() => {
-      if (this.reportsService.reportsSignal() === null) return;
-      this.parentReports = this.reportsService.reportsSignal();    
+      if (this.reportsService.archivedReportsSignal() === null) return;
+      this.archivedReports = this.reportsService.archivedReportsSignal();    
     })
   }
 }

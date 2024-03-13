@@ -106,10 +106,13 @@ export class ReportsService {
   public filteredReports: ReportParent[] = [];
   public selectedReportSignal: WritableSignal<ReportParent> = signal(ReportParent.createEmpty());
   public selectedReportId: string = '';
+  public archivedReports: ReportParent[] = [];
+  public archivedReportsSignal: WritableSignal<ReportParent[]> = signal([]);
 
   constructor(private db: Firestore, private storage: Storage, private dictionaryService: DictionaryService) {
     effect(() => this.reports = this.reportsSignal());
     effect(() => this.filteredReports = this.filteredReportsSignal());
+    effect(() => this.archivedReports = this.archivedReportsSignal());
   }
 
   public async getAllParentReports(verticalId: VERTICAL, getAll: boolean) {
@@ -138,11 +141,14 @@ export class ReportsService {
         });
 
         reports = reports.sort((a, b) => b.lastChildTime.getTime() - a.lastChildTime.getTime());
-        reports = reports.filter(report => report.isClosed === false);
-        this.reportsSignal.set(reports);
+        let allReports = reports.filter(report => report.isClosed === false);
+        this.reportsSignal.set(allReports);
+
+        let archivedReports = reports.filter(report => report.isClosed === true);
+        this.archivedReportsSignal.set(archivedReports);
 
         if (this.selectedReportId) {
-          const selectedReport = reports.find(report => report.id === this.selectedReportId);
+          const selectedReport = allReports.find(report => report.id === this.selectedReportId);
           if (selectedReport) this.selectedReportSignal.set(selectedReport);
         }
       },

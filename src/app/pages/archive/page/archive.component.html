@@ -10,8 +10,8 @@
             <div class="archive-table-head-cell actions-cell"><span>Azioni</span></div>
         </div>
         <div class="archive-table-content">
-            @if (parentReports.length !== 0) {
-                @for (report of parentReports; track $index) {
+            @if (archivedReports.length !== 0) {
+                @for (report of archivedReports; track $index) {
                 <app-archive-card [_parentReport]="report" />
                 }
             }
