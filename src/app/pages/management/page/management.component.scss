@@ -135,21 +135,25 @@ h2 {
 }
 
 .info-value.priority.not-assigned {
+    color: var(--f-default);
     background-color: var(--bg-subtle);
     border-color: var(--border-subtle);
 }
 
 .info-value.priority.low {
+    color: var(--f-default-contrast);
     background-color: var(--bg-success);
     border-color: var(--border-subtle);
 }
 
 .info-value.priority.medium {
+    color: var(--f-default-contrast);
     background-color: var(--bg-attention);
     border-color: var(--border-subtle);
 }
 
 .info-value.priority.high {
+    color: var(--f-default-contrast);
     background-color: var(--bg-danger);
     border-color: var(--border-subtle);
 }

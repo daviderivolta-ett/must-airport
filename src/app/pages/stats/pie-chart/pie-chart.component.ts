@@ -50,7 +50,7 @@ export class PieChartComponent {
     },
     legend: {
       itemStyle: {
-        color: 'rgb(230, 237, 243)'
+        // color: 'rgb(230, 237, 243)'
       },
       itemHoverStyle: {
         color: 'rgb(125, 133, 144)'

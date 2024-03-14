@@ -7,11 +7,12 @@ import { HeaderService } from '../../observables/header.service';
 import { SettingsService } from '../../services/settings.service';
 import { AppSettings } from '../../models/settings.model';
 import { VERTICAL } from '../../models/app-flow.model';
+import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, AccountMenuComponent],
+  imports: [RouterLink, RouterLinkActive, AccountMenuComponent, ThemeToggleComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })

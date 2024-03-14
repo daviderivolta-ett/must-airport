@@ -1,14 +1,23 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { SettingsStyles } from '../models/settings.model';
 import { MYCOLORTYPE, MyColor, MyColorShade } from '../models/color.model';
+import { COLORMODE } from '../models/color-mode.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThemeService {
+  public colorMode: COLORMODE | null = COLORMODE.Dark;
+  public colorModeSignal: WritableSignal<COLORMODE | null> = signal(null);
 
-  constructor(@Inject(DOCUMENT) private document: Document) { }
+  constructor(@Inject(DOCUMENT) private document: Document) {
+    effect(() => {
+      if (this.colorModeSignal() === null) return;
+      this.colorMode = this.colorModeSignal();
+      this.colorMode === COLORMODE.Light ? this.setLightMode() : this.setDarkMode();
+    });
+  }
 
   public setTheme(style: SettingsStyles): void {
     let colorShade: MyColorShade = this.generateColorShade(style.accent);
@@ -19,7 +28,6 @@ export class ThemeService {
   }
 
   public generateColorShade(colorString: string): MyColorShade {
-
     let color = colorString.includes('#') ? new MyColor(MYCOLORTYPE.Hex, colorString) : new MyColor(MYCOLORTYPE.Rgb, colorString);
     let dullColor = this.generateDullColor(color);
     let emphasisColor = this.generateEmphasisColor(color);
@@ -52,5 +60,45 @@ export class ThemeService {
     emphasisColor.hex = MyColor.rgbToHex(emphasisColor.rgb);
 
     return emphasisColor;
+  }
+
+  public setLightMode(): void {
+    this.document.documentElement.style.setProperty('color-scheme', 'light');
+    this.document.documentElement.style.setProperty('--f-default', 'rgb(31, 35, 40)');
+    this.document.documentElement.style.setProperty('--f-muted', 'rgb(101, 109, 118)');
+    this.document.documentElement.style.setProperty('--f-subtle', 'rgb(21, 21, 21)');
+
+    this.document.documentElement.style.setProperty('--bg-inset', 'rgb(248, 248, 249)');
+    this.document.documentElement.style.setProperty('--bg-default', 'rgb(255, 255, 255)');
+    this.document.documentElement.style.setProperty('--bg-overlay', 'red');
+    this.document.documentElement.style.setProperty('--bg-subtle', 'rgb(242, 242, 242)');
+    this.document.documentElement.style.setProperty('--bg-emphasis', 'rgb(218, 218, 218)');
+
+    this.document.documentElement.style.setProperty('--border-default', 'rgb(232, 234, 237)');    
+    this.document.documentElement.style.setProperty('--border-emphasis', 'rgb(206, 206, 206)');    
+    this.document.documentElement.style.setProperty('--border-subtle', 'rgba(0, 0, 0, 0.1)');    
+
+    this.document.documentElement.style.setProperty('--bg-danger-dull', 'rgb(255, 235, 233)');    
+    this.document.documentElement.style.setProperty('--bg-success-dull', 'rgb(218, 251, 225)');    
+  }
+  
+  public setDarkMode(): void {
+    this.document.documentElement.style.setProperty('color-scheme', 'dark');
+    this.document.documentElement.style.setProperty('--f-default', 'rgb(230, 237, 243)');
+    this.document.documentElement.style.setProperty('--f-muted', 'rgb(125, 133, 144)');
+    this.document.documentElement.style.setProperty('--f-subtle', 'rgb(110, 118, 129)');
+    
+    this.document.documentElement.style.setProperty('--bg-inset', 'rgb(1, 4, 9)');
+    this.document.documentElement.style.setProperty('--bg-default', 'rgb(13, 17, 23)');
+    this.document.documentElement.style.setProperty('--bg-overlay', 'rgb(22, 27, 34)');
+    this.document.documentElement.style.setProperty('--bg-subtle', 'rgb(39, 45, 52)');
+    this.document.documentElement.style.setProperty('--bg-emphasis', 'rgb(110, 118, 129)');
+
+    this.document.documentElement.style.setProperty('--border-default', 'rgb(48, 54, 61)');    
+    this.document.documentElement.style.setProperty('--border-emphasis', 'rgb(139, 148, 158)');
+    this.document.documentElement.style.setProperty('--border-subtle', 'rgba(240, 246, 252, 0.1)'); 
+
+    this.document.documentElement.style.setProperty('--bg-danger-dull', 'rgb(37, 23, 28)'); 
+    this.document.documentElement.style.setProperty('--bg-success-dull', 'rgb(18, 38, 30)');
   }
 }
