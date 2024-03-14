@@ -2,18 +2,19 @@ import { Component, Input, effect } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CodesService, CreateCodeFormData } from '../../../services/codes.service';
 import { DICTIONARY } from '../../../dictionaries/dictionary';
-import { NgClass } from '@angular/common';
+import { NgClass, TitleCasePipe } from '@angular/common';
 import { CreateCodeDialogService } from '../../../observables/create-code-dialog.service';
 import { ClickOutsideDirective } from '../../../directives/click-outside.directive';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SnackbarService } from '../../../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 import { APPTYPE } from '../../../models/app-type.mode';
+import { VERTICAL } from '../../../models/app-flow.model';
 
 @Component({
   selector: 'app-create-code',
   standalone: true,
-  imports: [NgClass, ReactiveFormsModule, ClickOutsideDirective],
+  imports: [NgClass, TitleCasePipe, ReactiveFormsModule, ClickOutsideDirective],
   templateUrl: './create-code.component.html',
   styleUrl: './create-code.component.scss',
   animations: [
@@ -40,6 +41,7 @@ import { APPTYPE } from '../../../models/app-type.mode';
   ]
 })
 export class CreateCodeComponent {
+  @Input() public apps: VERTICAL[] = [];
   public isOpen: boolean = false;
   public createCodeForm = this.fb.group({
     code: ['', Validators.required],

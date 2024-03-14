@@ -23,10 +23,6 @@ export class HoverTooltipDirective {
     this.resizeObserver.observe(document.body);
   }
 
-  public ngOnInit(): void {
-    // this.createTooltip();
-  }
-
   @HostListener('mouseenter')
   onMouseEnter(): void {
     this.showTooltip();

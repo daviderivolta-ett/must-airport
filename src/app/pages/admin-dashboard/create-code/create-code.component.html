@@ -10,7 +10,9 @@
             <label for="app">Scegli l'app</label>
             <select id="app" formControlName="app">
                 <option value="">Seleziona un'app</option>
-                <option value="airport">Aeroporto</option>
+                @for (app of apps; track $index) {
+                    <option>{{app | titlecase}}</option>
+                }
             </select>
         </div>
         <div class="select-single">
