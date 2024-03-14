@@ -35,7 +35,7 @@
                 <app-theme-toggle />
             </li>
             @if (loggedUser && loggedUser.email) {
-            <li (click)="showAccountMenu($event)">
+            <li (click)="showAccountMenu($event)" class="profile-pic">
                 @if (loggedUser.picUrl) {
                     <img src="{{loggedUser.picUrl}}" alt="Immagine profilo" class="profile-pic" referrerpolicy="no-referrer">
                 }

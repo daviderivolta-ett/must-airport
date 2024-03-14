@@ -8,6 +8,8 @@ import { SettingsService } from '../../services/settings.service';
 import { AppSettings } from '../../models/settings.model';
 import { VERTICAL } from '../../models/app-flow.model';
 import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
+import { ThemeService } from '../../services/theme.service';
+import { COLORMODE } from '../../models/color-mode.model';
 
 @Component({
   selector: 'app-header',
@@ -20,8 +22,9 @@ export class HeaderComponent {
   public loggedUser: LoggedUser | null = null;
   public currentApp: VERTICAL | null = null;
   public settings: AppSettings | null = null;
+  public colorMode: COLORMODE | null = null;
 
-  constructor(private headerService: HeaderService, private authService: AuthService, private settingsService: SettingsService) {
+  constructor(private headerService: HeaderService, private authService: AuthService, private settingsService: SettingsService, private themeService: ThemeService) {
     effect(() => {
       this.loggedUser = this.authService.loggedUserSignal();
     });
@@ -30,6 +33,11 @@ export class HeaderComponent {
     });
     effect(() => {
       this.currentApp = this.authService.currentAppSignal();
+    });
+    effect(() => {
+      if (this.themeService.colorModeSignal() === null) return;
+      this.colorMode = this.themeService.colorModeSignal();
+      console.log(this.colorMode);      
     })
   }
 
