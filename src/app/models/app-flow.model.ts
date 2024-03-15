@@ -1,4 +1,4 @@
-export enum APPFLOW {
-    Default = 'default',
+export enum VERTICAL {
+    Default = 'generic',
     Airport = 'airport'
 }
