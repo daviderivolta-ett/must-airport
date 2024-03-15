@@ -108,6 +108,7 @@ export class DictionaryService {
       });
 
       this.techElementTagsSignal.set([...techElementTagsV, ...techElementTagsH]);
+      // console.log(this.techElementTagsSignal());      
       return this.techElementTagsSignal;
 
     } catch (error) {
@@ -125,6 +126,7 @@ export class DictionaryService {
       subTags.push(t);
     })   
     this.techElementSubTagsSignal.set(subTags);
+    // console.log(this.techElementSubTagsSignal());    
     return this.techElementSubTagsSignal;
   }
 

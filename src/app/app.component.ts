@@ -15,6 +15,7 @@ import { UserService } from './services/user.service';
 import { Timestamp } from 'firebase/firestore';
 import { User } from 'firebase/auth';
 import { SeedService } from './services/seed.service';
+import { ConfigService } from './services/config.service';
 
 @Component({
   selector: 'app-root',
@@ -26,8 +27,9 @@ import { SeedService } from './services/seed.service';
 export class AppComponent {
   public title: string = 'must';
 
-  constructor(private firebaseService: FirebaseService, private authService: AuthService, private userService: UserService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService, private themeService: ThemeService, private splashService: SplashService, private seedService: SeedService) {    
+  constructor(private firebaseService: FirebaseService, private authService: AuthService, private userService: UserService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService, private configService: ConfigService, private themeService: ThemeService, private splashService: SplashService) {    
     this.splashService.createSplash();
+    this.configService.getVerticalConfig(VERTICAL.Default);
     this.codesService.getAllCodes();
     effect(async () => {
       if (this.authService.userSignal() === null) return;
