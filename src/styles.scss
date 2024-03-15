@@ -5,6 +5,7 @@
     --f-default: rgb(230, 237, 243);
     --f-muted: rgb(125, 133, 144);
     --f-subtle: rgb(110, 118, 129);
+    --f-default-contrast: rgb(230, 237, 243);
 
     --f-accent: rgb(47, 129, 247);
     --f-success: rgb(63, 185, 80);
@@ -30,15 +31,17 @@
     --bg-attention: rgb(158, 106, 3);
     --bg-attention-emphasis: rgb(196, 130, 0);
     --bg-severe-dull: rgb(34, 26, 25);
-    --bg-severe-emphasis: rgb(189, 86, 29);
+    --bg-severe: rgb(189, 86, 29);
+    --bg-severe-emphasis: rgb(241, 113, 44);
     --bg-danger-dull: rgb(37, 23, 28);
     --bg-danger: rgb(218, 54, 51);
     --bg-danger-emphasis: rgb(248, 81, 73);
-    --bg-done-dull: rgb(56, 50, 110);
+    --bg-done-dull: rgb(21, 19, 41);
     --bg-done: rgb(137, 87, 229);
     --bg-done-emphasis: rgb(168, 128, 241);
     --bg-other-dull: rgb(34, 25, 38);
-    --bg-other-emphasis: rgb(191, 75, 138);
+    --bg-other: rgb(191, 75, 138);
+    --bg-other-emphasis: rgb(243, 96, 177);
 
     --border-default: rgb(48, 54, 61);
     --border-subtle: rgba(240, 246, 252, 0.1);
@@ -178,7 +181,29 @@ h3 {
 
 .tooltip {
     width: max-content;
+    max-width: 200px;
+    text-wrap: wrap;
     background-color: var(--bg-subtle);
     padding: 8px;
     border-radius: 4px;
+}
+
+.hover-tooltip {
+    width: max-content;
+    max-width: 200px;
+    text-wrap: wrap;
+    background-color: var(--bg-subtle);
+    padding: 8px;
+    border-radius: 4px;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: -16px;
+        left: 50%;
+        border-width: 10px;
+        border-style: solid;
+        border-color: var(--bg-subtle) transparent transparent transparent;
+        transform: rotate(180deg) translateX(50%);
+    }
 }

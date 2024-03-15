@@ -47,15 +47,29 @@ p {
 }
 
 .email {
-    margin: 0 0 0 4px;
-    color: var(--f-danger);
+    margin: 0 4px 0 0;
     font-style: italic;
     font-weight: 600;
 }
 
-.isNoMoreValid {
+.is-associated {
+    background-color: var(--bg-done-dull);
+    border-color: var(--bg-done);
+}
+
+.is-associated .email,
+.is-associated .stop-icon {
+    color: var(--f-done);
+}
+
+.is-disabled {
     background-color: var(--bg-danger-dull);
     border-color: var(--bg-danger);
+}
+
+.is-disabled .email,
+.is-disabled .stop-icon {
+    color: var(--f-danger);
 }
 
 button {

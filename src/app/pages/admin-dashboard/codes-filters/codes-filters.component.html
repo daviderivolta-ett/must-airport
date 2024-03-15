@@ -1,10 +1,12 @@
 <div class="filters">
     <form [formGroup]="filterForm">
         <div class="select-single">
-            <label for="vertId">App</label>
-            <select id="vertId" formControlName="vertId">
+            <label for="appId">TEST</label>
+            <select id="appId" formControlName="vertId">
                 <option value="all">Tutti</option>
-                <option value="airport">Aeroporto</option>
+                @for (app of apps; track $index) {
+                    <option>{{app | titlecase}}</option>
+                }
             </select>
         </div>
         <div class="select-single">
@@ -19,8 +21,8 @@
             <label for="isValid">Validità</label>
             <select id="isValid" formControlName="isValid">
                 <option value="all">Tutti</option>
-                <option value="true">Non ancora utilizzato</option>
-                <option value="false">Codice utilizzato</option>
+                <option value="false">Non ancora utilizzato</option>
+                <option value="true">Codice utilizzato</option>
             </select>
         </div>
     </form>

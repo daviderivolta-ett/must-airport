@@ -21,10 +21,12 @@
                     <label for="high" class="checkbox-single-label">Alta</label>
                 </div>
             </div>
+            @if (loggedUser && loggedUser.level < 2) {
             <div class="checkbox-single isolated">
                 <input type="checkbox" id="not-assigned" formControlName="notAssigned">
                 <label for="not-assigned" class="checkbox-single-label">Non validate</label>
             </div>
+            }
         </div>
         <div class="date-selection">
             <h3 class="date-selection-title">Range date</h3>

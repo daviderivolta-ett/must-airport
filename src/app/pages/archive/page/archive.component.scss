@@ -1,0 +1,52 @@
+.archive {
+    padding: 40px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 1.4rem;
+    margin: 0 0 24px 0;
+}
+
+.empty-msg {
+    text-align: center;
+}
+
+.archive-table-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    font-size: .8rem;
+    color: var(--f-muted);
+    text-align: center;
+    border-bottom: 1px solid var(--border-default);
+    padding: 8px 0;
+    box-sizing: border-box;
+}
+
+.creation-time-cell,
+.closing-time-cell {
+    width: 11%;
+}
+
+.tech-element-tags-cell,
+.tech-element-subtags-cell,
+.failure-tags-cell,
+.failure-subtags-cell {
+    width: 18%;
+}
+
+.actions-cell {
+    width: 6%;
+}
+
+@media screen and (max-width: 992px) {
+    .archive {
+        padding: 24px 4%;
+    }
+
+    .archive-table-head {
+        display: none;
+    }
+}

@@ -1,3 +1,9 @@
+@if (parentReports.length === 0) {
+<div>
+    <p class="empty-msg">Impossibile generare report senza segnalazioni</p>
+</div>
+}
+
 <div class="charts-section">
     @if (reportsNumPerTimeSerie.data && reportsNumPerTimeSerie.data.length > 0) {
     <div class="chart-wrapper">
@@ -6,7 +12,7 @@
     </div>
     }
 
-    @if (inspectionsPerTimeSerie.data && inspectionsPerTimeSerie.data.length !== 0 && interventionsPerTimeSerie.data && interventionsPerTimeSerie.data.length !== 0) {
+    @if (inspectionsPerTimeSerie.data && inspectionsPerTimeSerie.data.length !== 0 || interventionsPerTimeSerie.data && interventionsPerTimeSerie.data.length !== 0) {
         <div class="chart-wrapper">
             <h2 class="chart-title">Ispezioni ed interventi</h2>
             <app-time-chart [firstSerie]="inspectionsPerTimeSerie" [secondSerie]="interventionsPerTimeSerie" />
@@ -17,6 +23,20 @@
     <div class="chart-wrapper">
         <h2 class="chart-title">Segnalazioni per priorità</h2>
         <app-pie-chart [serie]="reportsNumPerPrioritySerie"/>
+    </div>
+    }
+
+    @if (techElementTagsNumSerie.data && techElementTagsNumSerie.data.length !== 0 && techElementSubTagsDrilldownNumSeries && techElementSubTagsDrilldownNumSeries.length !== 0) {
+    <div class="chart-wrapper">
+        <h2 class="chart-title">Elementi tecnici</h2>
+        <app-pie-chart [serie]="techElementTagsNumSerie" [drilldown]="techElementSubTagsDrilldownNumSeries" />
+    </div>
+    }
+
+    @if (failureTagsNumSerie.data && failureTagsNumSerie.data.length !== 0 && failureSubTagsDrilldownNumSeries && failureSubTagsDrilldownNumSeries.length !== 0) {
+    <div class="chart-wrapper">
+        <h2 class="chart-title">Segnali di guasto</h2>
+        <app-pie-chart [serie]="failureTagsNumSerie" [drilldown]="failureSubTagsDrilldownNumSeries" />
     </div>
     }
 </div>

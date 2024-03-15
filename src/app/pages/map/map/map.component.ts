@@ -5,6 +5,8 @@ import { SidebarService } from '../../../observables/sidebar.service';
 import { ReportParent } from '../../../models/report-parent.model';
 import { ReportsService } from '../../../services/reports.service';
 import { DialogService } from '../../../observables/dialog.service';
+import { ThemeService } from '../../../services/theme.service';
+import { COLORMODE } from '../../../models/color-mode.model';
 
 @Component({
   selector: 'app-map',
@@ -18,9 +20,20 @@ export class MapComponent {
   private geoJsonData: any;
   private markersLayer = Leaflet.layerGroup();
   private map!: Leaflet.Map;
+  private darkTile: Leaflet.Layer = Leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 20
+  });
+  private lightTile: Leaflet.Layer = Leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 20
+  });
 
-  constructor(private mapService: MapService, private reportsService: ReportsService, private sidebarService: SidebarService, private dialogService: DialogService) {
+  constructor(private mapService: MapService, private reportsService: ReportsService, private sidebarService: SidebarService, private dialogService: DialogService, private themeService: ThemeService) {
     effect(() => {
+      this.markersLayer.clearLayers();
       this.reports = this.reportsService.reportsSignal();
       this.geoJsonData = this.mapService.createGeoJson(this.reports);
       this.populateMap(this.geoJsonData);
@@ -33,10 +46,21 @@ export class MapComponent {
       this.populateMap(this.geoJsonData);
     });
 
+    effect(() => {
+      if (this.themeService.colorModeSignal() === null) return;
+      if (this.themeService.colorMode === COLORMODE.Dark) {
+        this.map.removeLayer(this.lightTile)
+        this.darkTile.addTo(this.map);
+      } else {
+        this.map.removeLayer(this.darkTile)
+        this.lightTile.addTo(this.map);
+      }
+    });
   }
 
   ngOnInit(): void {
     this.initMap();
+    this.darkTile.addTo(this.map);
     this.map.addLayer(this.markersLayer);
   }
 
@@ -47,12 +71,6 @@ export class MapComponent {
       maxZoom: 20,
       minZoom: 14
     }).setView([44.41361028797091, 8.844596073925151], 13);
-
-    Leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 20
-    }).addTo(this.map);
 
     Leaflet.control.zoom({
       position: 'bottomright'

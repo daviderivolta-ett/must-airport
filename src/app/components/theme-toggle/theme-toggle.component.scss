@@ -1,0 +1,68 @@
+.theme-toggle {
+    cursor: pointer;
+    position: relative;
+    width: 40px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    height: 0;
+    width: 0;
+}
+
+.slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 80px;
+    background-color: var(--bg-subtle);
+}
+
+.slider::before {
+    content: '';
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 0;
+    top: 0;
+    background-color: var(--bg-emphasis);
+    border-radius: 100%;
+    transition: .2s ease-in-out;
+    z-index: 2;
+}
+
+input[type="checkbox"]:checked + .slider::before {
+    transform: translateX(20px);
+}
+
+.material-symbols-outlined {
+    font-size: .9rem;
+    color: var(--f-default);
+}
+
+.sun,
+.moon {
+    position: absolute;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    width: 20px;
+    z-index: 1;
+}
+
+.sun {
+    left: 0;
+}
+
+.moon {
+    right: 0;
+}

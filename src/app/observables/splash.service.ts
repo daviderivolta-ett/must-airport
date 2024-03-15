@@ -18,8 +18,8 @@ export class SplashService {
 
   public removeSplash() {
     setTimeout(() => {
-      const splash = document.querySelector('#splash');
-      if (splash) splash.remove();
-    }, 1000);
+      const splash = document.querySelectorAll('#splash');
+      if (splash.length !== 0) splash.forEach(item => item.remove());
+    }, 500);
   }
 }

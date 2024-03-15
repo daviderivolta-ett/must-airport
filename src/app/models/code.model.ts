@@ -1,12 +1,12 @@
 import { Timestamp } from "firebase/firestore";
-import { APPFLOW } from "./app-flow.model";
+import { VERTICAL } from "./app-flow.model";
 import { APPTYPE } from "./app-type.mode";
 
 export class Code {
     code: string;
     creationDate: Date;
     isValid: boolean;
-    vertId: APPFLOW;
+    vertId: VERTICAL;
     appType: APPTYPE;
     usedOn: Date | null;
     userId: string | null;
@@ -16,11 +16,11 @@ export class Code {
         code: string,
         creationDate: Date,
         isValid: boolean,
-        vertId: APPFLOW,
+        vertId: VERTICAL,
         appType: APPTYPE,
         usedOn: Date | null,
         userId: string | null,
-        userEmail: string | null
+        userEmail: string | null,
     ) {
         this.code = code;
         this.creationDate = creationDate;
@@ -37,7 +37,7 @@ export class Code {
             '',
             new Date(Date.now()),
             true,
-            APPFLOW.Default,
+            VERTICAL.Default,
             APPTYPE.Web,
             null,
             null,
@@ -51,7 +51,6 @@ export class CodeDb {
     creationDate: Timestamp;
     isValid: boolean;
     vertId: string;
-    appType: string;
     associatedOn: Timestamp | null;
     user: string | null;
     userEmail: string | null;
@@ -61,7 +60,6 @@ export class CodeDb {
         creationDate: Timestamp,
         isValid: boolean,
         vertId: string,
-        appType: string,
         associatedOn: Timestamp | null,
         user: string | null,
         userEmail: string | null
@@ -70,7 +68,6 @@ export class CodeDb {
         this.creationDate = creationDate;
         this.isValid = isValid;
         this.vertId = vertId;
-        this.appType = appType;
         this.associatedOn = associatedOn;
         this.user = user;
         this.userEmail = userEmail;
@@ -82,7 +79,6 @@ export class CodeDb {
             Timestamp.now(),
             true,
             'default',
-            'web',
             null,
             null,
             null

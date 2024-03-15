@@ -9,6 +9,7 @@ import { superuserGuard } from './guards/superuser.guard';
 import { UseCodeComponent } from './pages/use-code/use-code.component';
 import { adminGuard } from './guards/admin.guard';
 import { userGuard } from './guards/user.guard';
+import { ArchiveComponent } from './pages/archive/page/archive.component';
 
 export const routes: Routes = [
     {
@@ -38,6 +39,12 @@ export const routes: Routes = [
         title: 'MUST - Report',
         component: StatsPageComponent,
         canActivate: [authGuard]
+    },
+    {
+        path: 'archivio',
+        title: 'MUST - Archivio',
+        component: ArchiveComponent,
+        canActivate: [adminGuard]
     },
     {
         path: 'login',

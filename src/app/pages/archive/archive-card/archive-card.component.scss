@@ -1,0 +1,136 @@
+.archive-table-row {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: center;
+    font-size: .9rem;
+    color: var(--f-default);
+    text-align: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-default);
+    box-sizing: border-box;
+}
+
+.archive-table-row-cell {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.creation-time-cell,
+.closing-time-cell {
+    width: 11%;
+}
+
+.tech-element-tags-cell,
+.tech-element-subtags-cell,
+.failure-tags-cell,
+.failure-subtags-cell {
+    width: 18%;
+}
+
+.actions-cell {
+    width: 6%;
+    display: flex;
+    justify-content: center;
+}
+
+.comma::after {
+    content: ', ';
+}
+
+.restore-button {
+    cursor: pointer;
+    background-color: var(--bg-subtle);
+    color: var(--f-default);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+        border-color: var(--border-emphasis);
+    }
+}
+
+.restore-icon {
+    font-size: 1rem;
+}
+
+@media screen and (max-width: 992px) {
+    .archive-table-row {
+        display: block;
+        text-align: left;
+        padding: 24px;
+        border: 1px solid var(--border-default);
+        border-radius: 8px;
+        margin: 0 0 24px 0;
+        background-color: var(--bg-default);
+    }
+
+    .archive-table-row-cell {
+        padding: 4px 0;
+    }
+
+    .creation-time-cell,
+    .closing-time-cell,
+    .tech-element-tags-cell,
+    .tech-element-subtags-cell,
+    .failure-tags-cell,
+    .failure-subtags-cell,
+    .actions-cell {
+        width: 100%;
+    }
+
+    .actions-cell {
+        width: fit-content;
+        position: absolute;
+        top: 24px;
+        right: 24px;
+    }
+
+    .creation-time-cell::before {
+        content: 'Data creazione: ';
+    }
+
+    .closing-time-cell::before {
+        content: 'Data chiusura: ';
+    }
+
+    .tech-element-tags-cell::before {
+        content: 'Oggetto: ';
+    }
+
+    .tech-element-subtags-cell::before {
+        content: 'Elemento tecnico: ';
+    }
+
+    .failure-tags-cell::before {
+        content: 'Segnale di guasto: ';
+    }
+
+    .failure-subtags-cell::before {
+        content: 'Modo di guasto: ';
+    }
+
+    .creation-time-cell::before,
+    .closing-time-cell::before,
+    .tech-element-tags-cell::before,
+    .tech-element-subtags-cell::before,
+    .failure-tags-cell::before,
+    .failure-subtags-cell::before,
+    .actions-cell::before {
+        cursor: text;
+        color: var(--f-muted);
+    }
+
+    .archive-table-row-cell {
+        text-overflow: unset;
+        white-space: unset;
+        overflow: auto;
+    }
+}

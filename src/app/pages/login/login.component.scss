@@ -74,7 +74,7 @@ button {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
-    color: var(--f-default);
+    color: var(--f-default-contrast);
 }
 
 button.submit {    
@@ -93,6 +93,7 @@ button.google {
     justify-content: center;
     align-items: center;
     background-color: transparent;
+    color: var(--f-default);
     border: 1px solid var(--border-default);
 
     &:hover {

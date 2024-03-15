@@ -1,6 +1,6 @@
 import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy, setDoc, deleteDoc, updateDoc, arrayUnion, arrayRemove, where } from 'firebase/firestore';
+import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy, setDoc, deleteDoc, updateDoc, arrayUnion, arrayRemove, where, or, Query } from 'firebase/firestore';
 import { ReportParent } from '../models/report-parent.model';
 import { ReportParentFields } from '../models/report-parent.fields.model';
 import { ReportChild } from '../models/report-child.model';
@@ -10,18 +10,19 @@ import { TechElementSubTag } from '../models/tech-element-subtag.model';
 import { FailureTag } from '../models/failure-tag.model';
 import { FailureSubTag } from '../models/failure-subtag.model';
 import { PRIORITY, Priority } from '../models/priority.model';
-import { Language } from '../models/language.model';
+import { LANGUAGE, Language } from '../models/language.model';
 import { StorageReference, deleteObject, getMetadata, ref } from 'firebase/storage';
 import { Storage } from '@angular/fire/storage';
 import { OPERATIONTYPE, Operation, OperationDb } from '../models/operation.model';
-import { APPFLOW } from '../models/app-flow.model';
+import { VERTICAL } from '../models/app-flow.model';
+import { ReportChildFields } from '../models/report-child.fields.model';
 
 export interface ReportParentDb {
-  childFlowId: string;
+  childFlowsIds: string[];
   childrenIds: string[];
   closed: boolean;
-  closingChildId: string;
-  closingTime: Timestamp | null;
+  closingChildId: string | null;
+  closingTime: Timestamp | null | null;
   coverImgUrls: string[];
   creationTime: Timestamp;
   descriptionSelections: string[];
@@ -33,9 +34,10 @@ export interface ReportParentDb {
   parentFlowId: string;
   priority?: string;
   userId: string;
+  validated: boolean
+  validationDate: Timestamp,
   verticalId: string,
   operations: OperationDb[],
-  validationDate: Timestamp
 }
 
 export interface ReportParentFieldsDb {
@@ -45,18 +47,27 @@ export interface ReportParentFieldsDb {
   sub_tag_tech_el: string[]
 }
 
+export interface ReportParentClosingDataDb {
+  closed: boolean,
+  closingTime: Timestamp | null
+}
+
 export interface ReportChildDb {
   closure: boolean;
-  comment: string;
   creationTime: Timestamp;
+  fields: ReportChildFieldsDb;
   flowId: string;
-  foto_dettaglio: string[];
   language: string;
   parentId: string;
-  sub_tag_failure: string[];
-  tag_failure: string[];
   userId: string;
   verticalId: string;
+}
+
+export interface ReportChildFieldsDb {
+  comment: string,
+  foto_dettaglio: string[],
+  sub_tag_failure: string[];
+  tag_failure: string[];
 }
 
 export interface ValidationFormData {
@@ -100,23 +111,32 @@ export class ReportsService {
   public filteredReports: ReportParent[] = [];
   public selectedReportSignal: WritableSignal<ReportParent> = signal(ReportParent.createEmpty());
   public selectedReportId: string = '';
+  public archivedReports: ReportParent[] = [];
+  public archivedReportsSignal: WritableSignal<ReportParent[]> = signal([]);
 
   constructor(private db: Firestore, private storage: Storage, private dictionaryService: DictionaryService) {
     effect(() => this.reports = this.reportsSignal());
     effect(() => this.filteredReports = this.filteredReportsSignal());
+    effect(() => this.archivedReports = this.archivedReportsSignal());
   }
 
-  public async getAllParentReports(appFlow: APPFLOW) {
+  public async getAllParentReports(verticalId: VERTICAL, getAll: boolean) {
     await this.dictionaryService.getAll();
-    // console.log(this.dictionaryService.failureTags);
+    // console.log(this.dictionaryService.failureTagsSignal());
     // console.log(this.dictionaryService.techElementTags);
 
-    const q = query(collection(this.db, 'reportParents'), where('verticalId', '==', appFlow), orderBy('lastChildTime', 'desc'));
+    let q: Query;
+    if (getAll) {
+      q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId));
+    } else {
+      q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId), where('validated', '==', true));
+    }
+
     const unsubscribe = onSnapshot(q,
       (querySnapshot: QuerySnapshot<DocumentData>) => {
-        let reports: any[] = [];
-        querySnapshot.forEach(doc => {         
-          reports.push(this.parseParentReport(doc.id, doc.data() as ReportParentDb));         
+        let reports: ReportParent[] = [];
+        querySnapshot.forEach(doc => {
+          reports.push(this.parseParentReport(doc.id, doc.data() as ReportParentDb));
         });
 
         reports = reports.map((report: ReportParent) => {
@@ -125,10 +145,15 @@ export class ReportsService {
           return report;
         });
 
-        this.reportsSignal.set(reports);
+        reports = reports.sort((a, b) => b.lastChildTime.getTime() - a.lastChildTime.getTime());
+        let allReports = reports.filter(report => report.isClosed === false);
+        this.reportsSignal.set(allReports);
+
+        let archivedReports = reports.filter(report => report.isClosed === true);
+        this.archivedReportsSignal.set(archivedReports);
 
         if (this.selectedReportId) {
-          const selectedReport = reports.find(report => report.id === this.selectedReportId);
+          const selectedReport = allReports.find(report => report.id === this.selectedReportId);
           if (selectedReport) this.selectedReportSignal.set(selectedReport);
         }
       },
@@ -228,22 +253,23 @@ export class ReportsService {
   public parseParentReport(id: string, report: ReportParentDb): ReportParent {
     let r = ReportParent.createEmpty();
 
-    r.childFlowId = report.childFlowId;
+    r.childFlowIds = report.childFlowsIds;
     r.childrenIds = report.childrenIds;
-    r.closed = report.closed;
-    r.closingChildId = report.closingChildId;
+    r.isClosed = report.closed;
+    report.closingChildId ? r.closingChildId = report.closingChildId : r.closingChildId = null;
     report.closingTime ? r.closingTime = report.closingTime.toDate() : r.closingTime = null;
     r.coverImgUrls = report.coverImgUrls;
     r.creationTime = report.creationTime.toDate();
     r.descriptionSelections = report.descriptionSelections;
     r.descriptionText = report.descriptionText;
-    r.fields = this.parseParentReportsFields(report.fields as ReportParentFieldsDb);
+    r.fields = this.parseParentReportFields(report.fields as ReportParentFieldsDb);
     r.language = Language.parseLanguage(report.language);
     r.lastChildTime = report.lastChildTime.toDate();
     r.location = report.location;
     r.parentFlowId = report.parentFlowId;
     r.priority = Priority.parsePriorities(report.priority);
     r.userId = report.userId;
+    r.isValidated = report.validated;
     r.verticalId = report.verticalId;
     r.id = id;
 
@@ -260,7 +286,7 @@ export class ReportsService {
     return r;
   }
 
-  private parseParentReportsFields(fields: ReportParentFieldsDb): ReportParentFields {
+  private parseParentReportFields(fields: ReportParentFieldsDb): ReportParentFields {
     let f = ReportParentFields.createEmpty();
 
     if (fields.foto_campo_largo !== undefined) f.wideShots = fields.foto_campo_largo;
@@ -305,6 +331,24 @@ export class ReportsService {
     return o;
   }
 
+  public async getAllChildrenReports(verticalId: VERTICAL): Promise<ReportChild[]> {
+    let q: Query = query(collection(this.db, 'reportChildren'), where('verticalId', '==', verticalId));
+
+    try {
+      const querySnapshot: QuerySnapshot = await getDocs(q);
+      const childrenReport: ReportChild[] = querySnapshot.docs.map(doc => {
+        let childReport: ReportChild = this.parseChildReport(doc.id, doc.data() as ReportChildDb);       
+        childReport = this.populateFailureTags(childReport);
+        childReport = this.populateFailureSubtags(childReport);
+        return childReport;
+      });
+      return childrenReport;
+    } catch (error) {
+      console.error('Errore durante il recupero dei dati:', error);
+      throw error;
+    }
+  }
+
   public async populateChildrenReports(ids: string[]): Promise<ReportChild[]> {
     let reports: ReportChild[] = await Promise.all(ids.map(async id => {
       return await this.getChildReportById(id);
@@ -318,6 +362,7 @@ export class ReportsService {
       return this.dictionaryService.getTechElementTagById(id);
     });
     report.fields.tagTechElement = techElementTags;
+    report.descriptionSelections = techElementTags;
     return report;
   }
 
@@ -326,7 +371,6 @@ export class ReportsService {
     let techElementSubTags: TechElementSubTag[] = subTagIds.map((id: string) => {
       return this.dictionaryService.getTechElementSubTagById(id);
     });
-    report.descriptionSelections = techElementSubTags;
     report.fields.subTagTechElement = techElementSubTags;
     return report;
   }
@@ -346,7 +390,7 @@ export class ReportsService {
   public async deleteChildReportBydId(id: string): Promise<void> {
     try {
       let childReport: ReportChild = await this.getChildReportById(id);
-      childReport.detailPics.forEach(url => {
+      childReport.fields.detailShots.forEach(url => {
         let imgRef = this.getImageReference(url);
         this.deleteImage(imgRef);
       });
@@ -363,15 +407,21 @@ export class ReportsService {
   private parseChildReport(id: string, report: ReportChildDb): ReportChild {
     let r = ReportChild.createEmpty();
 
-    r.closure = report.closure;
-    r.comment = report.comment || '-';
+    r.isClosed = report.closure;
     r.creationTime = report.creationTime.toDate();
+    r.fields = this.parseChildReportFields(report.fields);
     r.flowId = report.flowId;
-    r.detailPics = report.foto_dettaglio;
-    r.language = report.language;
+
+    switch (report.language) {
+      case 'en':
+        r.language = LANGUAGE.English
+        break;
+      default:
+        r.language = LANGUAGE.Italian
+        break;
+    }
+
     r.parentId = report.parentId;
-    r.subTagFailure = report.sub_tag_failure || [];
-    r.tagFailure = report.tag_failure || [];
     r.userId = report.userId;
     r.verticalId = report.verticalId;
     r.id = id;
@@ -379,21 +429,32 @@ export class ReportsService {
     return r;
   }
 
+  private parseChildReportFields(fields: ReportChildFieldsDb): ReportChildFields {
+    let f = ReportChildFields.createEmpty();
+
+    if (fields.foto_dettaglio) f.detailShots = fields.foto_dettaglio;
+    fields.comment && fields.comment.length !== 0 ? f.description = fields.comment : f.description = '-';
+    fields.tag_failure ? f.tagFailure = fields.tag_failure : []
+    fields.sub_tag_failure ? f.subTagFailure = fields.sub_tag_failure : []
+
+    return f;
+  }
+
   public populateFailureTags(report: ReportChild): ReportChild {
-    let tagIds: string[] = report.tagFailure as string[];
+    let tagIds: string[] = report.fields.tagFailure as string[];
     let failureTags: FailureTag[] = tagIds.map((id: string) => {
       return this.dictionaryService.getFailureTagById(id);
     });
-    report.tagFailure = failureTags;
+    report.fields.tagFailure = failureTags;
     return report;
   }
 
   public populateFailureSubtags(report: ReportChild): ReportChild {
-    let subTagIds: string[] = report.subTagFailure as string[];
+    let subTagIds: string[] = report.fields.subTagFailure as string[];
     let failureSubTags: FailureSubTag[] = subTagIds.map((id: string) => {
       return this.dictionaryService.getFailureSubTagById(id);
     });
-    report.subTagFailure = failureSubTags;
+    report.fields.subTagFailure = failureSubTags;
     return report;
   }
 

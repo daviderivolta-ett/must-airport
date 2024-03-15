@@ -64,7 +64,7 @@ app-create-code {
     transition: .25s cubic-bezier(.47,1.64,.41,.8);
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
     app-code-card {
         width: 100%;
     }

@@ -1,9 +1,9 @@
 @if (code) {
-<div class="code-card" [ngClass]="{'isNoMoreValid': !code.isValid}">
+<div class="code-card" [ngClass]="{'is-associated': code.usedOn, 'is-disabled': code.usedOn && !code.isValid}">
     <div class="info">
         <p class="code">{{code.code}}</p>
         <p class="app secondary-text">{{code.vertId | titlecase}} &#8226; {{code.appType | titlecase}}</p>
-        @if (code.isValid) {
+        @if (!code.usedOn) {
             <p class="validity secondary-text">
                 <span class="material-symbols-outlined icon check-icon">check</span>
                 Codice non utilizzato
@@ -11,15 +11,31 @@
         }
         @else {
             <p class="validity secondary-text">
-                <span class="material-symbols-outlined icon stop-icon">do_not_disturb_on</span>
-                Codice usato da <span class="email">{{code.userEmail}}</span>
+                <!-- <span class="material-symbols-outlined icon stop-icon">do_not_disturb_on</span> -->
+                <span class="email">{{code.userEmail}}</span>
+                @if (code.isValid) {
+                <span class="code-status">&#8226; valido</span>
+                }
+                @else {
+                <span class="code-status">&#8226; disabilitato</span>
+                }
             </p>
         }
     </div>
     <div class="call-to-action">
-        <button type="button" class="copy-button" [disabled]="!code.isValid" (click)="copyToClipboard()" [appTooltip]="'Copiato ' + code.code">
-            <span class="material-symbols-outlined icon copy-icon">content_copy</span>
+        @if (!code.usedOn) {    
+        <button type="button" class="copy-button" [disabled]="code.usedOn" (click)="copyToClipboard()" [appTooltip]="'Copiato ' + code.code">
+            <span class="material-symbols-outlined icon toggle-validtion-icon">content_copy</span>
         </button>
+        }  
+        @else { 
+        <button type="button" class="copy-button" (click)="disableCode()">
+            <span class="material-symbols-outlined icon copy-icon">
+                @if (code.isValid) {block}
+                @else {check}
+            </span>
+        </button>
+        }
     </div>
 </div>
 }

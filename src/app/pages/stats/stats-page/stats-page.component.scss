@@ -8,6 +8,11 @@ h2 {
     margin: 0;
 }
 
+.empty-msg {
+    text-align: center;
+    padding: 40px;
+}
+
 .charts-section {
     display: flex;
     gap: 2%;
@@ -35,4 +40,45 @@ h2 {
         width: 100%;
         margin: 0 0 24px 0;
     }
+}
+
+::ng-deep g.highcharts-axis-labels text {
+    fill: var(--f-muted) !important;
+}
+
+::ng-deep g.highcharts-axis path.highcharts-tick {
+    stroke: var(--border-default) !important;
+}
+
+::ng-deep g.path.highcharts-axis-line {
+    stroke: var(--border-default) !important;
+}
+
+::ng-deep g.highcharts-grid path {
+    stroke: var(--border-default) !important;
+}
+
+::ng-deep .highcharts-background {
+    fill: var(--bg-default) !important;
+}
+
+::ng-deep path.highcharts-point {
+    stroke: var(--bg-default) !important;
+}
+
+::ng-deep g.highcharts-legend-item text {
+    fill: var(--f-default) !important;
+}
+
+::ng-deep g.highcharts-label text {
+    fill: var(--f-default) !important;
+    font-weight: 400 !important;
+}
+
+::ng-deep g.highcharts-label .highcharts-text-outline {
+    stroke-width: 0 !important;
+}
+
+::ng-deep g.highcharts-label text tspan {
+    font-weight: normal !important;
 }

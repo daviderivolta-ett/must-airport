@@ -4,7 +4,7 @@ import { Injectable, WritableSignal, signal } from '@angular/core';
   providedIn: 'root'
 })
 export class SidebarService {
-  public isOpen: WritableSignal<boolean> = signal(true);
+  public isOpen: WritableSignal<boolean> = signal(false);
 
   constructor() { }
 }

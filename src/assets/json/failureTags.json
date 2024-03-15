@@ -1,0 +1,283 @@
+[
+    {
+        "name": "alveolizzazione",
+        "description": "Presenza di cavità di forma e dimensioni variabili, dette alveoli, spesso interconnesse e con distribuzione uniforme",
+        "imageUrls": [],
+        "id": "cf02.01",
+        "descriptionEN": "Presence of cavities of variable shape and size, called alveoli, often interconnected and with uniform distribution",
+        "nameEN": "alveolization",
+        "categoryID": "cf02",
+        "subTags": [],
+        "DOCID": "2I3IDipgQ0Q6hCebeumA"
+    },
+    {
+        "subTags": [
+            {
+                "id": "cf02.03.01",
+                "imageUrls": [],
+                "nameEN": "surface cracks",
+                "description": "Scricchiature e crepe capillari negli elementi, nel caso di rivestimenti ceramici screpolatura dello smalto, scheggiatura dei bordi degli elementi, incisioni Sottile trama di fessure sulla superficie del calcestruzzo",
+                "descriptionEN": "Capillary cracks and crevices in the elements, in the case of ceramic coatings glaze cracking, chipping of element edges, etching. Thin pattern of cracks on the concrete surface.",
+                "name": "cavillature superficiali"
+            },
+            {
+                "imageUrls": [],
+                "description": "Decoesione con caduta del materiale sotto forma di polvere o minutissimi frammenti.",
+                "descriptionEN": "Decohesion by falling material in the form of dust or very small fragments",
+                "name": "disgregazione",
+                "nameEN": "disintegration",
+                "id": "cf02.03.02"
+            },
+            {
+                "nameEN": "exfoliation/exfoliation",
+                "id": "cf02.03.03",
+                "description": "Formazione di una o più porzioni laminari, di spessore molto ridotto e subparallele tra loro, dette sfoglie. Sfogliamento e distacco della pittura dal supporto",
+                "name": "esfoliazione/sfogliamento",
+                "descriptionEN": "Formation of one or more laminar portions, very thin and subparallel to each other, called flakes. Peeling and detachment of the paint from the support",
+                "imageUrls": []
+            },
+            {
+                "nameEN": "detachment",
+                "imageUrls": [],
+                "name": "distacco",
+                "description": "Decoesione e distacco in una zona localizzata dell’intonaco",
+                "id": "cf02.03.04",
+                "descriptionEN": "Decohesion and detachment in a localized area of the plaster"
+            },
+            {
+                "description": "Sollevamento superficiale localizzato del materiale di forma e consistenza variabili",
+                "name": "rigonfiamento dell'intonaco",
+                "descriptionEN": "Localized material surface uplift of variable shape and consistency",
+                "nameEN": "plaster swelling",
+                "imageUrls": [],
+                "id": "cf02.03.05"
+            },
+            {
+                "name": "altro",
+                "id": "cf02.03.00",
+                "nameEN": "other"
+            }
+        ],
+        "descriptionEN": "Decay of the coating layer recognizable by the presence of exfoliation, surface uplift or falling material in the form of dust or minute fragments",
+        "description": "Decoesione del rivestimento superficiale riconoscibile per la presenza di esfoliazioni, sollevamento superficiale o di caduta del materiale sotto forma di polvere o minutissimi frammenti",
+        "nameEN": "coating layer disintegration",
+        "name": "disgregazione del rivestimento superficiale",
+        "categoryID": "cf02",
+        "imageUrls": [],
+        "id": "cf02.03",
+        "DOCID": "BJlA4yIKrdeDoWYxfXdW"
+    },
+    {
+        "nameEN": "stains",
+        "name": "macchie",
+        "categoryID": "cf01",
+        "descriptionEN": "Localized chromatic variation of the surface, related both to the presence of certain natural components of the material and to the presence of extraneous materials.",
+        "imageUrls": [],
+        "description": "Variazione cromatica localizzata della superficie, correlata sia alla presenza di determinati componenti naturali del materiale sia alla presenza di materiali estranei.",
+        "subTags": [
+            {
+                "description": "Variazione naturale, a carico dei componenti del materiale, dei parametri che definiscono il colore. E’ generalmente estesa a tutto il materiale interessato; nel caso l’alterazione si manifesti in modo localizzato è preferibile usare il termine macchia.",
+                "imageUrls": [],
+                "id": "cf01.01.01",
+                "nameEN": "chromatic alteration",
+                "descriptionEN": "A natural variation, due to the components of the material, of the parameters that define the color. It is generally extended to the whole of the material concerned; if the alteration manifests itself in a localized manner it is preferable to use the term stain.",
+                "name": "alterazione cromatica"
+            },
+            {
+                "imageUrls": [],
+                "descriptionEN": "Accumulation of foreign materials of various kinds such as dust, soil, sheathing, etc. Variable thickness, generally poor consistency and poor adhesion to underlying material",
+                "name": "deposito superficiale",
+                "nameEN": "surface deposit",
+                "description": "Accumulo di materiali estranei di varia natura, quali polvere, terriccio, guaino, ecc. Ha spessore variabile, generalmente scarsa coerenza e scarsa aderenza al materiale sottostante",
+                "id": "cf01.01.02"
+            },
+            {
+                "id": "cf01.01.03",
+                "name": "dilavamento",
+                "description": "Effetto dell’azione dell’acqua piovana sui pigmenti e sui leganti delle tinteggiature a base di calce",
+                "imageUrls": [],
+                "descriptionEN": "Effect of rainwater action on pigments and binders of lime-based paints",
+                "nameEN": "run-off"
+            },
+            {
+                "nameEN": "efflorescence",
+                "descriptionEN": "Surface formation of crystalline, pulverulent or filamentous appearance, generally whitish in color",
+                "description": "Formazione superficiale di aspetto cristallino o polverulento o filamentoso, generalmente di colore biancastro",
+                "imageUrls": [],
+                "name": "efflorescenza",
+                "id": "cf01.01.04"
+            },
+            {
+                "nameEN": "rust",
+                "id": "cf01.01.05",
+                "description": "Macchie bruno-rossastre dovute alla corrosione dei ferri di armatura",
+                "name": "ruggine",
+                "imageUrls": [],
+                "descriptionEN": "Reddish-brown stains due to corrosion of reinforcement bars"
+            },
+            {
+                "name": "macchia da umidità",
+                "description": "Presenza di macchie dovute all’eccessivo contenuto di acqua della muratura tinteggiata, per assorbimento dal basso, perimetrale oppure all’impedito rilascio dell’umidità presente prima dell’applicazione del ciclo di tinteggiature",
+                "nameEN": "moisture stain",
+                "imageUrls": [],
+                "descriptionEN": "Presence of stains due to the excessive water content of the painted masonry, due to absorption from below, perimeter or to the impeded release of humidity already present before the application of the painting cycle",
+                "id": "cf01.01.06"
+            },
+            {
+                "imageUrls": [],
+                "descriptionEN": "Moisture infiltration with formation of patinas, fungal colonies and mold on the surface and along the joints between parts",
+                "id": "cf01.01.07",
+                "name": "muffa/colonizzazione bologica",
+                "description": "Infiltrazione di umidità con formazione di patine, colonie di fungine e muffe sulla superficie e lungo le giunzioni tra le componenti",
+                "nameEN": "mold/biological colonization"
+            },
+            {
+                "id": "cf01.01.00",
+                "nameEN": "other",
+                "name": "altro"
+            }
+        ],
+        "id": "cf01.01",
+        "DOCID": "BkWeeVI9Huc26x800TKi"
+    },
+    {
+        "descriptionEN": "Loss of a significant portion of one of the components of the element considered",
+        "imageUrls": [],
+        "subTags": [
+            {
+                "name": "erosione",
+                "description": "Asportazione di materiale dalla superficie che nella maggior parte dei casi si presenta compatta",
+                "descriptionEN": "Removal of material from the surface, which in most cases is compact",
+                "nameEN": "erosion",
+                "imageUrls": [],
+                "id": "cf03.02.01"
+            },
+            {
+                "descriptionEN": "Perdita di continuità di superficie",
+                "nameEN": "shortness/lack",
+                "imageUrls": [],
+                "description": "Perdita di continuità di superficie",
+                "name": "lacuna/mancanza",
+                "id": "cf03.02.02"
+            },
+            {
+                "name": "espulsione del copriferro",
+                "description": "Perdita completa o di una porzione del copriferro, a causa di fenomeni di carbonatazione delle armature. Visibile in elementi in calcestruzzo armato. ",
+                "descriptionEN": "Complete loss or a portion of the concrete cover, due to carbonation phenomena of the reinforcement. Visible in reinforced concrete elements",
+                "id": "cf03.02.03",
+                "nameEN": "spalling of cover",
+                "imageUrls": []
+            },
+            {
+                "nameEN": "mortar disintegration and masonry decohesion",
+                "description": "Perdita coesione delle componenti del sistema murario, a causa della disgregazione della malta",
+                "id": "cf03.02.04",
+                "descriptionEN": "Loss of the components cohesion of the masonry system, due to the disintegration of the mortar",
+                "imageUrls": [],
+                "name": "disgregazione della malta e decoesione della muratura"
+            },
+            {
+                "name": "altro",
+                "nameEN": "other",
+                "id": "cf03.02.00"
+            }
+        ],
+        "categoryID": "cf03",
+        "nameEN": "loss of parts",
+        "description": "Perdita di una porzione consistente di una delle componenti dell’elemento considerato",
+        "id": "cf03.02",
+        "name": "perdita di parti",
+        "DOCID": "MbH3KOJVtny9FhmGz8Ta"
+    },
+    {
+        "subTags": [
+            {
+                "description": "Distacco di uno o più elementi dal supporto che permangono precariamente nella collocazione iniziale",
+                "descriptionEN": "Detachment of one or more elements from the support that remain precariously in their initial location",
+                "imageUrls": [],
+                "id": "cf03.01.01",
+                "name": "distacco parziale dei singoli elementi",
+                "nameEN": "partial detachment of single elements"
+            },
+            {
+                "descriptionEN": "Uplift and buckling, cracking, of one or more elements with detachment from the support",
+                "name": "sollevamento dal supporto",
+                "imageUrls": [],
+                "description": "Sollevamento e inarcamento, fessurazione, di uno o più elementi con distacco dal supporto",
+                "nameEN": "lifting from support",
+                "id": "cf03.01.02"
+            },
+            {
+                "nameEN": "curvature or buckling",
+                "descriptionEN": "Loss of initial planarity due to bending or buckling of elements",
+                "name": "incurvamento o rigonfiamento",
+                "imageUrls": [],
+                "description": "Perdita della planarità iniziale per incurvamento o rigonfiamento degli elementi",
+                "id": "cf03.01.03"
+            },
+            {
+                "id": "cf03.01.00",
+                "nameEN": "other",
+                "name": "altro"
+            }
+        ],
+        "description": "Qualunque modifica degli elementi del sistema che consista in variazioni di dimensione o di forma",
+        "id": "cf03.01",
+        "name": "deformazione e variazione di dimensione",
+        "categoryID": "cf03",
+        "descriptionEN": "Any alteration of the elements of the system that consists of changes in size or shape",
+        "nameEN": "deformation and dimension variation",
+        "imageUrls": [],
+        "DOCID": "Y8cy2jTngnbXSdqp8d1J"
+    },
+    {
+        "subTags": [
+            {
+                "imageUrls": [],
+                "nameEN": "superficial cracks",
+                "id": "cf04.01.01",
+                "descriptionEN": "Formation of cracks and fissures, linear or in a net, which invest part of the thickness of the elements",
+                "name": "fessurazione superficiale",
+                "description": "Formazione di crepe e fenditure, lineari o a rete, che investono parte dello spessore degli elementi"
+            },
+            {
+                "nameEN": "deep cracks",
+                "id": "cf04.01.02",
+                "descriptionEN": "Formation of cracks and fissures, linear or in a net, which invest the entire thickness of the elements",
+                "imageUrls": [],
+                "name": "fessurazione profonda",
+                "description": "Formazione di crepe e fenditure lineari o a rete che investono l’intero spessore degli elementi"
+            }
+        ],
+        "categoryID": "cf04",
+        "nameEN": "cracks",
+        "id": "cf04.01",
+        "imageUrls": [],
+        "name": "fessurazioni",
+        "descriptionEN": "Interruption of continuity  in the material that involves the mutual displacement of parts",
+        "description": "Soluzione di continuità nel materiale che implica lo spostamento reciproco delle parti",
+        "DOCID": "iJbH0lTDCoAy8OjKA39M"
+    },
+    {
+        "subTags": [],
+        "DOCID": "nNcxVzs2XJryquBHe5t8",
+        "nameEN": "graffiti",
+        "name": "graffiti",
+        "descriptionEN": "Undesirable application of colored paint to the surface",
+        "categoryID": "cf01",
+        "id": "cf01.02",
+        "description": "Apposizione indesiderata sulla superficie di vernici colorate",
+        "imageUrls": []
+    },
+    {
+        "name": "presenza di vegetazione",
+        "description": "Presenza di individui erbacei, arbustivi o arborei",
+        "subTags": [],
+        "categoryID": "cf02",
+        "id": "cf02.02",
+        "nameEN": "presence of vegetation",
+        "imageUrls": [],
+        "descriptionEN": "Presence of herbaceous, shrubby or arboreal species",
+        "DOCID": "w0TAgGOlIM8qPQgJwO3l"
+    }
+]

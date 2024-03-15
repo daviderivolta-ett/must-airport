@@ -3,7 +3,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width:100%;
+    width: 100%;
     height: 100%;
     z-index: 99999;
 }
@@ -11,7 +11,7 @@
 .backdrop-overlay {
     width:100%;
     height: 100%;
-    background-color: rgba(var(--bg-overlay), .5);
+    background-color: rgba(1, 4, 9, .75);
     backdrop-filter: blur(3px);
     display: flex;
     justify-content: center;
@@ -98,7 +98,7 @@ img {
     cursor: pointer;
     font-family: 'Poppins', sans-serif;
     font-size: .9rem;
-    color: var(--f-default);
+    color: var(--f-default-contrast);
     background-color: var(--bg-accent);
     border-radius: 4px;
     border: none;
@@ -153,7 +153,7 @@ img {
 }
 
 .map-wrapper {
-    height: 196px;
+    height: 144px;
     width: 100%;
     padding: 0 8px 0 0;
     box-sizing: border-box;

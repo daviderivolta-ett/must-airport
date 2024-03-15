@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import * as Highcharts from 'highcharts';
+import { ChartsService } from '../../../services/charts.service';
+import Drilldown from 'highcharts/modules/drilldown';
 
 @Component({
   selector: 'app-pie-chart',
@@ -10,18 +12,45 @@ import * as Highcharts from 'highcharts';
 })
 export class PieChartComponent {
   @Input() public serie: Highcharts.SeriesPieOptions = { type: 'pie' };
+  @Input() public drilldown: Highcharts.SeriesPieOptions[] = [];
 
   public charts!: Highcharts.Chart;
+  public chartId: string = this.chartsService.generateChartUniqueId();
+
   public chartOptions: Highcharts.Options = {
     series: [],
+    drilldown: {
+      series: [],
+      activeDataLabelStyle: {
+        color: 'rgb(230, 237, 243)',
+        textDecoration: 'none',
+        textOutline: 'none',
+      },
+      breadcrumbs: {
+        showFullPath: false,
+        buttonTheme: {
+          style: {
+            color: 'rgb(230, 237, 243)',
+          },
+          states: {
+            hover: {
+              fill: 'transparent',
+              style: {
+                color: 'rgb(110, 118, 129)'
+              }
+            }
+          }
+        }
+      }
+    },
     chart: {
       type: 'pie',
       backgroundColor: 'transparent',
-      height: '300px',
+      height: '300px'
     },
-    legend : {
+    legend: {
       itemStyle: {
-        color: 'rgb(230, 237, 243)'
+        // color: 'rgb(230, 237, 243)'
       },
       itemHoverStyle: {
         color: 'rgb(125, 133, 144)'
@@ -44,7 +73,7 @@ export class PieChartComponent {
         },
         showInLegend: true,
         innerSize: '33%',
-        borderRadius: 8,
+        borderRadius: 4,
         borderWidth: 4,
         borderColor: 'rgb(13, 17, 23)'
       }
@@ -57,12 +86,27 @@ export class PieChartComponent {
     }
   }
 
-  public ngOnInit(): void {
+  constructor(private chartsService: ChartsService) { }
+
+  public ngAfterViewInit(): void {
     this.initChart();
   }
 
   private initChart(): void {
     this.chartOptions.series?.push(this.serie);
-    this.charts = Highcharts.chart('chart-pie', this.chartOptions);
+
+    if (this.drilldown && this.chartOptions.drilldown) {
+      Drilldown(Highcharts);
+      this.chartOptions.drilldown.series = this.drilldown;
+      // if (this.chartOptions.plotOptions && this.chartOptions.plotOptions.pie) {
+      //   this.chartOptions.plotOptions.pie.colors = Highcharts.getOptions().colors?.map((c, i) => {
+      //     return Highcharts.color('#d568fb')
+      //       .brighten((i - 3) / 7)
+      //       .get()
+      //   });
+      // }
+    }
+
+    this.charts = Highcharts.chart(`${this.chartId}`, this.chartOptions);
   }
 }

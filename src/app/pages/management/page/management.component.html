@@ -2,8 +2,13 @@
     <div class="column first-column">
         <div class="header">
             <h2>Dettagli segnalazione</h2>
+            <button class="archive-btn" (click)="archiveReportClick()">
+                <span class="material-symbols-outlined archive-icon">archive</span>
+            </button>
+        </div>
+        <div class="image-section">
             <div class="img-container">
-                <img src="{{parentReport.coverImgUrls}}" alt="Immagine della segnalazione">
+                <img src="{{parentReport.coverImgUrls[0]}}" alt="Immagine della segnalazione">
             </div>
         </div>
         <div class="report-details">
@@ -16,7 +21,7 @@
             <div class="info">
                 <p class="info-title">Ultimo aggiornamento</p>
                 <p class="info-value">{{parentReport.lastChildTime | date: 'dd/MM/yyyy'}} -
-                    h:{{parentReport.lastChildTime| date: 'HH:mm'}}</p>
+                    h:{{parentReport.lastChildTime | date: 'HH:mm'}}</p>
             </div>
 
             <div class="info">

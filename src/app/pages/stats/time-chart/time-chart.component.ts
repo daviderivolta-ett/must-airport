@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import * as Highstock from 'highcharts/highstock';
-import { timeChartData } from '../../../services/charts.service';
+import { ChartsService, timeChartData } from '../../../services/charts.service';
 
 @Component({
   selector: 'app-time-chart',
@@ -14,7 +14,7 @@ export class TimeChartComponent {
   @Input() public secondSerie: Highstock.SeriesLineOptions | null = null;
 
   public charts!: Highcharts.Chart;
-  public chartId: string = this.generateChartUniqueId();
+  public chartId: string = this.chartsService.generateChartUniqueId();
 
   public chartOptions: Highstock.Options = {
     series: [],
@@ -112,7 +112,7 @@ export class TimeChartComponent {
     }
   }
 
-  constructor() { }
+  constructor(private chartsService: ChartsService) { }
 
   public ngAfterViewInit(): void {
       this.initChart();
@@ -122,25 +122,5 @@ export class TimeChartComponent {
     this.chartOptions.series?.push(this.firstSerie);
     if (this.secondSerie) this.chartOptions.series?.push(this.secondSerie);
     this.charts = Highstock.stockChart(`${this.chartId}`, this.chartOptions);
-  }
-
-  private generateChartUniqueId(): string {
-    const alphabet: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    let isLowerCase: boolean = false;
-
-    let id: string = '';
-
-    for (let i = 0; i <= 9; i++) {
-      Math.floor(Math.random() * 10) % 2 === 0 ? isLowerCase = true : isLowerCase = false;
-      let randomLetter: string;
-      isLowerCase === true ? randomLetter = this.pickRandomLetter(alphabet).toLocaleLowerCase() : randomLetter = this.pickRandomLetter(alphabet);
-      let randomNum = Math.floor(Math.random() * 10);
-      id = id + randomLetter + randomNum;
-    }
-    return id;
-  }
-
-  private pickRandomLetter(str: string): string {
-    return str[Math.floor(Math.random() * (str.length - 1))];
   }
 }

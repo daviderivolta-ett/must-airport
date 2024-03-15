@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase/firestore";
-import { APPFLOW } from "./app-flow.model";
+import { VERTICAL } from "./app-flow.model";
 
 export enum USERLEVEL {
     Superuser = 0,
@@ -10,8 +10,8 @@ export enum USERLEVEL {
 export interface UserData {
     userLevel: USERLEVEL;
     lastLogin: Timestamp;
-    apps: APPFLOW[],
-    lastApp: APPFLOW
+    apps?: VERTICAL[],
+    lastApp: VERTICAL
 }
 
 export class LoggedUser {
@@ -20,8 +20,8 @@ export class LoggedUser {
     email: string | null;
     displayName: string | null;
     picUrl: string | null;
-    apps: APPFLOW[];
-    lastApp: APPFLOW;
+    apps: VERTICAL[];
+    lastApp: VERTICAL;
     id: string;
 
     constructor(
@@ -30,8 +30,8 @@ export class LoggedUser {
         email: string | null,
         displayName: string | null,
         picUrl: string | null,
-        apps: APPFLOW[],
-        lastApp: APPFLOW,
+        apps: VERTICAL[],
+        lastApp: VERTICAL,
         id: string
     ) {
         this.level = level;
@@ -51,8 +51,8 @@ export class LoggedUser {
             null,
             null,
             null,
-            [APPFLOW.Default],
-            APPFLOW.Default,
+            [VERTICAL.Default],
+            VERTICAL.Default,
             ''
         );
     }

@@ -143,7 +143,7 @@ export class ValidationFormComponent {
     this.failureTagsForm = this.fb.group({});
     for (const failureTag of this._failureTags) {
       this.failureTagsForm.addControl(failureTag.id, new FormControl(this._childrenReport.some(report => {
-        return report.tagFailure && report.tagFailure.some((r: FailureTag | string) => {
+        return report.fields.tagFailure && report.fields.tagFailure.some((r: FailureTag | string) => {
           return typeof r === 'string' ? r : r.id === failureTag.id
         });
       })));
@@ -158,13 +158,14 @@ export class ValidationFormComponent {
     let msg: string;
     try {
       if (!this._parentReport.validationDate) data.validationDate = Timestamp.now();
+      if (!this._parentReport.isValidated) data.validated = true;
       this.reportsService.setReportById(this._parentReport.id, data);
       msg = 'Modifica salvata con successo';
       this.snackbarService.createSnackbar(msg, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
     } catch (error) {
       msg = 'C\'è stato un errore nel salvataggio del report. Riprovare!'
       this.snackbarService.createSnackbar(msg, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
-    }    
+    }
   }
 
   public toggleTechElementTagsForm(): void {

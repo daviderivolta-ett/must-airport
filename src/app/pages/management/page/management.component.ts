@@ -1,4 +1,4 @@
-import { Component, effect } from '@angular/core';
+import { ApplicationRef, Component, ViewChild, createComponent, effect } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ReportParent } from '../../../models/report-parent.model';
 import { ReportChild } from '../../../models/report-child.model';
@@ -14,6 +14,8 @@ import { InspectionFormComponent } from '../inspection-form/inspection-form.comp
 import { OperationCardComponent } from '../operation-card/operation-card.component';
 import { MiniMapComponent } from '../../../components/mini-map/mini-map.component';
 import { MiniMapData } from '../../../services/map.service';
+import { ArchiveDialogComponent } from '../../../components/archive-dialog/archive-dialog.component';
+import { ArchiveDialogService } from '../../../observables/archive-dialog.service';
 
 @Component({
   selector: 'app-management',
@@ -33,16 +35,16 @@ export class ManagementComponent {
   // public miniMapData: MiniMapData = { location: new GeoPoint(0.0, 0.0), priority: PRIORITY.NotAssigned }
   public miniMapData!: MiniMapData;
 
-  constructor(private route: ActivatedRoute, private dictionaryService: DictionaryService, private reportsService: ReportsService) {
+  constructor(private applicationRef: ApplicationRef, private route: ActivatedRoute, private dictionaryService: DictionaryService, private reportsService: ReportsService, private archiveDialogService: ArchiveDialogService) {
     effect(async () => {
       this.parentReport = this.reportsService.selectedReportSignal();
       this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
       this.childrenReport.map((report: ReportChild) => {
-        if (report.tagFailure != undefined) report = this.reportsService.populateFailureTags(report);
-        if (report.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
+        if (report.fields.tagFailure != undefined) report = this.reportsService.populateFailureTags(report);
+        if (report.fields.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
       });
       this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
-      console.log(this.parentReport);
+      // console.log(this.parentReport);
       // console.log(this.childrenReport);
 
       this.discardDuplicatedReportFailureTags(this.childrenReport);
@@ -59,11 +61,22 @@ export class ManagementComponent {
     }
   }
 
+  public archiveReportClick(): void {
+    this.archiveDialogService.parentReport = this.parentReport;
+    
+    const div = document.createElement('div');
+    div.id = 'archive-dialog';
+    document.body.append(div);
+    const componentRef = createComponent(ArchiveDialogComponent, {hostElement: div, environmentInjector: this.applicationRef.injector});
+    this.applicationRef.attachView(componentRef.hostView);
+    componentRef.changeDetectorRef.detectChanges();
+  }
+
   private discardDuplicatedReportFailureTags(childrenReport: ReportChild[]): void {
     let reportFailureTags: FailureTag[] = [];
     childrenReport.forEach((childReport: ReportChild) => {
-      if (!childReport.tagFailure || childReport.tagFailure.length === 0) return;
-      childReport.tagFailure.forEach((failureTag: FailureTag | string) => {
+      if (!childReport.fields.tagFailure || childReport.fields.tagFailure.length === 0) return;
+      childReport.fields.tagFailure.forEach((failureTag: FailureTag | string) => {
         if (typeof failureTag === 'string') return;
         reportFailureTags.push(failureTag);
       });
@@ -82,8 +95,8 @@ export class ManagementComponent {
   private discardDuplicatedReportFailureSubTags(childrenReport: ReportChild[]): void {
     let reportFailureSubTags: FailureSubTag[] = [];
     childrenReport.forEach((childReport: ReportChild) => {
-      if (!childReport.subTagFailure || childReport.subTagFailure.length === 0) return;
-      childReport.subTagFailure.forEach((failureSubTag: FailureSubTag | string) => {
+      if (!childReport.fields.subTagFailure || childReport.fields.subTagFailure.length === 0) return;
+      childReport.fields.subTagFailure.forEach((failureSubTag: FailureSubTag | string) => {
         if (typeof failureSubTag === 'string') return;
         reportFailureSubTags.push(failureSubTag);
       });

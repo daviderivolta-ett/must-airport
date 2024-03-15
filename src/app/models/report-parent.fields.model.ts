@@ -3,7 +3,7 @@ import { TechElementTag } from "./tech-element-tag.model";
 
 export class ReportParentFields {
     wideShots: string[];
-    elementType: string[]
+    elementType: string[];
     tagTechElement: TechElementTag[] | string[];
     subTagTechElement: TechElementSubTag[] | string[];
 

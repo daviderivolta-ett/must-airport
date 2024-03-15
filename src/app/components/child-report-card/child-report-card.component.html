@@ -1,36 +1,36 @@
 <div class="card" #card>
     <div class="img-container">
         @if (childReport.detailPics) {
-            <img src="{{childReport.detailPics[0]}}" alt="Immagine del report">
+            <img src="{{childReport.fields.detailShots}}" alt="Immagine del report">
         }
     </div>
     <div class="card-body">
         <div class="card-details">
             <div class="info">
                 <span class="info-title">Segnale di guasto: </span>
-                @if (childReport.tagFailure.length === 0) {
+                @if (childReport.fields.tagFailure.length === 0) {
                 <span class="info-value">-</span>
                 }
                 @else {
-                    @for (failureTag of childReport.tagFailure; track $index; let last = $last) {
+                    @for (failureTag of childReport.fields.tagFailure; track $index; let last = $last) {
                     <span class="info-value" [ngClass]="{'comma': !last}">{{$any(failureTag).name.it}}</span>
                     }
                 }
             </div>
             <div class="info">
                 <span class="info-title">Modo di guasto: </span>
-                @if (childReport.subTagFailure.length === 0) {
+                @if (childReport.fields.subTagFailure.length === 0) {
                 <span class="info-value">-</span>
                 }
                 @else {
-                    @for (failureSubTag of childReport.subTagFailure; track $index; let last = $last) {
+                    @for (failureSubTag of childReport.fields.subTagFailure; track $index; let last = $last) {
                     <span class="info-value" [ngClass]="{'comma': !last}">{{$any(failureSubTag).name.it}}</span>
                     }
                 }
             </div>
             <div class="info">
                 <span class="info-title">Commento: </span>
-                <span class="info-value">{{childReport.comment}}</span>
+                <span class="info-value">{{childReport.fields.description}}</span>
             </div>
         </div>
         <div class="card-footer">

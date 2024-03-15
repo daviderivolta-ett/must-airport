@@ -18,7 +18,7 @@ export class SidebarComponent {
 
   constructor(private sidebarService: SidebarService) {
     effect(() => {
-      this.isOpen = this.sidebarService.isOpen();
+      this.isOpen = this.sidebarService.isOpen();   
     });
   }
 

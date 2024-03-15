@@ -1,0 +1,70 @@
+[
+    {
+        "closed": false,
+        "closingTime": null,
+        "geoHash": "spyk9w2rsn",
+        "descriptionSelections": [
+            "cte02.03.02"
+        ],
+        "closingChildId": null,
+        "progressiveId": null,
+        "parentFlowId": "default",
+        "color": null,
+        "validated": false,
+        "coverImgUrls": [
+            "https://firebasestorage.googleapis.com/v0/b/ett-must-v2.appspot.com/o/images%2Freports%2Fe3e434e6-c654-440a-b3c9-3988b7edb3f8.jpg?alt=media&token=c2e4e863-578a-457d-9a20-86ccd7a7547f"
+        ],
+        "priority": "medium",
+        "childFlowsIds": [
+            "horizontal"
+        ],
+        "descriptionText": "",
+        "userId": "ofEP2iFxiPgkGnDZ0P4hxAdny143",
+        "elementId": "44.42041867403789;8.855498470366001",
+        "operations": [
+            {
+                "id": "17140032000001709829897780",
+                "operatorName": "Davide R.",
+                "type": "inspection",
+                "date": {
+                    "seconds": 1714003200,
+                    "nanoseconds": 0
+                }
+            }
+        ],
+        "validationDate": {
+            "seconds": 1709829880,
+            "nanoseconds": 28000000
+        },
+        "language": "it",
+        "creationTime": {
+            "seconds": 1709810463,
+            "nanoseconds": 50000000
+        },
+        "fields": {
+            "element_type": [
+                "horizontal"
+            ],
+            "sub_tag_tech_el": [],
+            "tag_tech_el": [
+                "cte02.03.02"
+            ],
+            "foto_campo_largo": [
+                "https://firebasestorage.googleapis.com/v0/b/ett-must-v2.appspot.com/o/images%2Freports%2Fe3e434e6-c654-440a-b3c9-3988b7edb3f8.jpg?alt=media&token=c2e4e863-578a-457d-9a20-86ccd7a7547f"
+            ]
+        },
+        "childrenIds": [
+            "DAMiOeLk1hVS2pwsNHSq",
+            "n8rZLEcAqkeBlYXcMdxn"
+        ],
+        "lastChildTime": {
+            "seconds": 1709810510,
+            "nanoseconds": 591000000
+        },
+        "verticalId": "generic",
+        "location": {
+            "latitude": 44.42041867403789,
+            "longitude": 8.855498470366001
+        }
+    }
+]

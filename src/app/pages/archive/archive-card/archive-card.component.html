@@ -1,0 +1,41 @@
+<div class="archive-table-row">
+    <div class="archive-table-row-cell creation-time-cell"><span>{{parentReport.creationTime | date: 'dd/MM/yyyy'}}</span></div>
+    <div class="archive-table-row-cell closing-time-cell"><span>{{parentReport.closingTime | date: 'dd/MM/yyyy'}}</span></div>
+    <div class="archive-table-row-cell tech-element-tags-cell" appHoverTooltip [_data]="parentReport.fields.tagTechElement">
+        @for (tag of parentReport.fields.tagTechElement; track $index; let last = $last) {
+            <span [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</span>
+        }
+        @if (parentReport.fields.tagTechElement.length === 0) {
+            <span>-</span>
+        }
+    </div>
+    <div class="archive-table-row-cell tech-element-subtags-cell" appHoverTooltip [_data]="parentReport.fields.subTagTechElement">
+        @for (tag of parentReport.fields.subTagTechElement; track $index; let last = $last) {
+            <span [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</span>
+        }
+        @if (parentReport.fields.subTagTechElement.length === 0) {
+            <span>-</span>
+        }
+    </div>
+    <div class="archive-table-row-cell failure-tags-cell" appHoverTooltip [_data]="failureTags">
+        @for (tag of failureTags; track $index; let last = $last) {
+        <span [ngClass]="{'comma': !last}">{{tag.name.it}}</span>
+        }
+        @if (failureTags.length === 0) {
+            <span>-</span>
+        }
+    </div>
+    <div class="archive-table-row-cell failure-subtags-cell" appHoverTooltip [_data]="failureSubTags">
+        @for (tag of failureSubTags; track $index; let last = $last) {
+        <span [ngClass]="{'comma': !last}">{{tag.name.it}}</span>
+        }
+        @if (failureSubTags.length === 0) {
+            <span>-</span>
+        }
+    </div>
+    <div class="archive-table-row-cell actions-cell">
+        <button type="button" class="restore-button" (click)="restoreReport()">
+            <span class="material-symbols-outlined restore-icon">undo</span>
+        </button>
+    </div>
+</div>

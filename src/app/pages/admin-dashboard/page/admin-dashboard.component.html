@@ -1,6 +1,8 @@
 <div class="page">
     <h1>Elenco codici</h1>
-    <app-codes-filters [allCodes]="allCodes" />
+    @if (apps.length !== 0) {
+    <app-codes-filters [allCodes]="allCodes" [apps]="apps"/>
+    }
     <div class="codes-section">
         @for (code of allCodes; track $index) {
             <app-code-card [code]="code" />
@@ -12,5 +14,7 @@
     <button type="button" class="add-code-btn" (click)="toggleDialog($event)">
         <span class="material-symbols-outlined add-icon" [ngClass]="{'rotate': isDialogOpen}">add</span>
     </button>
-    <app-create-code />
+    @if (apps.length !== 0) {
+    <app-create-code [apps]="apps" />
+    }
 </div>
