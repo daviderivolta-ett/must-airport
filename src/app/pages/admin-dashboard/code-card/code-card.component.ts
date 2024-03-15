@@ -3,6 +3,8 @@ import { Code, CodeDb } from '../../../models/code.model';
 import { NgClass, TitleCasePipe } from '@angular/common';
 import { TooltipDirective } from '../../../directives/tooltip.directive';
 import { CodesService } from '../../../services/codes.service';
+import { SnackbarService } from '../../../observables/snackbar.service';
+import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 
 @Component({
   selector: 'app-code-card',
@@ -14,7 +16,7 @@ import { CodesService } from '../../../services/codes.service';
 export class CodeCardComponent {
   @Input() public code: Code | null = null;
 
-  constructor(private codesService: CodesService) { }
+  constructor(private codesService: CodesService, private snackbarService: SnackbarService) { }
 
   public copyToClipboard(): void {
     if (!this.code) return;
@@ -25,6 +27,11 @@ export class CodeCardComponent {
     if (!this.code) return;
     let codeDb: CodeDb = this.codesService.parseCode(this.code);
     codeDb.isValid = !codeDb.isValid;
-    this.codesService.setCodeById(this.code.appType, codeDb.code, codeDb);
+    try {
+      this.codesService.setCodeById(this.code.appType, codeDb.code, codeDb);
+      this.snackbarService.createSnackbar('Permessi aggiornati con successo.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
+    } catch (error) {
+      this.snackbarService.createSnackbar('Errore nell\'aggiornamento dei permessi. Riprovare.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
+    }
   }
 }

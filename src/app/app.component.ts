@@ -26,7 +26,7 @@ import { SeedService } from './services/seed.service';
 export class AppComponent {
   public title: string = 'must';
 
-  constructor(private firebaseService: FirebaseService, private authService: AuthService, private userService: UserService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService, private themeService: ThemeService, private splashService: SplashService, private seedService: SeedService) {
+  constructor(private firebaseService: FirebaseService, private authService: AuthService, private userService: UserService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService, private themeService: ThemeService, private splashService: SplashService, private seedService: SeedService) {    
     this.splashService.createSplash();
     this.codesService.getAllCodes();
     effect(async () => {

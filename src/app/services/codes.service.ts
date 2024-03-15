@@ -37,7 +37,7 @@ export class CodesService {
     const webCodes = this.webCodesSignal();
     const mobileCodes = this.mobileCodesSignal();
 
-    const codes = [...webCodes, ...mobileCodes];   
+    const codes = [...webCodes, ...mobileCodes];
     return codes;
   })
 
@@ -56,7 +56,11 @@ export class CodesService {
 
   public async setCodeById(appType: APPTYPE, id: string, data: CodeDb): Promise<void> {
     const ref = appType === APPTYPE.Web ? doc(this.db, 'web_codes', id) : doc(this.db, 'mobile_codes', id);
-    await setDoc(ref, data, { merge: true });
+    try {
+      await setDoc(ref, data, { merge: true });
+    } catch (error) {
+      throw new Error('Errore nell\'aggiornamento del codice.');
+    }
   }
 
   public async getAllCodes(): Promise<void> {

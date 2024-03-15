@@ -1,3 +1,9 @@
+@if (parentReports.length === 0) {
+<div>
+    <p class="empty-msg">Impossibile generare report senza segnalazioni</p>
+</div>
+}
+
 <div class="charts-section">
     @if (reportsNumPerTimeSerie.data && reportsNumPerTimeSerie.data.length > 0) {
     <div class="chart-wrapper">

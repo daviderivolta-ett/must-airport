@@ -68,18 +68,22 @@ export class ThemeService {
     this.document.documentElement.style.setProperty('--f-muted', 'rgb(101, 109, 118)');
     this.document.documentElement.style.setProperty('--f-subtle', 'rgb(21, 21, 21)');
 
-    this.document.documentElement.style.setProperty('--bg-inset', 'rgb(248, 248, 249)');
+    this.document.documentElement.style.setProperty('--bg-inset', 'rgb(248, 250, 253)');
     this.document.documentElement.style.setProperty('--bg-default', 'rgb(255, 255, 255)');
-    this.document.documentElement.style.setProperty('--bg-overlay', 'red');
+    this.document.documentElement.style.setProperty('--bg-overlay', 'rgb(22, 27, 34)');
     this.document.documentElement.style.setProperty('--bg-subtle', 'rgb(242, 242, 242)');
-    this.document.documentElement.style.setProperty('--bg-emphasis', 'rgb(218, 218, 218)');
+    this.document.documentElement.style.setProperty('--bg-emphasis', 'rgb(233, 238, 246)');
 
     this.document.documentElement.style.setProperty('--border-default', 'rgb(232, 234, 237)');    
     this.document.documentElement.style.setProperty('--border-emphasis', 'rgb(206, 206, 206)');    
     this.document.documentElement.style.setProperty('--border-subtle', 'rgba(0, 0, 0, 0.1)');    
 
-    this.document.documentElement.style.setProperty('--bg-danger-dull', 'rgb(255, 235, 233)');    
     this.document.documentElement.style.setProperty('--bg-success-dull', 'rgb(218, 251, 225)');    
+    this.document.documentElement.style.setProperty('--bg-attention-dull', 'rgb(255, 248, 197)');    
+    this.document.documentElement.style.setProperty('--bg-severe-dull', 'rgb(255, 241, 229)');    
+    this.document.documentElement.style.setProperty('--bg-danger-dull', 'rgb(255, 235, 233)');    
+    this.document.documentElement.style.setProperty('--bg-done-dull', 'rgb(251, 239, 255)');    
+    this.document.documentElement.style.setProperty('--bg-other-dull', 'rgb(255, 239, 247)');    
   }
   
   public setDarkMode(): void {
@@ -93,12 +97,16 @@ export class ThemeService {
     this.document.documentElement.style.setProperty('--bg-overlay', 'rgb(22, 27, 34)');
     this.document.documentElement.style.setProperty('--bg-subtle', 'rgb(39, 45, 52)');
     this.document.documentElement.style.setProperty('--bg-emphasis', 'rgb(110, 118, 129)');
-
+    
     this.document.documentElement.style.setProperty('--border-default', 'rgb(48, 54, 61)');    
     this.document.documentElement.style.setProperty('--border-emphasis', 'rgb(139, 148, 158)');
     this.document.documentElement.style.setProperty('--border-subtle', 'rgba(240, 246, 252, 0.1)'); 
-
-    this.document.documentElement.style.setProperty('--bg-danger-dull', 'rgb(37, 23, 28)'); 
+    
     this.document.documentElement.style.setProperty('--bg-success-dull', 'rgb(18, 38, 30)');
+    this.document.documentElement.style.setProperty('--bg-attention-dull', 'rgb(39, 33, 21)');    
+    this.document.documentElement.style.setProperty('--bg-severe-dull', 'rgb(34, 26, 25)');
+    this.document.documentElement.style.setProperty('--bg-danger-dull', 'rgb(37, 23, 28)'); 
+    this.document.documentElement.style.setProperty('--bg-done-dull', 'rgb(21, 19, 41)');    
+    this.document.documentElement.style.setProperty('--bg-other-dull', 'rgb(34, 25, 38)');    
   }
 }
