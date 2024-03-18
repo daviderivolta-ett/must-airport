@@ -66,7 +66,11 @@ export class DictionaryService {
   public allLoaded: boolean = false;
 
   constructor(private db: Firestore) {
-    effect(() => this.techElementTags = this.techElementTagsSignal());
+    effect(() => {
+      this.techElementTags = this.techElementTagsSignal()
+      console.log(this.techElementTags);
+      
+    });
   }
 
   public async getAll() {

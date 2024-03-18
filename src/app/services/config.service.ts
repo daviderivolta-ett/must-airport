@@ -16,11 +16,20 @@ export class ConfigService {
       if (!this.configSignal().name) return;
       this.config = this.configSignal();
       if (!this.config.parentFlows) return;
-      if (!this.config.parentFlows.default) return;
-      // this.getAllTags(JSON.parse(this.config.parentFlows.default));
-      console.log(JSON.parse(this.config.parentFlows.default));
-      let tags: Tag[] = this.getTags(JSON.parse(this.config.parentFlows.default));
-      console.log(tags);
+      if (!this.config.childFlows) return;
+
+      let allTags: Tag[] = [];
+      for (const key in this.config.parentFlows) {
+        const tags: Tag[] = this.getTags(JSON.parse(this.config.parentFlows[key]));
+        allTags = [...allTags, ...tags];
+      }
+
+      for (const key in this.config.childFlows) {
+        const tags: Tag[] = this.getTags(JSON.parse(this.config.childFlows[key].flowJson));
+        allTags = [...allTags, ...tags];
+      }
+
+      console.log(allTags);
     });
   }
 
@@ -35,35 +44,27 @@ export class ConfigService {
     }
   }
 
-  public getAllTags(config: any): void {
-    let tags: any[] = [];
-    console.log(config);
-    if (!config.child) return;
-    let child: any = config.child;
-    if (!child.options || child.options.length === 0) return;
-    let options: any[] = child.options;
-    options.map(option => {
-      if (!option.child) return;
-      let c: any = option.child;
-      if (!c.options || c.options.length === 0) return;
-      c.options.map((option: any) => {
-        tags.push(option);
-      });
-    });
-    let parsedTags: any[] = tags.map(tag => {
-      return this.parseTag(tag);
-    });
-    console.log(parsedTags);
-  }
-
   public getTags(object: any): Tag[] {
     let allTagsSet: Set<Tag> = new Set();
 
     switch (object['component']) {
       case 'selection':
         const options: any[] = object['options'];
+        const subLevels: any[] = object['subLevels'];
         const tagType: string = object['id'];
-        let tags: Tag[] = options.map((option: any) => this.parseTag(option, tagType));
+        let tags: Tag[] = options.map((option: any) => {
+          const tag: Tag = this.parseTag(option, tagType);
+
+          if (subLevels && subLevels.length > 0) {
+            subLevels.forEach((sub: any) => {
+              tag.options.forEach((subOption: any) => {
+                subOption.type = sub.id
+              })
+            });
+          }
+
+          return tag;
+        });
         tags.forEach(tag => allTagsSet.add(tag));
         break;
 
@@ -89,7 +90,6 @@ export class ConfigService {
     return Array.from(allTagsSet);
   }
 
-
   public parseTag(tagDb: any, type: string = ''): Tag {
     let tag: Tag = Tag.createEmpty();
 
@@ -98,9 +98,8 @@ export class ConfigService {
     tag.description = tagDb.description;
     tag.type = type;
     if (tagDb.options && tagDb.options.length !== 0) {
-      tag.options = tagDb.options;
-      tag.options = tag.options.map((tag: any) => {
-        return this.parseTag(tag);
+      tag.options = tagDb.options.map((tag: any) => {
+        return this.parseTag(tag, type);
       });
     }
 

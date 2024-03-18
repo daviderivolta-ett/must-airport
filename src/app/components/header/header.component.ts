@@ -36,8 +36,7 @@ export class HeaderComponent {
     });
     effect(() => {
       if (this.themeService.colorModeSignal() === null) return;
-      this.colorMode = this.themeService.colorModeSignal();
-      console.log(this.colorMode);      
+      this.colorMode = this.themeService.colorModeSignal();    
     })
   }
 
