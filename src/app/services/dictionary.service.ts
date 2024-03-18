@@ -68,7 +68,7 @@ export class DictionaryService {
   constructor(private db: Firestore) {
     effect(() => {
       this.techElementTags = this.techElementTagsSignal()
-      console.log(this.techElementTags);
+      // console.log(this.techElementTags);
       
     });
   }
