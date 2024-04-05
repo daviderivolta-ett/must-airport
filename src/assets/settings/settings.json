@@ -17,6 +17,15 @@
             "styles": {
                 "accent": "#B41312"
             }
+        },
+        {
+            "name": "dsh2030",
+            "assets": {
+                "logoUrl": "./assets/images/dsh2030_logo.jpg"
+            },
+            "styles": {
+                "accent": "#B0B92A"
+            }
         }
     ]
 }

@@ -118,6 +118,9 @@ export class CodesService {
       case 'airport':
         c.vertId = VERTICAL.Airport
         break;
+      case 'dsh2030':
+        c.vertId = VERTICAL.DSH2030;
+        break;
       default:
         c.vertId = VERTICAL.Default;
         break;
@@ -161,7 +164,7 @@ export class CodesService {
       code: formData.code,
       creationDate: Timestamp.now(),
       isValid: false,
-      vertId: formData.app,
+      vertId: formData.app.toLowerCase(),
       // appType: formData.type,
       associatedOn: null,
       user: null,
@@ -209,6 +212,9 @@ export class CodesService {
         break;
       case 'default':
         data.vertId = VERTICAL.Default;
+        break;
+      case 'dsh2030':
+        data.vertId = VERTICAL.DSH2030;
         break;
       default:
         data.vertId = 'all';

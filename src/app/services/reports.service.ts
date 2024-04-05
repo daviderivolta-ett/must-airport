@@ -16,6 +16,7 @@ import { Storage } from '@angular/fire/storage';
 import { OPERATIONTYPE, Operation, OperationDb } from '../models/operation.model';
 import { VERTICAL } from '../models/app-flow.model';
 import { ReportChildFields } from '../models/report-child.fields.model';
+import { ConfigService } from './config.service';
 
 export interface ReportParentDb {
   childFlowsIds: string[];
@@ -114,14 +115,16 @@ export class ReportsService {
   public archivedReports: ReportParent[] = [];
   public archivedReportsSignal: WritableSignal<ReportParent[]> = signal([]);
 
-  constructor(private db: Firestore, private storage: Storage, private dictionaryService: DictionaryService) {
+  constructor(private db: Firestore, private storage: Storage, private dictionaryService: DictionaryService, private configService: ConfigService) {
     effect(() => this.reports = this.reportsSignal());
     effect(() => this.filteredReports = this.filteredReportsSignal());
     effect(() => this.archivedReports = this.archivedReportsSignal());
   }
 
   public async getAllParentReports(verticalId: VERTICAL, getAll: boolean) {
+    console.log('VERTICAL:', verticalId);    
     await this.dictionaryService.getAll();
+    await this.configService.getVerticalConfig(verticalId);
     // console.log(this.dictionaryService.failureTagsSignal());
     // console.log(this.dictionaryService.techElementTags);
 

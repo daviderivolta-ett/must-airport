@@ -14,8 +14,6 @@ import { LoggedUser, USERLEVEL, UserData } from './models/user.model';
 import { UserService } from './services/user.service';
 import { Timestamp } from 'firebase/firestore';
 import { User } from 'firebase/auth';
-import { SeedService } from './services/seed.service';
-import { ConfigService } from './services/config.service';
 
 @Component({
   selector: 'app-root',
@@ -27,9 +25,8 @@ import { ConfigService } from './services/config.service';
 export class AppComponent {
   public title: string = 'must';
 
-  constructor(private firebaseService: FirebaseService, private authService: AuthService, private userService: UserService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService, private configService: ConfigService, private themeService: ThemeService, private splashService: SplashService) {    
+  constructor(private firebaseService: FirebaseService, private authService: AuthService, private userService: UserService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService, private themeService: ThemeService, private splashService: SplashService) {    
     this.splashService.createSplash();
-    this.configService.getVerticalConfig(VERTICAL.Default);
     this.codesService.getAllCodes();
     effect(async () => {
       if (this.authService.userSignal() === null) return;
@@ -37,18 +34,18 @@ export class AppComponent {
       const loggedUser = await this.createLoggedUser(this.authService.user);
       this.authService.loggedUserSignal.set(loggedUser);
     });
-
+    
     effect(() => {
       if (this.authService.loggedUserSignal() === null) return;
       const loggedUser = this.authService.loggedUser;
-
+      
       if (!loggedUser) return;
       if (!loggedUser.email) {
         this.authService.currentAppSignal.set(null);
         this.authService.currentAppSignal.set(VERTICAL.Default);
         return;
       }
-
+      
       if (!loggedUser.lastApp) {
         let data: UserData = {
           userLevel: loggedUser.level,
