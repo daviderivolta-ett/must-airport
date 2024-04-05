@@ -19,8 +19,8 @@ export class ConfigService {
       if (!this.config.parentFlows) return;
       if (!this.config.childFlows) return;
       console.log(this.config);
-      // console.log(JSON.parse(this.config.parentFlows.default));
-      // console.log(JSON.parse(this.config.childFlows.vertical.flowJson));
+      console.log(JSON.parse(this.config.parentFlows.default));
+      console.log(JSON.parse(this.config.childFlows.vertical.flowJson));
 
       let parentFlowTags: Tag[] = [];
       for (const key in this.config.parentFlows) {
