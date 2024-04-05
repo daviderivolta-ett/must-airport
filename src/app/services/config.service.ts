@@ -61,8 +61,10 @@ export class ConfigService {
         const options: any[] = object['options'];
         const subLevels: any[] = object['subLevels'];
         const tagType: string = object['id'];
+        const tagLabel: string = object['title'];
+        const deep: number = 1;
         let tags: Tag[] = options.map((option: any) => {
-          const tag: Tag = this.parseTag(option, tagType);
+          const tag: Tag = this.parseTag(option, tagType, tagLabel, deep);
 
           if (subLevels && subLevels.length > 0) {
             subLevels.forEach((sub: any) => {
@@ -99,16 +101,17 @@ export class ConfigService {
     return Array.from(allTagsSet);
   }
 
-  private parseTag(tagDb: any, type: string = ''): Tag {
+  private parseTag(tagDb: any, type: string = '', label = '', deep = 1): Tag {
     let tag: Tag = Tag.createEmpty();
 
     tag.id = tagDb.id;
     tag.name = tagDb.name;
     tag.description = tagDb.description;
     tag.type = type;
+    tag.label = `${label} ${deep}`;
     if (tagDb.options && tagDb.options.length !== 0) {
-      tag.options = tagDb.options.map((tag: any) => {
-        return this.parseTag(tag, type);
+      tag.options = tagDb.options.map((t: any) => {
+        return this.parseTag(t, type, label, deep + 1);
       });
     }
 
