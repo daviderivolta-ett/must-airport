@@ -37,6 +37,9 @@ export class DialogComponent {
       this.parentReport = this.dialogService.report();
       this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
       this.childrenReport.map((report: ReportChild) => {
+
+        if (report.fields.tagFailure != undefined) report = this.reportsService.populateChildFlowTags1(report);
+        if (report.fields.subTagFailure != undefined) report = this.reportsService.populateChildFlowTags2(report);
         if (report.fields.tagFailure != undefined) report = this.reportsService.populateFailureTags(report);
         if (report.fields.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
       });

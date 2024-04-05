@@ -1,30 +1,30 @@
 <div class="card" #card>
     <div class="img-container">
-        @if (childReport.fields.detailShots) {
-            <img src="{{childReport.fields.detailShots}}" alt="Immagine del report">
+        @if (childReport.fields.detailShots && childReport.fields.detailShots.length !== 0) {
+            <img src="{{childReport.fields.detailShots[0]}}" alt="Immagine del report">
         }
     </div>
     <div class="card-body">
         <div class="card-details">
             <div class="info">
                 <span class="info-title">Segnale di guasto: </span>
-                @if (childReport.fields.tagFailure.length === 0) {
+                @if (childReport.fields.childFlowTags1.length === 0) {
                 <span class="info-value">-</span>
                 }
                 @else {
-                    @for (failureTag of childReport.fields.tagFailure; track $index; let last = $last) {
-                    <span class="info-value" [ngClass]="{'comma': !last}">{{$any(failureTag).name.it}}</span>
+                    @for (failureTag of childReport.fields.childFlowTags1; track $index; let last = $last) {
+                    <span class="info-value" [ngClass]="{'comma': !last}">{{failureTag.name}}</span>
                     }
                 }
             </div>
             <div class="info">
                 <span class="info-title">Modo di guasto: </span>
-                @if (childReport.fields.subTagFailure.length === 0) {
+                @if (childReport.fields.childFlowTags2.length === 0) {
                 <span class="info-value">-</span>
                 }
                 @else {
-                    @for (failureSubTag of childReport.fields.subTagFailure; track $index; let last = $last) {
-                    <span class="info-value" [ngClass]="{'comma': !last}">{{$any(failureSubTag).name.it}}</span>
+                    @for (failureSubTag of childReport.fields.childFlowTags2; track $index; let last = $last) {
+                    <span class="info-value" [ngClass]="{'comma': !last}">{{failureSubTag.name}}</span>
                     }
                 }
             </div>

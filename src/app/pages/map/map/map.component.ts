@@ -76,7 +76,7 @@ export class MapComponent {
       position: 'bottomright'
     }).addTo(this.map);
 
-    this.map.setMaxBounds(this.map.getBounds());
+    // this.map.setMaxBounds(this.map.getBounds());
 
     this.map.on('click', () => this.sidebarService.isOpen.set(false));
   }

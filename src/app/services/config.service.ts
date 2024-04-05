@@ -12,29 +12,49 @@ export class ConfigService {
   public config: any;
   public configSignal: WritableSignal<any> = signal({});
 
+  public parentFlowTags: Tag[] = [];
+  public parentFlowTagsSignal: WritableSignal<Tag[]> = signal([]);
+
+  public childFlowTags: Tag[] = [];
+  public childFlowTagsSignal: WritableSignal<Tag[]> = signal([]);
+
   constructor(private db: Firestore) {
     effect(() => {
       if (!this.configSignal().name) return;
       this.config = this.configSignal();
       if (!this.config.parentFlows) return;
       if (!this.config.childFlows) return;
-      console.log(this.config);
-      console.log(JSON.parse(this.config.parentFlows.default));
-      console.log(JSON.parse(this.config.childFlows.vertical.flowJson));
+      // console.log(this.config);
+      // console.log(JSON.parse(this.config.parentFlows.default));
+      // console.log(JSON.parse(this.config.childFlows.vertical.flowJson));
 
       let parentFlowTags: Tag[] = [];
       for (const key in this.config.parentFlows) {
         const tags: Tag[] = this.getTags(JSON.parse(this.config.parentFlows[key]));
         parentFlowTags.push(...tags);
       }
-      console.log(parentFlowTags);
-      
+      this.parentFlowTagsSignal.set(parentFlowTags);
+      // console.log(parentFlowTags);
+
       let childFlowTags: Tag[] = [];
       for (const key in this.config.childFlows) {
         const tags: Tag[] = this.getTags(JSON.parse(this.config.childFlows[key].flowJson));
         childFlowTags.push(...tags);
       }
-      console.log(childFlowTags);
+      this.childFlowTagsSignal.set(childFlowTags);
+      // console.log(childFlowTags);
+    }, { allowSignalWrites: true });
+
+    effect(() => {
+      if (this.parentFlowTagsSignal().length === 0) return;
+      this.parentFlowTags = this.parentFlowTagsSignal();
+      // console.log(this.parentFlowTags);
+    });
+
+    effect(() => {
+      if (this.childFlowTagsSignal().length === 0) return;
+      this.childFlowTags = this.childFlowTagsSignal();
+      // console.log(this.childFlowTags);
     });
   }
 

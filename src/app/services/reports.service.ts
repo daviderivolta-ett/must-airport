@@ -17,6 +17,7 @@ import { OPERATIONTYPE, Operation, OperationDb } from '../models/operation.model
 import { VERTICAL } from '../models/app-flow.model';
 import { ReportChildFields } from '../models/report-child.fields.model';
 import { ConfigService } from './config.service';
+import { Tag } from '../models/tag.model';
 
 export interface ReportParentDb {
   childFlowsIds: string[];
@@ -122,7 +123,7 @@ export class ReportsService {
   }
 
   public async getAllParentReports(verticalId: VERTICAL, getAll: boolean) {
-    console.log('VERTICAL:', verticalId);    
+    // console.log('VERTICAL:', verticalId);
     await this.dictionaryService.getAll();
     await this.configService.getVerticalConfig(verticalId);
     // console.log(this.dictionaryService.failureTagsSignal());
@@ -143,6 +144,8 @@ export class ReportsService {
         });
 
         reports = reports.map((report: ReportParent) => {
+          report = this.populateParentFlowTags1(report);
+          report = this.populateParentFlowTags2(report);
           report = this.populateTechElementTags(report);
           report = this.populateTechElementSubTags(report);
           return report;
@@ -258,7 +261,7 @@ export class ReportsService {
 
     r.childFlowIds = report.childFlowsIds;
     r.childrenIds = report.childrenIds;
-    r.isClosed = report.closed;
+    report.closed ? r.isClosed = report.closed : r.isClosed = false;
     report.closingChildId ? r.closingChildId = report.closingChildId : r.closingChildId = null;
     report.closingTime ? r.closingTime = report.closingTime.toDate() : r.closingTime = null;
     r.coverImgUrls = report.coverImgUrls;
@@ -340,7 +343,9 @@ export class ReportsService {
     try {
       const querySnapshot: QuerySnapshot = await getDocs(q);
       const childrenReport: ReportChild[] = querySnapshot.docs.map(doc => {
-        let childReport: ReportChild = this.parseChildReport(doc.id, doc.data() as ReportChildDb);       
+        let childReport: ReportChild = this.parseChildReport(doc.id, doc.data() as ReportChildDb);
+        childReport = this.populateChildFlowTags1(childReport);
+        childReport = this.populateChildFlowTags2(childReport);
         childReport = this.populateFailureTags(childReport);
         childReport = this.populateFailureSubtags(childReport);
         return childReport;
@@ -375,6 +380,33 @@ export class ReportsService {
       return this.dictionaryService.getTechElementSubTagById(id);
     });
     report.fields.subTagTechElement = techElementSubTags;
+    return report;
+  }
+
+  public populateParentFlowTags1(report: ReportParent): ReportParent {
+    let tagIds: string[] = report.fields.tagTechElement as string[];
+    let parentFlowTags: Tag[] = tagIds.map((id: string) => {
+      let tag: Tag | undefined = this.configService.parentFlowTags.find((tag: Tag) => tag.id === id);
+      return tag ? tag : Tag.createEmpty();
+    });
+    report.fields.parentFlowTags1 = parentFlowTags;
+    return report;
+  }
+
+  public populateParentFlowTags2(report: ReportParent): ReportParent {
+    let subTagIds: string[] = report.fields.subTagTechElement as string[];
+    let parentFlowTags: Tag[] = subTagIds.map((id: string) => {
+      let foundTag: Tag | undefined;
+      this.configService.parentFlowTags.forEach((tag: Tag) => {
+        let foundOption: Tag | undefined = tag.options.find((subTag: Tag) => subTag.id === id);
+        if (foundOption) {
+          foundTag = foundOption;
+          return;
+        }
+      });
+      return foundTag ? foundTag : Tag.createEmpty();
+    });
+    report.fields.parentFlowTags2 = parentFlowTags;
     return report;
   }
 
@@ -458,6 +490,33 @@ export class ReportsService {
       return this.dictionaryService.getFailureSubTagById(id);
     });
     report.fields.subTagFailure = failureSubTags;
+    return report;
+  }
+
+  public populateChildFlowTags1(report: ReportChild): ReportChild {
+    let tagIds: string[] = report.fields.tagFailure as string[];
+    let childFlowTags: Tag[] = tagIds.map((id: string) => {
+      let tag: Tag | undefined = this.configService.childFlowTags.find((tag: Tag) => tag.id === id);
+      return tag ? tag : Tag.createEmpty();
+    });
+    report.fields.childFlowTags1 = childFlowTags;
+    return report;
+  }
+
+  public populateChildFlowTags2(report: ReportChild): ReportChild {
+    let subTagIds: string[] = report.fields.subTagFailure as string[];
+    let childFlowTags: Tag[] = subTagIds.map((id: string) => {
+      let foundTag: Tag | undefined;
+      this.configService.childFlowTags.forEach((tag: Tag) => {
+        let foundOption: Tag | undefined = tag.options.find((subTag: Tag) => subTag.id === id);
+        if (foundOption) {
+          foundTag = foundOption;
+          return;
+        }
+      });
+      return foundTag ? foundTag : Tag.createEmpty();
+    });
+    report.fields.childFlowTags2 = childFlowTags;
     return report;
   }
 

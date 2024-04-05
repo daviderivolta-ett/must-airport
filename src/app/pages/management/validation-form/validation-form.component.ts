@@ -11,6 +11,8 @@ import { ReportsService } from '../../../services/reports.service';
 import { SnackbarService } from '../../../observables/snackbar.service';
 import { Timestamp } from 'firebase/firestore';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
+import { Tag } from '../../../models/tag.model';
+import { ConfigService } from '../../../services/config.service';
 
 @Component({
   selector: 'app-validation-form',
@@ -28,8 +30,10 @@ export class ValidationFormComponent {
     if (value && value.id.length > 0) {
       this._parentReport = value;
       // console.log('Parent report:', value);
-      this.initializeTechElementTagsForm();
-      this.initializeTechElementSubTagsForm();
+      // this.initializeTechElementTagsForm();
+      // this.initializeTechElementSubTagsForm();
+      this.initializeParentFlowTags1Form();
+      this.initializeParentFlowTags2Form();
       this.initializePriorityForm();
     }
   }
@@ -61,13 +65,22 @@ export class ValidationFormComponent {
     }
   }
 
+  public _parentFlowTags: Tag[] = [];
+  @Input() set parentFlowTags(value: Tag[]) {
+    if (value && value.length > 0) {
+      this._parentFlowTags = value;
+    }
+  }
+
+  public _parentFlowTags2: Tag[] = [];
+
   public validationForm!: FormGroup;
   public techElementTagsForm!: FormGroup;
   public techElementSubTagsForm !: FormGroup;
   public failureTagsForm!: FormGroup;
   public priorityForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private dictionaryService: DictionaryService, private reportsService: ReportsService, private snackbarService: SnackbarService) {
+  constructor(private fb: FormBuilder, private dictionaryService: DictionaryService, private configService: ConfigService, private reportsService: ReportsService, private snackbarService: SnackbarService) {
     this.validationForm = this.fb.group({});
   }
 
@@ -78,6 +91,15 @@ export class ValidationFormComponent {
     }
     this.validationForm.addControl('techElementTagsForm', this.techElementTagsForm);
     this.techElementTagsForm.valueChanges.subscribe(changes => this.updateTechElementSubTagsForm(changes));
+  }
+
+  private initializeParentFlowTags1Form(): void {
+    this.techElementTagsForm = this.fb.group({});
+    for (const tag of this._parentFlowTags) {
+      this.techElementTagsForm.addControl(tag.id, new FormControl(this._parentReport.fields.parentFlowTags1.some((t: Tag) => t.id === tag.id)));
+    }
+    this.validationForm.addControl('techElementTagsForm', this.techElementTagsForm);
+    this.techElementTagsForm.valueChanges.subscribe(changes => this.updateParentFlowTags2Form(changes));
   }
 
   private initializeTechElementSubTagsForm(): void {
@@ -94,6 +116,24 @@ export class ValidationFormComponent {
       this.techElementSubTagsForm.addControl(subtag.id, new FormControl(this._parentReport.fields.subTagTechElement.some((t: TechElementSubTag | string) => typeof t === 'string' ? t : t.id === subtag.id)));
     }
 
+    this.validationForm.addControl('techElementSubTagsForm', this.techElementSubTagsForm);
+  }
+
+  private initializeParentFlowTags2Form(): void {
+    this.techElementSubTagsForm = this.fb.group({});
+    let validTagsId: string[] = [];
+    for (const key in this.techElementTagsForm.value) {
+      if (this.techElementTagsForm.value[key] === true) validTagsId.push(key);
+    }
+    let tags: Tag[] = validTagsId
+      .map((id: string) => this.configService.parentFlowTags.find((tag: Tag) => tag.id === id))
+      .filter((tag: Tag | undefined): tag is Tag => tag !== undefined);   
+    let subTags: Tag[] = [];
+    tags.forEach(tag => tag.options.forEach(s => subTags.push(s)));
+    this._parentFlowTags2 = subTags;
+    for (const subtag of this._parentFlowTags2) {
+      this.techElementSubTagsForm.addControl(subtag.id, new FormControl(this._parentReport.fields.parentFlowTags2.some((t: Tag) => t.id === subtag.id)));
+    }
     this.validationForm.addControl('techElementSubTagsForm', this.techElementSubTagsForm);
   }
 
@@ -118,6 +158,44 @@ export class ValidationFormComponent {
     this._reportTechElementSubTags = subTags;
 
     for (const subtag of this._reportTechElementSubTags) {
+      existingControls.push(subtag.id);
+
+      const control = this.techElementSubTagsForm.get(subtag.id);
+      if (control) {
+        control.setValue(values[subtag.id] === true);
+      } else {
+        // Se il controllo non esiste, aggiungilo
+        this.techElementSubTagsForm.addControl(subtag.id, new FormControl(values[subtag.id] === true));
+      }
+    }
+
+    // Rimuovi i controlli che non dovrebbero più esistere nel form
+    for (const control in this.techElementSubTagsForm.controls) {
+      if (!existingControls.includes(control)) {
+        this.techElementSubTagsForm.removeControl(control);
+      }
+    }
+
+    this.validationForm.setControl('techElementSubTagsForm', this.techElementSubTagsForm);
+  }
+
+  private updateParentFlowTags2Form(values: any): void {
+    // Lista dei controlli che dovrebbero esistere nel form
+    const existingControls: string[] = [];
+
+    let validTagsId: string[] = [];
+    for (const key in values) {
+      if (values[key] === true) validTagsId.push(key);
+    }
+
+    let tags: Tag[] = validTagsId
+    .map((id: string) => this.configService.parentFlowTags.find((tag: Tag) => tag.id === id))
+    .filter((tag: Tag | undefined): tag is Tag => tag !== undefined);   
+    let subTags: Tag[] = [];
+    tags.forEach(tag => tag.options.forEach(s => subTags.push(s)));
+    this._parentFlowTags2 = subTags;
+
+    for (const subtag of this._parentFlowTags2) {
       existingControls.push(subtag.id);
 
       const control = this.techElementSubTagsForm.get(subtag.id);

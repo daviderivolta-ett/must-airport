@@ -4,8 +4,8 @@
     </div>
     <div class="card-body">
         <span class="info">Oggetto: </span>
-        @for (techTag of report.fields.tagTechElement; track $index; let last = $last) {
-        <span class="info-title" [ngClass]="{'comma': !last}">{{$any(techTag).name.it}}</span>
+        @for (techTag of report.fields.parentFlowTags1; track $index; let last = $last) {
+        <span class="info-title" [ngClass]="{'comma': !last}">{{techTag.name}}</span>
         }
         <p class="date">{{report.creationTime | date: 'dd/MM/yyy'}} - h:{{report.creationTime | date: 'HH:mm'}}</p>
     </div>

@@ -71,7 +71,7 @@ export class MiniMapComponent {
     //   maxZoom: 20
     // }).addTo(this.map);
 
-    this.map.setMaxBounds(this.map.getBounds());
+    // this.map.setMaxBounds(this.map.getBounds());
   }
 
   private createMarker(latLng: Leaflet.LatLng, priority: PRIORITY): void {

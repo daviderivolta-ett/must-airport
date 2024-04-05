@@ -46,8 +46,8 @@
             <div class="info">
                 <p class="info-title">Oggetto</p>
                 <div class="info-value-list">
-                    @for (tag of parentReport.fields.tagTechElement; track $index; let last = $last) {
-                    <p class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</p>
+                    @for (tag of parentReport.fields.parentFlowTags1; track $index; let last = $last) {
+                    <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</p>
                     }
                 </div>
             </div>
@@ -55,8 +55,8 @@
             <div class="info">
                 <p class="info-title">Elemento tecnico</p>
                 <div class="info-value-list">
-                    @for (tag of parentReport.fields.subTagTechElement; track $index; let last = $last) {
-                    <p class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</p>
+                    @for (tag of parentReport.fields.parentFlowTags2; track $index; let last = $last) {
+                    <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</p>
                     }
                 </div>
             </div>
@@ -64,12 +64,12 @@
             <div class="info">
                 <p class="info-title">Segnali di guasto</p>
                 <div class="info-value-list">
-                    @if (reportFailureTags.length === 0) {
+                    @if (childFlowTags1.length === 0) {
                     <p class="info-value">-</p>
                     }
                     @else {
-                    @for (tag of reportFailureTags; track $index; let last = $last) {
-                    <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.it}}</p>
+                    @for (tag of childFlowTags1; track $index; let last = $last) {
+                    <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</p>
                     }
                     }
                 </div>
@@ -82,8 +82,8 @@
                     <p class="info-value">-</p>
                     }
                     @else {
-                        @for (tag of reportFailureSubTags; track $index; let last = $last) {
-                        <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.it}}</p>
+                        @for (tag of childFlowTags2; track $index; let last = $last) {
+                        <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</p>
                         }
                     }
                 </div>
@@ -105,7 +105,7 @@
     </div>
     <div class="column third-column">
         <h2>Scheda validazione</h2>
-        <app-validation-form [techElementTags]="techElementTags" [failureTags]="failureTags"
+        <app-validation-form [parentFlowTags]="parentFlowTags" [techElementTags]="techElementTags" [failureTags]="failureTags"
             [parentReport]="parentReport" [childrenReport]="childrenReport" />
     </div>
     <div class="column fourth-column">

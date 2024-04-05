@@ -16,6 +16,8 @@ import { MiniMapComponent } from '../../../components/mini-map/mini-map.componen
 import { MiniMapData } from '../../../services/map.service';
 import { ArchiveDialogComponent } from '../../../components/archive-dialog/archive-dialog.component';
 import { ArchiveDialogService } from '../../../observables/archive-dialog.service';
+import { Tag } from '../../../models/tag.model';
+import { ConfigService } from '../../../services/config.service';
 
 @Component({
   selector: 'app-management',
@@ -32,26 +34,35 @@ export class ManagementComponent {
   public failureTags: FailureTag[] = [];
   public reportFailureTags: FailureTag[] = [];
   public reportFailureSubTags: FailureSubTag[] = [];
-  // public miniMapData: MiniMapData = { location: new GeoPoint(0.0, 0.0), priority: PRIORITY.NotAssigned }
+
+  public parentFlowTags: Tag[] = [];
+  public childFlowTags: Tag[] = [];
+  public childFlowTags1: Tag[] = [];
+  public childFlowTags2: Tag[] = [];
+
   public miniMapData!: MiniMapData;
 
-  constructor(private applicationRef: ApplicationRef, private route: ActivatedRoute, private dictionaryService: DictionaryService, private reportsService: ReportsService, private archiveDialogService: ArchiveDialogService) {
+  constructor(private applicationRef: ApplicationRef, private route: ActivatedRoute, private dictionaryService: DictionaryService, private configService: ConfigService, private reportsService: ReportsService, private archiveDialogService: ArchiveDialogService) {
     effect(async () => {
       this.parentReport = this.reportsService.selectedReportSignal();
       this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
       this.childrenReport.map((report: ReportChild) => {
+        if (report.fields.tagFailure != undefined) report = this.reportsService.populateChildFlowTags1(report);
+        if (report.fields.subTagFailure != undefined) report = this.reportsService.populateChildFlowTags2(report);
         if (report.fields.tagFailure != undefined) report = this.reportsService.populateFailureTags(report);
         if (report.fields.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
       });
       this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
       // console.log(this.parentReport);
       // console.log(this.childrenReport);
-
+      this.discardDuplicatedReportChildFlowTags1(this.childrenReport);
+      this.discardDuplicatedReportChildFlowTags2(this.childrenReport);
       this.discardDuplicatedReportFailureTags(this.childrenReport);
       this.discardDuplicatedReportFailureSubTags(this.childrenReport);
     });
     effect(() => this.techElementTags = this.dictionaryService.techElementTagsSignal());
     effect(() => this.failureTags = this.dictionaryService.failureTagsSignal());
+    effect(() => this.parentFlowTags = this.configService.parentFlowTagsSignal());
   }
 
   async ngOnInit(): Promise<void> {
@@ -63,11 +74,11 @@ export class ManagementComponent {
 
   public archiveReportClick(): void {
     this.archiveDialogService.parentReport = this.parentReport;
-    
+
     const div = document.createElement('div');
     div.id = 'archive-dialog';
     document.body.append(div);
-    const componentRef = createComponent(ArchiveDialogComponent, {hostElement: div, environmentInjector: this.applicationRef.injector});
+    const componentRef = createComponent(ArchiveDialogComponent, { hostElement: div, environmentInjector: this.applicationRef.injector });
     this.applicationRef.attachView(componentRef.hostView);
     componentRef.changeDetectorRef.detectChanges();
   }
@@ -90,6 +101,28 @@ export class ManagementComponent {
       }
     });
     this.reportFailureTags = [...uniqueReportFailureTags];
+  }
+
+  private discardDuplicatedReportChildFlowTags1(childrenReport: ReportChild[]): void {
+    let tags: Tag[] = [];
+    childrenReport.forEach((report: ReportChild) => {
+      report.fields.childFlowTags1.forEach((tag: Tag) => {
+        if (!tags.some(existingTag => existingTag.id === tag.id)) tags.push(tag);
+      });
+    });
+    this.childFlowTags1 = [...tags];
+    this.childFlowTags = [...tags];
+  }
+
+  private discardDuplicatedReportChildFlowTags2(childrenReport: ReportChild[]): void {
+    let tags: Tag[] = [];
+    childrenReport.forEach((report: ReportChild) => {
+      report.fields.childFlowTags2.forEach((tag: Tag) => {
+        if (!tags.some(existingTag => existingTag.id === tag.id)) tags.push(tag);
+      });
+    });
+    this.childFlowTags2 = [...tags];
+    this.childFlowTags = [...tags];
   }
 
   private discardDuplicatedReportFailureSubTags(childrenReport: ReportChild[]): void {
