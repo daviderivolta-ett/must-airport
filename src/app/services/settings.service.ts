@@ -20,6 +20,7 @@ export class SettingsService {
       map(res => {
         let allSettings: AppSettings[] = res.apps as AppSettings[];
         let appSettings: AppSettings | undefined = allSettings.find((item: AppSettings) => item.name === app);
+        if (!appSettings) appSettings = allSettings[0];
         return appSettings;
       })
     )

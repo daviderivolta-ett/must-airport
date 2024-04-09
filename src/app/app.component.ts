@@ -25,13 +25,13 @@ import { User } from 'firebase/auth';
 export class AppComponent {
   public title: string = 'must';
 
-  constructor(private firebaseService: FirebaseService, private authService: AuthService, private userService: UserService, private reportsService: ReportsService, private codesService: CodesService, private settingsService: SettingsService, private themeService: ThemeService, private splashService: SplashService) {    
+  constructor(private firebaseService: FirebaseService, private authService: AuthService, private codesService: CodesService, private userService: UserService, private reportsService: ReportsService, private settingsService: SettingsService, private themeService: ThemeService, private splashService: SplashService) {    
     this.splashService.createSplash();
     this.codesService.getAllCodes();
     effect(async () => {
       if (this.authService.userSignal() === null) return;
       if (this.authService.user === null) return;
-      const loggedUser = await this.createLoggedUser(this.authService.user);
+      const loggedUser = await this.createLoggedUser(this.authService.user);    
       this.authService.loggedUserSignal.set(loggedUser);
     });
     

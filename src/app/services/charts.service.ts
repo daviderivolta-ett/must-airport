@@ -57,7 +57,7 @@ export class ChartsService {
 
   public createInterventionsPerTimeSerie(reports: ReportParent[]): Highcharts.SeriesLineOptions {
     const operations: Operation[] = reports.flatMap(report => report.operations);
-    const interventions: Operation[] = operations.filter(operation => operation.type === OPERATIONTYPE.Intervention);
+    const interventions: Operation[] = operations.filter(operation => operation.type === OPERATIONTYPE.Maintenance);
     const interventionFrequency = this.calculateDateFrequency(interventions);
     let interventionsSerieData: [number, number][] = Object.entries(interventionFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
     interventionsSerieData.sort((a, b) => a[0] - b[0]);

@@ -249,11 +249,11 @@ export class ReportsService {
     let parentReport: ReportParentDb = await this.getParentReportById(id);
     let operationDb: any = this.reParseParentReportOperation(operation);
     console.log(operationDb);
+    console.log(parentReport);
     const ref = doc(this.db, 'reportParents', id);
     await updateDoc(ref, {
       operations: arrayRemove(operationDb)
     })
-    console.log(parentReport);
   }
 
   public parseParentReport(id: string, report: ReportParentDb): ReportParent {
@@ -310,8 +310,8 @@ export class ReportsService {
     if (operation.operatorName !== undefined) o.operatorName = operation.operatorName;
     if (operation.type !== undefined) {
       switch (operation.type) {
-        case 'intervention':
-          o.type = OPERATIONTYPE.Intervention;
+        case 'maintenance':
+          o.type = OPERATIONTYPE.Maintenance;
           break;
         case 'inspection':
           o.type = OPERATIONTYPE.Inspection;
@@ -322,6 +322,7 @@ export class ReportsService {
       }
     }
     if (operation.id !== undefined) o.id = operation.id;
+    if (operation.operationLink !== undefined) o.operationLink = operation.operationLink;
 
     return o;
   }
@@ -331,7 +332,8 @@ export class ReportsService {
       date: Timestamp.fromDate(operation.date),
       operatorName: operation.operatorName,
       type: operation.type,
-      id: operation.id
+      id: operation.id,
+      operationLink: operation.operationLink
     }
 
     return o;
