@@ -20,7 +20,7 @@
         <button type="button" class="delete-button" (click)="deleteOperation()">
             <span class="material-symbols-outlined icon delete-icon">delete</span>
         </button>
-        <button type="button" class="copy-button" (click)="copyToClipboard()" [appTooltip]="'https://s4must.it/?linkId=' + operation.operationLink">
+        <button type="button" class="copy-button" (click)="copyToClipboard()" [appTooltip]="'https://s4must.it/appLink?id=' + operation.operationLink">
             <span class="material-symbols-outlined icon copy-icon">content_copy</span>
         </button>
     </div>
