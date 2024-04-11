@@ -172,7 +172,7 @@ export class ReportsService {
     await setDoc(ref, data, { merge: true });
   }
 
-  public selectReport(id: string) {
+  public selectReport(id: string): void {
     this.selectedReportId = id;
     if (this.reports.length > 0) {
       const selectedReport = this.reports.find(report => report.id === this.selectedReportId);
@@ -542,5 +542,15 @@ export class ReportsService {
     parentReport.priority = formData.priorityForm['priority'];
 
     return parentReport;
+  }
+
+  public getAllOperations(): Operation[] {
+    const operations: Operation[] = []
+    this.reports.map((report: ReportParent) => {
+      report.operations.forEach((operation: Operation) => {
+        operations.push(operation);
+      });
+    })
+    return operations;
   }
 }

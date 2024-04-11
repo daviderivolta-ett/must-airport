@@ -32,7 +32,7 @@ export class Operation {
     type: OPERATIONTYPE;
     id: string;
     operationLink: string;
-    
+
     constructor(date: Date, operatorName: string, type: OPERATIONTYPE, id: string, operationLink: string) {
         this.date = date;
         this.operatorName = operatorName;
@@ -43,6 +43,24 @@ export class Operation {
 
     static createEmpty(): Operation {
         return new Operation(new Date(Date.now()), '', OPERATIONTYPE.Inspection, '', '');
+    }
+}
+
+export class OperationLinkDb {
+    childFlowId: string;
+    reportParentId: string;
+    type: string;
+    verticalId: string;
+
+    constructor(childFlowId: string, reportParentId: string, type: string, verticalId: string) {
+        this.childFlowId = childFlowId;
+        this.reportParentId = reportParentId;
+        this.type = type;
+        this.verticalId = verticalId;
+    }
+
+    static createEmpty(): OperationLinkDb {
+        return new OperationLinkDb('', '', '', '');
     }
 }
 

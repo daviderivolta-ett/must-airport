@@ -1,0 +1,7 @@
+<p>calendar-page works!</p>
+<app-calendar-filters />
+@if (operations.length !== 0) {
+    @for (operation of operations; track operation.id) {
+        <app-operation-card [operation]="operation" />
+    }
+}

@@ -10,6 +10,7 @@ import { UseCodeComponent } from './pages/use-code/use-code.component';
 import { adminGuard } from './guards/admin.guard';
 import { userGuard } from './guards/user.guard';
 import { ArchiveComponent } from './pages/archive/page/archive.component';
+import { CalendarPageComponent } from './pages/calendar/page/calendar-page.component';
 
 export const routes: Routes = [
     {
@@ -32,6 +33,12 @@ export const routes: Routes = [
         path: 'gestione/:id',
         title: 'MUST - Gestione',
         component: ManagementComponent,
+        canActivate: [adminGuard]
+    },
+    {
+        path: 'calendario-interventi',
+        title: 'MUST - Calendario interventi',
+        component: CalendarPageComponent,
         canActivate: [adminGuard]
     },
     {

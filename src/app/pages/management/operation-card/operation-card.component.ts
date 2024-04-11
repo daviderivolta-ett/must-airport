@@ -1,8 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { Operation } from '../../../models/operation.model';
+import { Operation, OperationLinkDb } from '../../../models/operation.model';
 import { DatePipe, TitleCasePipe } from '@angular/common';
 import { ReportsService } from '../../../services/reports.service';
-import { ReportParent } from '../../../models/report-parent.model';
 import { SnackbarService } from '../../../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 import { TooltipDirective } from '../../../directives/tooltip.directive';
@@ -17,7 +16,6 @@ import { OperationsService } from '../../../services/operations.service';
 })
 export class OperationCardComponent {
   @Input() public operation: Operation = Operation.createEmpty();
-  @Input() public parentReport: ReportParent = ReportParent.createEmpty();
 
   constructor(private reportsService: ReportsService, private operationsService: OperationsService, private snackbarService: SnackbarService) { }
 
@@ -26,6 +24,8 @@ export class OperationCardComponent {
   }
 
   public async deleteOperation(): Promise<void> {
+    const operation: OperationLinkDb = await this.operationsService.getOperationById(this.operation.operationLink);
+
     let msg: string;
     try {
       switch (this.operation.type) {
@@ -40,7 +40,7 @@ export class OperationCardComponent {
           break;
       }
       
-      await this.reportsService.deleteOperationByReportId(this.parentReport.id, this.operation);
+      await this.reportsService.deleteOperationByReportId(operation.reportParentId, this.operation);
       await this.operationsService.deleteOperationLinkById(this.operation.operationLink);
       this.snackbarService.createSnackbar(msg, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
 

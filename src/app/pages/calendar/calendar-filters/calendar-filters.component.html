@@ -1,0 +1,17 @@
+<form [formGroup]="filterForm">
+    <div class="select-single">
+        <label for="operation-type">Operazione</label>
+        <select id="operation-type" formControlName="type">
+            <option value="all">Tutti</option>
+            <option value="inspection">Ispezione</option>
+            <option value="maintenance">Manutenzione</option>
+        </select>
+    </div>
+    <div class="date-selection">
+        <h3 class="date-selection-title">Range date</h3>
+        <div class="date-inputs">
+            <input type="date" min="2018-01-01" formControlName="initialDate">
+            <input type="date" min="2018-01-01" formControlName="endingDate">
+        </div>
+    </div>
+</form>

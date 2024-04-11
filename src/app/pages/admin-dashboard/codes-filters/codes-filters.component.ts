@@ -27,7 +27,7 @@ export class CodesFiltersComponent {
     this.filterForm.valueChanges.subscribe(changes => {
       const filtersFormData: CodesFiltersFormData = this.filterForm.value as CodesFiltersFormData;
       const parsedFormData = this.codesService.parseCodesFiltersFormData(filtersFormData);
-      this.codesService.filterCodes(parsedFormData);         
+      this.codesService.filterCodes(parsedFormData);
     });
   }
 
