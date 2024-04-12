@@ -1,0 +1,35 @@
+@if (operation && report) {
+<div class="operation">
+    @if (minimapData) {
+        <div class="mini-map">
+            <app-mini-map [miniMapData]="minimapData" />
+        </div>
+    }
+
+    <div class="data">
+        <div class="details">
+            <p class="type">
+                @switch (operation.type) {
+                    @case ("inspection") {
+                        Ispezione
+                    }
+                    @default {
+                        Intervento
+                    }
+                }        
+            </p>
+            <p class="info">
+                <span class="operator">{{operation.operatorName}}</span>
+                -
+                <span class="date">{{operation.date | date: 'dd/MM/yyyy'}}</span>
+            </p>
+        </div>
+
+        <div class="call-to-action">
+            <a [routerLink]="'/gestione/' + report.id" class="link-button">
+                <span class="material-symbols-outlined icon link-icon">navigate_next</span>
+            </a>
+        </div>
+    </div>
+</div>
+}

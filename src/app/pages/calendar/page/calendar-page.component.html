@@ -1,7 +1,17 @@
-<p>calendar-page works!</p>
-<app-calendar-filters />
-@if (operations.length !== 0) {
-    @for (operation of operations; track operation.id) {
-        <app-operation-card [operation]="operation" />
+<div class="page">
+    <h1>Calendario interventi</h1>
+    <app-calendar-filters />
+    <div class="list">
+    @for (keyValue of aggregatedOperations | keyvalue; track keyValue.key) {
+        <h2>{{keyValue.key | date: 'EEEE, MMMM d, y':'':'it-IT'}}</h2>
+        <div class="day">
+            @for (operation of keyValue.value; track operation.id) {
+                <app-operation-card-calendar [operation]="operation"/>
+            }
+        </div>
     }
-}
+    @empty {
+        <p class="not-found-msg">Non è stato trovato alcun codice</p>
+    }
+    </div>
+</div>

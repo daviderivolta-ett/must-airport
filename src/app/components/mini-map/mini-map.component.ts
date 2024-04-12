@@ -14,6 +14,12 @@ import { COLORMODE } from '../../models/color-mode.model';
   styleUrl: './mini-map.component.scss'
 })
 export class MiniMapComponent {
+  private map!: Leaflet.Map;
+  private marker: Leaflet.CircleMarker | null = null;
+  public mapId: string = this.generateMiniMapUniqueId();
+
+  private _miniMapData: MiniMapData = { location: new GeoPoint(0.0, 0.0), priority: PRIORITY.NotAssigned };
+
   @Input() public set miniMapData(value: MiniMapData) {
     if (value) {
       this._miniMapData = value;
@@ -22,15 +28,13 @@ export class MiniMapComponent {
       this.createMarker(new Leaflet.LatLng(this._miniMapData.location.latitude, this._miniMapData.location.longitude), this._miniMapData.priority);
     }
   }
-  private marker: Leaflet.CircleMarker | null = null;
-  private map!: Leaflet.Map;
-  public mapId: string = this.generateMiniMapUniqueId();
-  private _miniMapData: MiniMapData = { location: new GeoPoint(0.0, 0.0), priority: PRIORITY.NotAssigned };
+
   private darkTile: Leaflet.Layer = Leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: 'abcd',
     maxZoom: 20
   });
+
   private lightTile: Leaflet.Layer = Leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: 'abcd',
@@ -50,14 +54,14 @@ export class MiniMapComponent {
     });
   }
 
-  public ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {   
     this.initMap();
     this.darkTile.addTo(this.map);
     this.createMarker(new Leaflet.LatLng(this._miniMapData.location.latitude, this._miniMapData.location.longitude), this._miniMapData.priority);
   }
 
   private initMap(): void {
-    this.map = Leaflet.map('mini-map', {
+    this.map = Leaflet.map(this.mapId, {
       zoomControl: false,
       attributionControl: false,
       maxZoom: 13,

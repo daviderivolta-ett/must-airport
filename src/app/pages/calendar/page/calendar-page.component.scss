@@ -1,0 +1,30 @@
+.page {
+    max-width: 992px;
+    margin: 0 auto;
+    padding: 40px 4%;
+}
+
+.list {
+    margin: 0 0 40px 0;
+}
+
+h1 {
+    text-align: center;
+    font-size: 1.4rem;
+    margin: 0 0 24px 0;
+}
+
+.day {
+    margin: 0 0 40px 0;
+}
+
+.not-found-msg {
+    width: 100%;
+    margin: 0;
+    text-align: center;
+}
+
+app-operation-card-calendar {
+    display: block;
+    margin: 0 0 16px 0;
+}

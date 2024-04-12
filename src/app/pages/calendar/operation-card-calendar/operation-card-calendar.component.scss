@@ -1,0 +1,61 @@
+p {
+    margin: 0;
+}
+
+.operation {
+    padding: 16px;
+    background-color: var(--bg-default);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+
+.mini-map {
+    width: 288px;
+}
+
+.data {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.type {
+    font-weight: 600;
+    margin: 0 0 2px 0;
+}
+
+.info {
+    font-size: .9rem;
+}
+
+.call-to-action {
+    display: flex;
+    gap: 8px;
+}
+
+a.link-button {
+    text-decoration: none;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: var(--bg-subtle);
+    color: var(--f-default);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
+
+    &:hover {
+        border-color: var(--border-emphasis);
+    }
+}
+
+.icon {
+    font-size: 1.1rem;
+}
