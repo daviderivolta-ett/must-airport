@@ -248,8 +248,8 @@ export class ReportsService {
   public async deleteOperationByReportId(id: string, operation: Operation): Promise<void> {
     let parentReport: ReportParentDb = await this.getParentReportById(id);
     let operationDb: any = this.reParseParentReportOperation(operation);
-    console.log(operationDb);
-    console.log(parentReport);
+    // console.log(operationDb);
+    // console.log(parentReport);
     const ref = doc(this.db, 'reportParents', id);
     await updateDoc(ref, {
       operations: arrayRemove(operationDb)
