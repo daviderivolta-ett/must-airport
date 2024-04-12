@@ -18,11 +18,12 @@ import { ArchiveDialogComponent } from '../../../components/archive-dialog/archi
 import { ArchiveDialogService } from '../../../observables/archive-dialog.service';
 import { Tag } from '../../../models/tag.model';
 import { ConfigService } from '../../../services/config.service';
+import { OperationCardManagementComponent } from '../operation-card-management/operation-card-management.component';
 
 @Component({
   selector: 'app-management',
   standalone: true,
-  imports: [MiniMapComponent, ChildReportCardComponent, ValidationFormComponent, InspectionFormComponent, OperationCardComponent, DatePipe, NgClass, TitleCasePipe],
+  imports: [MiniMapComponent, ChildReportCardComponent, ValidationFormComponent, InspectionFormComponent, OperationCardComponent, OperationCardManagementComponent, DatePipe, NgClass, TitleCasePipe],
   templateUrl: './management.component.html',
   styleUrl: './management.component.scss'
 })

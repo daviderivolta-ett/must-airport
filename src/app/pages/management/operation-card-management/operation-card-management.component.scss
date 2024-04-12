@@ -3,7 +3,6 @@ p {
 }
 
 .operation {
-    position: relative;
     padding: 16px;
     background-color: var(--bg-default);
     border: 1px solid var(--border-default);
@@ -11,18 +10,6 @@ p {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 24px;
-}
-
-.mini-map {
-    width: 288px;
-}
-
-.data {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-grow: 1;
 }
 
 .type {
@@ -39,16 +26,28 @@ p {
     gap: 8px;
 }
 
-a.link-button {
-    text-decoration: none;
+button {
+    cursor: pointer;
     width: 32px;
     height: 32px;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.delete-button {
+    background-color: transparent;
+    border: none;
+    border-radius: 100px;
+
+    &:hover {
+        background-color: var(--bg-danger-dull);
+    }
+}
+
+.copy-button {
     position: relative;
     background-color: var(--bg-subtle);
-    color: var(--f-default);
     border: 1px solid var(--border-default);
     border-radius: 4px;
 
@@ -61,14 +60,6 @@ a.link-button {
     font-size: 1.1rem;
 }
 
-@media screen and (max-width: 576px) {
-    .mini-map {
-        width: 144px;
-    }
-
-    .call-to-action {
-        position: absolute;
-        bottom: 16px;
-        right: 16px;
-    }
+.delete-icon {
+    color: var(--f-danger);
 }

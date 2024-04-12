@@ -116,9 +116,14 @@
         <p>Nessun intervento creato</p>
         }
         @else {
-        <div class="operations">
+        <!-- <div class="operations">
             @for (operation of parentReport.operations; track $index) {
             <app-operation-card [operation]="operation" />
+            }
+        </div> -->
+        <div class="operations">
+            @for (operation of parentReport.operations; track $index) {
+            <app-operation-card-management [operation]="operation" />
             }
         </div>
         }

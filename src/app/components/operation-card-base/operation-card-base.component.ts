@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { Operation } from '../../models/operation.model';
 import { ReportsService } from '../../services/reports.service';
 import { ReportParent } from '../../models/report-parent.model';
-import { MiniMapData } from '../../services/map.service';
 
 @Component({
   selector: 'app-operation-card-base',
@@ -38,7 +37,7 @@ export class OperationCardBaseComponent {
     return this._report;
   }
 
-  constructor(private reportsService: ReportsService) { }
+  constructor(protected reportsService: ReportsService) { }
 
   private getParentReportByOperationId(id: string): ReportParent | null {
     let report: ReportParent | null = null;

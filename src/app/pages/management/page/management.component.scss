@@ -212,6 +212,15 @@ app-operation-card:last-child {
     margin: 0;
 }
 
+app-operation-card-management {
+    display: block;
+    margin: 0 0 16px 0;
+}
+
+app-operation-card-management:last-child {
+    margin: 0;
+}
+
 @media screen and (max-width: 1024px) {
     .page {
         height: auto;
