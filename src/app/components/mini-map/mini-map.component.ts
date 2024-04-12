@@ -26,6 +26,7 @@ export class MiniMapComponent {
     }
     if (this.map) {
       this.createMarker(new Leaflet.LatLng(this._miniMapData.location.latitude, this._miniMapData.location.longitude), this._miniMapData.priority);
+      this.map.setView([this._miniMapData.location.latitude, this._miniMapData.location.longitude], 13);
     }
   }
 
@@ -54,7 +55,7 @@ export class MiniMapComponent {
     });
   }
 
-  public ngAfterViewInit(): void {   
+  public ngAfterViewInit(): void {
     this.initMap();
     this.darkTile.addTo(this.map);
     this.createMarker(new Leaflet.LatLng(this._miniMapData.location.latitude, this._miniMapData.location.longitude), this._miniMapData.priority);
@@ -67,7 +68,9 @@ export class MiniMapComponent {
       maxZoom: 13,
       minZoom: 13,
       dragging: false
-    }).setView([this._miniMapData.location.latitude, this._miniMapData.location.longitude], 13);
+    })
+    
+    this.map.setView([this._miniMapData.location.latitude, this._miniMapData.location.longitude], 13);
 
     // Leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
     //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
