@@ -2,8 +2,8 @@
     <div class="archive-table-row-cell type-cell">
         <div class="icon-wrapper">
             <span class="material-symbols-outlined status-icon">
-                @if (parentReport.closingChildId) {inventory_2}
-                @else {check_circle}
+                @if (parentReport.closingChildId) {check_circle}
+                @else {inventory_2}
             </span>
         </div>
     </div>
@@ -41,7 +41,7 @@
         }
     </div>
     <div class="archive-table-row-cell actions-cell">
-        <button type="button" class="detail-button">
+        <button type="button" class="detail-button" (click)="navigateTo(parentReport.id)">
             <span class="material-symbols-outlined detail-icon">navigate_next</span>
         </button>
     </div>

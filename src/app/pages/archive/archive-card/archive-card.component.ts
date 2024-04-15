@@ -6,6 +6,7 @@ import { ReportParentClosingDataDb, ReportsService } from '../../../services/rep
 import { FailureSubTag } from '../../../models/failure-subtag.model';
 import { FailureTag } from '../../../models/failure-tag.model';
 import { HoverTooltipDirective } from '../../../directives/hover-tooltip.directive';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-archive-card',
@@ -32,7 +33,7 @@ export class ArchiveCardComponent {
   public failureTags: FailureTag[] = [];
   public failureSubTags: FailureSubTag[] = [];
 
-  constructor(private reportsService: ReportsService) { }
+  constructor(private reportsService: ReportsService, private router: Router) { }
 
   public async restoreReport(): Promise<void> {
     let data: ReportParentClosingDataDb = {
@@ -45,6 +46,10 @@ export class ArchiveCardComponent {
 
   private async loadChildrenReports(childrenIds: string[]): Promise<void> {
     this.childrenReport = await this.reportsService.populateChildrenReports(childrenIds);
+  }
+
+  public navigateTo(id: string): void {
+    this.router.navigate(['/archivio', id]);
   }
 
   private discardDuplicatedReportFailureTags(childrenReport: ReportChild[]): void {

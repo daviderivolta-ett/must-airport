@@ -68,10 +68,11 @@ export interface ReportChildDb {
 }
 
 export interface ReportChildFieldsDb {
-  comment: string,
-  foto_dettaglio: string[],
+  comment: string;
+  foto_dettaglio: string[];
   sub_tag_failure: string[];
   tag_failure: string[];
+  intervention_photo: string[];
 }
 
 export interface ValidationFormData {
@@ -479,6 +480,7 @@ export class ReportsService {
     let f = ReportChildFields.createEmpty();
 
     if (fields.foto_dettaglio) f.detailShots = fields.foto_dettaglio;
+    if (fields.intervention_photo) f.detailShots = fields.intervention_photo;
     fields.comment && fields.comment.length !== 0 ? f.description = fields.comment : f.description = '-';
     fields.tag_failure ? f.tagFailure = fields.tag_failure : []
     fields.sub_tag_failure ? f.subTagFailure = fields.sub_tag_failure : []
