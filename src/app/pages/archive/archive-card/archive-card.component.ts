@@ -36,8 +36,8 @@ export class ArchiveCardComponent {
 
   public async restoreReport(): Promise<void> {
     let data: ReportParentClosingDataDb = {
-      closed: false,
-      closingTime: null
+      archived: false,
+      archivingTime: null
     }  
 
     await this.reportsService.setReportById(this.parentReport.id, data);

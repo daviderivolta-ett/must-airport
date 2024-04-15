@@ -30,6 +30,8 @@ export class ReportParent {
     id: string;
     operations: Operation[];
     validationDate?: Date;
+    isArchived?: boolean;
+    archivingTime?: Date | null;
 
     constructor(
         childFlowIds: string[],
@@ -52,7 +54,9 @@ export class ReportParent {
         verticalId: string,
         id: string,
         operations: Operation[],
-        validationDate: Timestamp | undefined
+        validationDate: Timestamp | undefined,
+        isArchived?: boolean,
+        archivingTime?: Timestamp | null
     ) {
         this.childFlowIds = childFlowIds;
         this.childrenIds = childrenIds;
@@ -75,6 +79,8 @@ export class ReportParent {
         this.id = id;
         this.operations = operations;
         if (validationDate) this.validationDate = validationDate.toDate();
+        if (isArchived) this.isArchived = isArchived;
+        if (archivingTime) this.archivingTime = archivingTime.toDate();
     }
 
     static createEmpty(): ReportParent {

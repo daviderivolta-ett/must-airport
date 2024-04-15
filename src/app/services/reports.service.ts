@@ -24,11 +24,11 @@ export interface ReportParentDb {
   childrenIds: string[];
   closed: boolean;
   closingChildId: string | null;
-  closingTime: Timestamp | null | null;
+  closingTime: Timestamp | null;
   coverImgUrls: string[];
   creationTime: Timestamp;
   descriptionSelections: string[];
-  descriptionText: string,
+  descriptionText: string;
   fields: ReportParentFieldsDb;
   language: string;
   lastChildTime: Timestamp;
@@ -36,10 +36,12 @@ export interface ReportParentDb {
   parentFlowId: string;
   priority?: string;
   userId: string;
-  validated: boolean
-  validationDate: Timestamp,
-  verticalId: string,
-  operations: OperationDb[],
+  validated: boolean;
+  validationDate: Timestamp;
+  verticalId: string;
+  operations: OperationDb[];
+  archived?: boolean;
+  archivingTime?: Timestamp | null;
 }
 
 export interface ReportParentFieldsDb {
@@ -50,8 +52,8 @@ export interface ReportParentFieldsDb {
 }
 
 export interface ReportParentClosingDataDb {
-  closed: boolean,
-  closingTime: Timestamp | null
+  archived: boolean,
+  archivingTime: Timestamp | null
 }
 
 export interface ReportChildDb {
@@ -152,10 +154,10 @@ export class ReportsService {
         });
 
         reports = reports.sort((a, b) => b.lastChildTime.getTime() - a.lastChildTime.getTime());
-        let allReports = reports.filter(report => report.isClosed === false);
+        let allReports = reports.filter(report => report.isArchived === false || report.isArchived === undefined);
         this.reportsSignal.set(allReports);
 
-        let archivedReports = reports.filter(report => report.isClosed === true);
+        let archivedReports = reports.filter(report => report.isArchived === true);
         this.archivedReportsSignal.set(archivedReports);
 
         if (this.selectedReportId) {
@@ -288,6 +290,8 @@ export class ReportsService {
     }
 
     if (report.validationDate) r.validationDate = report.validationDate.toDate();
+    if (report.archived) r.isArchived = report.archived;
+    if (report.archivingTime) r.archivingTime = report.archivingTime.toDate();
 
     return r;
   }

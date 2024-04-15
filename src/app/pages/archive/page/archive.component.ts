@@ -16,7 +16,8 @@ export class ArchiveComponent {
   constructor(private reportsService: ReportsService) {
     effect(() => {
       if (this.reportsService.archivedReportsSignal() === null) return;
-      this.archivedReports = this.reportsService.archivedReportsSignal();    
+      this.archivedReports = this.reportsService.archivedReportsSignal();
+      console.log(this.archivedReports);         
     })
   }
 }

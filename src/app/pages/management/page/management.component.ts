@@ -54,7 +54,7 @@ export class ManagementComponent {
         if (report.fields.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
       });
       this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
-      // console.log(this.parentReport);
+      console.log(this.parentReport);
       // console.log(this.childrenReport);
       this.discardDuplicatedReportChildFlowTags1(this.childrenReport);
       this.discardDuplicatedReportChildFlowTags2(this.childrenReport);

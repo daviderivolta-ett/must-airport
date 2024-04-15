@@ -8,8 +8,8 @@ import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../models/snackbar.model';
 import { Router } from '@angular/router';
 
 interface closingReportData {
-  closed: boolean,
-  closingTime: Timestamp
+  archived: boolean,
+  archivingTime: Timestamp
 }
 
 @Component({
@@ -29,8 +29,8 @@ export class ArchiveDialogComponent {
 
   public async confirm(): Promise<void> {
     const reportDb: closingReportData = {
-      closed: true,
-      closingTime: Timestamp.now()
+      archived: true,
+      archivingTime: Timestamp.now()
     }
 
     try {
