@@ -1,10 +1,10 @@
 <div class="archive">
     <h1>Archivio segnalazioni</h1>
     <div class="archive-table">
-        @if (archivedReports.length !== 0) {
+        @if (reports.length !== 0) {
         <div class="archive-table-head">
             <div class="archive-table-head-cell creation-time-cell"><span>Data creazione</span></div>
-            <div class="archive-table-head-cell closing-time-cell"><span>Data chiusura</span></div>
+            <!-- <div class="archive-table-head-cell closing-time-cell"><span>Data chiusura</span></div> -->
             <div class="archive-table-head-cell tech-element-tags-cell"><span>Oggetto</span></div>
             <div class="archive-table-head-cell tech-element-subtags-cell"><span>Elemento tecnico</span></div>
             <div class="archive-table-head-cell failure-tags-cell"><span>Segnale di guasto</span></div>
@@ -12,8 +12,8 @@
             <div class="archive-table-head-cell actions-cell"><span>Azioni</span></div>
         </div>
         <div class="archive-table-content">
-            @for (report of archivedReports; track $index) {
-            <app-archive-card [_parentReport]="report" />
+            @for (report of reports; track $index) {
+            <app-archive-card [parentReport]="report" />
             }            
         </div>
         }

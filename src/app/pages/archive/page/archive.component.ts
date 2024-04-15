@@ -1,4 +1,4 @@
-import { Component, effect } from '@angular/core';
+import { Component, Signal, computed, effect } from '@angular/core';
 import { ReportParent } from '../../../models/report-parent.model';
 import { ReportsService } from '../../../services/reports.service';
 import { ArchiveCardComponent } from '../archive-card/archive-card.component';
@@ -11,13 +11,19 @@ import { ArchiveCardComponent } from '../archive-card/archive-card.component';
   styleUrl: './archive.component.scss'
 })
 export class ArchiveComponent {
+  public reports: ReportParent[] = [];
+  public reportsSignal: Signal<ReportParent[]> = computed(() => {
+    const archivedReports = this.reportsService.archivedReportsSignal();
+    const closedReports = this.reportsService.closedReportSignal();
+    return [...archivedReports, ...closedReports];
+  });
   public archivedReports: ReportParent[] = [];
+  public closedReports: ReportParent[] = [];
 
   constructor(private reportsService: ReportsService) {
     effect(() => {
-      if (this.reportsService.archivedReportsSignal() === null) return;
-      this.archivedReports = this.reportsService.archivedReportsSignal();
-      console.log(this.archivedReports);         
-    })
+      const reports: ReportParent[] = this.reportsSignal();
+      this.reports = reports.sort((a, b) => a.creationTime.getTime() - b.creationTime.getTime()).reverse(); 
+    });
   }
 }

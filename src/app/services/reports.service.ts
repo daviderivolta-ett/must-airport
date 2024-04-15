@@ -117,6 +117,8 @@ export class ReportsService {
   public selectedReportId: string = '';
   public archivedReports: ReportParent[] = [];
   public archivedReportsSignal: WritableSignal<ReportParent[]> = signal([]);
+  public closedReports: ReportParent[] = [];
+  public closedReportSignal: WritableSignal<ReportParent[]> = signal([]);
 
   constructor(private db: Firestore, private storage: Storage, private dictionaryService: DictionaryService, private configService: ConfigService) {
     effect(() => this.reports = this.reportsSignal());
@@ -154,11 +156,14 @@ export class ReportsService {
         });
 
         reports = reports.sort((a, b) => b.lastChildTime.getTime() - a.lastChildTime.getTime());
-        let allReports = reports.filter(report => report.isArchived === false || report.isArchived === undefined);
+        let allReports: ReportParent[] = reports.filter(report => report.isArchived === false || report.isArchived === undefined);
         this.reportsSignal.set(allReports);
 
-        let archivedReports = reports.filter(report => report.isArchived === true);
+        let archivedReports: ReportParent[] = reports.filter(report => report.isArchived === true);
         this.archivedReportsSignal.set(archivedReports);
+
+        let closedReports: ReportParent[] = reports.filter(report => report.closingChildId);
+        this.closedReportSignal.set(closedReports);
 
         if (this.selectedReportId) {
           const selectedReport = allReports.find(report => report.id === this.selectedReportId);
