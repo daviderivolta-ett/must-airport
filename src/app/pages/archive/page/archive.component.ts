@@ -23,7 +23,8 @@ export class ArchiveComponent {
   constructor(private reportsService: ReportsService) {
     effect(() => {
       const reports: ReportParent[] = this.reportsSignal();
-      this.reports = reports.sort((a, b) => a.creationTime.getTime() - b.creationTime.getTime()).reverse(); 
+      this.reports = reports.sort((a, b) => a.creationTime.getTime() - b.creationTime.getTime()).reverse();
+      console.log(this.reports);      
     });
   }
 }

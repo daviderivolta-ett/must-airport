@@ -1,6 +1,13 @@
 <div class="archive-table-row">
+    <div class="archive-table-row-cell type-cell">
+        <div class="icon-wrapper">
+            <span class="material-symbols-outlined status-icon">
+                @if (parentReport.closingChildId) {inventory_2}
+                @else {check_circle}
+            </span>
+        </div>
+    </div>
     <div class="archive-table-row-cell creation-time-cell"><span>{{parentReport.creationTime | date: 'dd/MM/yyyy'}}</span></div>
-    <!-- <div class="archive-table-row-cell closing-time-cell"><span>{{parentReport.archivingTime | date: 'dd/MM/yyyy'}}</span></div> -->
     <div class="archive-table-row-cell tech-element-tags-cell" appHoverTooltip [_data]="parentReport.fields.tagTechElement">
         @for (tag of parentReport.fields.tagTechElement; track $index; let last = $last) {
             <span [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</span>
@@ -34,8 +41,8 @@
         }
     </div>
     <div class="archive-table-row-cell actions-cell">
-        <button type="button" class="restore-button" (click)="restoreReport()">
-            <span class="material-symbols-outlined restore-icon">undo</span>
+        <button type="button" class="detail-button">
+            <span class="material-symbols-outlined detail-icon">navigate_next</span>
         </button>
     </div>
 </div>

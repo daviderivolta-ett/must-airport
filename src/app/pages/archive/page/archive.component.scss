@@ -34,11 +34,12 @@ h1 {
 .tech-element-subtags-cell,
 .failure-tags-cell,
 .failure-subtags-cell {
-    width: 20%;
+    width: 19%;
 }
 
-.actions-cell {
-    width: 8%;
+.actions-cell,
+.type-cell {
+    width: 6%;
 }
 
 @media screen and (max-width: 992px) {

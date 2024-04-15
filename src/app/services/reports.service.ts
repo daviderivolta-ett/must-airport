@@ -156,7 +156,7 @@ export class ReportsService {
         });
 
         reports = reports.sort((a, b) => b.lastChildTime.getTime() - a.lastChildTime.getTime());
-        let allReports: ReportParent[] = reports.filter(report => report.isArchived === false || report.isArchived === undefined);
+        let allReports: ReportParent[] = reports.filter(report => (report.isArchived === false || report.isArchived === undefined) && report.closingChildId === null);
         this.reportsSignal.set(allReports);
 
         let archivedReports: ReportParent[] = reports.filter(report => report.isArchived === true);
