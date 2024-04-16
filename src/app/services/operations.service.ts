@@ -88,10 +88,11 @@ export class OperationsService {
 
   public filterOperations(filters: ParsedOperationsFiltersFormData): void {
     let filteredOperations: Operation[] = this.operations.slice();
-
+      
     for (const key in filters) {
-      if (key === 'type') {      
-        if (filters[key] !== 'all') filteredOperations = filteredOperations.filter(operation => operation.type === filters[key]);
+      if (key === 'type') { 
+        if (filters[key] === 'inspection') filteredOperations = filteredOperations.filter(operation => operation.type === OPERATIONTYPE.InspectionHorizontal || operation.type === OPERATIONTYPE.InspectionVertical);
+        if (filters[key] === 'maintenance') filteredOperations = filteredOperations.filter(operation => operation.type === OPERATIONTYPE.Maintenance);
       }
 
       if (key === 'initialDate' && filters[key] !== null) {      

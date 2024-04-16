@@ -59,8 +59,8 @@ export class ManagementComponent {
         if (report.fields.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
       });
       this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
-      console.log(this.parentReport);
-      console.log(this.childrenReport);
+      // console.log(this.parentReport);
+      // console.log(this.childrenReport);
       this.discardDuplicatedReportChildFlowTags1(this.childrenReport);
       this.discardDuplicatedReportChildFlowTags2(this.childrenReport);
       this.discardDuplicatedReportFailureTags(this.childrenReport);
@@ -70,7 +70,7 @@ export class ManagementComponent {
     });
     effect(() => this.techElementTags = this.dictionaryService.techElementTagsSignal());
     effect(() => this.failureTags = this.dictionaryService.failureTagsSignal());
-    // effect(() => this.parentFlowTags = this.configService.parentFlowTagsSignal());
+    effect(() => this.parentFlowTags = this.configService.parentFlowTagsSignal());
   }
 
   async ngOnInit(): Promise<void> {

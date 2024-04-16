@@ -93,7 +93,7 @@ export class ValidationFormComponent {
     this.techElementTagsForm.valueChanges.subscribe(changes => this.updateTechElementSubTagsForm(changes));
   }
 
-  private initializeParentFlowTags1Form(): void {
+  private initializeParentFlowTags1Form(): void {    
     this.techElementTagsForm = this.fb.group({});
     for (const tag of this._parentFlowTags) {
       this.techElementTagsForm.addControl(tag.id, new FormControl(this._parentReport.fields.parentFlowTags1.some((t: Tag) => t.id === tag.id)));
