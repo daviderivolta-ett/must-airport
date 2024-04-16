@@ -5,6 +5,7 @@ import { DatePipe, NgClass } from '@angular/common';
 import { ChildReportCardComponent } from '../../../components/child-report-card/child-report-card.component';
 import { MiniMapComponent } from '../../../components/mini-map/mini-map.component';
 import { Router } from '@angular/router';
+import { ConfigService } from '../../../services/config.service';
 
 
 @Component({
@@ -15,8 +16,8 @@ import { Router } from '@angular/router';
   styleUrl: './parent-report-detail-archived.component.scss'
 })
 export class ParentReportDetailArchivedComponent extends ParentReportDetailComponent {
-  constructor(reportsService: ReportsService, private router: Router){
-    super(reportsService);
+  constructor(reportsService: ReportsService, configService: ConfigService, private router: Router){
+    super(reportsService, configService);
   }
 
   public async restoreReport(): Promise<void> {

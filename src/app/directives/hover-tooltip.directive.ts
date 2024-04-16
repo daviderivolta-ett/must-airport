@@ -1,17 +1,25 @@
 import { Directive, ElementRef, HostListener, Input, Renderer2 } from '@angular/core';
+import { Tag } from '../models/tag.model';
 
 @Directive({
   selector: '[appHoverTooltip]',
   standalone: true
 })
 export class HoverTooltipDirective {
-  @Input() public appTooltip: string = '';
-  @Input() public set _data(value: any) {
+  private _data: any = [];
+
+  public get data(): any {
+    return this._data;
+  }
+
+  @Input() public set data(value: any) {    
     if (!value || value.length === 0) return;
-    this.data = value;
+    this._data = value;
     this.createTooltip();
   }
-  public data: any = [];
+
+  @Input() public appTooltip: string = '';
+  
   private tooltipElement: HTMLDivElement = this.renderer.createElement('div');
   private isVisible: boolean = false;
   private resizeObserver: ResizeObserver;
@@ -36,7 +44,7 @@ export class HoverTooltipDirective {
   private createTooltip(): void {
     this.tooltipElement = this.renderer.createElement('div');
     this.renderer.addClass(this.tooltipElement, 'hover-tooltip');
-    this.tooltipElement.innerHTML = this.arrayToString(this.data);
+    this.tooltipElement.innerHTML = this.getStringTags(this.data);
     this.renderer.setStyle(this.tooltipElement, 'display', 'none');
     this.renderer.setStyle(this.tooltipElement, 'position', 'fixed');
 
@@ -76,12 +84,10 @@ export class HoverTooltipDirective {
     }
   }
 
-  private arrayToString(tags: any): string {
-    let stringTags: string[] = [];
-    tags.forEach((tag: any) => {
-      stringTags.push(tag.name.it);
-    })
-    let tooltip: string = stringTags.join(', ');
+  private getStringTags(tags: Tag[]): string {
+    let strings: string[] = [];
+    tags.forEach((tag: Tag) => strings.push(tag.name));
+    let tooltip: string = strings.join(', ');
     return tooltip;
   }
 

@@ -116,10 +116,10 @@ export class ReportsService {
   public filteredReports: ReportParent[] = [];
   public selectedReportSignal: WritableSignal<ReportParent> = signal(ReportParent.createEmpty());
   public selectedReportId: string = '';
-  public archivedReports: ReportParent[] = [];
   public archivedReportsSignal: WritableSignal<ReportParent[]> = signal([]);
-  public closedReports: ReportParent[] = [];
+  public archivedReports: ReportParent[] = [];
   public closedReportSignal: WritableSignal<ReportParent[]> = signal([]);
+  public closedReports: ReportParent[] = [];
 
   constructor(private db: Firestore, private storage: Storage, private dictionaryService: DictionaryService, private configService: ConfigService) {
     effect(() => this.reports = this.reportsSignal());
@@ -129,7 +129,7 @@ export class ReportsService {
 
   public async getAllParentReports(verticalId: VERTICAL, getAll: boolean) {
     // console.log('VERTICAL:', verticalId);
-    await this.dictionaryService.getAll();
+    // await this.dictionaryService.getAll();
     await this.configService.getVerticalConfig(verticalId);
     // console.log(this.dictionaryService.failureTagsSignal());
     // console.log(this.dictionaryService.techElementTags);

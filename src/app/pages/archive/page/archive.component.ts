@@ -14,7 +14,7 @@ export class ArchiveComponent {
   public reports: ReportParent[] = [];
   public reportsSignal: Signal<ReportParent[]> = computed(() => {
     const archivedReports = this.reportsService.archivedReportsSignal();
-    const closedReports = this.reportsService.closedReportSignal();
+    const closedReports = this.reportsService.closedReportSignal();    
     return [...archivedReports, ...closedReports];
   });
   public archivedReports: ReportParent[] = [];
@@ -23,8 +23,7 @@ export class ArchiveComponent {
   constructor(private reportsService: ReportsService) {
     effect(() => {
       const reports: ReportParent[] = this.reportsSignal();
-      this.reports = reports.sort((a, b) => a.creationTime.getTime() - b.creationTime.getTime()).reverse();
-      console.log(this.reports);      
+      this.reports = reports.sort((a, b) => a.creationTime.getTime() - b.creationTime.getTime()).reverse();   
     });
   }
 }
