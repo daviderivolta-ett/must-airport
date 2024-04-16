@@ -3,7 +3,8 @@ import { VERTICAL } from "./app-flow.model";
 
 export enum OPERATIONTYPE {
     Maintenance = 'maintenance',
-    Inspection = 'inspection'
+    InspectionHorizontal = 'inspectionHorizontal',
+    InspectionVertical = 'inspectionVertical',
 }
 
 export class OperationDb {
@@ -42,7 +43,7 @@ export class Operation {
     }
 
     static createEmpty(): Operation {
-        return new Operation(new Date(Date.now()), '', OPERATIONTYPE.Inspection, '', '');
+        return new Operation(new Date(Date.now()), '', OPERATIONTYPE.Maintenance, '', '');
     }
 }
 
@@ -78,6 +79,6 @@ export class OperationLink {
     }
 
     static createEmpty(): OperationLink {
-        return new OperationLink(OPERATIONTYPE.Inspection, '', 'activateChildFlow', VERTICAL.Default);
+        return new OperationLink(OPERATIONTYPE.Maintenance, '', 'activateChildFlow', VERTICAL.Default);
     }
 }

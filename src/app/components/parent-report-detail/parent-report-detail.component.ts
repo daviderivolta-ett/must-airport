@@ -1,30 +1,25 @@
 import { Component, Input, WritableSignal, effect, signal } from '@angular/core';
 import { ReportParent } from '../../models/report-parent.model';
-import { ReportParentDb, ReportsService } from '../../services/reports.service';
+import { ReportParentClosingDataDb, ReportParentDb, ReportsService } from '../../services/reports.service';
 import { ReportChild } from '../../models/report-child.model';
 import { Tag } from '../../models/tag.model';
 import { MiniMapData } from '../../services/map.service';
 import { GeoPoint } from 'firebase/firestore';
 import { PRIORITY } from '../../models/priority.model';
 import { ConfigService } from '../../services/config.service';
+import { ActivatedRoute, Route, Router } from '@angular/router';
+import { DatePipe, NgClass } from '@angular/common';
+import { MiniMapComponent } from '../mini-map/mini-map.component';
+import { ChildReportCardComponent } from '../child-report-card/child-report-card.component';
 
 @Component({
   selector: 'app-parent-report-detail',
   standalone: true,
-  imports: [],
+  imports: [DatePipe, NgClass, MiniMapComponent, ChildReportCardComponent],
   templateUrl: './parent-report-detail.component.html',
   styleUrl: './parent-report-detail.component.scss'
 })
 export class ParentReportDetailComponent {
-  private _input: ReportParent = ReportParent.createEmpty();
-  @Input() public set input(value: ReportParent) {
-    this._input = value;
-    this.parentReportSignal.set(this.input);
-  }
-  public get input(): ReportParent {
-    return this._input;
-  }
-
   private parentReportSignal: WritableSignal<ReportParent> = signal(ReportParent.createEmpty());
   public parentReport: ReportParent = ReportParent.createEmpty();
   public childrenReport: ReportChild[] = [];
@@ -36,7 +31,7 @@ export class ParentReportDetailComponent {
 
   public miniMapData: MiniMapData = { location: new GeoPoint(0.0, 0.0), priority: PRIORITY.NotAssigned };
 
-  constructor(protected reportsService: ReportsService, private configService: ConfigService) {
+  constructor(private router: Router, private route: ActivatedRoute, protected reportsService: ReportsService, private configService: ConfigService) {
     effect(async () => {
       if (this.parentReportSignal().id === '') return;
       let report: ReportParent = this.parentReportSignal();
@@ -45,7 +40,7 @@ export class ParentReportDetailComponent {
       this.parentReport = report;
       
       this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
-      if (this.parentReport.closingChildId) this.childrenReport.push(await this.reportsService.getChildReportById(this.parentReport.closingChildId));
+      if (this.parentReport.closingChildId) this.childrenReport.unshift(await this.reportsService.getChildReportById(this.parentReport.closingChildId));
 
       this.childrenReport.map((report: ReportChild) => {
         if (report.fields.tagFailure != undefined) report = this.reportsService.populateChildFlowTags1(report);
@@ -60,6 +55,28 @@ export class ParentReportDetailComponent {
     });
 
     // effect(() => this.parentFlowTags = this.configService.parentFlowTagsSignal());
+  }
+
+  public async ngOnInit(): Promise<void> {
+    const id: string | null = this.route.snapshot.paramMap.get('id');
+    if (!id) return;
+
+    try {
+      const parentReportDb: ReportParentDb = await this.reportsService.getParentReportById(id);
+      this.parentReportSignal.set(this.reportsService.parseParentReport(id, parentReportDb));
+    } catch (error) {
+      this.router.navigate(['/']);
+    }
+  }
+
+  public async restoreReport(): Promise<void> {
+    let data: ReportParentClosingDataDb = {
+      archived: false,
+      archivingTime: null
+    }  
+
+    await this.reportsService.setReportById(this.parentReport.id, data);
+    this.router.navigate(['/archivio']);
   }
 
   private discardDuplicatedReportChildFlowTags1(childrenReport: ReportChild[]): void {

@@ -34,14 +34,14 @@
                         </div>
                         <div class="info">
                             <p class="info-title">Oggetto</p>
-                            @for (tag of parentReport.fields.tagTechElement; track $index; let last = $last) {
-                            <p class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</p>
+                            @for (tag of parentReport.fields.parentFlowTags1; track $index; let last = $last) {
+                            <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name}}</p>
                             }
                         </div>
                         <div class="info">
                             <p class="info-title">Elemento tecnico</p>
-                            @for (tag of parentReport.fields.subTagTechElement; track $index; let last = $last) {
-                            <p class="info-value" [ngClass]="{'comma': !last}">{{$any(tag).name.it}}</p>
+                            @for (tag of parentReport.fields.parentFlowTags2; track $index; let last = $last) {
+                            <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name}}</p>
                             }
                         </div>
                     </div>

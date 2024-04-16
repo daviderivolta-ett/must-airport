@@ -36,6 +36,7 @@ export class OperationsService {
   }
 
   public async getOperationById(id: string): Promise<OperationLinkDb> {
+    console.log(id);    
     const q = doc(this.db, 'links', id);
     const snapshot = await getDoc(q);
     if (snapshot.exists()) {

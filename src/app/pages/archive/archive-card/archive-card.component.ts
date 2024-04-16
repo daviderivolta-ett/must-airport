@@ -58,12 +58,6 @@ export class ArchiveCardComponent {
     this.router.navigate(['/archivio', id]);
   }
 
-  private getStringTags(tags: Tag[]): string[] {
-    let strings: string[] = [];
-    tags.forEach((tag: Tag) => strings.push(tag.name));
-    return strings;
-  }
-
   private discardDuplicatedReportFailureTags(childrenReport: ReportChild[]): void {
     let reportFailureTags: Tag[] = [];
     childrenReport.forEach((childReport: ReportChild) => {

@@ -11,7 +11,7 @@ import { adminGuard } from './guards/admin.guard';
 import { userGuard } from './guards/user.guard';
 import { ArchiveComponent } from './pages/archive/page/archive.component';
 import { CalendarPageComponent } from './pages/calendar/page/calendar-page.component';
-import { ArchiveDetailComponent } from './pages/archive-detail/page/archive-detail.component';
+import { ParentReportDetailComponent } from './components/parent-report-detail/parent-report-detail.component';
 
 export const routes: Routes = [
     {
@@ -57,7 +57,7 @@ export const routes: Routes = [
     {
         path: 'archivio/:id',
         title: 'MUST - Archivio',
-        component: ArchiveDetailComponent,
+        component: ParentReportDetailComponent,
         canActivate: [adminGuard]
     },
     {

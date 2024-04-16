@@ -77,7 +77,7 @@ export class ChartsService {
 
   public createInspectionsPerTimeSerie(reports: ReportParent[]): Highcharts.SeriesLineOptions {
     const operations: Operation[] = reports.flatMap(report => report.operations);
-    const inspections: Operation[] = operations.filter(operation => operation.type === OPERATIONTYPE.Inspection);
+    const inspections: Operation[] = operations.filter(operation => operation.type === OPERATIONTYPE.InspectionHorizontal || operation.type === OPERATIONTYPE.InspectionVertical);
     const inspectionFrequency = this.calculateDateFrequency(inspections);
     let inspectionsSerieData: [number, number][] = Object.entries(inspectionFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
     inspectionsSerieData.sort((a, b) => a[0] - b[0]);

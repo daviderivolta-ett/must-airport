@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Operation, OperationLinkDb } from '../../../models/operation.model';
+import { OPERATIONTYPE, Operation, OperationLinkDb } from '../../../models/operation.model';
 import { DatePipe, TitleCasePipe } from '@angular/common';
 import { ReportsService } from '../../../services/reports.service';
 import { SnackbarService } from '../../../observables/snackbar.service';
@@ -29,17 +29,20 @@ export class OperationCardComponent {
     let msg: string;
     try {
       switch (this.operation.type) {
-        case 'maintenance':
+        case OPERATIONTYPE.Maintenance:
           msg = 'Intervento eliminato con successo.';
           break;
-        case 'inspection':
+        case OPERATIONTYPE.InspectionHorizontal:
+          msg = 'Ispezione eliminata con successo.';
+          break;
+        case OPERATIONTYPE.InspectionVertical:
           msg = 'Ispezione eliminata con successo.';
           break;
         default:
           msg = 'Ispezione eliminata con successo.';
           break;
       }
-      
+
       await this.reportsService.deleteOperationByReportId(operation.reportParentId, this.operation);
       await this.operationsService.deleteOperationLinkById(this.operation.operationLink);
       this.snackbarService.createSnackbar(msg, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);

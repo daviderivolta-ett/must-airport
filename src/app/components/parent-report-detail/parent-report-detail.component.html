@@ -1,1 +1,121 @@
-<p>parent-report-detail works!</p>
+<div class="page">
+    <div class="column first-column">
+        <div class="header">
+            <h2>Dettagli segnalazione</h2>
+            @if (parentReport.closingChildId) {
+            <button class="archive-btn">
+                <span class="material-symbols-outlined archive-icon">unarchive</span>
+            </button>
+            }
+            @else {
+            <button class="archive-btn" (click)="restoreReport()">
+                <span class="material-symbols-outlined archive-icon">unarchive</span>
+            </button>
+            }
+        </div>
+        <div class="image-section">
+            <div class="img-container">
+                <img src="{{parentReport.coverImgUrls[0]}}" alt="Immagine della segnalazione">
+            </div>
+        </div>
+        <div class="report-details">
+            <div class="info">
+                <p class="info-title">Status</p>
+                <p class="info-value">
+                    @if (parentReport.closingChildId) {Chiusa}
+                    @else {Archiviata}
+                </p>
+            </div>
+
+            <div class="info">
+                <p class="info-title">Prima segnalazione</p>
+                <p class="info-value">{{parentReport.creationTime | date: 'dd/MM/yyyy'}} -
+                    h:{{parentReport.creationTime| date: 'HH:mm'}}</p>
+            </div>
+
+            <div class="info">
+                <p class="info-title">Ultimo aggiornamento</p>
+                <p class="info-value">{{parentReport.lastChildTime | date: 'dd/MM/yyyy'}} -
+                    h:{{parentReport.lastChildTime | date: 'HH:mm'}}</p>
+            </div>
+
+            <div class="info">
+                <p class="info-title">Priorità</p>
+                @switch (parentReport.priority) {
+                @case ("high") {
+                <p class="info-value priority high">Alta</p>
+                }
+                @case ("medium") {
+                <p class="info-value priority medium">Media</p>
+                }
+                @case ("low") {
+                <p class="info-value priority low">Bassa</p>
+                }
+                @default {
+                <p class="info-value priority not-assigned">Non assegnata</p>
+                }
+
+                }
+            </div>
+
+            <div class="info">
+                <p class="info-title">Oggetto</p>
+                <div class="info-value-list">
+                    @for (tag of parentReport.fields.parentFlowTags1; track $index; let last = $last) {
+                    <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</p>
+                    }
+                </div>
+            </div>
+
+            <div class="info">
+                <p class="info-title">Elemento tecnico</p>
+                <div class="info-value-list">
+                    @for (tag of parentReport.fields.parentFlowTags2; track $index; let last = $last) {
+                    <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</p>
+                    }
+                </div>
+            </div>
+
+            <div class="info">
+                <p class="info-title">Segnali di guasto</p>
+                <div class="info-value-list">
+                    @if (childFlowTags1.length === 0) {
+                    <p class="info-value">-</p>
+                    }
+                    @else {
+                    @for (tag of childFlowTags1; track $index; let last = $last) {
+                    <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</p>
+                    }
+                    }
+                </div>
+            </div>
+
+            <div class="info">
+                <p class="info-title">Modalità di guasto</p>
+                <div class="info-value-list">
+                    @if (childFlowTags2.length === 0) {
+                    <p class="info-value">-</p>
+                    }
+                    @else {
+                        @for (tag of childFlowTags2; track $index; let last = $last) {
+                        <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</p>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        @if (miniMapData) {
+        <div class="map-wrapper">
+            <app-mini-map [miniMapData]="miniMapData" />
+        </div>
+        }
+    </div>
+    <div class="column second-column">
+        <h2>Aggiornamenti</h2>
+        <div class="children-report">
+            @for (report of childrenReport; track $index) {
+            <app-child-report-card [childReport]="report" [parentReport]="parentReport" />
+            }
+        </div>
+    </div>
+</div>

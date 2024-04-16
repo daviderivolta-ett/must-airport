@@ -87,7 +87,7 @@ export class HoverTooltipDirective {
   private getStringTags(tags: Tag[]): string {
     let strings: string[] = [];
     tags.forEach((tag: Tag) => strings.push(tag.name));
-    let tooltip: string = strings.join(', ');
+    let tooltip: string = strings.join(', ').toLowerCase();
     return tooltip;
   }
 

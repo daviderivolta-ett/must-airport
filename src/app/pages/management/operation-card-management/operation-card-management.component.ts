@@ -26,7 +26,7 @@ export class OperationCardManagementComponent extends OperationCardBaseComponent
 
   public async deleteOperation(): Promise<void> {
     if (!this.operation) return;
-
+ 
     const operationLink: OperationLinkDb = await this.operationsService.getOperationById(this.operation.operationLink);
 
     let msg: string;

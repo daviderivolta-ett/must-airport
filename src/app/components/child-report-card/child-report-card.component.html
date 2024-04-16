@@ -3,6 +3,12 @@
         @if (childReport.fields.detailShots && childReport.fields.detailShots.length !== 0) {
             <img src="{{childReport.fields.detailShots[0]}}" alt="Immagine del report">
         }
+
+        @if (childReport.flowId === 'maintenance' || childReport.flowId === 'inspectionHorizontal' || childReport.flowId === 'inspectionVertical') {
+            <div class="icon-wrapper">
+                <span class="material-symbols-outlined verified-icon">verified</span>
+            </div>
+        }
     </div>
     <div class="card-body">
         <div class="card-details">

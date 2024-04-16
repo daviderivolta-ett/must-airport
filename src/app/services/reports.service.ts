@@ -320,14 +320,14 @@ export class ReportsService {
     if (operation.operatorName !== undefined) o.operatorName = operation.operatorName;
     if (operation.type !== undefined) {
       switch (operation.type) {
-        case 'maintenance':
-          o.type = OPERATIONTYPE.Maintenance;
+        case 'inspectionVertical':
+          o.type = OPERATIONTYPE.InspectionVertical;
           break;
-        case 'inspection':
-          o.type = OPERATIONTYPE.Inspection;
+        case 'inspectionHorizontal':
+          o.type = OPERATIONTYPE.InspectionHorizontal;
           break;
         default:
-          o.type = OPERATIONTYPE.Inspection;
+          o.type = OPERATIONTYPE.Maintenance;
           break;
       }
     }
@@ -427,7 +427,7 @@ export class ReportsService {
     const snapshot = await getDoc(q);
     if (snapshot.exists()) {
       const r = snapshot.data() as ReportChildDb;
-      const report: ReportChild = this.parseChildReport(id, r);
+      const report: ReportChild = this.parseChildReport(id, r);      
       return report;
     } else {
       throw new Error('Report non trovato');
@@ -453,7 +453,7 @@ export class ReportsService {
 
   private parseChildReport(id: string, report: ReportChildDb): ReportChild {
     let r = ReportChild.createEmpty();
-
+    
     r.isClosed = report.closure;
     r.creationTime = report.creationTime.toDate();
     r.fields = this.parseChildReportFields(report.fields);
@@ -472,18 +472,18 @@ export class ReportsService {
     r.userId = report.userId;
     r.verticalId = report.verticalId;
     r.id = id;
-
+    console.log(r);    
     return r;
   }
 
   private parseChildReportFields(fields: ReportChildFieldsDb): ReportChildFields {
-    let f = ReportChildFields.createEmpty();
+    let f = ReportChildFields.createEmpty();    
 
     if (fields.foto_dettaglio) f.detailShots = fields.foto_dettaglio;
     if (fields.intervention_photo) f.detailShots = fields.intervention_photo;
     fields.comment && fields.comment.length !== 0 ? f.description = fields.comment : f.description = '-';
     fields.tag_failure ? f.tagFailure = fields.tag_failure : []
-    fields.sub_tag_failure ? f.subTagFailure = fields.sub_tag_failure : []
+    fields.sub_tag_failure ? f.subTagFailure = fields.sub_tag_failure : [];    
 
     return f;
   }

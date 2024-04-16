@@ -6,3 +6,22 @@
 .comma::after {
     content: ', ';
 }
+
+.img-container {
+    position: relative;
+}
+
+.icon-wrapper {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 16px;
+    width: 16px;
+}
+
+.verified-icon {
+    font-size: 1.25rem;
+}

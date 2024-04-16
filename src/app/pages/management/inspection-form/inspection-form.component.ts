@@ -39,13 +39,22 @@ export class InspectionFormComponent {
 
     try {
       switch (operation.type) {
-        case 'maintenance':
+        case 'inspection':
           msg = 'Intervento creato con successo.';
-          operationLink.childFlowId = 'maintenance';
+
+          if (this.parentReport.childFlowIds[0] === 'horizontal') {
+            operationLink.childFlowId = 'inspectionHorizontal';
+            operation.type = 'inspectionHorizontal';
+          } else {
+            operationLink.childFlowId = 'inspectionVertical';
+            operation.type = 'inspectionVertical';
+          }
+
           break;
+
         default:
           msg = 'Ispezione creata con successo.';
-          operationLink.childFlowId = 'inspection';
+          operationLink.childFlowId = 'maintenance';
           break;
       }
 
