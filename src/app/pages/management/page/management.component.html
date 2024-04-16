@@ -97,9 +97,15 @@
     </div>
     <div class="column second-column">
         <h2>Aggiornamenti</h2>
+        <app-child-reports-filters (filterEvent)="filterChildReports($event)" />
         <div class="children-report">
-            @for (report of childrenReport; track $index) {
-            <app-child-report-card [childReport]="report" [parentReport]="parentReport" />
+            @if (filteredChildrenReport.length !== 0) {
+                @for (report of filteredChildrenReport; track $index) {
+                <app-child-report-card [childReport]="report" [parentReport]="parentReport" />
+                }
+            }
+            @else {
+                <p class="empty-msg">Nessuna segnalazione trovata</p>
             }
         </div>
     </div>

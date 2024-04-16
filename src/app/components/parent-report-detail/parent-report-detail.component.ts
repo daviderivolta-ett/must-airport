@@ -1,6 +1,6 @@
 import { Component, Input, WritableSignal, effect, signal } from '@angular/core';
 import { ReportParent } from '../../models/report-parent.model';
-import { ReportParentClosingDataDb, ReportParentDb, ReportsService } from '../../services/reports.service';
+import { ChildReportFiltersFormData, ReportParentClosingDataDb, ReportParentDb, ReportsService } from '../../services/reports.service';
 import { ReportChild } from '../../models/report-child.model';
 import { Tag } from '../../models/tag.model';
 import { MiniMapData } from '../../services/map.service';
@@ -11,18 +11,22 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 import { DatePipe, NgClass } from '@angular/common';
 import { MiniMapComponent } from '../mini-map/mini-map.component';
 import { ChildReportCardComponent } from '../child-report-card/child-report-card.component';
+import { ChildReportsFiltersComponent } from '../child-reports-filters/child-reports-filters.component';
+import { OPERATIONTYPE } from '../../models/operation.model';
 
 @Component({
   selector: 'app-parent-report-detail',
   standalone: true,
-  imports: [DatePipe, NgClass, MiniMapComponent, ChildReportCardComponent],
+  imports: [DatePipe, NgClass, MiniMapComponent, ChildReportCardComponent, ChildReportsFiltersComponent],
   templateUrl: './parent-report-detail.component.html',
   styleUrl: './parent-report-detail.component.scss'
 })
 export class ParentReportDetailComponent {
   private parentReportSignal: WritableSignal<ReportParent> = signal(ReportParent.createEmpty());
   public parentReport: ReportParent = ReportParent.createEmpty();
+
   public childrenReport: ReportChild[] = [];
+  public filteredChildrenReport: ReportChild[] = [];
 
   public parentFlowTags: Tag[] = [];
   public childFlowTags: Tag[] = [];
@@ -38,7 +42,7 @@ export class ParentReportDetailComponent {
       report = this.reportsService.populateParentFlowTags1(report);
       report = this.reportsService.populateParentFlowTags2(report);
       this.parentReport = report;
-      
+
       this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
       if (this.parentReport.closingChildId) this.childrenReport.unshift(await this.reportsService.getChildReportById(this.parentReport.closingChildId));
 
@@ -52,6 +56,8 @@ export class ParentReportDetailComponent {
 
       this.discardDuplicatedReportChildFlowTags1(this.childrenReport);
       this.discardDuplicatedReportChildFlowTags2(this.childrenReport);
+
+      this.filteredChildrenReport = this.childrenReport;
     });
 
     // effect(() => this.parentFlowTags = this.configService.parentFlowTagsSignal());
@@ -73,10 +79,38 @@ export class ParentReportDetailComponent {
     let data: ReportParentClosingDataDb = {
       archived: false,
       archivingTime: null
-    }  
+    }
 
     await this.reportsService.setReportById(this.parentReport.id, data);
     this.router.navigate(['/archivio']);
+  }
+
+  public filterChildReports(filter: ChildReportFiltersFormData) {
+    this.filteredChildrenReport = [];
+
+    if (filter.inspection) {
+      this.filteredChildrenReport = this.filteredChildrenReport.concat(
+        this.childrenReport.filter((report: ReportChild) =>
+          report.flowId === OPERATIONTYPE.InspectionHorizontal || report.flowId === OPERATIONTYPE.InspectionVertical
+        )
+      );
+    }
+
+    if (filter.maintenance) {
+      this.filteredChildrenReport = this.filteredChildrenReport.concat(
+        this.childrenReport.filter((report: ReportChild) => report.flowId === OPERATIONTYPE.Maintenance)
+      );
+    }
+
+    if (filter.other) {
+      this.filteredChildrenReport = this.filteredChildrenReport.concat(
+        this.childrenReport.filter((report: ReportChild) =>
+          report.flowId !== OPERATIONTYPE.InspectionHorizontal && report.flowId !== OPERATIONTYPE.InspectionVertical && report.flowId !== OPERATIONTYPE.Maintenance
+        )
+      );
+    }
+
+    this.filteredChildrenReport.sort((a, b) => b.creationTime.getTime() - a.creationTime.getTime())
   }
 
   private discardDuplicatedReportChildFlowTags1(childrenReport: ReportChild[]): void {

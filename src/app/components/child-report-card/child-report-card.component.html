@@ -6,7 +6,12 @@
 
         @if (childReport.flowId === 'maintenance' || childReport.flowId === 'inspectionHorizontal' || childReport.flowId === 'inspectionVertical') {
             <div class="icon-wrapper">
-                <span class="material-symbols-outlined verified-icon">verified</span>
+                @if (childReport.flowId === 'maintenance') {
+                    <span class="material-symbols-outlined verified-icon">check_circle</span>
+                }
+                @else {
+                    <span class="material-symbols-outlined verified-icon">check</span>
+                }
             </div>
         }
     </div>

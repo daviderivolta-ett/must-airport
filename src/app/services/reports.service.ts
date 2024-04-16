@@ -106,6 +106,12 @@ export interface ParsedFiltersFormData {
   }
 }
 
+export interface ChildReportFiltersFormData {
+  maintenance: boolean,
+  inspection: boolean,
+  other: boolean
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -472,7 +478,7 @@ export class ReportsService {
     r.userId = report.userId;
     r.verticalId = report.verticalId;
     r.id = id;
-    console.log(r);    
+  
     return r;
   }
 

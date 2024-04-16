@@ -1,0 +1,14 @@
+<form [formGroup]="filterForm">
+    <div class="checkbox-single">
+        <input type="checkbox" id="maintenance" formControlName="maintenance">
+        <label for="maintenance" class="checkbox-single-label">Manutenzioni</label>
+    </div>
+    <div class="checkbox-single">
+        <input type="checkbox" id="inspection" formControlName="inspection">
+        <label for="inspection" class="checkbox-single-label">Ispezioni</label>
+    </div>
+    <div class="checkbox-single">
+        <input type="checkbox" id="other" formControlName="other">
+        <label for="other" class="checkbox-single-label">Pubbliche</label>
+    </div>
+</form>

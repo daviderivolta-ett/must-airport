@@ -48,7 +48,7 @@ h2 {
     padding: 24px 24px 16px 24px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    // align-items: center;
 }
 
 .first-column h2 {
@@ -166,6 +166,8 @@ h2 {
 .second-column {
     // width: 20%;
     overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .third-column {
@@ -179,11 +181,15 @@ h2 {
 }
 
 .children-report {
-    height: 100%;
+    flex-grow: 1;
     overflow-y: auto;
-    padding: 0 0 24px 0;
+    // padding: 0 0 24px 0;
     box-sizing: border-box;
     scrollbar-width: none;
+}
+
+.empty-msg {
+    text-align: center;
 }
 
 app-child-report-card {

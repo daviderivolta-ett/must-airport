@@ -5,7 +5,7 @@ import { ReportChild } from '../../../models/report-child.model';
 import { TechElementTag } from '../../../models/tech-element-tag.model';
 import { DictionaryService } from '../../../services/dictionary.service';
 import { ValidationFormComponent } from '../validation-form/validation-form.component';
-import { ReportsService } from '../../../services/reports.service';
+import { ChildReportFiltersFormData, ReportsService } from '../../../services/reports.service';
 import { FailureTag } from '../../../models/failure-tag.model';
 import { DatePipe, NgClass, TitleCasePipe } from '@angular/common';
 import { FailureSubTag } from '../../../models/failure-subtag.model';
@@ -19,22 +19,27 @@ import { ArchiveDialogService } from '../../../observables/archive-dialog.servic
 import { Tag } from '../../../models/tag.model';
 import { ConfigService } from '../../../services/config.service';
 import { OperationCardManagementComponent } from '../operation-card-management/operation-card-management.component';
+import { OPERATIONTYPE } from '../../../models/operation.model';
+import { ChildReportsFiltersComponent } from '../../../components/child-reports-filters/child-reports-filters.component';
 
 @Component({
   selector: 'app-management',
   standalone: true,
-  imports: [MiniMapComponent, ChildReportCardComponent, ValidationFormComponent, InspectionFormComponent, OperationCardComponent, OperationCardManagementComponent, DatePipe, NgClass, TitleCasePipe],
+  imports: [MiniMapComponent, ChildReportsFiltersComponent, ChildReportCardComponent, ValidationFormComponent, InspectionFormComponent, OperationCardComponent, OperationCardManagementComponent, DatePipe, NgClass, TitleCasePipe],
   templateUrl: './management.component.html',
   styleUrl: './management.component.scss'
 })
 export class ManagementComponent {
   public id: string | null = null;
   public parentReport: ReportParent = ReportParent.createEmpty();
-  public childrenReport: ReportChild[] = [];
+
   public techElementTags: TechElementTag[] = [];
   public failureTags: FailureTag[] = [];
   public reportFailureTags: FailureTag[] = [];
   public reportFailureSubTags: FailureSubTag[] = [];
+
+  public childrenReport: ReportChild[] = [];
+  public filteredChildrenReport: ReportChild[] = [];
 
   public parentFlowTags: Tag[] = [];
   public childFlowTags: Tag[] = [];
@@ -60,6 +65,8 @@ export class ManagementComponent {
       this.discardDuplicatedReportChildFlowTags2(this.childrenReport);
       this.discardDuplicatedReportFailureTags(this.childrenReport);
       this.discardDuplicatedReportFailureSubTags(this.childrenReport);
+
+      this.filteredChildrenReport = this.childrenReport;
     });
     effect(() => this.techElementTags = this.dictionaryService.techElementTagsSignal());
     effect(() => this.failureTags = this.dictionaryService.failureTagsSignal());
@@ -82,6 +89,34 @@ export class ManagementComponent {
     const componentRef = createComponent(ArchiveDialogComponent, { hostElement: div, environmentInjector: this.applicationRef.injector });
     this.applicationRef.attachView(componentRef.hostView);
     componentRef.changeDetectorRef.detectChanges();
+  }
+
+  public filterChildReports(filter: ChildReportFiltersFormData) {
+    this.filteredChildrenReport = [];
+
+    if (filter.inspection) {
+      this.filteredChildrenReport = this.filteredChildrenReport.concat(
+        this.childrenReport.filter((report: ReportChild) =>
+          report.flowId === OPERATIONTYPE.InspectionHorizontal || report.flowId === OPERATIONTYPE.InspectionVertical
+        )
+      );
+    }
+
+    if (filter.maintenance) {
+      this.filteredChildrenReport = this.filteredChildrenReport.concat(
+        this.childrenReport.filter((report: ReportChild) => report.flowId === OPERATIONTYPE.Maintenance)
+      );
+    }
+
+    if (filter.other) {
+      this.filteredChildrenReport = this.filteredChildrenReport.concat(
+        this.childrenReport.filter((report: ReportChild) =>
+          report.flowId !== OPERATIONTYPE.InspectionHorizontal && report.flowId !== OPERATIONTYPE.InspectionVertical && report.flowId !== OPERATIONTYPE.Maintenance
+        )
+      );
+    }
+
+    this.filteredChildrenReport.sort((a, b) => b.creationTime.getTime() - a.creationTime.getTime())
   }
 
   private discardDuplicatedReportFailureTags(childrenReport: ReportChild[]): void {
