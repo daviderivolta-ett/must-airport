@@ -1,0 +1,6 @@
+<form [formGroup]="uploadFileForm">
+    <input type="text" formControlName="name">
+    <input type="file" accept=".geojson" (change)="onFileChange($event)" #inputGeoJSON>
+    <input type="hidden" formControlName="file">
+    <button type="submit" [disabled]="!uploadFileForm.valid" (click)="handleSubmit(inputGeoJSON)">Carica</button>
+</form>

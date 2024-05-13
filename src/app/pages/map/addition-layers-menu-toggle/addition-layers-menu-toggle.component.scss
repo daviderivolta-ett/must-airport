@@ -1,0 +1,25 @@
+:host {
+    position: absolute;
+    bottom: 80px;
+    right: 10px;
+    z-index: 9999; 
+}
+
+.toggle-btn {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--f-muted);
+    background-color: var(--bg-inset);
+    border-radius: 4px;
+    border: 1px solid var(--border-subtle);
+    height: 40px;
+    width: 40px;
+    transition: .2s ease-in-out;
+
+    &:hover {
+        color: var(--f-default);
+        border-color: var(--border-emphasis);
+    }
+}
