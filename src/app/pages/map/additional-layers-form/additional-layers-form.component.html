@@ -8,13 +8,16 @@
     <label for="file-input" class="custom-file-input">
         <span>Scegli un file</span>
         <input type="file" accept=".geojson" id="file-input" (change)="onFileChange($event)" #inputGeoJSON
-            placeholder="Seleziona file geoJSON" formControlName="file">
+            placeholder="Seleziona file geoJSON">
     </label>
     <input type="hidden" formControlName="fileName">
     <button type="submit" [disabled]="!uploadFileForm.valid" (click)="handleSubmit(inputGeoJSON)">Carica</button>
     <div class="validation-msg">
         @if (!uploadFileForm.get('name')?.pristine && uploadFileForm.get('name')?.invalid) {
         <p>Il campo nome è obbligatorio</p>
+        }
+        @if (!uploadFileForm.get('fileName')?.pristine && uploadFileForm.get('fileName')?.invalid) {
+            <p>Il file inserito non è un GeoJSON valido</p>
         }
     </div>
 </form>

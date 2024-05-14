@@ -17,11 +17,12 @@ export class AdditionalLayersFormComponent {
   public isOpen: boolean = false;
   public uploadFileForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
-    fileName: ['', Validators.required],
-    file: [null, this.geoJsonValidator]
+    fileName: ['', [Validators.required, Validators.minLength(1)]]
   });
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private additionalLayersService: AdditionalLayersService) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private additionalLayersService: AdditionalLayersService) {
+    this.uploadFileForm.valueChanges.subscribe(change => console.log(change))
+  }
 
   public async onFileChange(event: Event): Promise<void> {
     const inputElement: HTMLInputElement = event.target as HTMLInputElement;
@@ -51,19 +52,5 @@ export class AdditionalLayersFormComponent {
 
   public toggleForm(): void {
     this.isOpen = !this.isOpen;
-  }
-
-  public geoJsonValidator(): AsyncValidatorFn {
-    return async (control: AbstractControl): Promise<ValidationErrors | null> => {
-      const file: File = control.value as File;
-
-      try {
-        const isValid: boolean = await this.additionalLayersService.readFile(file);
-        return isValid ? null : { invalidGeoJson: true }
-      } catch (error) {
-        console.error('Si è verificato un errore durante la validazione del file:', error);
-        return { invalidGeoJson: true }
-      }
-    }
   }
 }
