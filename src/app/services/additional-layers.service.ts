@@ -17,7 +17,7 @@ export class AdditionalLayersService {
   public isValidGeoJSON(content: string): boolean {
     try {
       const geoJSON: any = JSON.parse(content);
-      if (!geoJSON.type || (geoJSON.type !== 'Feature' && geoJSON.type !== 'FeatureCollection' && geoJSON.type !== 'Geometry')) return false;
+      if (!geoJSON.type || (geoJSON.type !== 'Feature' && geoJSON.type !== 'FeatureCollection' && geoJSON.type !== 'Point' && geoJSON.type !== 'Geometry')) return false;
       return true;
     } catch (error) {
       return false;
@@ -56,26 +56,52 @@ export class AdditionalLayersService {
     });
   }
 
-  public readFile(file: File): void {
-    const reader: FileReader = new FileReader();
+  // public readFile(file: File): void {
+  //   const reader: FileReader = new FileReader();
 
-    reader.onload = (e: Event) => {
-      const textDecoder = new TextDecoder('utf-8');
-      const content = textDecoder.decode(reader.result as ArrayBuffer);
+  //   reader.onload = (e: Event) => {
+  //     const textDecoder = new TextDecoder('utf-8');
+  //     const content = textDecoder.decode(reader.result as ArrayBuffer);
 
-      try {
-        if (this.isValidGeoJSON(content)) {
-          const parsedGeoJSON: any = JSON.parse(content);
-          console.log('Il file è un GeoJSON valido.');
-          this.geoJson = parsedGeoJSON;
-        } else {
-          console.log('Il file non è un GeoJSON valido.');
+  //     try {
+  //       if (this.isValidGeoJSON(content)) {
+  //         const parsedGeoJSON: any = JSON.parse(content);
+  //         console.log('Il file è un GeoJSON valido.');
+  //         this.geoJson = parsedGeoJSON;
+  //       } else {
+  //         console.log('Il file non è un GeoJSON valido.');
+  //       }
+  //     } catch (error) {
+  //       console.error('Errore durante il parsing del JSON:', error);
+  //     }
+  //   }
+  //   reader.readAsArrayBuffer(file);
+  // }
+
+  public async readFile(file: File): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      const reader: FileReader = new FileReader();
+
+      reader.onload = (e: Event) => {
+        const textDecoder = new TextDecoder('utf-8');
+        const content = textDecoder.decode(reader.result as ArrayBuffer);
+
+        try {
+          const isValid: boolean = this.isValidGeoJSON(content);
+          if (isValid) {
+            console.log('Il file è un GeoJSON valido.');
+          } else {
+            console.log('Il file non è un GeoJSON valido.');
+          }
+          resolve(isValid);
+        } catch (error) {
+          console.error('Errore durante il parsing del JSON:', error);
+          reject(error);
         }
-      } catch (error) {
-        console.error('Errore durante il parsing del JSON:', error);
-      }
-    }
-    reader.readAsArrayBuffer(file);
+      };
+
+      reader.readAsArrayBuffer(file);
+    });
   }
 
   private getGeoJson(url: string): void {

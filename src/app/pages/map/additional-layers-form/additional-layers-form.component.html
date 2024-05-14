@@ -3,11 +3,18 @@
     <span class="material-symbols-outlined">add</span>
 </button>
 <form [ngClass]="{'dropdown-toggle-open': isOpen}" [formGroup]="uploadFileForm">
-    <input type="text" class="additional-layer-name-input" placeholder="Scegli un nome per il layer" formControlName="name">
+    <input type="text" class="additional-layer-name-input" placeholder="Scegli un nome per il layer"
+        formControlName="name">
     <label for="file-input" class="custom-file-input">
         <span>Scegli un file</span>
-        <input type="file" accept=".geojson" id="file-input" (change)="onFileChange($event)" #inputGeoJSON placeholder="Seleziona file geoJSON">
+        <input type="file" accept=".geojson" id="file-input" (change)="onFileChange($event)" #inputGeoJSON
+            placeholder="Seleziona file geoJSON" formControlName="file">
     </label>
-    <input type="hidden" formControlName="file">
+    <input type="hidden" formControlName="fileName">
     <button type="submit" [disabled]="!uploadFileForm.valid" (click)="handleSubmit(inputGeoJSON)">Carica</button>
+    <div class="validation-msg">
+        @if (!uploadFileForm.get('name')?.pristine && uploadFileForm.get('name')?.invalid) {
+        <p>Il campo nome è obbligatorio</p>
+        }
+    </div>
 </form>
