@@ -2,7 +2,7 @@
     position: absolute;
     left: -384px;
     bottom: 0;
-    height: calc(100% - 56px);
+    height: calc(100dvh - 56px);
     width: 384px;
     z-index: 99999;
     background-color: var(--bg-default);
@@ -23,7 +23,7 @@
 }
 
 .header h1 {
-    font-size: 1rem;
+    // font-size: 1rem;
     font-weight: 500;
     margin: 0;
 }

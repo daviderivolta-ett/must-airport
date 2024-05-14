@@ -1,9 +1,9 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { CollectionReference, DocumentData, DocumentSnapshot, Query, QuerySnapshot, addDoc, collection, getDocs, onSnapshot, query } from 'firebase/firestore';
-import { AdditionalLayer, additionalLayerConverter } from '../models/additional-layer.model';
+import { AdditionalLayer, AdditionalLayerDb, additionalLayerConverter } from '../models/additional-layer.model';
 import { Storage } from '@angular/fire/storage';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { StorageReference, getBlob, getBytes, getDownloadURL, getStream, ref, uploadBytes } from 'firebase/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -24,15 +24,18 @@ export class AdditionalLayersService {
     }
   }
 
-  public async getAllGeoJSON() {
+  public async getAllAdditionalLayers() {
     const ref = collection(this.db, 'additionalLayers').withConverter(additionalLayerConverter);
     if (!ref) return;
-    const q: Query = query(ref as CollectionReference<AdditionalLayer>);
+    const q: Query = query(ref as CollectionReference<AdditionalLayerDb>);
     const unsubscribe = onSnapshot(q,
       (querySnapshot: QuerySnapshot<DocumentData>) => {
         const layers: AdditionalLayer[] = [];
         querySnapshot.forEach(doc => {
-          layers.push(doc.data() as AdditionalLayer);
+          const layerDb: AdditionalLayerDb = doc.data() as AdditionalLayerDb;
+          const layer: AdditionalLayer = new AdditionalLayer(layerDb.name, layerDb.geoJsonUrl, layerDb.vertId, doc.id, null);
+          this.getGeoJson(layer.geoJsonUrl);
+          layers.push(layer);
         });
         this.layersSignal.set(layers);
       },
@@ -40,7 +43,7 @@ export class AdditionalLayersService {
     );
   }
 
-  public async setAdditionalLayer(data: AdditionalLayer): Promise<void> {
+  public async setAdditionalLayer(data: AdditionalLayerDb): Promise<void> {
     const ref = collection(this.db, 'additionalLayers').withConverter(additionalLayerConverter);
     await addDoc(ref, data)
     // .catch((error) => console.log('nu'));
@@ -73,5 +76,15 @@ export class AdditionalLayersService {
       }
     }
     reader.readAsArrayBuffer(file);
+  }
+
+  private getGeoJson(url: string): void {
+    const storageRef: StorageReference = ref(this.storage, url);
+    // getBytes(storageRef).then(a => console.log(a));
+
+    // getDownloadURL(storageRef)
+    //   .then(url => {
+    //       console.log(url);          
+    //   })
   }
 }

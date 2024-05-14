@@ -30,8 +30,4 @@ export class MapPageComponent {
       // console.log(this.reports);      
     });
   }
-
-  public pippo(): void {
-    console.log('ehi');    
-  }
 }

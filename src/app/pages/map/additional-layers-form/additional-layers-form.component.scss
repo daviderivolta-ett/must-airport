@@ -1,0 +1,111 @@
+.dropdown-toggle {
+    cursor: pointer;
+    font-family: "Noto Sans", sans-serif;
+    font-size: 0.9rem;
+    width: 100%;
+    color: var(--f-default);
+    background-color: var(--bg-default);
+    border-radius: 4px;
+    border: 1px solid var(--border-default);
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &:hover {
+        background-color: var(--bg-subtle);
+        border-color: var(--border-emphasis);
+    }
+}
+
+form {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+    font-size: 0.9rem;
+    color: var(--f-default);
+    background-color: var(--bg-default);
+    border-radius: 4px;
+    border: 1px solid var(--border-default);
+    margin: 8px 0 0 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.additional-layer-name-input {
+    font-family: 'Noto Sans', sans-serif;
+    padding: 8px;
+    box-sizing: border-box;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
+    
+    &:hover {
+        border-color: var(--border-emphasis);        
+    }
+}
+
+.custom-file-input {
+    cursor: pointer;
+    font-family: 'Noto Sans', sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--bg-overlay);
+    border-radius: 4px;
+}
+
+.custom-file-input input[type="file"] {
+    cursor: inherit;
+    width: 100%;
+    padding: 0 0 0 16px;
+}
+
+.custom-file-input input[type="file"]::file-selector-button {
+    display: none;
+}
+
+.custom-file-input span {
+    // display: inline-block;
+    background-color: var(--bg-subtle);
+    color: white;
+    border-radius: 4px 0 0 4px;
+    padding: 8px;
+    height: 100%;
+    min-width: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        background-color: var(--bg-emphasis);
+    }
+}
+
+button[type="submit"] {
+    cursor: pointer;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 4px;
+    color: var(--f-default-contrast);
+    background-color: var(--bg-accent);
+    width: 100%;
+    padding: 8px;
+
+    &:hover {
+        background-color: var(--bg-accent-emphasis);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        background-color: var(--bg-accent-dull);
+    }
+}
+
+.dropdown-toggle-open {
+    display: flex;
+}

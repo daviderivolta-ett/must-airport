@@ -1,7 +1,7 @@
-import { DocumentData, DocumentSnapshot, QuerySnapshot } from 'firebase/firestore';
+import { DocumentSnapshot} from 'firebase/firestore';
 import { VERTICAL } from './app-flow.model';
 
-export class AdditionalLayer {
+export class AdditionalLayerDb {
     name: string;
     geoJsonUrl: string;
     vertId: VERTICAL;
@@ -11,10 +11,14 @@ export class AdditionalLayer {
         this.geoJsonUrl = geoJsonUrl;
         this.vertId = vertId;
     }
+
+    static fromAdditionLayer(layer: AdditionalLayer): AdditionalLayerDb {
+        return new AdditionalLayerDb(layer.name, layer.geoJsonUrl, layer.vertId);
+    }
 }
 
 export const additionalLayerConverter = {
-    toFirestore: (layer: AdditionalLayer) => {
+    toFirestore: (layer: AdditionalLayerDb) => {
         return {
             name: layer.name,
             geoJsonUrl: layer.geoJsonUrl,
@@ -24,6 +28,17 @@ export const additionalLayerConverter = {
     fromFirestore: (snapshot: DocumentSnapshot, options: any) => {
         const data = snapshot.data(options);
         if (!data) return;
-        return new AdditionalLayer(data['name'], data['geoJsonUrl'], data['vertId']);
+        return new AdditionalLayerDb(data['name'], data['geoJsonUrl'], data['vertId']);
+    }
+}
+
+export class AdditionalLayer extends AdditionalLayerDb {
+    id: string;
+    geoJson: any;
+
+    constructor(name: string, geoJsonUrl: string, vertId: VERTICAL, id: string, geoJson: any) {
+        super(name, geoJsonUrl, vertId);
+        this.id = id;
+        this.geoJson = geoJson;
     }
 }

@@ -7,6 +7,7 @@ import { ReportsService } from '../../../services/reports.service';
 import { DialogService } from '../../../observables/dialog.service';
 import { ThemeService } from '../../../services/theme.service';
 import { COLORMODE } from '../../../models/color-mode.model';
+import { AdditionalLayersMenuService } from '../../../observables/additional-layers-menu.service';
 
 @Component({
   selector: 'app-map',
@@ -31,7 +32,7 @@ export class MapComponent {
     maxZoom: 20
   });
 
-  constructor(private mapService: MapService, private reportsService: ReportsService, private sidebarService: SidebarService, private dialogService: DialogService, private themeService: ThemeService) {
+  constructor(private mapService: MapService, private reportsService: ReportsService, private sidebarService: SidebarService, private additionalLayersMenuService: AdditionalLayersMenuService, private dialogService: DialogService, private themeService: ThemeService) {
     effect(() => {
       this.markersLayer.clearLayers();
       this.reports = this.reportsService.reportsSignal();
@@ -78,7 +79,10 @@ export class MapComponent {
 
     // this.map.setMaxBounds(this.map.getBounds());
 
-    this.map.on('click', () => this.sidebarService.isOpen.set(false));
+    this.map.on('click', () => {
+      this.sidebarService.isOpen.set(false);
+      this.additionalLayersMenuService.isOpenSignal.set(false);
+    });
   }
 
   private populateMap(geoJsonData: any): void {
