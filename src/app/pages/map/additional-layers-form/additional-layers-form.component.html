@@ -16,8 +16,8 @@
         @if (!uploadFileForm.get('name')?.pristine && uploadFileForm.get('name')?.invalid) {
         <p>Il campo nome è obbligatorio</p>
         }
-        @if (!uploadFileForm.get('fileName')?.pristine && uploadFileForm.get('fileName')?.invalid) {
-            <p>Il file inserito non è un GeoJSON valido</p>
+        @if (inputGeoJSON.files && inputGeoJSON.files[0] && uploadFileForm.get('fileName')?.invalid) {
+        <p>Il file inserito non è un GeoJSON valido</p>
         }
     </div>
 </form>

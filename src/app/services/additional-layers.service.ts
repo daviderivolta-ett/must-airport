@@ -1,18 +1,29 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { CollectionReference, DocumentData, DocumentSnapshot, Query, QuerySnapshot, addDoc, collection, getDocs, onSnapshot, query } from 'firebase/firestore';
+import { CollectionReference, DocumentData, Query, QuerySnapshot, addDoc, collection, onSnapshot, query } from 'firebase/firestore';
 import { AdditionalLayer, AdditionalLayerDb, additionalLayerConverter } from '../models/additional-layer.model';
 import { Storage } from '@angular/fire/storage';
-import { StorageReference, getBlob, getBytes, getDownloadURL, getStream, ref, uploadBytes } from 'firebase/storage';
+import { StorageReference, getBlob, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdditionalLayersService {
   public geoJson: any;
-  public layersSignal: WritableSignal<AdditionalLayer[]> = signal([]);
+  public allLayersSignal: WritableSignal<AdditionalLayer[]> = signal([]);
+  public currentLayersSignal: WritableSignal<AdditionalLayer[]> = signal([]);
+  private _currentLayers: AdditionalLayer[] = [];
 
   constructor(private db: Firestore, private storage: Storage) { }
+
+  public get currentLayers(): AdditionalLayer[] {
+    return this._currentLayers;
+  }
+
+  public set currentLayers(currentLayers: AdditionalLayer[]) {
+    this._currentLayers = currentLayers;
+    this.currentLayersSignal.set(this.currentLayers);
+  }
 
   public isValidGeoJSON(content: string): boolean {
     try {
@@ -27,21 +38,24 @@ export class AdditionalLayersService {
   public async getAllAdditionalLayers() {
     const ref = collection(this.db, 'additionalLayers').withConverter(additionalLayerConverter);
     if (!ref) return;
+  
     const q: Query = query(ref as CollectionReference<AdditionalLayerDb>);
+  
     const unsubscribe = onSnapshot(q,
-      (querySnapshot: QuerySnapshot<DocumentData>) => {
-        const layers: AdditionalLayer[] = [];
-        querySnapshot.forEach(doc => {
+      async (querySnapshot: QuerySnapshot<DocumentData>) => {
+        const promises: Promise<AdditionalLayer>[] = querySnapshot.docs.map(async doc => {
           const layerDb: AdditionalLayerDb = doc.data() as AdditionalLayerDb;
-          const layer: AdditionalLayer = new AdditionalLayer(layerDb.name, layerDb.geoJsonUrl, layerDb.vertId, doc.id, null);
-          this.getGeoJson(layer.geoJsonUrl);
-          layers.push(layer);
+          const geoJSON = await this.getGeoJson(layerDb.fileName);
+          return new AdditionalLayer(layerDb.name, layerDb.fileName, layerDb.vertId, doc.id, geoJSON);
         });
-        this.layersSignal.set(layers);
+  
+        const layers: AdditionalLayer[] = await Promise.all(promises);
+        this.allLayersSignal.set(layers);
       },
       (err: Error) => console.log(err)
     );
   }
+  
 
   public async setAdditionalLayer(data: AdditionalLayerDb): Promise<void> {
     const ref = collection(this.db, 'additionalLayers').withConverter(additionalLayerConverter);
@@ -55,28 +69,6 @@ export class AdditionalLayersService {
       return await getDownloadURL(storageRef);
     });
   }
-
-  // public readFile(file: File): void {
-  //   const reader: FileReader = new FileReader();
-
-  //   reader.onload = (e: Event) => {
-  //     const textDecoder = new TextDecoder('utf-8');
-  //     const content = textDecoder.decode(reader.result as ArrayBuffer);
-
-  //     try {
-  //       if (this.isValidGeoJSON(content)) {
-  //         const parsedGeoJSON: any = JSON.parse(content);
-  //         console.log('Il file è un GeoJSON valido.');
-  //         this.geoJson = parsedGeoJSON;
-  //       } else {
-  //         console.log('Il file non è un GeoJSON valido.');
-  //       }
-  //     } catch (error) {
-  //       console.error('Errore durante il parsing del JSON:', error);
-  //     }
-  //   }
-  //   reader.readAsArrayBuffer(file);
-  // }
 
   public async readFile(file: File): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
@@ -104,13 +96,44 @@ export class AdditionalLayersService {
     });
   }
 
-  private getGeoJson(url: string): void {
-    const storageRef: StorageReference = ref(this.storage, url);
-    // getBytes(storageRef).then(a => console.log(a));
+  private async getGeoJson(fileName: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const storageRef: StorageReference = ref(this.storage, `geoJSON/${fileName}`);
 
-    // getDownloadURL(storageRef)
-    //   .then(url => {
-    //       console.log(url);          
-    //   })
+      getBlob(storageRef).then(blob => {
+        const fileReader: FileReader = new FileReader();
+
+        fileReader.onload = (event: ProgressEvent<FileReader>) => {
+          if (event.target && typeof event.target.result === 'string') {
+            const content: string = event.target.result;
+            const geoJSON: any = JSON.parse(content);
+            console.log(geoJSON);            
+            resolve(geoJSON);
+          }
+        }
+
+        fileReader.onerror = (error) => {
+          reject(error);
+        };
+
+        fileReader.readAsText(blob);
+      })
+        .catch((error: Error) => {
+          reject(error);
+        });
+    });
+  }
+
+  public addAdditionalLayer(layer: AdditionalLayer): void {
+    const layers: AdditionalLayer[] = [...this.currentLayers];
+    layers.push(layer);
+    this.currentLayers = [...layers];
+  }
+
+  public removeAdditionalLayer(layer: AdditionalLayer): void {
+    const layers: AdditionalLayer[] = this.currentLayers.filter((l: AdditionalLayer) => {
+      return l.id !== layer.id;
+    });   
+    this.currentLayers = [...layers];
   }
 }

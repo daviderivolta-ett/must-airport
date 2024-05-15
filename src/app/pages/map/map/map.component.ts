@@ -8,6 +8,8 @@ import { DialogService } from '../../../observables/dialog.service';
 import { ThemeService } from '../../../services/theme.service';
 import { COLORMODE } from '../../../models/color-mode.model';
 import { AdditionalLayersMenuService } from '../../../observables/additional-layers-menu.service';
+import { AdditionalLayersService } from '../../../services/additional-layers.service';
+import { AdditionalLayer } from '../../../models/additional-layer.model';
 
 @Component({
   selector: 'app-map',
@@ -19,8 +21,11 @@ import { AdditionalLayersMenuService } from '../../../observables/additional-lay
 export class MapComponent {
   public reports: ReportParent[] = [];
   private geoJsonData: any;
-  private markersLayer = Leaflet.layerGroup();
+
   private map!: Leaflet.Map;
+  private markersLayer = Leaflet.layerGroup();
+  private additionalLayers: Leaflet.LayerGroup = Leaflet.layerGroup();
+
   private darkTile: Leaflet.Layer = Leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: 'abcd',
@@ -32,7 +37,14 @@ export class MapComponent {
     maxZoom: 20
   });
 
-  constructor(private mapService: MapService, private reportsService: ReportsService, private sidebarService: SidebarService, private additionalLayersMenuService: AdditionalLayersMenuService, private dialogService: DialogService, private themeService: ThemeService) {
+  private pathOptions: Leaflet.PathOptions = {
+    stroke: false,
+    color: '#3388ff',
+    fillColor: '#3388ff',
+    fillOpacity: 0.5
+  }
+
+  constructor(private mapService: MapService, private reportsService: ReportsService, private sidebarService: SidebarService, private additionalLayersService: AdditionalLayersService, private additionalLayersMenuService: AdditionalLayersMenuService, private dialogService: DialogService, private themeService: ThemeService) {
     effect(() => {
       this.markersLayer.clearLayers();
       this.reports = this.reportsService.reportsSignal();
@@ -57,11 +69,22 @@ export class MapComponent {
         this.lightTile.addTo(this.map);
       }
     });
+
+    effect(() => {
+      if (this.additionalLayersService.currentLayersSignal() === null) return;
+      this.additionalLayers.clearLayers();
+      this.additionalLayersService.currentLayersSignal().forEach((layer: AdditionalLayer) => {
+        Leaflet.geoJSON(layer.geoJson, {
+          style: this.pathOptions
+        }).addTo(this.additionalLayers).bringToBack();
+      });
+    });
   }
 
   ngOnInit(): void {
     this.initMap();
     this.darkTile.addTo(this.map);
+    this.map.addLayer(this.additionalLayers);
     this.map.addLayer(this.markersLayer);
   }
 

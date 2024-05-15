@@ -21,7 +21,7 @@ export class AdditionalLayersFormComponent {
   });
 
   constructor(private fb: FormBuilder, private authService: AuthService, private additionalLayersService: AdditionalLayersService) {
-    this.uploadFileForm.valueChanges.subscribe(change => console.log(change))
+    this.uploadFileForm.valueChanges.subscribe(change => console.log(this.uploadFileForm));
   }
 
   public async onFileChange(event: Event): Promise<void> {
@@ -29,6 +29,9 @@ export class AdditionalLayersFormComponent {
     if (!inputElement.files) return;
     const file: any = inputElement.files[0];
     const isValid: boolean = await this.additionalLayersService.readFile(file);
+    // this.uploadFileForm.get('fileName')?.clearValidators();
+    // this.uploadFileForm.controls['fileName'].addAsyncValidators(this.fileNameValidator());
+    // this.uploadFileForm.get('fileName')?.updateValueAndValidity();
     this.uploadFileForm.controls['fileName'].setValue(isValid ? file.name : '');
   }
 
@@ -39,9 +42,10 @@ export class AdditionalLayersFormComponent {
     const file: File = input.files[0];
     const fileName: string = this.generateFileName(file);
     const url: string = await this.additionalLayersService.uploadGeoJSON(file, fileName);
-    const layer: AdditionalLayerDb = new AdditionalLayerDb(this.uploadFileForm.value.name, url, this.authService.currentApp);
+    const layer: AdditionalLayerDb = new AdditionalLayerDb(this.uploadFileForm.value.name, fileName, this.authService.currentApp);
     this.additionalLayersService.setAdditionalLayer(layer);
     this.additionalLayersService.geoJson = null;
+    this.uploadFileForm.reset();
   }
 
   private generateFileName(file: File): string {
@@ -52,5 +56,13 @@ export class AdditionalLayersFormComponent {
 
   public toggleForm(): void {
     this.isOpen = !this.isOpen;
+  }
+
+  private fileNameValidator(): AsyncValidatorFn {
+    return async (control: AbstractControl): Promise<ValidationErrors | null> => {
+      const value: string = control.value;
+      if (value !== '') return null;
+      return { 'error': { value } }
+    }
   }
 }

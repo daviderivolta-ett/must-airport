@@ -33,7 +33,6 @@ export interface MiniMapData {
   providedIn: 'root'
 })
 export class MapService {
-
   constructor() { }
 
   public createGeoJson(reports: ReportParent[]): GeoJsonData {

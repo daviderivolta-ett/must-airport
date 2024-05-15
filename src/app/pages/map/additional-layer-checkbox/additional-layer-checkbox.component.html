@@ -1,3 +1,7 @@
-<label for="">
-    <input type="checkbox" id="">
-</label>
+<div class="checkbox-single">
+    <label [for]="layer.id" class="checkbox-single-label">
+        <input type="checkbox" [id]="layer.id" [(ngModel)]="isChecked" (change)="handleCheckbox()">
+        <span class="checkmark"></span>
+        {{layer.name.charAt(0).toUpperCase() + layer.name.slice(1)}}
+    </label>
+</div>

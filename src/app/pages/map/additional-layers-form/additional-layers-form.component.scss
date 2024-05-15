@@ -21,7 +21,6 @@
 form {
     display: none;
     flex-direction: column;
-    gap: 8px;
     padding: 16px;
     font-size: 0.9rem;
     color: var(--f-default);
@@ -40,6 +39,7 @@ form {
     background: var(--bg-subtle);
     border: 1px solid var(--border-default);
     border-radius: 4px;
+    margin: 0 0 8px 0;
     
     &:hover {
         border-color: var(--border-emphasis);        
@@ -56,6 +56,7 @@ form {
     box-sizing: border-box;
     background-color: var(--bg-overlay);
     border-radius: 4px;
+    margin: 0 0 8px 0;
 }
 
 .custom-file-input input[type="file"] {
