@@ -10,6 +10,7 @@ import { COLORMODE } from '../../../models/color-mode.model';
 import { AdditionalLayersMenuService } from '../../../observables/additional-layers-menu.service';
 import { AdditionalLayersService } from '../../../services/additional-layers.service';
 import { AdditionalLayer } from '../../../models/additional-layer.model';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-map',
@@ -44,7 +45,7 @@ export class MapComponent {
     fillOpacity: 0.5
   }
 
-  constructor(private mapService: MapService, private reportsService: ReportsService, private sidebarService: SidebarService, private additionalLayersService: AdditionalLayersService, private additionalLayersMenuService: AdditionalLayersMenuService, private dialogService: DialogService, private themeService: ThemeService) {
+  constructor(private authService: AuthService, private mapService: MapService, private reportsService: ReportsService, private sidebarService: SidebarService, private additionalLayersService: AdditionalLayersService, private additionalLayersMenuService: AdditionalLayersMenuService, private dialogService: DialogService, private themeService: ThemeService) {
     effect(() => {
       this.markersLayer.clearLayers();
       this.reports = this.reportsService.reportsSignal();
@@ -79,6 +80,12 @@ export class MapComponent {
         }).addTo(this.additionalLayers).bringToBack();
       });
     });
+
+    // effect(() => {
+    //   if (this.authService.currentAppSignal() === null) return;    
+    //   this.additionalLayers.clearLayers();
+    //   this.additionalLayersService.currentLayers = [];
+    // });
   }
 
   ngOnInit(): void {
