@@ -22,7 +22,7 @@ export class AdditionalLayerCheckboxComponent {
     return this._layer;
   }
 
-  private _layer: AdditionalLayer = new AdditionalLayer('', '', VERTICAL.Default, '', null);
+  private _layer: AdditionalLayer = AdditionalLayer.createEmpty();
 
   constructor(private additionalLayersService: AdditionalLayersService) { }
 

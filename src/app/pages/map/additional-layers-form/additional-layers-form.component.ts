@@ -21,7 +21,7 @@ export class AdditionalLayersFormComponent {
   });
 
   constructor(private fb: FormBuilder, private authService: AuthService, private additionalLayersService: AdditionalLayersService) {
-    this.uploadFileForm.valueChanges.subscribe(change => console.log(this.uploadFileForm));
+    // this.uploadFileForm.valueChanges.subscribe(change => console.log(this.uploadFileForm));
   }
 
   public async onFileChange(event: Event): Promise<void> {
@@ -42,10 +42,11 @@ export class AdditionalLayersFormComponent {
     const file: File = input.files[0];
     const fileName: string = this.generateFileName(file);
     const url: string = await this.additionalLayersService.uploadGeoJSON(file, fileName);
-    const layer: AdditionalLayerDb = new AdditionalLayerDb(this.uploadFileForm.value.name, fileName, this.authService.currentApp);
+    const layer: AdditionalLayerDb = new AdditionalLayerDb(this.uploadFileForm.value.name, fileName, this.authService.currentApp, { strokeColor: 'red', fillColor: 'green' });
     this.additionalLayersService.setAdditionalLayer(layer);
-    this.additionalLayersService.geoJson = null;
+    // this.additionalLayersService.geoJson = null;
     this.uploadFileForm.reset();
+    input.value = '';
   }
 
   private generateFileName(file: File): string {

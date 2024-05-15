@@ -6,6 +6,7 @@ import { AdditionalLayerCheckboxComponent } from '../additional-layer-checkbox/a
 import { AdditionalLayersMenuService } from '../../../observables/additional-layers-menu.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { NgClass } from '@angular/common';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-additional-layers-menu',
@@ -34,16 +35,18 @@ export class AdditionalLayersMenuComponent {
   public layers: AdditionalLayer[] = [];
   public isOpen: boolean = false;
 
-  constructor(private additionalLayersService: AdditionalLayersService, private additionalLayersMenuService: AdditionalLayersMenuService) {
+  constructor(private authService: AuthService, private additionalLayersService: AdditionalLayersService, private additionalLayersMenuService: AdditionalLayersMenuService) {
     effect(() => {
-      if (this.additionalLayersService.allLayersSignal().length === 0) return;
       this.layers = this.additionalLayersService.allLayersSignal();
+      console.log(this.layers);      
     });
 
     effect(() => this.isOpen = this.additionalLayersMenuService.isOpenSignal());
-  }
 
-  public ngOnInit(): void {
-    this.additionalLayersService.getAllAdditionalLayers();
+    effect(() => {
+      if (this.authService.currentAppSignal() === null) return;
+      console.log(this.authService.currentApp);
+      if (this.authService.currentApp) this.additionalLayersService.getAllAdditionalLayers(this.authService.currentApp);
+    });
   }
 }

@@ -1,15 +1,16 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { CollectionReference, DocumentData, Query, QuerySnapshot, addDoc, collection, onSnapshot, query } from 'firebase/firestore';
+import { CollectionReference, DocumentData, Query, QuerySnapshot, addDoc, collection, onSnapshot, query, where } from 'firebase/firestore';
 import { AdditionalLayer, AdditionalLayerDb, additionalLayerConverter } from '../models/additional-layer.model';
 import { Storage } from '@angular/fire/storage';
 import { StorageReference, getBlob, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { VERTICAL } from '../models/app-flow.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdditionalLayersService {
-  public geoJson: any;
+  // public geoJson: any;
   public allLayersSignal: WritableSignal<AdditionalLayer[]> = signal([]);
   public currentLayersSignal: WritableSignal<AdditionalLayer[]> = signal([]);
   private _currentLayers: AdditionalLayer[] = [];
@@ -35,18 +36,18 @@ export class AdditionalLayersService {
     }
   }
 
-  public async getAllAdditionalLayers() {
+  public async getAllAdditionalLayers(vertId: VERTICAL) {
     const ref = collection(this.db, 'additionalLayers').withConverter(additionalLayerConverter);
     if (!ref) return;
-  
-    const q: Query = query(ref as CollectionReference<AdditionalLayerDb>);
+   
+    const q: Query = query(ref as CollectionReference<AdditionalLayerDb>, where('vertId', '==', vertId));
   
     const unsubscribe = onSnapshot(q,
       async (querySnapshot: QuerySnapshot<DocumentData>) => {
         const promises: Promise<AdditionalLayer>[] = querySnapshot.docs.map(async doc => {
           const layerDb: AdditionalLayerDb = doc.data() as AdditionalLayerDb;
           const geoJSON = await this.getGeoJson(layerDb.fileName);
-          return new AdditionalLayer(layerDb.name, layerDb.fileName, layerDb.vertId, doc.id, geoJSON);
+          return new AdditionalLayer(layerDb.name, layerDb.fileName, layerDb.vertId, layerDb.style, doc.id, geoJSON);
         });
   
         const layers: AdditionalLayer[] = await Promise.all(promises);
@@ -106,8 +107,7 @@ export class AdditionalLayersService {
         fileReader.onload = (event: ProgressEvent<FileReader>) => {
           if (event.target && typeof event.target.result === 'string') {
             const content: string = event.target.result;
-            const geoJSON: any = JSON.parse(content);
-            console.log(geoJSON);            
+            const geoJSON: any = JSON.parse(content); 
             resolve(geoJSON);
           }
         }
