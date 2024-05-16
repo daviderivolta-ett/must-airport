@@ -1,4 +1,4 @@
-import { ApplicationRef, Injectable, WritableSignal, createComponent, effect, signal } from '@angular/core';
+import { ApplicationRef, Injectable, createComponent } from '@angular/core';
 import { SnackbarComponent } from '../components/snackbar/snackbar.component';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../models/snackbar.model';
 

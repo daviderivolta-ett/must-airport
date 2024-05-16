@@ -4,11 +4,12 @@ import { AdditionalLayersService } from '../../../services/additional-layers.ser
 import { AuthService } from '../../../services/auth.service';
 import { AdditionalLayer, AdditionalLayerDb, AdditionalLayerStyle } from '../../../models/additional-layer.model';
 import { NgClass } from '@angular/common';
+import { AlertComponent } from '../../../components/alert/alert.component';
 
 @Component({
   selector: 'app-additional-layers-form',
   standalone: true,
-  imports: [NgClass, ReactiveFormsModule],
+  imports: [NgClass, ReactiveFormsModule, AlertComponent],
   templateUrl: './additional-layers-form.component.html',
   styleUrl: './additional-layers-form.component.scss'
 })
@@ -52,9 +53,9 @@ export class AdditionalLayersFormComponent {
     const fileName: string = this.generateFileName(file);
     let style: AdditionalLayerStyle = this.additionalLayersService.getGeoJsonStyle(JSON.parse(fileContentString));
 
-    await this.additionalLayersService.uploadGeoJSON(file, fileName);
+    // await this.additionalLayersService.uploadGeoJSON(file, fileName);
     const layer: AdditionalLayerDb = new AdditionalLayerDb(this.uploadFileForm.value.name, fileName, this.authService.currentApp, style);
-    this.additionalLayersService.setAdditionalLayer(layer);
+    // this.additionalLayersService.setAdditionalLayer(layer);
 
     this.uploadFileForm.reset();
     input.value = '';

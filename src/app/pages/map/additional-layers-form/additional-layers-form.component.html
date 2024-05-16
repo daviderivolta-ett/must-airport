@@ -1,8 +1,8 @@
-<button type="button" class="dropdown-toggle" (click)="toggleForm()">
+<button type="button" class="dropdown-toggle" [ngClass]="{'dropdown-toggle-open': isOpen}" (click)="toggleForm()">
     Aggiungi nuovo layer
     <span class="material-symbols-outlined">add</span>
 </button>
-<form [ngClass]="{'dropdown-toggle-open': isOpen}" [formGroup]="uploadFileForm">
+<form [ngClass]="{'dropdown-open': isOpen}" [formGroup]="uploadFileForm">
     <input type="text" class="additional-layer-name-input" placeholder="Scegli un nome per il layer"
         formControlName="name">
     <label for="file-input" class="custom-file-input">
@@ -14,10 +14,12 @@
     <button type="submit" [disabled]="!uploadFileForm.valid" (click)="handleSubmit(inputGeoJSON)">Carica</button>
     <div class="validation-msg">
         @if (!uploadFileForm.get('name')?.pristine && uploadFileForm.get('name')?.invalid) {
-        <p>Il campo nome è obbligatorio</p>
-        }
-        @if (inputGeoJSON.files && inputGeoJSON.files[0] && uploadFileForm.get('fileName')?.invalid) {
-        <p>Il file inserito non è un GeoJSON valido</p>
+        <!-- <p>Il campo nome è obbligatorio</p> -->
+        <app-alert msg="Il campo nome è obbligatorio"/>
+    }
+    @if (inputGeoJSON.files && inputGeoJSON.files[0] && uploadFileForm.get('fileName')?.invalid) {
+        <!-- <p>Il file inserito non è un GeoJSON valido</p> -->
+        <app-alert msg="Il file inserito non è un GeoJSON valido"/>
         }
     </div>
 </form>
