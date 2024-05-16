@@ -14,6 +14,7 @@ import { LoggedUser, USERLEVEL, UserData } from './models/user.model';
 import { UserService } from './services/user.service';
 import { Timestamp } from 'firebase/firestore';
 import { User } from 'firebase/auth';
+import { AdditionalLayersService } from './services/additional-layers.service';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,7 @@ import { User } from 'firebase/auth';
 export class AppComponent {
   public title: string = 'must';
 
-  constructor(private firebaseService: FirebaseService, private authService: AuthService, private codesService: CodesService, private userService: UserService, private reportsService: ReportsService, private settingsService: SettingsService, private themeService: ThemeService, private splashService: SplashService) {    
+  constructor(private firebaseService: FirebaseService, private authService: AuthService, private codesService: CodesService, private userService: UserService, private reportsService: ReportsService, private additionalLayersService: AdditionalLayersService, private settingsService: SettingsService, private themeService: ThemeService, private splashService: SplashService) {    
     this.splashService.createSplash();
     this.codesService.getAllCodes();
     effect(async () => {
@@ -68,6 +69,8 @@ export class AppComponent {
       if (!currentApp || !loggedUser) return;
 
       this.splashService.createSplash();
+
+      this.additionalLayersService.currentLayers = [];
 
       if (currentApp === VERTICAL.Default) {
         switch (loggedUser.level) {
