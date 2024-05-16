@@ -3,9 +3,12 @@
     <!-- <app-additional-layers-form /> -->
     <ul class="additional-layers-list">
         @if (layers.length !== 0) {
-        @for (layer of layers; track layer.id) {
-        <li><app-additional-layer-checkbox [layer]="layer" /></li>
+            @for (layer of layers; track layer.id) {
+            <li><app-additional-layer-checkbox [layer]="layer" /></li>
+            }
         }
+        @else {
+            <p class="empty-msg">Nessun è presente alcun layer aggiuntivo</p>
         }
     </ul>
 </div>
