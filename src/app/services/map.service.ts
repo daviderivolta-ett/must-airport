@@ -14,7 +14,7 @@ export interface FeatureProperties {
 }
 
 export interface GeoJSONFeature {
-  type: "Feature";
+  type: string;
   geometry: Geometry;
   properties: FeatureProperties;
 }

@@ -69,7 +69,7 @@ app-sidebar-card:last-child {
     cursor: pointer;
     position: absolute;
     top: 16px;
-    right: -48px;
+    right: -56px;
     z-index: 999;
     transform: rotateY(180deg);
     display: flex;
@@ -81,6 +81,7 @@ app-sidebar-card:last-child {
     border: 1px solid var(--border-subtle);
     height: 40px;
     width: 40px;
+    box-sizing: border-box;
     transition: .2s ease-in-out;
 
     &:hover {

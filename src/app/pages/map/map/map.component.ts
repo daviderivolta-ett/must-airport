@@ -37,13 +37,6 @@ export class MapComponent {
     maxZoom: 20
   });
 
-  private pathOptions: Leaflet.PathOptions = {
-    stroke: false,
-    color: '#3388ff',
-    fillColor: '#3388ff',
-    fillOpacity: 0.5
-  }
-
   constructor(private mapService: MapService, private reportsService: ReportsService, private sidebarService: SidebarService, private additionalLayersService: AdditionalLayersService, private additionalLayersMenuService: AdditionalLayersMenuService, private dialogService: DialogService, private themeService: ThemeService) {
     effect(() => {
       this.markersLayer.clearLayers();
@@ -75,7 +68,11 @@ export class MapComponent {
       this.additionalLayers.clearLayers();
       this.additionalLayersService.currentLayersSignal().forEach((layer: AdditionalLayer) => {
         Leaflet.geoJSON(layer.geoJson, {
-          style: this.pathOptions
+          style: {
+            fillColor: layer.style.fillColor,
+            color: layer.style.strokeColor,
+            weight: 1
+          }
         }).addTo(this.additionalLayers).bringToBack();
       });
     });

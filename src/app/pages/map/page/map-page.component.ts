@@ -5,7 +5,6 @@ import { ReportsService } from '../../../services/reports.service';
 import { ReportParent } from '../../../models/report-parent.model';
 import { TechElementTag } from '../../../models/tech-element-tag.model';
 import { DialogComponent } from '../dialog/dialog.component';
-import { AdditionLayersMenuToggleComponent } from '../addition-layers-menu-toggle/addition-layers-menu-toggle.component';
 import { AdditionalLayersMenuComponent } from '../additional-layers-menu/additional-layers-menu.component';
 import { LoggedUser } from '../../../models/user.model';
 import { VERTICAL } from '../../../models/app-flow.model';
@@ -14,7 +13,7 @@ import { AuthService } from '../../../services/auth.service';
 @Component({
   selector: 'app-map-page',
   standalone: true,
-  imports: [MapComponent, SidebarComponent, DialogComponent, AdditionalLayersMenuComponent, AdditionLayersMenuToggleComponent],
+  imports: [MapComponent, SidebarComponent, DialogComponent, AdditionalLayersMenuComponent],
   templateUrl: './map-page.component.html',
   styleUrl: './map-page.component.scss'
 })

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AdditionalLayersService } from '../../../services/additional-layers.service';
 import { AuthService } from '../../../services/auth.service';
-import { AdditionalLayer, AdditionalLayerDb } from '../../../models/additional-layer.model';
+import { AdditionalLayer, AdditionalLayerDb, AdditionalLayerStyle } from '../../../models/additional-layer.model';
 import { NgClass } from '@angular/common';
 
 @Component({
@@ -28,10 +28,10 @@ export class AdditionalLayersFormComponent {
     const inputElement: HTMLInputElement = event.target as HTMLInputElement;
     if (!inputElement.files) return;
     const file: any = inputElement.files[0];
-    const isValid: boolean = await this.additionalLayersService.readFile(file);
-    // this.uploadFileForm.get('fileName')?.clearValidators();
-    // this.uploadFileForm.controls['fileName'].addAsyncValidators(this.fileNameValidator());
-    // this.uploadFileForm.get('fileName')?.updateValueAndValidity();
+    // const isValid: boolean = await this.additionalLayersService.readFile(file);
+    const fileContentString: string | undefined = await this.additionalLayersService.readFile(file);
+    let isValid: boolean = false;
+    fileContentString ? isValid = this.additionalLayersService.isValidGeoJSON(fileContentString) : isValid = false;
     this.uploadFileForm.controls['fileName'].setValue(isValid ? file.name : '');
   }
 
@@ -40,11 +40,22 @@ export class AdditionalLayersFormComponent {
 
     if (!input.files) return
     const file: File = input.files[0];
+
+    const fileContentString: string | undefined = await this.additionalLayersService.readFile(file);
+
+    if (!fileContentString) {
+      this.uploadFileForm.reset();
+      input.value = '';
+      return;
+    }
+
     const fileName: string = this.generateFileName(file);
-    const url: string = await this.additionalLayersService.uploadGeoJSON(file, fileName);
-    const layer: AdditionalLayerDb = new AdditionalLayerDb(this.uploadFileForm.value.name, fileName, this.authService.currentApp, { strokeColor: 'red', fillColor: 'green' });
+    let style: AdditionalLayerStyle = this.additionalLayersService.getGeoJsonStyle(JSON.parse(fileContentString));
+
+    await this.additionalLayersService.uploadGeoJSON(file, fileName);
+    const layer: AdditionalLayerDb = new AdditionalLayerDb(this.uploadFileForm.value.name, fileName, this.authService.currentApp, style);
     this.additionalLayersService.setAdditionalLayer(layer);
-    // this.additionalLayersService.geoJson = null;
+
     this.uploadFileForm.reset();
     input.value = '';
   }

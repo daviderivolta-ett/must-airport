@@ -1,4 +1,4 @@
-import { DocumentSnapshot} from 'firebase/firestore';
+import { DocumentSnapshot } from 'firebase/firestore';
 import { VERTICAL } from './app-flow.model';
 
 export interface AdditionalLayerStyle {
@@ -12,7 +12,7 @@ export class AdditionalLayerDb {
     vertId: VERTICAL;
     style: AdditionalLayerStyle;
 
-    constructor(name: string, fileName: string, vertId: VERTICAL, style: AdditionalLayerStyle) {
+    constructor(name: string, fileName: string, vertId: VERTICAL, style: AdditionalLayerStyle = { fillColor: '#3388ff', strokeColor: '#3388ff' }) {
         this.name = name;
         this.fileName = fileName;
         this.vertId = vertId;
@@ -28,7 +28,7 @@ export class AdditionalLayerDb {
             '',
             '',
             VERTICAL.Default,
-            {fillColor: '', strokeColor: ''},
+            { fillColor: '#3388ff', strokeColor: '#3388ff' },
             '',
             null
         )
@@ -40,7 +40,8 @@ export const additionalLayerConverter = {
         return {
             name: layer.name,
             fileName: layer.fileName,
-            vertId: layer.vertId
+            vertId: layer.vertId,
+            style: layer.style
         };
     },
     fromFirestore: (snapshot: DocumentSnapshot, options: any) => {
@@ -54,7 +55,7 @@ export class AdditionalLayer extends AdditionalLayerDb {
     id: string;
     geoJson: any;
 
-    constructor(name: string, fileName: string, vertId: VERTICAL, style: AdditionalLayerStyle, id: string, geoJson: any) {
+    constructor(name: string, fileName: string, vertId: VERTICAL, style: AdditionalLayerStyle = { fillColor: '3388ff', strokeColor: '3388ff' }, id: string, geoJson: any) {
         super(name, fileName, vertId, style);
         this.id = id;
         this.geoJson = geoJson;

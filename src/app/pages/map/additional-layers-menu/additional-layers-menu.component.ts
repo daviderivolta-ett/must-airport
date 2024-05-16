@@ -17,7 +17,7 @@ import { AuthService } from '../../../services/auth.service';
   animations: [
     trigger('openClose', [
       state('open', style({
-        right: '10px'
+        right: '0'
       })),
       state('closed', style({
         right: '-384px'
@@ -45,8 +45,12 @@ export class AdditionalLayersMenuComponent {
 
     effect(() => {
       if (this.authService.currentAppSignal() === null) return;
-      console.log(this.authService.currentApp);
       if (this.authService.currentApp) this.additionalLayersService.getAllAdditionalLayers(this.authService.currentApp);
     });
+  }
+
+  public toggleMenu(): void {
+    this.isOpen = !this.isOpen;
+    this.additionalLayersMenuService.isOpenSignal.set(this.isOpen);
   }
 }

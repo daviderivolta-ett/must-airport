@@ -1,5 +1,10 @@
-<div class="dialog" [@openClose]="isOpen ? 'open' : 'closed'">
-    <h2>Layer aggiuntivi</h2>
+<div class="menu" [@openClose]="isOpen ? 'open' : 'closed'">
+    <button type="button" class="toggle-btn" [ngClass]="{'open': isOpen}" (click)="toggleMenu()">
+        <span class="material-symbols-outlined">stacks</span>
+    </button>
+    <div class="header">
+        <h2>Layer aggiuntivi</h2>
+    </div>
     <!-- <app-additional-layers-form /> -->
     <ul class="additional-layers-list">
         @if (layers.length !== 0) {
@@ -8,7 +13,7 @@
             }
         }
         @else {
-            <p class="empty-msg">Nessun è presente alcun layer aggiuntivo</p>
+            <p class="empty-msg">Non è presente alcun layer aggiuntivo</p>
         }
     </ul>
 </div>
