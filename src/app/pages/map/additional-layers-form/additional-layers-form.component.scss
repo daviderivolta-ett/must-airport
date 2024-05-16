@@ -63,7 +63,8 @@ form {
     align-items: center;
     width: 100%;
     box-sizing: border-box;
-    background-color: var(--bg-overlay);
+    border: 1px solid var(--border-default);
+    background-color: var(--bg-default);
     border-radius: 4px;
     margin: 0 0 8px 0;
 }
@@ -71,7 +72,7 @@ form {
 .custom-file-input input[type="file"] {
     cursor: inherit;
     width: 100%;
-    padding: 0 0 0 16px;
+    padding: 0 8px 0 8px;
 }
 
 .custom-file-input input[type="file"]::file-selector-button {
@@ -81,7 +82,7 @@ form {
 .custom-file-input span {
     // display: inline-block;
     background-color: var(--bg-subtle);
-    color: white;
+    color: var(--f-default);
     border-radius: 4px 0 0 4px;
     padding: 8px;
     height: 100%;
