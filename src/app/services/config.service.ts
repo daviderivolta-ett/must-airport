@@ -3,7 +3,6 @@ import { VERTICAL } from '../models/app-flow.model';
 import { DocumentReference, DocumentSnapshot, doc, getDoc } from 'firebase/firestore';
 import { Firestore } from '@angular/fire/firestore';
 import { Tag } from '../models/tag.model';
-import { TechElementTag } from '../models/tech-element-tag.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +24,7 @@ export class ConfigService {
       if (!this.config.parentFlows) return;
       if (!this.config.childFlows) return;
       // console.log(this.config);
-      // console.log(JSON.parse(this.config.parentFlows.default));
+      console.log(JSON.parse(this.config.parentFlows.default));
       // console.log(JSON.parse(this.config.childFlows.vertical.flowJson));
 
       let parentFlowTags: Tag[] = [];
@@ -48,13 +47,11 @@ export class ConfigService {
     effect(() => {
       if (this.parentFlowTagsSignal().length === 0) return;
       this.parentFlowTags = this.parentFlowTagsSignal();
-      // console.log(this.parentFlowTags);
     });
 
     effect(() => {
       if (this.childFlowTagsSignal().length === 0) return;
       this.childFlowTags = this.childFlowTagsSignal();
-      // console.log(this.childFlowTags);
     });
   }
 

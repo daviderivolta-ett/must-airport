@@ -37,8 +37,7 @@ export class AdditionalLayersMenuComponent {
 
   constructor(private authService: AuthService, private additionalLayersService: AdditionalLayersService, private additionalLayersMenuService: AdditionalLayersMenuService) {
     effect(() => {
-      this.layers = this.additionalLayersService.allLayersSignal();
-      console.log(this.layers);      
+      this.layers = this.additionalLayersService.allLayersSignal();    
     });
 
     effect(() => this.isOpen = this.additionalLayersMenuService.isOpenSignal());
