@@ -9,6 +9,8 @@ import { AdditionalLayersMenuComponent } from '../additional-layers-menu/additio
 import { LoggedUser } from '../../../models/user.model';
 import { VERTICAL } from '../../../models/app-flow.model';
 import { AuthService } from '../../../services/auth.service';
+import { ConfigService } from '../../../services/config.service';
+import { WebAppConfig } from '../../../models/config.model';
 
 @Component({
   selector: 'app-map-page',
@@ -18,12 +20,13 @@ import { AuthService } from '../../../services/auth.service';
   styleUrl: './map-page.component.scss'
 })
 export class MapPageComponent {
+  public config: WebAppConfig = this.configService.config;
   public loggedUser: LoggedUser | null = null;
   public currentApp: VERTICAL | null = null;
   public reports: ReportParent[] = [];
   public techElementTags: TechElementTag[] = [];
 
-  constructor(private reportsService: ReportsService, private authService: AuthService) {
+  constructor(private configService: ConfigService, private authService: AuthService, private reportsService: ReportsService) {
     effect(() => {
       this.reports = this.reportsService.reportsSignal();
       // console.log(this.reports);

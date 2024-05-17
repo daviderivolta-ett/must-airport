@@ -6,6 +6,7 @@ import { FiltersFormData } from '../services/reports.service';
 })
 export class FiltersService {
   public filtersLastState: FiltersFormData = {
+      closed: true,
       notAssigned: true,
       low: true,
       medium: true,

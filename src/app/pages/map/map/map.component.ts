@@ -20,6 +20,7 @@ import { AdditionalLayer } from '../../../models/additional-layer.model';
 })
 export class MapComponent {
   public reports: ReportParent[] = [];
+  public closedReports: ReportParent[] = [];
   private geoJsonData: any;
 
   private map!: Leaflet.Map;
@@ -128,6 +129,11 @@ export class MapComponent {
 
   private chooseMarkerColor(feature: GeoJSONFeature): string {
     let color: string;
+
+    if (feature.properties['report'].closingChildId) {
+      return color = 'blue';
+    }
+
     switch (feature.properties['report'].priority) {
       case 'high':
         color = 'red';

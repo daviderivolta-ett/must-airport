@@ -4,6 +4,7 @@ import { SidebarService } from '../../../observables/sidebar.service';
 import { ReportParent } from '../../../models/report-parent.model';
 import { SidebarCardComponent } from '../sidebar-card/sidebar-card.component';
 import { FiltersComponent } from '../filters/filters.component';
+import { WebAppConfig } from '../../../models/config.model';
 
 @Component({
   selector: 'app-sidebar',
@@ -13,6 +14,13 @@ import { FiltersComponent } from '../filters/filters.component';
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
+  private _config: WebAppConfig = WebAppConfig.createEmpty();
+  public get config(): WebAppConfig {
+    return this._config;
+  }
+  @Input() public set config(value: WebAppConfig) {
+    this._config = value;
+  };
   @Input() public reports: ReportParent[] = [];
   public isOpen: boolean = false;
 

@@ -156,8 +156,8 @@ export class ChartsService {
 
     techElementTags = reports.flatMap(report =>
       report.fields.tagTechElement
-        .filter(tag => typeof tag !== 'string')
-        .map(tag => tag as TechElementTag)
+        .filter((tag: any) => typeof tag !== 'string')
+        .map((tag: any) => tag as TechElementTag)
     );
 
     techElementTags.forEach(tag => {
@@ -257,8 +257,8 @@ export class ChartsService {
 
     techElementSubtags = reports.flatMap(report => {
       return report.fields.subTagTechElement
-        .filter(tag => typeof tag !== 'string')
-        .map(tag => tag as TechElementSubTag)
+        .filter((tag: any) => typeof tag !== 'string')
+        .map((tag: any) => tag as TechElementSubTag)
     });
 
     if (techElementTagsNumSerie.data) {

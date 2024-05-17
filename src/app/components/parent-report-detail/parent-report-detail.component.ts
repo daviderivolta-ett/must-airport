@@ -85,6 +85,23 @@ export class ParentReportDetailComponent {
     this.router.navigate(['/archivio']);
   }
 
+  public async reopenReport(): Promise<void> {
+    let data = {
+      closingChildId: null,
+      closingTime: null,
+      childrenIds: [...this.parentReport.childrenIds, this.parentReport.closingChildId]
+    };
+
+    if (!this.parentReport.closingChildId) return;
+
+    const closingChild: ReportChild = await this.reportsService.getChildReportById(this.parentReport.closingChildId);
+
+    await this.reportsService.setReportById(this.parentReport.id, data);
+    await this.reportsService.setChildReportById(closingChild.id, { closure: false });
+
+    this.router.navigate(['/segnalazioni']);
+  }
+
   public filterChildReports(filter: ChildReportFiltersFormData) {
     this.filteredChildrenReport = [];
 

@@ -15,6 +15,7 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class FiltersComponent {
   public filterForm = this.fb.group({
+    closed: [true],
     notAssigned: [true],
     low: [true],
     medium: [true],
@@ -47,6 +48,7 @@ export class FiltersComponent {
   private parseFiltersFormData(value: FiltersFormData): ParsedFiltersFormData {
     let parsedValue: ParsedFiltersFormData = {
       priority: {
+        closed: value.closed,
         notAssigned: value.notAssigned,
         low: value.low,
         medium: value.medium,

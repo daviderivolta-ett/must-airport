@@ -1,9 +1,9 @@
-import { Component, effect } from '@angular/core';
+import { Component, Input, effect } from '@angular/core';
 import { DialogService } from '../../../observables/dialog.service';
 import { ReportParent } from '../../../models/report-parent.model';
 import { ReportChild } from '../../../models/report-child.model';
 import { ReportsService } from '../../../services/reports.service';
-import { DatePipe, NgClass } from '@angular/common';
+import { DatePipe, KeyValuePipe, NgClass } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ChildReportCardComponent } from '../../../components/child-report-card/child-report-card.component';
 import { CloseEscapeDirective } from '../../../directives/close-escape.directive';
@@ -12,15 +12,23 @@ import { AuthService } from '../../../services/auth.service';
 import { MiniMapComponent } from '../../../components/mini-map/mini-map.component';
 import { MiniMapData } from '../../../services/map.service';
 import { VERTICAL } from '../../../models/app-flow.model';
+import { WebAppConfig } from '../../../models/config.model';
 
 @Component({
   selector: 'app-dialog',
   standalone: true,
-  imports: [MiniMapComponent, ChildReportCardComponent, DatePipe, NgClass, RouterLink, CloseEscapeDirective],
+  imports: [MiniMapComponent, ChildReportCardComponent, DatePipe, NgClass, KeyValuePipe, RouterLink, CloseEscapeDirective],
   templateUrl: './dialog.component.html',
   styleUrl: './dialog.component.scss'
 })
 export class DialogComponent {
+  private _config: WebAppConfig = WebAppConfig.createEmpty();
+  public get config(): WebAppConfig {
+    return this._config;
+  }
+  @Input() public set config(value: WebAppConfig) {
+    this._config = value;
+  };
   public isOpen: boolean = false;
   public parentReport: ReportParent = ReportParent.createEmpty();
   public childrenReport: ReportChild[] = [];
@@ -35,7 +43,9 @@ export class DialogComponent {
 
     effect(async () => {
       this.parentReport = this.dialogService.report();
-      this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
+      const childrenIds: string [] = [...this.parentReport.childrenIds];
+      if (this.parentReport.closingChildId) childrenIds.push(this.parentReport.closingChildId);
+      this.childrenReport = await this.reportsService.populateChildrenReports(childrenIds);
       this.childrenReport.map((report: ReportChild) => {
 
         if (report.fields.tagFailure != undefined) report = this.reportsService.populateChildFlowTags1(report);
@@ -54,7 +64,7 @@ export class DialogComponent {
   }
 
   public navigateTo(id: string): void {
-    this.router.navigate(['/gestione', id]);
+    this.parentReport.closingChildId ? this.router.navigate(['/archivio', id]) : this.router.navigate(['/gestione', id]);
     this.closeDialog();
   }
 }

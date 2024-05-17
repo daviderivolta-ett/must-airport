@@ -83,6 +83,7 @@ export interface ValidationFormData {
 
 export interface FiltersFormData {
   [key: string]: any;
+  closed: boolean;
   notAssigned: boolean;
   low: boolean;
   medium: boolean;
@@ -163,14 +164,17 @@ export class ReportsService {
         });
 
         reports = reports.sort((a, b) => b.lastChildTime.getTime() - a.lastChildTime.getTime());
-        let allReports: ReportParent[] = reports.filter(report => (report.isArchived === false || report.isArchived === undefined) && report.closingChildId === null);
+        // let allReports: ReportParent[] = reports.filter(report => (report.isArchived === false || report.isArchived === undefined) && report.closingChildId === null);
+        let allReports: ReportParent[] = reports.filter(report => (report.isArchived === false || report.isArchived === undefined));
+
+        let closedReports: ReportParent[] = reports.filter(report => report.closingChildId);
+        this.closedReportSignal.set(closedReports);
+
         this.reportsSignal.set(allReports);
 
         let archivedReports: ReportParent[] = reports.filter(report => report.isArchived === true);
         this.archivedReportsSignal.set(archivedReports);
 
-        let closedReports: ReportParent[] = reports.filter(report => report.closingChildId);
-        this.closedReportSignal.set(closedReports);
 
         if (this.selectedReportId) {
           const selectedReport = allReports.find(report => report.id === this.selectedReportId);
@@ -197,14 +201,19 @@ export class ReportsService {
   public filterReports(filters: ParsedFiltersFormData): void {
     let filteredReports: ReportParent[] = [];
     let priorityData = filters.priority;
+
     for (const key in priorityData) {
       if (priorityData[key] === false) continue;
+
       if (key === 'notAssigned' && priorityData[key] === true) {
         filteredReports = filteredReports.concat(this.reports.filter(report => report.priority === undefined || report.priority === PRIORITY.NotAssigned));
-      } else if (priorityData[key] === true) {
-        filteredReports = filteredReports.concat(this.reports.filter(report => report.priority === key));
+      } else if (key !== 'closed' && priorityData[key] === true) {
+        filteredReports = filteredReports.concat(this.reports.filter(report => report.priority === key && !report.closingChildId));
+      } else if (key === 'closed' && priorityData[key] === true) {
+        filteredReports = filteredReports.concat(this.reports.filter(report => report.closingChildId));
       }
     }
+
     let dateData = filters.date;
     for (const key in dateData) {
       if (dateData[key] === null) continue;
@@ -433,7 +442,7 @@ export class ReportsService {
     const snapshot = await getDoc(q);
     if (snapshot.exists()) {
       const r = snapshot.data() as ReportChildDb;
-      const report: ReportChild = this.parseChildReport(id, r);      
+      const report: ReportChild = this.parseChildReport(id, r);
       return report;
     } else {
       throw new Error('Report non trovato');
@@ -457,9 +466,14 @@ export class ReportsService {
     }
   }
 
+  public async setChildReportById(id: string, data: any): Promise<void> {
+    const ref = doc(this.db, 'reportChildren', id);
+    await setDoc(ref, data, { merge: true });
+  }
+
   private parseChildReport(id: string, report: ReportChildDb): ReportChild {
     let r = ReportChild.createEmpty();
-    
+
     r.isClosed = report.closure;
     r.creationTime = report.creationTime.toDate();
     r.fields = this.parseChildReportFields(report.fields);
@@ -478,18 +492,18 @@ export class ReportsService {
     r.userId = report.userId;
     r.verticalId = report.verticalId;
     r.id = id;
-  
+
     return r;
   }
 
   private parseChildReportFields(fields: ReportChildFieldsDb): ReportChildFields {
-    let f = ReportChildFields.createEmpty();    
+    let f = ReportChildFields.createEmpty();
 
     if (fields.foto_dettaglio) f.detailShots = fields.foto_dettaglio;
     if (fields.intervention_photo) f.detailShots = fields.intervention_photo;
     fields.comment && fields.comment.length !== 0 ? f.description = fields.comment : f.description = '-';
     fields.tag_failure ? f.tagFailure = fields.tag_failure : []
-    fields.sub_tag_failure ? f.subTagFailure = fields.sub_tag_failure : [];    
+    fields.sub_tag_failure ? f.subTagFailure = fields.sub_tag_failure : [];
 
     return f;
   }

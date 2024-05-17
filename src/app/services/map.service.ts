@@ -69,7 +69,11 @@ export class MapService {
   }
 
   private chooseMarkerColor(feature: GeoJSONFeature): string {
-    let color: string;
+    let color: string;   
+    if (feature.properties['report'].closingChildId) {
+      return color = 'blue';
+    }
+
     switch (feature.properties['report'].priority) {
       case 'high':
         color = 'red';

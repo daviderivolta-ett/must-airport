@@ -99,6 +99,7 @@ export class MiniMapComponent {
 
   private choosemarkerColor(priority: PRIORITY): string {
     let color: string;
+    
     switch (priority) {
       case PRIORITY.High:
         color = 'red';

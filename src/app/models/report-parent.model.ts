@@ -17,7 +17,7 @@ export class ReportParent {
     creationTime: Date;
     descriptionSelections: string[] | TechElementSubTag[];
     descriptionText: string;
-    fields: ReportParentFields;
+    fields: any;
     language: LANGUAGE;
     lastChildTime: Date;
     location: GeoPoint;
@@ -43,7 +43,7 @@ export class ReportParent {
         creationTime: Timestamp,
         descriptionSelections: string[] | TechElementSubTag[],
         descriptionText: string,
-        fields: ReportParentFields,
+        fields: any,
         language: LANGUAGE,
         lastChildTime: Timestamp,
         location: GeoPoint,
@@ -94,7 +94,8 @@ export class ReportParent {
             Timestamp.now(),
             [],
             '',
-            ReportParentFields.createEmpty(),
+            // ReportParentFields.createEmpty(),
+            {},
             LANGUAGE.Italian,
             Timestamp.now(),
             new GeoPoint(44.415229489227684, 8.845336246602141),

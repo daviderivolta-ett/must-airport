@@ -2,9 +2,10 @@ export class Tag {
     id: string;
     name: string;
     description: string;
-    type: string;
+    type?: string;
     label: string;
     options: Tag[];
+    depth?: number;
 
     constructor(
         id: string,
@@ -12,14 +13,16 @@ export class Tag {
         description: string,
         type: string,
         label: string,
-        options: Tag[]
+        options: Tag[],
+        depth: number = 1
     ) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.type = type;
         this.label = label;
-        this.options = options
+        this.options = options;
+        this.depth = depth;
     }
 
     static createEmpty(): Tag {
@@ -28,6 +31,18 @@ export class Tag {
 
     static fromType(type: string): Tag {
         return new Tag('', '', '', type, '', []);
+    }
+
+    public equals(other: Tag): boolean {
+        return (
+            this.id === other.id &&
+            this.name === other.name &&
+            this.description === other.description &&
+            this.type === other.type &&
+            this.label === other.label &&
+            this.options.length === other.options.length &&
+            this.options.every((option, index) => option.equals(other.options[index]))
+        );
     }
 }
 

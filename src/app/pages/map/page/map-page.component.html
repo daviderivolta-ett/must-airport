@@ -1,6 +1,6 @@
-<app-sidebar [reports]="reports" />
+<app-sidebar [reports]="reports" [config]="config" />
 <app-map />
-<app-dialog />
+<app-dialog [config]="config" />
 @if (currentApp !== 'generic') {
 <app-additional-layers-menu />
 }

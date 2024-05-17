@@ -3,7 +3,7 @@
         <div class="header">
             <h2>Dettagli segnalazione</h2>
             @if (parentReport.closingChildId) {
-            <button class="archive-btn">
+            <button class="archive-btn" (click)="reopenReport()">
                 <span class="material-symbols-outlined archive-icon">unarchive</span>
             </button>
             }

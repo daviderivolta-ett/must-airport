@@ -3,9 +3,9 @@
         <img src={{report.coverImgUrls[0]}}>
     </div>
     <div class="card-body">
-        <span class="info">Oggetto: </span>
-        @for (techTag of report.fields.parentFlowTags1; track $index; let last = $last) {
-        <span class="info-title" [ngClass]="{'comma': !last}">{{techTag.name}}</span>
+        <span class="info">{{config.tags.parent.label}}: </span>
+        @for (tag of report.fields.parentFlowTags1; track $index; let last = $last) {
+        <span class="info-title" [ngClass]="{'comma': !last}">{{tag.name}}</span>
         }
         <p class="date">{{report.creationTime | date: 'dd/MM/yyy'}} - h:{{report.creationTime | date: 'HH:mm'}}</p>
     </div>
