@@ -46,9 +46,9 @@ export class ConfigService {
       if (!this.mobileAppConfig.parentFlows) return;
       if (!this.mobileAppConfig.childFlows) return;
 
-      // console.log(this.mobileAppConfig);      
-      // console.log(JSON.parse(this.mobileAppConfig.parentFlows.default));
-      // console.log(JSON.parse(this.mobileAppConfig.childFlows.horizontal.flowJson));      
+      console.log('Mobile config:', this.mobileAppConfig);
+      console.log('Parent flow:', JSON.parse(this.mobileAppConfig.parentFlows.default));
+      console.log('Child flow:', JSON.parse(this.mobileAppConfig.childFlows.horizontal.flowJson));
 
       let parentTags: Tag[] = [];
       for (const key in this.mobileAppConfig.parentFlows) {
@@ -72,7 +72,7 @@ export class ConfigService {
       this.config.tags.child.label = childTags[0].label;
       this.config.tags.child.tags = [...childTags];
 
-      // console.log(this.config);      
+      console.log('Web config:', this.config);      
     }, { allowSignalWrites: true });
   }
 
