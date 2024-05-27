@@ -7,7 +7,7 @@ import { DictionaryService } from '../../../services/dictionary.service';
 import { ValidationFormComponent } from '../validation-form/validation-form.component';
 import { ChildReportFiltersFormData, ReportsService } from '../../../services/reports.service';
 import { FailureTag } from '../../../models/failure-tag.model';
-import { DatePipe, NgClass, TitleCasePipe } from '@angular/common';
+import { DatePipe, KeyValuePipe, NgClass, TitleCasePipe } from '@angular/common';
 import { FailureSubTag } from '../../../models/failure-subtag.model';
 import { ChildReportCardComponent } from '../../../components/child-report-card/child-report-card.component';
 import { InspectionFormComponent } from '../inspection-form/inspection-form.component';
@@ -16,20 +16,22 @@ import { MiniMapComponent } from '../../../components/mini-map/mini-map.componen
 import { MiniMapData } from '../../../services/map.service';
 import { ArchiveDialogComponent } from '../../../components/archive-dialog/archive-dialog.component';
 import { ArchiveDialogService } from '../../../observables/archive-dialog.service';
-import { Tag } from '../../../models/tag.model';
+import { ReportTagGroup } from '../../../models/tag.model';
 import { ConfigService } from '../../../services/config.service';
 import { OperationCardManagementComponent } from '../operation-card-management/operation-card-management.component';
 import { OPERATIONTYPE } from '../../../models/operation.model';
 import { ChildReportsFiltersComponent } from '../../../components/child-reports-filters/child-reports-filters.component';
+import { WebAppConfig } from '../../../models/config.model';
 
 @Component({
   selector: 'app-management',
   standalone: true,
-  imports: [MiniMapComponent, ChildReportsFiltersComponent, ChildReportCardComponent, ValidationFormComponent, InspectionFormComponent, OperationCardComponent, OperationCardManagementComponent, DatePipe, NgClass, TitleCasePipe],
+  imports: [MiniMapComponent, ChildReportsFiltersComponent, ChildReportCardComponent, ValidationFormComponent, InspectionFormComponent, OperationCardComponent, OperationCardManagementComponent, DatePipe, NgClass, TitleCasePipe, KeyValuePipe],
   templateUrl: './management.component.html',
   styleUrl: './management.component.scss'
 })
 export class ManagementComponent {
+  public config: WebAppConfig = this.configService.config;
   public id: string | null = null;
   public parentReport: ReportParent = ReportParent.createEmpty();
 
@@ -41,36 +43,34 @@ export class ManagementComponent {
   public childrenReport: ReportChild[] = [];
   public filteredChildrenReport: ReportChild[] = [];
 
-  public parentFlowTags: Tag[] = [];
-  public childFlowTags: Tag[] = [];
-  public childFlowTags1: Tag[] = [];
-  public childFlowTags2: Tag[] = [];
+  public childFlowTags: ReportTagGroup[] = [];
 
   public miniMapData!: MiniMapData;
 
   constructor(private applicationRef: ApplicationRef, private route: ActivatedRoute, private dictionaryService: DictionaryService, private configService: ConfigService, private reportsService: ReportsService, private archiveDialogService: ArchiveDialogService) {
     effect(async () => {
       this.parentReport = this.reportsService.selectedReportSignal();
-      this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
-      this.childrenReport.map((report: ReportChild) => {
-        if (report.fields.tagFailure != undefined) report = this.reportsService.populateChildFlowTags1(report);
-        if (report.fields.subTagFailure != undefined) report = this.reportsService.populateChildFlowTags2(report);
-        if (report.fields.tagFailure != undefined) report = this.reportsService.populateFailureTags(report);
-        if (report.fields.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
+      // console.log(this.parentReport);      
+      this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);      
+      if (this.parentReport.closingChildId) this.childrenReport.unshift(await this.reportsService.getChildReportById(this.parentReport.closingChildId));
+      this.childrenReport = this.childrenReport.map((report: ReportChild) => {
+        report.tags = this.reportsService.parseReportTags(report.fields, 'child');
+        return report;
       });
+
       this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
-      // console.log(this.parentReport);
-      // console.log(this.childrenReport);
-      this.discardDuplicatedReportChildFlowTags1(this.childrenReport);
-      this.discardDuplicatedReportChildFlowTags2(this.childrenReport);
-      this.discardDuplicatedReportFailureTags(this.childrenReport);
-      this.discardDuplicatedReportFailureSubTags(this.childrenReport);
+      
+      let tagGroups: ReportTagGroup[] = [];
+      this.childrenReport.map((report: ReportChild) => {
+        if (report.tags) report.tags.map((tagGroup: ReportTagGroup) => tagGroups.push(tagGroup))
+      });
+      this.childFlowTags = this.reportsService.mergeReportTagGroups(tagGroups);
 
       this.filteredChildrenReport = this.childrenReport;
     });
-    effect(() => this.techElementTags = this.dictionaryService.techElementTagsSignal());
-    effect(() => this.failureTags = this.dictionaryService.failureTagsSignal());
-    effect(() => this.parentFlowTags = this.configService.parentFlowTagsSignal());
+    // effect(() => this.techElementTags = this.dictionaryService.techElementTagsSignal());
+    // effect(() => this.failureTags = this.dictionaryService.failureTagsSignal());
+    // effect(() => this.parentFlowTags = this.configService.parentFlowTagsSignal());
   }
 
   async ngOnInit(): Promise<void> {
@@ -117,67 +117,5 @@ export class ManagementComponent {
     }
 
     this.filteredChildrenReport.sort((a, b) => b.creationTime.getTime() - a.creationTime.getTime())
-  }
-
-  private discardDuplicatedReportFailureTags(childrenReport: ReportChild[]): void {
-    let reportFailureTags: FailureTag[] = [];
-    childrenReport.forEach((childReport: ReportChild) => {
-      if (!childReport.fields.tagFailure || childReport.fields.tagFailure.length === 0) return;
-      childReport.fields.tagFailure.forEach((failureTag: FailureTag | string) => {
-        if (typeof failureTag === 'string') return;
-        reportFailureTags.push(failureTag);
-      });
-    });
-    let uniqueReportFailureTags: FailureTag[] = [];
-    let uniqueIds: string[] = [];
-    reportFailureTags.forEach(tag => {
-      if (uniqueIds.indexOf(tag.id) === -1) {
-        uniqueIds.push(tag.id);
-        uniqueReportFailureTags.push(tag);
-      }
-    });
-    this.reportFailureTags = [...uniqueReportFailureTags];
-  }
-
-  private discardDuplicatedReportChildFlowTags1(childrenReport: ReportChild[]): void {
-    let tags: Tag[] = [];
-    childrenReport.forEach((report: ReportChild) => {
-      report.fields.childFlowTags1.forEach((tag: Tag) => {
-        if (!tags.some(existingTag => existingTag.id === tag.id)) tags.push(tag);
-      });
-    });
-    this.childFlowTags1 = [...tags];
-    this.childFlowTags = [...tags];
-  }
-
-  private discardDuplicatedReportChildFlowTags2(childrenReport: ReportChild[]): void {
-    let tags: Tag[] = [];
-    childrenReport.forEach((report: ReportChild) => {
-      report.fields.childFlowTags2.forEach((tag: Tag) => {
-        if (!tags.some(existingTag => existingTag.id === tag.id)) tags.push(tag);
-      });
-    });
-    this.childFlowTags2 = [...tags];
-    this.childFlowTags = [...tags];
-  }
-
-  private discardDuplicatedReportFailureSubTags(childrenReport: ReportChild[]): void {
-    let reportFailureSubTags: FailureSubTag[] = [];
-    childrenReport.forEach((childReport: ReportChild) => {
-      if (!childReport.fields.subTagFailure || childReport.fields.subTagFailure.length === 0) return;
-      childReport.fields.subTagFailure.forEach((failureSubTag: FailureSubTag | string) => {
-        if (typeof failureSubTag === 'string') return;
-        reportFailureSubTags.push(failureSubTag);
-      });
-    });
-    let uniqueReportFailureSubTags: FailureSubTag[] = [];
-    let uniqueIds: string[] = [];
-    reportFailureSubTags.forEach(tag => {
-      if (uniqueIds.indexOf(tag.id) === -1) {
-        uniqueIds.push(tag.id);
-        uniqueReportFailureSubTags.push(tag);
-      }
-    });
-    this.reportFailureSubTags = [...uniqueReportFailureSubTags];
   }
 }

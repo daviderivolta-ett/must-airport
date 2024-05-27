@@ -58,51 +58,31 @@
                 }
             </div>
 
-            <div class="info">
-                <p class="info-title">Oggetto</p>
-                <div class="info-value-list">
-                    @for (tag of parentReport.fields.parentFlowTags1; track $index; let last = $last) {
-                    <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</p>
+            @if (parentReport.tags) {
+                @for (keyvalue of parentReport.tags | keyvalue; track keyvalue.key) {
+                    @for (tagGroup of keyvalue.value; track tagGroup.id) {
+                        <div class="info">
+                            <p class="info-title">{{tagGroup.name}}</p>
+                            <div class="info-value-list">
+                            @for (tag of tagGroup.elements; track tag.id; let last = $last) {
+                                <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</p>
+                            }
+                            </div>
+                        </div>
                     }
-                </div>
-            </div>
+                }
+            }
 
-            <div class="info">
-                <p class="info-title">Elemento tecnico</p>
-                <div class="info-value-list">
-                    @for (tag of parentReport.fields.parentFlowTags2; track $index; let last = $last) {
-                    <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</p>
-                    }
-                </div>
-            </div>
-
-            <div class="info">
-                <p class="info-title">Segnali di guasto</p>
-                <div class="info-value-list">
-                    @if (childFlowTags1.length === 0) {
-                    <p class="info-value">-</p>
-                    }
-                    @else {
-                    @for (tag of childFlowTags1; track $index; let last = $last) {
-                    <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</p>
-                    }
-                    }
-                </div>
-            </div>
-
-            <div class="info">
-                <p class="info-title">Modalità di guasto</p>
-                <div class="info-value-list">
-                    @if (childFlowTags2.length === 0) {
-                    <p class="info-value">-</p>
-                    }
-                    @else {
-                        @for (tag of childFlowTags2; track $index; let last = $last) {
-                        <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</p>
+            @for (tagGroup of childFlowTags; track tagGroup.id) {
+                <div class="info">
+                    <p class="info-title">{{tagGroup.name}}</p>
+                    <div class="info-value-list">
+                        @for (tag of tagGroup.elements; track tag.id; let last = $last) {
+                            <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</p>
                         }
-                    }
+                    </div>
                 </div>
-            </div>
+            }
         </div>
         @if (miniMapData) {
         <div class="map-wrapper">

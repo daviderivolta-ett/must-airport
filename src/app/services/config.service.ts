@@ -1,15 +1,18 @@
 import { Component, Injectable, WritableSignal, effect, signal } from '@angular/core';
-import { VERTICAL } from '../models/app-flow.model';
-import { DocumentReference, DocumentSnapshot, doc, getDoc } from 'firebase/firestore';
 import { Firestore } from '@angular/fire/firestore';
-import { Tag } from '../models/tag.model';
-import { MobileAppConfigComponent, MobileAppMobileAppConfigComponentType, MobileAppConfigOption, WebAppConfig } from '../models/config.model';
+import { DocumentReference, DocumentSnapshot, doc, getDoc } from 'firebase/firestore';
+import { VERTICAL } from '../models/app-flow.model';
+import { Tag, TagGroup } from '../models/tag.model';
+import { MobileAppConfigComponent, MobileAppMobileAppConfigComponentType, MobileAppConfigOption, WebAppConfig, WebAppConfigTags } from '../models/config.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConfigService {
   public config: WebAppConfig = WebAppConfig.createEmpty();
+  public tags: Tag[] = [];
+  public tagGroups: TagGroup[] = [];
+
   public mobileAppConfig: any;
   public mobileAppConfigSignal: WritableSignal<any> = signal({});
 
@@ -20,7 +23,7 @@ export class ConfigService {
   }
 
   public set parentFlowTags(tags: Tag[]) {
-    this._parentFlowTags = tags;  
+    this._parentFlowTags = tags;
     this.parentFlowTagsSignal.set(tags);
   }
 
@@ -46,33 +49,51 @@ export class ConfigService {
       if (!this.mobileAppConfig.parentFlows) return;
       if (!this.mobileAppConfig.childFlows) return;
 
-      console.log('Mobile config:', this.mobileAppConfig);
-      console.log('Parent flow:', JSON.parse(this.mobileAppConfig.parentFlows.default));
-      console.log('Child flow:', JSON.parse(this.mobileAppConfig.childFlows.horizontal.flowJson));
+      // console.log('Mobile config:', this.mobileAppConfig);
+      // console.log('Parent flow:', JSON.parse(this.mobileAppConfig.parentFlows.default));
+      // console.log('Child flow:', JSON.parse(this.mobileAppConfig.childFlows.horizontal.flowJson));
 
       let parentTags: Tag[] = [];
+      let parentTagGroups: TagGroup[] = [];
       for (const key in this.mobileAppConfig.parentFlows) {
         const component: MobileAppConfigComponent = JSON.parse(this.mobileAppConfig.parentFlows[key]);
-        parentTags.push(...this.findTags(component));
+        parentTags.push(...this.searchTags(component));
+        parentTagGroups.push(...this.searchTagGroups(component));
       }
-      parentTags = [...new Set(parentTags.filter((tag, index, array) => array.findIndex(t => t.equals(tag)) === index))];
+
+      parentTags = this.removeDuplicatedTags(parentTags);
+      parentTagGroups = this.removeDuplicatedTagGroups(parentTagGroups);
+
       this.parentFlowTags = [...parentTags];
 
-      this.config.tags.parent.label = parentTags[0].label;
-      this.config.tags.parent.tags = [...parentTags];
+      // console.log('Parent tags:', parentTags);
+      // console.log('Parent tag groups:', parentTagGroups);
 
       let childTags: Tag[] = [];
+      let childTagGroups: TagGroup[] = [];
       for (const key in this.mobileAppConfig.childFlows) {
         const component: MobileAppConfigComponent = JSON.parse(this.mobileAppConfig.childFlows[key].flowJson);
-        childTags.push(...this.findTags(component));
+        childTags.push(...this.searchTags(component));
+        childTagGroups.push(...this.searchTagGroups(component));
       }
-      childTags = [...new Set(childTags.filter((tag, index, array) => array.findIndex(t => t.equals(tag)) === index))];
+
+      childTags = this.removeDuplicatedTags(childTags);
+      childTagGroups = this.removeDuplicatedTagGroups(childTagGroups);
+
       this.childFlowTags = [...childTags];
 
-      this.config.tags.child.label = childTags[0].label;
-      this.config.tags.child.tags = [...childTags];
+      // console.log('Child tags:', childTags);      
+      // console.log('Child tag groups', childTagGroups);
 
-      console.log('Web config:', this.config);      
+      this.config.tags.parent.elements = [...parentTags];
+      this.config.tags.parent.groups = [...parentTagGroups];
+      this.config.tags.child.elements = [...childTags];
+      this.config.tags.child.groups = [...childTagGroups];
+
+      console.log('Web config:', this.config);
+
+      this.tags = this.flatTags(this.config.tags);
+      this.tagGroups = this.flatTagGroups(this.config.tags);
     }, { allowSignalWrites: true });
   }
 
@@ -91,69 +112,125 @@ export class ConfigService {
     }
   }
 
-  public findTags(component: MobileAppConfigComponent): Tag[] {
-    const result: Tag[] = [];
+  private searchTags(component: MobileAppConfigComponent): Tag[] {
+    let results: any[] = [];
 
     if (component.component === MobileAppMobileAppConfigComponentType.Selection && component.options) {
-      for (const option of component.options) {
-        if (this.isMobileAppConfigOption(option)) {
-          const tag: Tag = this.convertToTag(option, component.title || '', 1);
-          if (!result.some(existingTag => existingTag.id === tag.id)) {
-            result.push(tag);
-          }
-        }
-      }
+      results = this.parseTags(component);
     }
 
     if (component.child) {
-      result.push(...this.findTagsRecursive(component.child));
+      results = [...results, ...this.searchTags(component.child)];
+
+    } else if (component.component === MobileAppMobileAppConfigComponentType.Branch && component.options) {
+      results = [...results, ...component.options.map((o: any) => new Tag(o.id, o.name, '', component.id, [])), ...component.options.flatMap((o: any) => this.searchTags(o.child))];
     }
 
-    return result;
+    return results;
   }
 
-  private findTagsRecursive(component: MobileAppConfigComponent): Tag[] {
-    const result: Tag[] = [];
-    if (component.options) {
-      for (const option of component.options) {
-        if (this.isMobileAppConfigOption(option)) {
-          const tag: Tag = this.convertToTag(option, component.title || '', 1);
-          if (!result.some(existingTag => existingTag.id === tag.id)) {
-            result.push(tag);
-          }
-        } else if (this.isMobileAppConfigComponent(option)) {
-          result.push(...this.findTagsRecursive(option));
-        } else if (this.hasChildComponent(option)) {
-          const childComponent = (option as MobileAppConfigComponent).child;
-          if (childComponent) {
-            result.push(...this.findTagsRecursive(childComponent));
-          }
+  private parseTags(component: any): any {
+    return component.options.map((o: any) => new Tag(o.id, o.name, o.description, component.id, o.options ? o.options.map((obj: any) => this.parseSubTags(component.subLevels, 0, obj)) : []));
+  }
+
+  private parseSubTags(subLevels: any[], index: number = 0, option: MobileAppConfigOption): any {
+    const newIndex: number = index + 1;
+    const subTags: Tag = new Tag(
+      option.id,
+      option.name,
+      option.description || '',
+      subLevels[index].id,
+      subLevels[newIndex] ? (option.options ? option.options.map((o: any) => this.parseSubTags(subLevels, newIndex, o)) : []) : []);
+    return subTags;
+  }
+
+  private removeDuplicatedTags(tags: Tag[]): Tag[] {
+    return Object.values(tags.reduce((a: any, c) => { a[(c.id)] = c; return a }, {}));
+  }
+
+  private removeDuplicatedTagGroups(tagGroups: TagGroup[]): TagGroup[] {
+    return Object.values(tagGroups.reduce((a: any, c) => { a[(c.id)] = c; return a }, {}));
+  }
+
+  private searchTagGroups(component: MobileAppConfigComponent): TagGroup[] {
+    let results: any[] = [];
+
+    if (component.component === MobileAppMobileAppConfigComponentType.Selection && component.options) {
+      results = [this.parseGroups(component)];
+    }
+
+    if (component.child) {
+      results = [...results, ...this.searchTagGroups(component.child)];
+
+    } else if (component.component === MobileAppMobileAppConfigComponentType.Branch && component.options) {
+      results = [...results, new TagGroup(component.id, component.title || '', null), ...component.options.flatMap((o: any) => this.searchTagGroups(o.child))];
+    }
+
+    return results;
+  }
+
+  private parseGroups(component: MobileAppConfigComponent): any {
+    return new TagGroup(component.id, component.title || '', component.subLevels && component.subLevels.length > 0 ? this.parseSubGroup(component.subLevels) : null)
+  }
+
+  private parseSubGroup(subLevels: any[], index: number = 0): TagGroup {
+    const newIndex: number = index + 1;
+    return new TagGroup(subLevels[index].id, subLevels[index].title, subLevels[newIndex] ? this.parseSubGroup(subLevels, newIndex) : null);
+  }
+
+  private createTag(option: MobileAppConfigOption): any {
+    const { id, name, description } = option;
+    let tagOptions: any[] = [];
+    if (option.options) tagOptions = option.options.map((o: MobileAppConfigOption) => this.createTag(o));
+    return { id, name, description, options: tagOptions };
+  }
+
+  private flatTags(configTags: WebAppConfigTags): Tag[] {
+    const allTags: Tag[] = [];
+
+    function recurse(tags: Tag[]) {
+      for (const tag of tags) {
+        allTags.push(tag);
+
+        if (tag.subTags && tag.subTags.length > 0) {
+          recurse(tag.subTags);
         }
       }
     }
-    return result;
-  }
 
-  private isMobileAppConfigOption(obj: any): obj is MobileAppConfigOption {
-    return 'id' in obj && 'name' in obj && !('component' in obj) && !('child' in obj);
-  }
-
-  private isMobileAppConfigComponent(obj: any): obj is MobileAppConfigComponent {
-    return 'component' in obj;
-  }
-
-  private hasChildComponent(obj: any): obj is { child: MobileAppConfigComponent } {
-    return 'child' in obj && obj.child !== undefined && this.isMobileAppConfigComponent(obj.child);
-  }
-
-  private convertToTag(option: MobileAppConfigOption, label: string, optionDepth: number): Tag {
-    const { id, name, description } = option;
-    const type = '';
-    let tagOptions: any[] = [];
-    if (option.options) {
-      const newDepth = optionDepth + 1;     
-      tagOptions = option.options.map((o: MobileAppConfigOption) => this.convertToTag(o, label, newDepth));
+    if (configTags.parent && configTags.parent.elements) {
+      recurse(configTags.parent.elements);
     }
-    return new Tag(id, name, description || '', type, label, tagOptions, optionDepth);
+
+    if (configTags.child && configTags.child.elements) {
+      recurse(configTags.child.elements);
+    }
+
+    return allTags;
+  }
+
+  private flatTagGroups(configTags: WebAppConfigTags): TagGroup[] {
+    const allTagGroups: TagGroup[] = [];
+
+    function recurse(group: TagGroup) {
+      allTagGroups.push(group);
+      if (group.subGroup) {
+        recurse(group.subGroup);
+      }
+    }
+
+    if (configTags.child && Array.isArray(configTags.child.groups)) {
+      configTags.child.groups.forEach((group: TagGroup) => {
+        recurse(group);
+      });
+    }
+
+    if (configTags.parent && Array.isArray(configTags.parent.groups)) {
+      configTags.parent.groups.forEach((group: TagGroup) => {
+        recurse(group);
+      });
+    }
+
+    return allTagGroups;
   }
 }

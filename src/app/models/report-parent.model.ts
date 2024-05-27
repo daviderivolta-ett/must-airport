@@ -4,6 +4,7 @@ import { TechElementSubTag } from './tech-element-subtag.model';
 import { PRIORITY } from './priority.model';
 import { LANGUAGE } from './language.model';
 import { Operation } from './operation.model';
+import { ReportTagGroup } from './tag.model';
 
 export class ReportParent {
     [key: string]: any;
@@ -32,6 +33,7 @@ export class ReportParent {
     validationDate?: Date;
     isArchived?: boolean;
     archivingTime?: Date | null;
+    tags?: { parent: ReportTagGroup[], child: ReportTagGroup[] };
 
     constructor(
         childFlowIds: string[],
@@ -56,7 +58,7 @@ export class ReportParent {
         operations: Operation[],
         validationDate: Timestamp | undefined,
         isArchived?: boolean,
-        archivingTime?: Timestamp | null
+        archivingTime?: Timestamp | null,
     ) {
         this.childFlowIds = childFlowIds;
         this.childrenIds = childrenIds;

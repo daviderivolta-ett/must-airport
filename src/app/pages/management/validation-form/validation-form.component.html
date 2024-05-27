@@ -1,80 +1,55 @@
-@if (validationForm) {
-<form [formGroup]="validationForm" (ngSubmit)="handleSubmit()">
+<form [formGroup]="baseForm" id="validation-form" (ngSubmit)="handleSubmit()">
 
-    <div class="dropdown">
-        <button type="button" class="dropdown-toggle" (click)="toggleTechElementTagsForm()" [ngClass]="{'dropdown-toggle-open': isTechElementTagsFormOpen}">
-            Oggetto
-            <span class="material-symbols-outlined expand-more" [ngClass]="{'expand-more-open': isTechElementTagsFormOpen}">expand_more</span>
-        </button>
-        @if (techElementTagsForm) {
-        <div class="form-group form-tech-element-tags dropdown-content" [ngClass]="{'dropdown-open': isTechElementTagsFormOpen}" formGroupName="techElementTagsForm">
-            <div class="dropdown-content-header">
-                <h3>Oggetto</h3>
-                <span class="material-symbols-outlined close" (click)="closeTechElementTagsForm()">close</span>
-            </div>
-            <div class="dropdown-content-list">
-                <!-- @for (tag of _techElementTags; track tag.id) {
-                <div class="checkbox-single">
-                    <label for="{{tag.id}}" class="checkbox-single-label">
-                        <input type="checkbox" id="{{tag.id}}" [formControlName]="tag.id">
-                        <span class="checkmark"></span>
-                        {{tag.id}} - {{tag.name.it}}
-                    </label>
+    @for (baseControl of baseForm.controls | keyvalue; track $index) {
+        @if(baseControl.key !== 'priority' && $any(baseControl).value.customType === 'parent') {
+            <div class="dropdown" [formGroupName]="baseControl.key">
+                <button type="button" class="dropdown-toggle" (click)="toggleDropdown(content)">
+                    {{baseControl.key | controlLabel}}
+                    <span class="material-symbols-outlined expand-more">expand_more</span>
+                </button>
+                <div class="form-group form-tech-element-tags dropdown-content" style="display: none;" #content>
+                    @for (control of $any(baseControl.value).controls | keyvalue; track $index) {
+                        @if($any(control.value).enabled) {
+                            <div class="checkbox-single">
+                                <label [for]="control.key" class="checkbox-single-label">
+                                    <input type="checkbox" [id]="control.key" [formControlName]="$any(control.key)">
+                                    <span class="checkmark"></span>
+                                    {{$any(control.key) | controlLabel}}
+                                </label>
+                            </div>
+                        }
+                    }
                 </div>
-                } -->
-                @for (tag of _parentFlowTags; track tag.id) {
-                <div class="checkbox-single">
-                    <label for="{{tag.id}}" class="checkbox-single-label">
-                        <input type="checkbox" id="{{tag.id}}" [formControlName]="tag.id">
-                        <span class="checkmark"></span>
-                        {{tag.id}} - {{tag.name}}
-                    </label>
-                </div>
-                }
             </div>
-        </div>
         }
-    </div>
+    }
 
-    <div class="dropdown">
-        <button type="button" class="dropdown-toggle" (click)="toggleTechElementSubTagsForm()" [ngClass]="{'dropdown-toggle-open': isTechElementSubTagsFormOpen}" [disabled]="_parentFlowTags2.length === 0">
-            Elemento tecnico
-            <span class="material-symbols-outlined expand-more" [ngClass]="{'expand-more-open': isTechElementSubTagsFormOpen}">expand_more</span>
-        </button>
-        @if (techElementSubTagsForm) {
-        <div class="form-group form-tech-element-subtags dropdown-content" [ngClass]="{'dropdown-open': isTechElementSubTagsFormOpen}" formGroupName="techElementSubTagsForm">
-            <div class="dropdown-content-header">
-                <h3>Elemento tecnico</h3>
-                <span class="material-symbols-outlined close" (click)="closeTechElementSubTagsForm()">close</span>
-            </div>
-            <div class="dropdown-content-list">
-                <!-- @for (subTag of _reportTechElementSubTags; track subTag.id) {
-                <div class="checkbox-single">
-                    <label for="{{subTag.id}}" class="checkbox-single-label">
-                        <input type="checkbox" id="{{subTag.id}}" [formControlName]="subTag.id">
-                        <span class="checkmark"></span>
-                        {{subTag.id}} - {{subTag.name.it}}
-                    </label>
+    @for (baseControl of baseForm.controls | keyvalue; track $index) {
+        @if(baseControl.key !== 'priority' && $any(baseControl).value.customType === 'child') {
+            <div class="dropdown" [formGroupName]="baseControl.key" [ngClass]="{'dropdown-disabled': checkControls(baseControl.key)}">
+                <button type="button" class="dropdown-toggle" [disabled]="checkControls(baseControl.key)" (click)="toggleDropdown(content)">
+                    {{baseControl.key | controlLabel}}
+                    <span class="material-symbols-outlined expand-more">expand_more</span>
+                </button>
+                <div class="form-group form-tech-element-tags dropdown-content" style="display: none;" #content>
+                    @for (control of $any(baseControl.value).controls | keyvalue; track $index) {
+                        @if($any(control.value).enabled) {
+                            <div class="checkbox-single">
+                                <label [for]="control.key" class="checkbox-single-label">
+                                    <input type="checkbox" [id]="control.key" [formControlName]="$any(control.key)">
+                                    <span class="checkmark"></span>
+                                    {{$any(control.key) | controlLabel}}
+                                </label>
+                            </div>
+                        }
+                    }
                 </div>
-                } -->
-
-                @for (subTag of _parentFlowTags2; track subTag.id) {
-                <div class="checkbox-single">
-                    <label for="{{subTag.id}}" class="checkbox-single-label">
-                        <input type="checkbox" id="{{subTag.id}}" [formControlName]="subTag.id">
-                        <span class="checkmark"></span>
-                        {{subTag.id}} - {{subTag.name}}
-                    </label>
-                </div>
-                }
             </div>
-        </div>
         }
-    </div>
+    }
 
     <h3 class="priority-title">Priorità</h3>
-    @if (priorityForm) {
-    <div class="form-group radio-buttons" formGroupName="priorityForm">
+    <div class="form-group radio-buttons" formGroupName="priority">
         <div class="radio-single">
             <input type="radio" id="low" value="low" name="priority" formControlName="priority">
             <label class="radio-single-label low" for="low">Bassa</label>
@@ -88,7 +63,5 @@
             <label class="radio-single-label high" for="high">Alta</label>
         </div>
     </div>
-    }
-    <button type="submit" [disabled]="!validationForm.valid">Salva modifiche</button>
+    <button type="submit" [disabled]="!baseForm.valid">Salva modifiche</button>
 </form>
-}

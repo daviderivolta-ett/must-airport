@@ -1,7 +1,10 @@
 <div class="card" #card>
     <div class="img-container">
-        @if (childReport.fields.detailShots && childReport.fields.detailShots.length !== 0) {
-            <img src="{{childReport.fields.detailShots[0]}}" alt="Immagine del report">
+        @if (childReport.fields.foto_dettaglio && childReport.fields.foto_dettaglio.length !== 0) {
+            <img src="{{childReport.fields.foto_dettaglio[0]}}" alt="Immagine del report">
+        }
+        @if (childReport.fields.intervention_photo && childReport.fields.intervention_photo.length !== 0) {
+            <img src="{{childReport.fields.intervention_photo[0]}}" alt="Immagine del report">
         }
 
         @if (childReport.flowId === 'maintenance' || childReport.flowId === 'inspectionHorizontal' || childReport.flowId === 'inspectionVertical') {
@@ -16,34 +19,18 @@
         }
     </div>
     <div class="card-body">
+        @if (childReport.tags && childReport.tags.length > 0) {
         <div class="card-details">
-            <div class="info">
-                <span class="info-title">Segnale di guasto: </span>
-                @if (childReport.fields.childFlowTags1.length === 0) {
-                <span class="info-value">-</span>
-                }
-                @else {
-                    @for (failureTag of childReport.fields.childFlowTags1; track $index; let last = $last) {
-                    <span class="info-value" [ngClass]="{'comma': !last}">{{failureTag.name}}</span>
+            @for (tagGroup of childReport.tags; track tagGroup.id) {
+                <div class="info">
+                    <span class="info-title">{{tagGroup.name}}: </span>
+                    @for (tag of tagGroup.elements; track tag.id; let last = $last) {
+                        <span class="info-value" [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</span>
                     }
-                }
-            </div>
-            <div class="info">
-                <span class="info-title">Modo di guasto: </span>
-                @if (childReport.fields.childFlowTags2.length === 0) {
-                <span class="info-value">-</span>
-                }
-                @else {
-                    @for (failureSubTag of childReport.fields.childFlowTags2; track $index; let last = $last) {
-                    <span class="info-value" [ngClass]="{'comma': !last}">{{failureSubTag.name}}</span>
-                    }
-                }
-            </div>
-            <div class="info">
-                <span class="info-title">Commento: </span>
-                <span class="info-value">{{childReport.fields.description}}</span>
-            </div>
+                </div>
+            }
         </div>
+        }
         <div class="card-footer">
             <p class="date">{{childReport.creationTime | date: 'dd/MM/yyyy'}} - h:{{childReport.creationTime | date: 'HH:mm'}}</p>
             @if (showDeleteBtn && parentReport.childrenIds.length > 1) {

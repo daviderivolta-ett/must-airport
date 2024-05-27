@@ -2,47 +2,37 @@ export class Tag {
     id: string;
     name: string;
     description: string;
-    type?: string;
-    label: string;
-    options: Tag[];
-    depth?: number;
+    type: string;
+    subTags: Tag[];
 
     constructor(
         id: string,
         name: string,
         description: string,
         type: string,
-        label: string,
-        options: Tag[],
-        depth: number = 1
+        subTags: Tag[]
     ) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.type = type;
-        this.label = label;
-        this.options = options;
-        this.depth = depth;
+        this.subTags = subTags;
     }
 
     static createEmpty(): Tag {
-        return new Tag('', '', '', '', '', []);
+        return new Tag('', '', '', '', []);
     }
+}
 
-    static fromType(type: string): Tag {
-        return new Tag('', '', '', type, '', []);
-    }
+export class TagGroup {
+    id: string;
+    name: string;
+    subGroup: TagGroup | null;
 
-    public equals(other: Tag): boolean {
-        return (
-            this.id === other.id &&
-            this.name === other.name &&
-            this.description === other.description &&
-            this.type === other.type &&
-            this.label === other.label &&
-            this.options.length === other.options.length &&
-            this.options.every((option, index) => option.equals(other.options[index]))
-        );
+    constructor(id: string, name: string, subGroup: TagGroup | null) {
+        this.id = id;
+        this.name = name;
+        this.subGroup = subGroup;
     }
 }
 
@@ -51,4 +41,30 @@ export interface TagDb {
     name: string;
     description: string;
     options: any[];
+}
+
+export class ReportTagGroup {
+    id: string;
+    name: string;
+    elements: ReportTag[];
+    order: number;
+
+    constructor(id: string, name: string, elements: ReportTag[], order: number) {
+        this.id = id;
+        this.name = name;
+        this.elements = elements;
+        this.order = order;
+    }
+}
+
+export class ReportTag {
+    id: string;
+    name: string;
+    description: string;
+
+    constructor(id: string, name: string, description: string) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
 }

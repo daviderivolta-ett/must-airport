@@ -1,4 +1,4 @@
-import { Tag } from './tag.model';
+import { Tag, TagGroup } from './tag.model';
 
 export class WebAppConfig {
     tags: WebAppConfigTags;
@@ -18,14 +18,8 @@ export class WebAppConfig {
     static createEmpty(): WebAppConfig {
         return new WebAppConfig(
             {
-                parent: {
-                    label: 'Elemento tecnico',
-                    tags: []
-                },
-                child: {
-                    label: 'Guasto',
-                    tags: []
-                }
+                parent: { elements: [], groups: [] },
+                child: { elements: [], groups: [] }
             },
             'MUST',
             {
@@ -48,13 +42,19 @@ export class WebAppConfig {
 }
 
 export interface WebAppConfigTags {
-    parent: WebAppConfigTag;
-    child: WebAppConfigTag;
+    parent: WebAppConfigTagType,
+    child: WebAppConfigTagType
 }
 
-export interface WebAppConfigTag {
-    label: string;
-    tags: Tag[];
+export interface WebAppConfigTagType {
+    elements: Tag[],
+    groups: TagGroup[]
+}
+
+export interface WebAppConfigTagGroup {
+    groupName: string;
+    groupId: string;
+    order: number;
 }
 
 export interface WebAppConfigStyle {
@@ -110,5 +110,6 @@ export type MobileAppConfigComponent = {
     mandatory?: boolean;
     multiple?: boolean;
     child?: MobileAppConfigComponent;
-    options?: MobileAppConfigComponent[]
+    options?: MobileAppConfigComponent[] | MobileAppConfigOption[],
+    subLevels?: MobileAppConfigComponent[];
 }

@@ -12,7 +12,8 @@ import { AuthService } from '../../../services/auth.service';
 import { MiniMapComponent } from '../../../components/mini-map/mini-map.component';
 import { MiniMapData } from '../../../services/map.service';
 import { VERTICAL } from '../../../models/app-flow.model';
-import { WebAppConfig } from '../../../models/config.model';
+import { PRIORITY } from '../../../models/priority.model';
+import { GeoPoint } from 'firebase/firestore';
 
 @Component({
   selector: 'app-dialog',
@@ -22,13 +23,6 @@ import { WebAppConfig } from '../../../models/config.model';
   styleUrl: './dialog.component.scss'
 })
 export class DialogComponent {
-  private _config: WebAppConfig = WebAppConfig.createEmpty();
-  public get config(): WebAppConfig {
-    return this._config;
-  }
-  @Input() public set config(value: WebAppConfig) {
-    this._config = value;
-  };
   public isOpen: boolean = false;
   public parentReport: ReportParent = ReportParent.createEmpty();
   public childrenReport: ReportChild[] = [];
@@ -42,17 +36,20 @@ export class DialogComponent {
     effect(() => this.currentApp = this.authService.currentAppSignal());
 
     effect(async () => {
-      this.parentReport = this.dialogService.report();
-      const childrenIds: string [] = [...this.parentReport.childrenIds];
+      const report: ReportParent = this.dialogService.report();
+      if (report.id.length === 0) return;
+
+      this.parentReport = { ...report };
+
+      const childrenIds: string[] = [...this.parentReport.childrenIds];
       if (this.parentReport.closingChildId) childrenIds.push(this.parentReport.closingChildId);
       this.childrenReport = await this.reportsService.populateChildrenReports(childrenIds);
-      this.childrenReport.map((report: ReportChild) => {
 
-        if (report.fields.tagFailure != undefined) report = this.reportsService.populateChildFlowTags1(report);
-        if (report.fields.subTagFailure != undefined) report = this.reportsService.populateChildFlowTags2(report);
-        if (report.fields.tagFailure != undefined) report = this.reportsService.populateFailureTags(report);
-        if (report.fields.subTagFailure != undefined) report = this.reportsService.populateFailureSubtags(report);
+      this.childrenReport = this.childrenReport.map((report: ReportChild) => {
+        report.tags = this.reportsService.parseReportTags(report.fields, 'child');
+        return report;
       });
+
       this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
       // console.log(this.parentReport);
       // console.log(this.childrenReport);

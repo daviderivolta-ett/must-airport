@@ -1,24 +1,24 @@
 import { Timestamp } from "firebase/firestore";
-import { FailureTag } from "./failure-tag.model";
-import { FailureSubTag } from "./failure-subtag.model";
 import { ReportChildFields } from "./report-child.fields.model";
 import { LANGUAGE } from "./language.model";
+import { ReportTagGroup } from "./tag.model";
 
 export class ReportChild {
     isClosed: boolean;
     creationTime: Date;
-    fields: ReportChildFields;
+    fields: any;
     flowId: string;
     language: LANGUAGE;
     parentId: string;
     userId: string;
     verticalId: string;
     id: string;
+    tags?: ReportTagGroup[]
 
     constructor(
         isClosed: boolean,
         creationTime: Timestamp,
-        fields: ReportChildFields,
+        fields: any,
         flowId: string,
         language: LANGUAGE,
         parentId: string,
@@ -41,7 +41,8 @@ export class ReportChild {
         return new ReportChild(
             false,
             Timestamp.now(),
-            ReportChildFields.createEmpty(),
+            // ReportChildFields.createEmpty(),
+            {},
             '',
             LANGUAGE.Italian,
             '',

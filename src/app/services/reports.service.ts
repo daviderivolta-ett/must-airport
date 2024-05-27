@@ -17,7 +17,7 @@ import { OPERATIONTYPE, Operation, OperationDb } from '../models/operation.model
 import { VERTICAL } from '../models/app-flow.model';
 import { ReportChildFields } from '../models/report-child.fields.model';
 import { ConfigService } from './config.service';
-import { Tag } from '../models/tag.model';
+import { ReportTag, ReportTagGroup, Tag, TagGroup } from '../models/tag.model';
 
 export interface ReportParentDb {
   childFlowsIds: string[];
@@ -155,14 +155,6 @@ export class ReportsService {
           reports.push(this.parseParentReport(doc.id, doc.data() as ReportParentDb));
         });
 
-        reports = reports.map((report: ReportParent) => {
-          report = this.populateParentFlowTags1(report);
-          report = this.populateParentFlowTags2(report);
-          report = this.populateTechElementTags(report);
-          report = this.populateTechElementSubTags(report);
-          return report;
-        });
-
         reports = reports.sort((a, b) => b.lastChildTime.getTime() - a.lastChildTime.getTime());
         // let allReports: ReportParent[] = reports.filter(report => (report.isArchived === false || report.isArchived === undefined) && report.closingChildId === null);
         let allReports: ReportParent[] = reports.filter(report => (report.isArchived === false || report.isArchived === undefined));
@@ -291,7 +283,8 @@ export class ReportsService {
     r.creationTime = report.creationTime.toDate();
     r.descriptionSelections = report.descriptionSelections;
     r.descriptionText = report.descriptionText;
-    r.fields = this.parseParentReportFields(report.fields as ReportParentFieldsDb);
+    // r.fields = this.parseParentReportFields(report.fields as ReportParentFieldsDb);
+    r.fields = report.fields;
     r.language = Language.parseLanguage(report.language);
     r.lastChildTime = report.lastChildTime.toDate();
     r.location = report.location;
@@ -314,7 +307,92 @@ export class ReportsService {
     if (report.archived) r.isArchived = report.archived;
     if (report.archivingTime) r.archivingTime = report.archivingTime.toDate();
 
+    r.tags = { parent: this.parseReportTags(r.fields, 'parent').sort((a, b) => a.order - b.order), child: this.parseReportTags(r.fields, 'child').sort((a, b) => a.order - b.order) };
+
     return r;
+  }
+
+  public parseReportTags(fields: any, type: 'parent' | 'child'): ReportTagGroup[] {
+    const tagGroups: ReportTagGroup[] = this.getTagGroups(fields, type);
+
+    this.populateTagGroups(tagGroups, fields, type);
+
+    return tagGroups;
+  }
+
+  private getTagGroups(fields: any, type: 'parent' | 'child'): ReportTagGroup[] {
+    let order: number = 0;
+    const tagGroups: ReportTagGroup[] = [];
+    for (const fieldKey in fields) {
+      for (const group of this.configService.config.tags[type].groups) {
+        const tagGroup = this.searchTagGroup(group, fieldKey, order);
+        if (tagGroup) tagGroups.push(tagGroup);
+      }
+    }
+    return tagGroups;
+  }
+
+  private populateTagGroups(tagGroups: ReportTagGroup[], fields: any, type: 'parent' | 'child'): void {
+    for (const key in fields) {
+      tagGroups.forEach((tagGroup: ReportTagGroup) => {
+        if (tagGroup.id === key) {
+          fields[key].forEach((id: string) => {
+            this.configService.config.tags[type].elements.forEach((t: Tag) => {
+              const tag = this.searchTags(t, id);
+              if (tag) tagGroup.elements.push(tag);
+            });
+          });
+        }
+      });
+    }
+  }
+
+  private searchTagGroup(group: TagGroup, fieldKey: string, order: number): ReportTagGroup | null {
+    if (group.id === fieldKey) {
+      return new ReportTagGroup(group.id, group.name, [], order);
+    }
+    if (group.subGroup) {
+      order++;
+      const subGroup = this.searchTagGroup(group.subGroup, fieldKey, order);
+      if (subGroup) {
+        return subGroup;
+      }
+    }
+    return null;
+  }
+
+  private searchTags(tag: Tag, id: string): ReportTag | null {
+    if (tag.id === id) {
+      return new ReportTag(tag.id, tag.name, tag.description);
+    }
+
+    if (tag.subTags) {
+      for (const subTag of tag.subTags) {
+        const foundTag = this.searchTags(subTag, id);
+        if (foundTag) return foundTag;
+      }
+    }
+
+    return null;
+  }
+
+  public mergeReportTagGroups(tagGroups: ReportTagGroup[]): ReportTagGroup[] {
+    const groupMap = new Map<string, ReportTagGroup>();
+
+    tagGroups.forEach((group: ReportTagGroup) => {
+      if (groupMap.has(group.id)) {
+        const existingGroup = groupMap.get(group.id) as ReportTagGroup;
+        if (existingGroup) {
+          const mergedElements: ReportTag[] = [...existingGroup.elements, ...group.elements];
+          const uniqueElements: ReportTag[] = Array.from(new Map(mergedElements.map(tag => [tag.id, tag])).values());
+          existingGroup.elements = uniqueElements;
+        }
+      } else {
+        groupMap.set(group.id, { ...group, elements: [...group.elements] });
+      }
+    });
+
+    return Array.from(groupMap.values());
   }
 
   private parseParentReportFields(fields: ReportParentFieldsDb): ReportParentFields {
@@ -425,11 +503,11 @@ export class ReportsService {
     let parentFlowTags: Tag[] = subTagIds.map((id: string) => {
       let foundTag: Tag | undefined;
       this.configService.parentFlowTags.forEach((tag: Tag) => {
-        let foundOption: Tag | undefined = tag.options.find((subTag: Tag) => subTag.id === id);
-        if (foundOption) {
-          foundTag = foundOption;
-          return;
-        }
+        // let foundOption: Tag | undefined = tag.options.find((subTag: Tag) => subTag.id === id);
+        // if (foundOption) {
+        //   foundTag = foundOption;
+        //   return;
+        // }
       });
       return foundTag ? foundTag : Tag.createEmpty();
     });
@@ -452,7 +530,7 @@ export class ReportsService {
   public async deleteChildReportBydId(id: string): Promise<void> {
     try {
       let childReport: ReportChild = await this.getChildReportById(id);
-      childReport.fields.detailShots.forEach(url => {
+      childReport.fields.detailShots.forEach((url: any) => {
         let imgRef = this.getImageReference(url);
         this.deleteImage(imgRef);
       });
@@ -476,7 +554,8 @@ export class ReportsService {
 
     r.isClosed = report.closure;
     r.creationTime = report.creationTime.toDate();
-    r.fields = this.parseChildReportFields(report.fields);
+    // r.fields = this.parseChildReportFields(report.fields);
+    r.fields = report.fields;
     r.flowId = report.flowId;
 
     switch (report.language) {
@@ -541,11 +620,11 @@ export class ReportsService {
     let childFlowTags: Tag[] = subTagIds.map((id: string) => {
       let foundTag: Tag | undefined;
       this.configService.childFlowTags.forEach((tag: Tag) => {
-        let foundOption: Tag | undefined = tag.options.find((subTag: Tag) => subTag.id === id);
-        if (foundOption) {
-          foundTag = foundOption;
-          return;
-        }
+        // let foundOption: Tag | undefined = tag.options.find((subTag: Tag) => subTag.id === id);
+        // if (foundOption) {
+        //   foundTag = foundOption;
+        //   return;
+        // }
       });
       return foundTag ? foundTag : Tag.createEmpty();
     });

@@ -8,7 +8,24 @@
         </div>
     </div>
     <div class="archive-table-row-cell creation-time-cell"><span>{{parentReport.creationTime | date: 'dd/MM/yyyy'}}</span></div>
-    <div class="archive-table-row-cell tech-element-tags-cell" appHoverTooltip [data]="parentReport.fields.parentFlowTags1">
+    @if (parentReport.tags) {
+        @for (tagGroup of parentReport.tags.parent; track tagGroup.id; let last = $last) {
+            <div class="archive-table-row-cell">
+                @for (tag of tagGroup.elements; track tag.id) {
+                    <span [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</span>
+                }
+            </div>
+        }
+    }
+
+    @for (tagGroup of childFlowTags; track tagGroup.id) {
+        <div class="archive-table-row-cell">
+            @for (tag of tagGroup.elements; track tag.id; let last = $last) {
+                <span [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</span>
+            }
+        </div>
+    }
+    <!-- <div class="archive-table-row-cell tech-element-tags-cell" appHoverTooltip [data]="parentReport.fields.parentFlowTags1">
         @for (tag of parentReport.fields.parentFlowTags1; track $index; let last = $last) {
             <span [ngClass]="{'comma': !last}">{{tag.name}}</span>
         }
@@ -39,7 +56,7 @@
         @if (childFlowTags2.length === 0) {
             <span>-</span>
         }
-    </div>
+    </div> -->
     <div class="archive-table-row-cell actions-cell">
         <button type="button" class="detail-button" (click)="navigateTo(parentReport.id)">
             <span class="material-symbols-outlined detail-icon">navigate_next</span>

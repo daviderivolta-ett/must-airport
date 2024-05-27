@@ -29,7 +29,7 @@ export class ChildReportCardComponent {
 
   public ngOnInit():void {
     this.card?.nativeElement;
-    if (this.router.url !== '/segnalazioni') this.showDeleteBtn = true;
+    if (this.router.url !== '/segnalazioni') this.showDeleteBtn = true;    
   }
 
   public iconClick(): void {

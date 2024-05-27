@@ -185,8 +185,8 @@ export class ChartsService {
 
     failureSubTags = reports.flatMap(report => {
       return report.fields.subTagFailure
-        .filter(tag => typeof tag !== 'string')
-        .map(tag => tag as FailureSubTag)
+        .filter((tag: any) => typeof tag !== 'string')
+        .map((tag: any) => tag as FailureSubTag)
     });
 
     if (failureTagsNumSerie.data) {
@@ -228,8 +228,8 @@ export class ChartsService {
 
     failureTags = reports.flatMap(report => {
       return report.fields.tagFailure
-        .filter(tag => typeof tag !== 'string')
-        .map(tag => tag as FailureTag)
+        .filter((tag: any) => typeof tag !== 'string')
+        .map((tag: any) => tag as FailureTag)
     });
 
     failureTags.forEach(tag => {
