@@ -18,6 +18,11 @@
 //     overflow: hidden;
 // }
 
+.info-value-mobile-label {
+    display: none;
+    color: var(--f-muted);
+}
+
 .creation-time-cell,
 .closing-time-cell {
     width: 12%;
@@ -36,6 +41,10 @@
     width: 6%;
     display: flex;
     justify-content: center;
+}
+
+.info-value {
+    display: inline;
 }
 
 .comma::after {
@@ -90,6 +99,7 @@
         padding: 4px 0;
     }
 
+    .tag-cell,
     .creation-time-cell,
     .closing-time-cell,
     .tech-element-tags-cell,
@@ -107,45 +117,49 @@
         right: 24px;
     }
 
-    .creation-time-cell::before {
-        content: 'Data creazione: ';
-    }
+    // .creation-time-cell::before {
+    //     content: 'Data creazione: ';
+    // }
 
-    .closing-time-cell::before {
-        content: 'Data chiusura: ';
-    }
+    // .closing-time-cell::before {
+    //     content: 'Data chiusura: ';
+    // }
 
-    .tech-element-tags-cell::before {
-        content: 'Oggetto: ';
-    }
+    // .tech-element-tags-cell::before {
+    //     content: 'Oggetto: ';
+    // }
 
-    .tech-element-subtags-cell::before {
-        content: 'Elemento tecnico: ';
-    }
+    // .tech-element-subtags-cell::before {
+    //     content: 'Elemento tecnico: ';
+    // }
 
-    .failure-tags-cell::before {
-        content: 'Segnale di guasto: ';
-    }
+    // .failure-tags-cell::before {
+    //     content: 'Segnale di guasto: ';
+    // }
 
-    .failure-subtags-cell::before {
-        content: 'Modo di guasto: ';
-    }
+    // .failure-subtags-cell::before {
+    //     content: 'Modo di guasto: ';
+    // }
 
-    .creation-time-cell::before,
-    .closing-time-cell::before,
-    .tech-element-tags-cell::before,
-    .tech-element-subtags-cell::before,
-    .failure-tags-cell::before,
-    .failure-subtags-cell::before,
-    .actions-cell::before {
-        cursor: text;
-        color: var(--f-muted);
-    }
+    // .creation-time-cell::before,
+    // .closing-time-cell::before,
+    // .tech-element-tags-cell::before,
+    // .tech-element-subtags-cell::before,
+    // .failure-tags-cell::before,
+    // .failure-subtags-cell::before,
+    // .actions-cell::before {
+    //     cursor: text;
+    //     color: var(--f-muted);
+    // }
 
     .archive-table-row-cell {
         text-overflow: unset;
         white-space: unset;
         overflow: auto;
+    }
+
+    .info-value-mobile-label {
+        display: block;
     }
 
     .type-cell {

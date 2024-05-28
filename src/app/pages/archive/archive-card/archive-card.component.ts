@@ -39,19 +39,8 @@ export class ArchiveCardComponent {
     });
 
     Promise.all(childrenReport).then((reports: ReportChild[]) => {
-      // reports = reports.map((report: ReportChild) => {
-      //   report.tags = this.reportsService.parseReportTags(report.fields, 'child');
-      //   return report;
-      // });
       this.childrenReport = reports;
       this.childrenFields = this.getCumulativeChildrenFields(this.childrenReport);
-      console.log(this.childrenFields);
-
-      // let tagGroups: ReportTagGroup[] = [];
-      // this.childrenReport.map((report: ReportChild) => {
-      //   if (report.tags) report.tags.map((tagGroup: ReportTagGroup) => tagGroups.push(tagGroup))
-      // });
-      // this.childFlowTags = this.reportsService.mergeReportTagGroups(tagGroups);
     });
     this._parentReport = value;
   }
@@ -59,7 +48,7 @@ export class ArchiveCardComponent {
   public childrenReport: ReportChild[] = [];
   public childFlowTags: ReportTagGroup[] = [];
 
-  constructor(private reportsService: ReportsService, private router: Router) { }
+  constructor(private reportsService: ReportsService, private router: Router) {}
 
   public async restoreReport(): Promise<void> {
     let data: ReportParentClosingDataDb = {
