@@ -13,15 +13,21 @@ import { MiniMapComponent } from '../mini-map/mini-map.component';
 import { ChildReportCardComponent } from '../child-report-card/child-report-card.component';
 import { ChildReportsFiltersComponent } from '../child-reports-filters/child-reports-filters.component';
 import { OPERATIONTYPE } from '../../models/operation.model';
+import { WebAppConfig } from '../../models/config.model';
+import { ControlLabelPipe } from '../../pipes/control-label.pipe';
 
 @Component({
   selector: 'app-parent-report-detail',
   standalone: true,
-  imports: [DatePipe, KeyValuePipe, NgClass, MiniMapComponent, ChildReportCardComponent, ChildReportsFiltersComponent],
+  imports: [DatePipe, KeyValuePipe, ControlLabelPipe, NgClass, MiniMapComponent, ChildReportCardComponent, ChildReportsFiltersComponent],
   templateUrl: './parent-report-detail.component.html',
   styleUrl: './parent-report-detail.component.scss'
 })
 export class ParentReportDetailComponent {
+  public config: WebAppConfig = this.configService.config;
+  public tagGroups: TagGroup[] = this.configService.tagGroups;
+  public childTagGroups: TagGroup[] = this.configService.childTagGroups;
+  
   private parentReportSignal: WritableSignal<ReportParent> = signal(ReportParent.createEmpty());
   public parentReport: ReportParent = ReportParent.createEmpty();
 
@@ -123,5 +129,14 @@ export class ParentReportDetailComponent {
     }
 
     this.filteredChildrenReport.sort((a, b) => b.creationTime.getTime() - a.creationTime.getTime())
+  }
+
+  public hasMatchfingField(groupId: string): boolean {
+    return Object.keys(this.parentReport.fields).some(key => key === groupId);
+  }
+
+  public getTags(groupId: string): string[] {
+    const field: string[] = this.parentReport.fields[groupId];
+    return field ? field : [];
   }
 }
