@@ -9,9 +9,4 @@ export class DialogService {
   public isOpen: WritableSignal<boolean> = signal(false);
 
   constructor() { }
-
-  public transformLanguage(data: any): any {
-    data.language = 'pippo';
-    return data;
-  }
 }

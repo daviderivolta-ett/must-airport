@@ -22,8 +22,8 @@ import { TagGroup } from '../../../models/tag.model';
 })
 export class MapPageComponent {
   public config: WebAppConfig = this.configService.config;
-  public childTagGroups: TagGroup[] = this.configService.childTagGroups;
-  public parentTagGroups: TagGroup[] = this.configService.parentTagGroups;
+  public childTagGroups: TagGroup[] | null = null;
+  public parentTagGroups: TagGroup[] | null = null;;
   public loggedUser: LoggedUser | null = null;
   public currentApp: VERTICAL | null = null;
   public reports: ReportParent[] = [];
@@ -32,12 +32,10 @@ export class MapPageComponent {
   constructor(private configService: ConfigService, private authService: AuthService, private reportsService: ReportsService) {
     effect(() => {
       this.reports = this.reportsService.reportsSignal();
-      // console.log('All reports:', this.reports);
     });
 
     effect(() => {
-      this.reports = this.reportsService.filteredReportsSignal();
-      // console.log(this.reports);      
+      this.reports = this.reportsService.filteredReportsSignal();     
     });
 
     effect(() => {
@@ -46,6 +44,14 @@ export class MapPageComponent {
 
     effect(() => {
       this.currentApp = this.authService.currentAppSignal();
+    });
+
+    effect(() => {
+      this.parentTagGroups = this.configService.parentTagGroupsSignal();
+    });
+
+    effect(() => {
+      this.childTagGroups = this.configService.childTagGroupsSignal();
     });
   }
 }

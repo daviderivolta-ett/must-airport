@@ -26,41 +26,31 @@ import { ControlLabelPipe } from '../../pipes/control-label.pipe';
 export class ParentReportDetailComponent {
   public config: WebAppConfig = this.configService.config;
   public tagGroups: TagGroup[] = this.configService.tagGroups;
+  public parentTagGroups: TagGroup[] = this.configService.parentTagGroups;
   public childTagGroups: TagGroup[] = this.configService.childTagGroups;
-  
+
+  public childrenFields: any = {};
+
   private parentReportSignal: WritableSignal<ReportParent> = signal(ReportParent.createEmpty());
   public parentReport: ReportParent = ReportParent.createEmpty();
-
   public childrenReport: ReportChild[] = [];
   public filteredChildrenReport: ReportChild[] = [];
-
-  public childFlowTags: ReportTagGroup[] = [];
 
   public miniMapData: MiniMapData = { location: new GeoPoint(0.0, 0.0), priority: PRIORITY.NotAssigned };
 
   constructor(private router: Router, private route: ActivatedRoute, protected reportsService: ReportsService, private configService: ConfigService) {
     effect(async () => {
       if (this.parentReportSignal().id === '') return;
-      let report: ReportParent = this.parentReportSignal();      
+      let report: ReportParent = this.parentReportSignal();
       this.parentReport = report;
 
       this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
       if (this.parentReport.closingChildId) this.childrenReport.unshift(await this.reportsService.getChildReportById(this.parentReport.closingChildId));
 
-      this.childrenReport.map((report: ReportChild) => {
-        report.tags = this.reportsService.parseReportTags(report.fields, 'child');
-        return report;
-      });
-
       this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
 
-      let tagGroups: ReportTagGroup[] = [];
-      this.childrenReport.map((report: ReportChild) => {
-        if (report.tags) report.tags.map((tagGroup: ReportTagGroup) => tagGroups.push(tagGroup))
-      });
-      this.childFlowTags = this.reportsService.mergeReportTagGroups(tagGroups);
-
-      this.filteredChildrenReport = this.childrenReport;      
+      this.filteredChildrenReport = this.childrenReport;
+      this.childrenFields = this.getCumulativeChildrenFields(this.childrenReport);
     });
   }
 
@@ -131,12 +121,45 @@ export class ParentReportDetailComponent {
     this.filteredChildrenReport.sort((a, b) => b.creationTime.getTime() - a.creationTime.getTime())
   }
 
-  public hasMatchfingField(groupId: string): boolean {
+  private getCumulativeChildrenFields(reports: ReportChild[]): { [key: string]: string[] } {
+    let fields: { [key: string]: string[] } = {};
+
+    reports.forEach((report: ReportChild) => {
+      for (const key in report.fields) {
+        if (!fields[key]) {
+          fields[key] = report.fields[key];
+        } else {
+          if (Array.isArray(report.fields[key])) {
+            report.fields[key].forEach((id: string) => fields[key].push(id));
+          }
+        }
+      }
+    });
+
+    for (const key in fields) {
+      if (Array.isArray(fields[key])) {
+        fields[key] = [...new Set(fields[key])];
+      }
+    }
+
+    return fields;
+  }
+
+  public hasMatchingField(groupId: string): boolean {
     return Object.keys(this.parentReport.fields).some(key => key === groupId);
   }
 
   public getTags(groupId: string): string[] {
     const field: string[] = this.parentReport.fields[groupId];
+    return field ? field : [];
+  }
+
+  public hasChildrenMatchingFields(groupId: string): boolean {
+    return Object.keys(this.childrenFields).some(key => key === groupId);
+  }
+
+  public getChildrenTags(groupId: string): string[] {
+    const field: string[] = this.childrenFields[groupId];
     return field ? field : [];
   }
 }

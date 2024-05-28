@@ -5,6 +5,7 @@ import { KeyValuePipe, NgClass, TitleCasePipe } from '@angular/common';
 import { Tag, TagGroup } from '../../../models/tag.model';
 import { WebAppConfigTags } from '../../../models/config.model';
 import { ControlLabelPipe } from '../../../pipes/control-label.pipe';
+import { ReportChild } from '../../../models/report-child.model';
 
 @Component({
   selector: 'app-validation-form',
@@ -31,7 +32,22 @@ export class ValidationFormComponent {
     if (!value || value.id.length === 0) return;
     this._report = value;
     this.priorityForm.setValue({ priority: this.report?.priority });
-    this.patchControls(this.report?.fields);
+    this.patchControls([this.report?.fields]);
+  }
+
+  private _childrenReport: ReportChild[] = [];
+
+  public get childrenReport(): ReportChild[] {
+    return this._childrenReport;
+  }
+
+  @Input() public set childrenReport(value: ReportChild[]) {
+    if (value.length === 0) return;
+    this._childrenReport = value;
+
+    let fields: any[] = [];
+    this.childrenReport.forEach((report: ReportChild) => fields.push(report.fields));   
+    this.patchControls(fields);
   }
 
   private _tags: WebAppConfigTags = { parent: { elements: [], groups: [] }, child: { elements: [], groups: [] } };
@@ -222,19 +238,24 @@ export class ValidationFormComponent {
     return undefined;
   }
 
-  private patchControls(fields: any) {
-    for (const key in fields) {
-      let values: string[] = fields[key];
+  private patchControls(fieldsArray: { [key: string]: any }[]) {    
+    fieldsArray.forEach((fields: { [key: string]: any }) => {      
+      for (const key in fields) {
+        let values: any = fields[key];       
+        if (!Array.isArray(values) || values.some((v: any) => typeof v !== 'string')) continue;
 
-      const formGroup: FormGroup = this.baseForm.get(key) as FormGroup;
-      if (formGroup) {
-        values.forEach((value: string) => {
-          for (const key in formGroup.controls) {
-            if (value.replaceAll('.', '_') === key) formGroup.get(key)?.setValue(true);
-          }
-        });
+        const formGroup: FormGroup = this.baseForm.get(key) as FormGroup;
+        
+        if (formGroup) {
+          values.forEach((value: string) => {
+            
+            for (const key in formGroup.controls) {
+              if (value.replaceAll('.', '_') === key) formGroup.get(key)?.setValue(true);
+            }
+          });
+        }
       }
-    }
+    });
   }
 
   public handleSubmit(): void {

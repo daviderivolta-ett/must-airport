@@ -12,17 +12,18 @@
     box-sizing: border-box;
 }
 
-.archive-table-row-cell {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-}
+// .archive-table-row-cell {
+//     text-overflow: ellipsis;
+//     white-space: nowrap;
+//     overflow: hidden;
+// }
 
 .creation-time-cell,
 .closing-time-cell {
     width: 12%;
 }
 
+.tag-cell,
 .tech-element-tags-cell,
 .tech-element-subtags-cell,
 .failure-tags-cell,

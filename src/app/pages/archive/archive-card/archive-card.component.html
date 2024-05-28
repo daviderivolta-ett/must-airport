@@ -8,55 +8,23 @@
         </div>
     </div>
     <div class="archive-table-row-cell creation-time-cell"><span>{{parentReport.creationTime | date: 'dd/MM/yyyy'}}</span></div>
-    @if (parentReport.tags) {
-        @for (tagGroup of parentReport.tags.parent; track tagGroup.id; let last = $last) {
-            <div class="archive-table-row-cell">
-                @for (tag of tagGroup.elements; track tag.id) {
-                    <span [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</span>
+    @for (group of tagGroups; track $index) {
+        <div class="archive-table-row-cell tag-cell" appHoverTooltip>
+            @if (hasMatchingField(group.id)) {
+                @for (tag of getTags(group.id); track $index; let last = $last) {
+                    <p class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel}}</p>
                 }
-            </div>
-        }
-    }
-
-    @for (tagGroup of childFlowTags; track tagGroup.id) {
-        <div class="archive-table-row-cell">
-            @for (tag of tagGroup.elements; track tag.id; let last = $last) {
-                <span [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</span>
+            }
+            @else if (hasChildrenMatchingFields(group.id)) {
+                @for (tag of getChildrenTags(group.id); track $index; let last = $last) {
+                    <p class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel}}</p>
+                }
+            }
+            @else {
+                <p class="info-value">-</p>
             }
         </div>
     }
-    <!-- <div class="archive-table-row-cell tech-element-tags-cell" appHoverTooltip [data]="parentReport.fields.parentFlowTags1">
-        @for (tag of parentReport.fields.parentFlowTags1; track $index; let last = $last) {
-            <span [ngClass]="{'comma': !last}">{{tag.name}}</span>
-        }
-        @if (parentReport.fields.parentFlowTags1.length === 0) {
-            <span>-</span>
-        }
-    </div>
-    <div class="archive-table-row-cell tech-element-subtags-cell" appHoverTooltip [data]="parentReport.fields.parentFlowTags2">
-        @for (tag of parentReport.fields.parentFlowTags2; track $index; let last = $last) {
-            <span [ngClass]="{'comma': !last}">{{tag.name}}</span>
-        }
-        @if (parentReport.fields.parentFlowTags2.length === 0) {
-            <span>-</span>
-        }
-    </div>
-    <div class="archive-table-row-cell failure-tags-cell" appHoverTooltip [data]="childFlowTags1">
-        @for (tag of childFlowTags1; track $index; let last = $last) {
-        <span [ngClass]="{'comma': !last}">{{tag.name}}</span>
-        }
-        @if (childFlowTags1.length === 0) {
-            <span>-</span>
-        }
-    </div>
-    <div class="archive-table-row-cell failure-subtags-cell" appHoverTooltip [data]="childFlowTags2">
-        @for (tag of childFlowTags2; track $index; let last = $last) {
-        <span [ngClass]="{'comma': !last}">{{tag.name}}</span>
-        }
-        @if (childFlowTags2.length === 0) {
-            <span>-</span>
-        }
-    </div> -->
     <div class="archive-table-row-cell actions-cell">
         <button type="button" class="detail-button" (click)="navigateTo(parentReport.id)">
             <span class="material-symbols-outlined detail-icon">navigate_next</span>

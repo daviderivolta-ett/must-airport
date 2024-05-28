@@ -12,7 +12,9 @@ export class ConfigService {
   public config: WebAppConfig = WebAppConfig.createEmpty();
   public tags: Tag[] = [];
   public tagGroups: TagGroup[] = [];
+  public parentTagGroupsSignal: WritableSignal<TagGroup[]> = signal([]);
   public parentTagGroups: TagGroup[] = [];
+  public childTagGroupsSignal: WritableSignal<TagGroup[]> = signal([]);
   public childTagGroups: TagGroup[] = [];
 
   public mobileAppConfig: any;
@@ -68,9 +70,6 @@ export class ConfigService {
 
       this.parentFlowTags = [...parentTags];
 
-      // console.log('Parent tags:', parentTags);
-      // console.log('Parent tag groups:', parentTagGroups);
-
       let childTags: Tag[] = [];
       let childTagGroups: TagGroup[] = [];
       for (const key in this.mobileAppConfig.childFlows) {
@@ -84,15 +83,12 @@ export class ConfigService {
 
       this.childFlowTags = [...childTags];
 
-      // console.log('Child tags:', childTags);      
-      // console.log('Child tag groups', childTagGroups);
-
       this.config.tags.parent.elements = [...parentTags];
       this.config.tags.parent.groups = [...parentTagGroups];
       this.config.tags.child.elements = [...childTags];
       this.config.tags.child.groups = [...childTagGroups];
 
-      console.log('Web config:', this.config);
+      // console.log('Web config:', this.config);
 
       this.tags = this.flatTags(this.config.tags);
 
@@ -100,6 +96,9 @@ export class ConfigService {
       this.tagGroups = flatTagGroups;
       this.parentTagGroups = flatParentTagGroups;
       this.childTagGroups = flatChildTagGroups;
+
+      this.parentTagGroupsSignal.set(flatParentTagGroups);
+      this.childTagGroupsSignal.set(flatChildTagGroups);
       
     }, { allowSignalWrites: true });
   }

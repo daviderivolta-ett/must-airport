@@ -25,14 +25,30 @@ import { ControlLabelPipe } from '../../../pipes/control-label.pipe';
   styleUrl: './dialog.component.scss'
 })
 export class DialogComponent {
+  private _childTagGroups: TagGroup[] = [];
+  public get childTagGroups(): TagGroup[] {
+    return this._childTagGroups;
+  }
+  @Input() public set childTagGroups(value: TagGroup[]) {
+    if (value.length === 0) return;
+    this._childTagGroups = value;
+  }
+
+  private _parentTagGroups: TagGroup[] = [];
+  public get parentTagGroups(): TagGroup[] {
+    return this._parentTagGroups;
+  }
+  @Input() public set parentTagGroups(value: TagGroup[]) {
+    if (value.length === 0) return;
+    this._parentTagGroups = value;
+  }
+
   public isOpen: boolean = false;
   public parentReport: ReportParent = ReportParent.createEmpty();
   public childrenReport: ReportChild[] = [];
   public loggedUser: LoggedUser | null = null;
   public miniMapData!: MiniMapData;
   public currentApp: VERTICAL | null = null;
-  @Input() public childTagGroups: TagGroup[] = [];
-  @Input() public parentTagGroups: TagGroup[] = [];
 
   constructor(private dialogService: DialogService, private reportsService: ReportsService, private router: Router, private authService: AuthService) {
     effect(() => this.isOpen = this.dialogService.isOpen());
@@ -40,23 +56,14 @@ export class DialogComponent {
     effect(() => this.currentApp = this.authService.currentAppSignal());
 
     effect(async () => {
-      const report: ReportParent = this.dialogService.report();
-      if (report.id.length === 0) return;
-
-      this.parentReport = { ...report };
+      if (this.dialogService.report().id.length === 0) return;
+      this.parentReport = this.dialogService.report();
 
       const childrenIds: string[] = [...this.parentReport.childrenIds];
       if (this.parentReport.closingChildId) childrenIds.push(this.parentReport.closingChildId);
       this.childrenReport = await this.reportsService.populateChildrenReports(childrenIds);
 
-      this.childrenReport = this.childrenReport.map((report: ReportChild) => {
-        report.tags = this.reportsService.parseReportTags(report.fields, 'child');
-        return report;
-      });
-
       this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
-      // console.log(this.parentReport);
-      // console.log(this.childrenReport);
     });
   }
 
@@ -69,7 +76,7 @@ export class DialogComponent {
     this.closeDialog();
   }
 
-  public hasMatchfingField(groupId: string): boolean {
+  public hasMatchingField(groupId: string): boolean {
     return Object.keys(this.parentReport.fields).some(key => key === groupId);
   }
 
