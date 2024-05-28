@@ -8,7 +8,7 @@
     <app-filters />
     <div class="sidebar-content">
         @for (report of reports; track report.id) {
-        <app-sidebar-card [report]="report" />
+        <app-sidebar-card [parentTagGroups]="parentTagGroups" [report]="report" />
         }
         @if (reports.length === 0) {
         <p class="no-report-message">Nessuna segnalazione trovata</p>

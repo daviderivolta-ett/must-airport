@@ -4,6 +4,7 @@ import { SidebarService } from '../../../observables/sidebar.service';
 import { ReportParent } from '../../../models/report-parent.model';
 import { SidebarCardComponent } from '../sidebar-card/sidebar-card.component';
 import { FiltersComponent } from '../filters/filters.component';
+import { TagGroup } from '../../../models/tag.model';
 
 @Component({
   selector: 'app-sidebar',
@@ -14,6 +15,7 @@ import { FiltersComponent } from '../filters/filters.component';
 })
 export class SidebarComponent {
   @Input() public reports: ReportParent[] = [];
+  @Input() public parentTagGroups: TagGroup[] = [];
   public isOpen: boolean = false;
 
   constructor(private sidebarService: SidebarService) {

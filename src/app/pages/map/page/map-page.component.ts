@@ -23,7 +23,7 @@ import { TagGroup } from '../../../models/tag.model';
 export class MapPageComponent {
   public config: WebAppConfig = this.configService.config;
   public childTagGroups: TagGroup[] | null = null;
-  public parentTagGroups: TagGroup[] | null = null;;
+  public parentTagGroups: TagGroup[] | null = null;
   public loggedUser: LoggedUser | null = null;
   public currentApp: VERTICAL | null = null;
   public reports: ReportParent[] = [];
