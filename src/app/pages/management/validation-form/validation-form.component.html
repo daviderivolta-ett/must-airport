@@ -1,15 +1,15 @@
 <form [formGroup]="baseForm" id="validation-form" (ngSubmit)="handleSubmit()">
 
-    @for (baseControl of baseForm.controls | keyvalue; track $index) {
-        @if(baseControl.key !== 'priority' && $any(baseControl).value.customType === 'parent') {
-            <div class="dropdown" [formGroupName]="baseControl.key">
-                <button type="button" class="dropdown-toggle" (click)="toggleDropdown(content)">
-                    {{baseControl.key | controlLabel}}
-                    <span class="material-symbols-outlined expand-more">expand_more</span>
-                </button>
-                <div class="form-group form-tech-element-tags dropdown-content" style="display: none;" #content>
-                    @for (control of $any(baseControl.value).controls | keyvalue; track $index) {
-                        @if($any(control.value).enabled) {
+    @for (group of tagGroups; track $index) {
+        <div class="dropdown" [formGroupName]="group.id">
+            <button type="button" class="dropdown-toggle" [disabled]="checkControls(group.id)" (click)="toggleDropdown(content)">
+                {{group.id | controlLabel}}
+                <span class="material-symbols-outlined expand-more">expand_more</span>
+            </button>
+            <div class="form-group dropdown-content" style="display: none;" #content>
+                @for (baseControl of baseForm.controls | keyvalue; track $index) {
+                    @for (control of $any(baseControl).value.controls | keyvalue; track $index) {
+                        @if (baseControl.key === group.id && $any(control).value.enabled) {
                             <div class="checkbox-single">
                                 <label [for]="control.key" class="checkbox-single-label">
                                     <input type="checkbox" [id]="control.key" [formControlName]="$any(control.key)">
@@ -19,33 +19,9 @@
                             </div>
                         }
                     }
-                </div>
+                }
             </div>
-        }
-    }
-
-    @for (baseControl of baseForm.controls | keyvalue; track $index) {
-        @if(baseControl.key !== 'priority' && $any(baseControl).value.customType === 'child') {
-            <div class="dropdown" [formGroupName]="baseControl.key" [ngClass]="{'dropdown-disabled': checkControls(baseControl.key)}">
-                <button type="button" class="dropdown-toggle" [disabled]="checkControls(baseControl.key)" (click)="toggleDropdown(content)">
-                    {{baseControl.key | controlLabel}}
-                    <span class="material-symbols-outlined expand-more">expand_more</span>
-                </button>
-                <div class="form-group form-tech-element-tags dropdown-content" style="display: none;" #content>
-                    @for (control of $any(baseControl.value).controls | keyvalue; track $index) {
-                        @if($any(control.value).enabled) {
-                            <div class="checkbox-single">
-                                <label [for]="control.key" class="checkbox-single-label">
-                                    <input type="checkbox" [id]="control.key" [formControlName]="$any(control.key)">
-                                    <span class="checkmark"></span>
-                                    {{$any(control.key) | controlLabel}}
-                                </label>
-                            </div>
-                        }
-                    }
-                </div>
-            </div>
-        }
+        </div>
     }
 
     <h3 class="priority-title">Priorità</h3>

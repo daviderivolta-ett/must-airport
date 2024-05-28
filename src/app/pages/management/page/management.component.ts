@@ -16,22 +16,24 @@ import { MiniMapComponent } from '../../../components/mini-map/mini-map.componen
 import { MiniMapData } from '../../../services/map.service';
 import { ArchiveDialogComponent } from '../../../components/archive-dialog/archive-dialog.component';
 import { ArchiveDialogService } from '../../../observables/archive-dialog.service';
-import { ReportTagGroup } from '../../../models/tag.model';
+import { ReportTagGroup, TagGroup } from '../../../models/tag.model';
 import { ConfigService } from '../../../services/config.service';
 import { OperationCardManagementComponent } from '../operation-card-management/operation-card-management.component';
 import { OPERATIONTYPE } from '../../../models/operation.model';
 import { ChildReportsFiltersComponent } from '../../../components/child-reports-filters/child-reports-filters.component';
 import { WebAppConfig } from '../../../models/config.model';
+import { ControlLabelPipe } from '../../../pipes/control-label.pipe';
 
 @Component({
   selector: 'app-management',
   standalone: true,
-  imports: [MiniMapComponent, ChildReportsFiltersComponent, ChildReportCardComponent, ValidationFormComponent, InspectionFormComponent, OperationCardComponent, OperationCardManagementComponent, DatePipe, NgClass, TitleCasePipe, KeyValuePipe],
+  imports: [MiniMapComponent, ChildReportsFiltersComponent, ChildReportCardComponent, ValidationFormComponent, InspectionFormComponent, OperationCardComponent, OperationCardManagementComponent, DatePipe, NgClass, TitleCasePipe, KeyValuePipe, ControlLabelPipe],
   templateUrl: './management.component.html',
   styleUrl: './management.component.scss'
 })
 export class ManagementComponent {
   public config: WebAppConfig = this.configService.config;
+  public tagGroups: TagGroup[] = this.configService.tagGroups;
   public id: string | null = null;
   public parentReport: ReportParent = ReportParent.createEmpty();
 

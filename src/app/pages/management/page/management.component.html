@@ -42,7 +42,7 @@
                 }
             </div>
             
-            @if (parentReport.tags) {
+            <!-- @if (parentReport.tags) {
                 @for (keyvalue of parentReport.tags | keyvalue; track keyvalue.key) {
                     @for (tagGroup of keyvalue.value; track tagGroup.id) {
                         <div class="info">
@@ -55,14 +55,38 @@
                         </div>
                     }
                 }
-            }
+            } -->
 
-            @for (tagGroup of childFlowTags; track tagGroup.id) {
+            <!-- @for (type of config.tags | keyvalue; track $index) {
+                @for (group of type.value.groups; track $index) {
+                    <div class="info">
+                        <p class="info-title">{{group.name}}</p>
+                        <div class="info-value-list">
+                            @for (field of parentReport.fields | keyvalue; track $index) {
+                                @if (field.key === group.id) {
+                                    @for (tag of $any(field.value); track $index; let last = $last) {
+                                        <p class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel}}</p>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+            } -->
+
+            @for (group of tagGroups; track $index) {
                 <div class="info">
-                    <p class="info-title">{{tagGroup.name}}</p>
+                    <p class="info-title">{{group.name}}</p>
                     <div class="info-value-list">
-                        @for (tag of tagGroup.elements; track tag.id; let last = $last) {
-                            <p class="info-value" [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</p>
+                        @for (field of parentReport.fields | keyvalue; track $index) {
+                            @if (field.key === group.id) {
+                                @for (tag of $any(field).value; track $index; let last = $last) {
+                                    <p class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel}}</p>
+                                }
+                            }
+                            @else if (!field.key) {
+                                <p class="info-value">-</p>
+                            }
                         }
                     </div>
                 </div>
@@ -91,10 +115,8 @@
     </div>
     <div class="column third-column">
         <h2>Scheda validazione</h2>
-        <!-- <app-validation-form [parentFlowTags]="parentFlowTags" [techElementTags]="techElementTags" [failureTags]="failureTags"
-            [parentReport]="parentReport" [childrenReport]="childrenReport" /> -->
         @if (config.tags) {
-            <app-validation-form [tags]="config.tags" [priority]="parentReport.priority" />
+            <app-validation-form [tags]="config.tags" [tagGroups]="tagGroups" [report]="parentReport"/>
         }
     </div>
     <div class="column fourth-column">
@@ -105,11 +127,6 @@
         <p>Nessun intervento creato</p>
         }
         @else {
-        <!-- <div class="operations">
-            @for (operation of parentReport.operations; track $index) {
-            <app-operation-card [operation]="operation" />
-            }
-        </div> -->
         <div class="operations">
             @for (operation of parentReport.operations; track $index) {
             <app-operation-card-management [operation]="operation" />

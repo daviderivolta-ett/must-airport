@@ -219,18 +219,18 @@ export class ConfigService {
       }
     }
 
-    if (configTags.child && Array.isArray(configTags.child.groups)) {
-      configTags.child.groups.forEach((group: TagGroup) => {
-        recurse(group);
-      });
-    }
-
     if (configTags.parent && Array.isArray(configTags.parent.groups)) {
       configTags.parent.groups.forEach((group: TagGroup) => {
         recurse(group);
       });
     }
 
+    if (configTags.child && Array.isArray(configTags.child.groups)) {
+      configTags.child.groups.forEach((group: TagGroup) => {
+        recurse(group);
+      });
+    }
+   
     return allTagGroups;
   }
 }
