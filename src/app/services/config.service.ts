@@ -12,6 +12,8 @@ export class ConfigService {
   public config: WebAppConfig = WebAppConfig.createEmpty();
   public tags: Tag[] = [];
   public tagGroups: TagGroup[] = [];
+  public parentTagGroups: TagGroup[] = [];
+  public childTagGroups: TagGroup[] = [];
 
   public mobileAppConfig: any;
   public mobileAppConfigSignal: WritableSignal<any> = signal({});
@@ -93,7 +95,12 @@ export class ConfigService {
       console.log('Web config:', this.config);
 
       this.tags = this.flatTags(this.config.tags);
-      this.tagGroups = this.flatTagGroups(this.config.tags);
+
+      const { flatTagGroups, flatParentTagGroups, flatChildTagGroups } = this.flatTagGroups(this.config.tags);
+      this.tagGroups = flatTagGroups;
+      this.parentTagGroups = flatParentTagGroups;
+      this.childTagGroups = flatChildTagGroups;
+      
     }, { allowSignalWrites: true });
   }
 
@@ -209,28 +216,37 @@ export class ConfigService {
     return allTags;
   }
 
-  private flatTagGroups(configTags: WebAppConfigTags): TagGroup[] {
-    const allTagGroups: TagGroup[] = [];
 
-    function recurse(group: TagGroup) {
-      allTagGroups.push(group);
+  flatTagGroups(configTags: WebAppConfigTags): { flatTagGroups: TagGroup[], flatParentTagGroups: TagGroup[], flatChildTagGroups: TagGroup[] } {
+    const flatTagGroups: TagGroup[] = [];
+    const flatParentTagGroups: TagGroup[] = [];
+    const flatChildTagGroups: TagGroup[] = [];
+
+    function recurse(group: TagGroup, targetArray: TagGroup[]) {
+      targetArray.push(group);
       if (group.subGroup) {
-        recurse(group.subGroup);
+        recurse(group.subGroup, targetArray);
       }
     }
 
     if (configTags.parent && Array.isArray(configTags.parent.groups)) {
       configTags.parent.groups.forEach((group: TagGroup) => {
-        recurse(group);
+        recurse(group, flatParentTagGroups);
       });
+      flatTagGroups.push(...flatParentTagGroups);
     }
 
     if (configTags.child && Array.isArray(configTags.child.groups)) {
       configTags.child.groups.forEach((group: TagGroup) => {
-        recurse(group);
+        recurse(group, flatChildTagGroups);
       });
+      flatTagGroups.push(...flatChildTagGroups);
     }
-   
-    return allTagGroups;
+
+    return {
+      flatTagGroups,
+      flatParentTagGroups,
+      flatChildTagGroups
+    };
   }
 }

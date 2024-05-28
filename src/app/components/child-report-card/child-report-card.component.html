@@ -19,18 +19,22 @@
         }
     </div>
     <div class="card-body">
-        @if (childReport.tags && childReport.tags.length > 0) {
         <div class="card-details">
-            @for (tagGroup of childReport.tags; track tagGroup.id) {
+            @for (group of childTagGroups; track $index) {
                 <div class="info">
-                    <span class="info-title">{{tagGroup.name}}: </span>
-                    @for (tag of tagGroup.elements; track tag.id; let last = $last) {
-                        <span class="info-value" [ngClass]="{'comma': !last}">{{tag.name.toLowerCase()}}</span>
+                    <span class="info-title">{{group.name}}: </span>
+                    @if (hasMatchfingField(group.id)) {
+                        @for (tag of getTags(group.id); track $index; let last = $last) {
+                            <span class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel}}</span>
+                        }
+                    }
+                    @else {
+                        <p class="info-value">-</p>
                     }
                 </div>
             }
         </div>
-        }
+
         <div class="card-footer">
             <p class="date">{{childReport.creationTime | date: 'dd/MM/yyyy'}} - h:{{childReport.creationTime | date: 'HH:mm'}}</p>
             @if (showDeleteBtn && parentReport.childrenIds.length > 1) {

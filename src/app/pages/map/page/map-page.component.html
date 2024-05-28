@@ -1,6 +1,6 @@
 <app-sidebar [reports]="reports" />
 <app-map />
-<app-dialog />
+<app-dialog [parentTagGroups]="parentTagGroups" [childTagGroups]="childTagGroups" />
 @if (currentApp !== 'generic') {
 <app-additional-layers-menu />
 }

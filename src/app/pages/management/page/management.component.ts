@@ -34,6 +34,7 @@ import { ControlLabelPipe } from '../../../pipes/control-label.pipe';
 export class ManagementComponent {
   public config: WebAppConfig = this.configService.config;
   public tagGroups: TagGroup[] = this.configService.tagGroups;
+  public childTagGroups: TagGroup[] = this.configService.childTagGroups;
   public id: string | null = null;
   public parentReport: ReportParent = ReportParent.createEmpty();
 
@@ -53,7 +54,7 @@ export class ManagementComponent {
     effect(async () => {
       this.parentReport = this.reportsService.selectedReportSignal();
       // console.log(this.parentReport);      
-      this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);      
+      this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
       if (this.parentReport.closingChildId) this.childrenReport.unshift(await this.reportsService.getChildReportById(this.parentReport.closingChildId));
       this.childrenReport = this.childrenReport.map((report: ReportChild) => {
         report.tags = this.reportsService.parseReportTags(report.fields, 'child');
@@ -61,7 +62,7 @@ export class ManagementComponent {
       });
 
       this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
-      
+
       let tagGroups: ReportTagGroup[] = [];
       this.childrenReport.map((report: ReportChild) => {
         if (report.tags) report.tags.map((tagGroup: ReportTagGroup) => tagGroups.push(tagGroup))
@@ -70,9 +71,6 @@ export class ManagementComponent {
 
       this.filteredChildrenReport = this.childrenReport;
     });
-    // effect(() => this.techElementTags = this.dictionaryService.techElementTagsSignal());
-    // effect(() => this.failureTags = this.dictionaryService.failureTagsSignal());
-    // effect(() => this.parentFlowTags = this.configService.parentFlowTagsSignal());
   }
 
   async ngOnInit(): Promise<void> {
@@ -119,5 +117,14 @@ export class ManagementComponent {
     }
 
     this.filteredChildrenReport.sort((a, b) => b.creationTime.getTime() - a.creationTime.getTime())
+  }
+
+  public hasMatchfingField(groupId: string): boolean {
+    return Object.keys(this.parentReport.fields).some(key => key === groupId);
+  }
+
+  public getTags(groupId: string): string[] {
+    const field: string[] = this.parentReport.fields[groupId];
+    return field ? field : [];
   }
 }

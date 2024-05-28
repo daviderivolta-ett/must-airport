@@ -14,11 +14,13 @@ import { MiniMapData } from '../../../services/map.service';
 import { VERTICAL } from '../../../models/app-flow.model';
 import { PRIORITY } from '../../../models/priority.model';
 import { GeoPoint } from 'firebase/firestore';
+import { TagGroup } from '../../../models/tag.model';
+import { ControlLabelPipe } from '../../../pipes/control-label.pipe';
 
 @Component({
   selector: 'app-dialog',
   standalone: true,
-  imports: [MiniMapComponent, ChildReportCardComponent, DatePipe, NgClass, KeyValuePipe, RouterLink, CloseEscapeDirective],
+  imports: [MiniMapComponent, ChildReportCardComponent, DatePipe, NgClass, KeyValuePipe, ControlLabelPipe, RouterLink, CloseEscapeDirective],
   templateUrl: './dialog.component.html',
   styleUrl: './dialog.component.scss'
 })
@@ -29,6 +31,8 @@ export class DialogComponent {
   public loggedUser: LoggedUser | null = null;
   public miniMapData!: MiniMapData;
   public currentApp: VERTICAL | null = null;
+  @Input() public childTagGroups: TagGroup[] = [];
+  @Input() public parentTagGroups: TagGroup[] = [];
 
   constructor(private dialogService: DialogService, private reportsService: ReportsService, private router: Router, private authService: AuthService) {
     effect(() => this.isOpen = this.dialogService.isOpen());
@@ -63,5 +67,14 @@ export class DialogComponent {
   public navigateTo(id: string): void {
     this.parentReport.closingChildId ? this.router.navigate(['/archivio', id]) : this.router.navigate(['/gestione', id]);
     this.closeDialog();
+  }
+
+  public hasMatchfingField(groupId: string): boolean {
+    return Object.keys(this.parentReport.fields).some(key => key === groupId);
+  }
+
+  public getTags(groupId: string): string[] {
+    const field: string[] = this.parentReport.fields[groupId];
+    return field ? field : [];
   }
 }

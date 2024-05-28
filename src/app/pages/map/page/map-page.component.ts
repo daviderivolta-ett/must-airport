@@ -11,6 +11,7 @@ import { VERTICAL } from '../../../models/app-flow.model';
 import { AuthService } from '../../../services/auth.service';
 import { ConfigService } from '../../../services/config.service';
 import { WebAppConfig } from '../../../models/config.model';
+import { TagGroup } from '../../../models/tag.model';
 
 @Component({
   selector: 'app-map-page',
@@ -21,6 +22,8 @@ import { WebAppConfig } from '../../../models/config.model';
 })
 export class MapPageComponent {
   public config: WebAppConfig = this.configService.config;
+  public childTagGroups: TagGroup[] = this.configService.childTagGroups;
+  public parentTagGroups: TagGroup[] = this.configService.parentTagGroups;
   public loggedUser: LoggedUser | null = null;
   public currentApp: VERTICAL | null = null;
   public reports: ReportParent[] = [];

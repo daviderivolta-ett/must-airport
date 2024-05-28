@@ -29,7 +29,7 @@
                             <p class="info-value">{{parentReport.lastChildTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.lastChildTime | date: 'HH:mm'}}</p>
                         </div>
 
-                        @if (parentReport.tags && parentReport.tags.parent) {
+                        <!-- @if (parentReport.tags && parentReport.tags.parent) {
                             @for (tagGroup of parentReport.tags.parent; track tagGroup.id) {
                                 <div class="info">
                                     <p class="info-title">{{tagGroup.name}}</p>
@@ -38,6 +38,17 @@
                                     }
                                 </div>
                             }
+                        } -->
+
+                        @for (group of parentTagGroups; track $index) {
+                            <div class="info">
+                                <p class="info-title">{{group.name}}</p>
+                                @if (hasMatchfingField(group.id)) {
+                                    @for (tag of getTags(group.id); track $index; let last = $last) {
+                                        <p class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel}}</p>
+                                    }
+                                }
+                            </div>
                         }
 
                     </div>
@@ -49,7 +60,7 @@
                     <h2 class="children-report-title">Report ({{parentReport.childrenIds.length}})</h2>
                     <div class="children-report">
                         @for (childReport of childrenReport; track $index) {
-                        <app-child-report-card [childReport]="childReport" [parentReport]="parentReport"/>
+                        <app-child-report-card [childTagGroups]="childTagGroups" [childReport]="childReport" [parentReport]="parentReport"/>
                         }
                     </div>
                 </div>
