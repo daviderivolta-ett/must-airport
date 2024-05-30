@@ -8,7 +8,6 @@ import { ReportsService } from '../../services/reports.service';
 import { LoggedUser } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { WebAppConfigTags } from '../../models/config.model';
 import { ControlLabelPipe } from '../../pipes/control-label.pipe';
 import { TagGroup } from '../../models/tag.model';
 

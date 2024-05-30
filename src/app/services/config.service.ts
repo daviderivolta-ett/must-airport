@@ -88,7 +88,7 @@ export class ConfigService {
       this.config.tags.child.elements = [...childTags];
       this.config.tags.child.groups = [...childTagGroups];
 
-      // console.log('Web config:', this.config);
+      console.log('Web config:', this.config);
 
       this.tags = this.flatTags(this.config.tags);
 
@@ -96,7 +96,7 @@ export class ConfigService {
       this.tagGroups = flatTagGroups;
       this.parentTagGroups = flatParentTagGroups;
       this.childTagGroups = flatChildTagGroups;
-
+      
       this.parentTagGroupsSignal.set(flatParentTagGroups);
       this.childTagGroupsSignal.set(flatChildTagGroups);
       
@@ -129,20 +129,20 @@ export class ConfigService {
       results = [...results, ...this.searchTags(component.child)];
 
     } else if (component.component === MobileAppMobileAppConfigComponentType.Branch && component.options) {
-      results = [...results, ...component.options.map((o: any) => new Tag(o.id, o.name, '', component.id, [])), ...component.options.flatMap((o: any) => this.searchTags(o.child))];
+      results = [...results, ...component.options.map((o: any) => new Tag(o.id.replace(/\./g, '_'), o.name, '', component.id, [])), ...component.options.flatMap((o: any) => this.searchTags(o.child))];
     }
 
     return results;
   }
 
   private parseTags(component: any): any {
-    return component.options.map((o: any) => new Tag(o.id, o.name, o.description, component.id, o.options ? o.options.map((obj: any) => this.parseSubTags(component.subLevels, 0, obj)) : []));
+    return component.options.map((o: any) => new Tag(o.id.replace(/\./g, '_'), o.name, o.description, component.id, o.options ? o.options.map((obj: any) => this.parseSubTags(component.subLevels, 0, obj)) : []));
   }
 
   private parseSubTags(subLevels: any[], index: number = 0, option: MobileAppConfigOption): any {
     const newIndex: number = index + 1;
     const subTags: Tag = new Tag(
-      option.id,
+      option.id.replace(/\./g, '_'),
       option.name,
       option.description || '',
       subLevels[index].id,

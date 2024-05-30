@@ -1,6 +1,6 @@
 import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy, setDoc, deleteDoc, updateDoc, arrayUnion, arrayRemove, where, or, Query } from 'firebase/firestore';
+import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy, setDoc, deleteDoc, updateDoc, arrayUnion, arrayRemove, where, or, Query, addDoc } from 'firebase/firestore';
 import { ReportParent } from '../models/report-parent.model';
 import { ReportParentFields } from '../models/report-parent.fields.model';
 import { ReportChild } from '../models/report-child.model';
@@ -178,8 +178,13 @@ export class ReportsService {
   }
 
   public async setReportById(id: string, data: any): Promise<void> {
-    const ref = doc(this.db, 'reportParents', id);
-    await setDoc(ref, data, { merge: true });
+    try {
+      const ref = doc(this.db, 'reportParents', id);
+      await setDoc(ref, data, { merge: true });
+    } catch (error) {
+      console.error('Error setting document: ', error);
+      throw new Error('Failed to set report by ID');
+    }
   }
 
   public selectReport(id: string): void {
@@ -283,8 +288,8 @@ export class ReportsService {
     r.creationTime = report.creationTime.toDate();
     r.descriptionSelections = report.descriptionSelections;
     r.descriptionText = report.descriptionText;
-    // r.fields = this.parseParentReportFields(report.fields as ReportParentFieldsDb);
-    r.fields = report.fields;
+    // r.fields = report.fields;
+    r.fields = this.parseReportFields(report.fields);
     r.language = Language.parseLanguage(report.language);
     r.lastChildTime = report.lastChildTime.toDate();
     r.location = report.location;
@@ -395,16 +400,34 @@ export class ReportsService {
     return Array.from(groupMap.values());
   }
 
-  private parseParentReportFields(fields: ReportParentFieldsDb): ReportParentFields {
-    let f = ReportParentFields.createEmpty();
+  // private parseParentReportFields(fields: ReportParentFieldsDb): ReportParentFields {
+  //   let f = ReportParentFields.createEmpty();
 
-    if (fields.foto_campo_largo !== undefined) f.wideShots = fields.foto_campo_largo;
-    if (fields.element_type !== undefined) f.elementType = fields.element_type;
-    if (fields.tag_tech_el !== undefined) f.tagTechElement = fields.tag_tech_el;
-    if (fields.sub_tag_tech_el !== undefined) f.subTagTechElement = fields.sub_tag_tech_el;
+  //   if (fields.foto_campo_largo !== undefined) f.wideShots = fields.foto_campo_largo;
+  //   if (fields.element_type !== undefined) f.elementType = fields.element_type;
+  //   if (fields.tag_tech_el !== undefined) f.tagTechElement = fields.tag_tech_el;
+  //   if (fields.sub_tag_tech_el !== undefined) f.subTagTechElement = fields.sub_tag_tech_el;
+
+  //   return f;
+  // }
+
+  private parseReportFields(fields: { [key: string]: any }): { [key: string]: any } {    
+    let f: { [key: string]: any } = {};
+
+    const groupIds = new Set(this.configService.tagGroups.map((group: TagGroup) => group.id));
+
+    Object.keys(fields).forEach((key: string) => {
+      if (groupIds.has(key) && Array.isArray(fields[key])) {
+        fields[key] = fields[key].map((tag: string) => tag.replace(/\./g, '_'));
+        f[key] = fields[key];
+      } else {
+        f[key] = fields[key];
+      }
+    });
 
     return f;
   }
+
 
   private parseParentReportOperation(operation: OperationDb): Operation {
     let o = Operation.createEmpty();
@@ -465,7 +488,7 @@ export class ReportsService {
   public async populateChildrenReports(ids: string[]): Promise<ReportChild[]> {
     let reports: ReportChild[] = await Promise.all(ids.map(async id => {
       return await this.getChildReportById(id);
-    }));
+    }));  
     return reports.reverse();
   }
 
@@ -520,7 +543,7 @@ export class ReportsService {
     const snapshot = await getDoc(q);
     if (snapshot.exists()) {
       const r = snapshot.data() as ReportChildDb;
-      const report: ReportChild = this.parseChildReport(id, r);
+      const report: ReportChild = this.parseChildReport(id, r);    
       return report;
     } else {
       throw new Error('Report non trovato');
@@ -530,32 +553,52 @@ export class ReportsService {
   public async deleteChildReportBydId(id: string): Promise<void> {
     try {
       let childReport: ReportChild = await this.getChildReportById(id);
-      childReport.fields.detailShots.forEach((url: any) => {
-        let imgRef = this.getImageReference(url);
-        this.deleteImage(imgRef);
-      });
 
-      let parentReport = await this.getParentReportById(childReport.parentId);
-      parentReport.childrenIds = parentReport.childrenIds.filter(id => id !== childReport.id);
-      this.setReportById(childReport.parentId, parentReport);
-      await deleteDoc(doc(this.db, 'reportChildren', id))
+      for (const key in childReport.fields) {
+        if (key === 'foto_dettaglio' || key === 'photo_detail' || key === 'maintenance_photo' || key === 'intervention_photo') {
+          if (Array.isArray(childReport.fields[key]))
+            childReport.fields[key].forEach((url: string) => {
+              let imgRef = this.getImageReference(url);
+              this.deleteImage(imgRef);
+            });
+        }
+      }
+
+      await deleteDoc(doc(this.db, 'reportChildren', id));
+      const parentRef = doc(this.db, 'reportParents', childReport.parentId);
+      await setDoc(parentRef, { childrenIds: arrayRemove(childReport.id) }, { merge: true });
     } catch (error) {
       console.error(error);
     }
   }
 
   public async setChildReportById(id: string, data: any): Promise<void> {
-    const ref = doc(this.db, 'reportChildren', id);
-    await setDoc(ref, data, { merge: true });
+    console.log('Data', data);    
+    console.log('id', id);
+    
+    try {
+      const ref = doc(this.db, 'reportChildren', id);
+      await setDoc(ref, data);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  private parseChildReport(id: string, report: ReportChildDb): ReportChild {
+  public async addChildReport(data: any): Promise<void> {
+    const ref = collection(this.db, 'reportChildren');
+    await addDoc(ref, data).then(async (res: any) => {
+      const parentRef = doc(this.db, 'reportParents', data.parentId);
+      await setDoc(parentRef, { childrenIds: arrayUnion(res.id) }, { merge: true });
+    });
+  }
+
+  private parseChildReport(id: string, report: ReportChildDb): ReportChild {    
     let r = ReportChild.createEmpty();
 
     r.isClosed = report.closure;
     r.creationTime = report.creationTime.toDate();
-    // r.fields = this.parseChildReportFields(report.fields);
-    r.fields = report.fields;
+    // r.fields = report.fields;
+    r.fields = this.parseReportFields(report.fields);
     r.flowId = report.flowId;
 
     switch (report.language) {
@@ -571,7 +614,7 @@ export class ReportsService {
     r.userId = report.userId;
     r.verticalId = report.verticalId;
     r.id = id;
-
+  
     return r;
   }
 

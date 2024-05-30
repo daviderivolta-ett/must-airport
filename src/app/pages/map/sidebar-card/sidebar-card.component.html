@@ -3,12 +3,6 @@
         <img src={{report.coverImgUrls[0]}}>
     </div>
     <div class="card-body">
-        <!-- @if (report.tags && report.tags.parent[0]) {
-            <span class="info">{{report.tags.parent[0].name}}: </span>
-            @for (tag of report.tags.parent[0].elements; track tag.id; let last = $last) {
-                <span class="info-title" [ngClass]="{'comma': !last}">{{tag.name}}</span>
-            }
-        } -->
         @for (group of parentTagGroups; track $index) {
             <div>
                 <span class="info">{{group.name}}: </span>

@@ -62,7 +62,7 @@ export class DialogComponent {
       const childrenIds: string[] = [...this.parentReport.childrenIds];
       if (this.parentReport.closingChildId) childrenIds.push(this.parentReport.closingChildId);
       this.childrenReport = await this.reportsService.populateChildrenReports(childrenIds);
-
+     
       this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
     });
   }

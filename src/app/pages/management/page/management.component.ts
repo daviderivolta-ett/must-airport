@@ -46,12 +46,13 @@ export class ManagementComponent {
     effect(async () => {
       this.parentReport = this.reportsService.selectedReportSignal();
       this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
+      
       if (this.parentReport.closingChildId) this.childrenReport.unshift(await this.reportsService.getChildReportById(this.parentReport.closingChildId));
-
+     
       this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
 
       this.filteredChildrenReport = this.childrenReport;
-      this.childrenFields = this.getCumulativeChildrenFields(this.childrenReport);
+      this.childrenFields = this.getCumulativeChildrenFields(this.childrenReport);   
     });
   }
 
@@ -121,7 +122,7 @@ export class ManagementComponent {
         fields[key] = [...new Set(fields[key])];
       }
     }
-
+ 
     return fields;
   }
 
@@ -134,7 +135,7 @@ export class ManagementComponent {
     return field ? field : [];
   }
 
-  public hasChildrenMatchingFields(groupId: string): boolean {
+  public hasChildrenMatchingFields(groupId: string): boolean {  
     return Object.keys(this.childrenFields).some(key => key === groupId);
   }
 

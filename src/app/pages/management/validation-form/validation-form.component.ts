@@ -6,6 +6,18 @@ import { Tag, TagGroup } from '../../../models/tag.model';
 import { WebAppConfigTags } from '../../../models/config.model';
 import { ControlLabelPipe } from '../../../pipes/control-label.pipe';
 import { ReportChild } from '../../../models/report-child.model';
+import { Timestamp } from 'firebase/firestore';
+import { ReportsService } from '../../../services/reports.service';
+import { LANGUAGE } from '../../../models/language.model';
+import { AuthService } from '../../../services/auth.service';
+import { SnackbarService } from '../../../observables/snackbar.service';
+import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
+import { VERTICAL } from '../../../models/app-flow.model';
+
+interface TagChanges {
+  toAdd: { [key: string]: string[] },
+  toRemove: { [key: string]: string[] }
+}
 
 @Component({
   selector: 'app-validation-form',
@@ -15,7 +27,7 @@ import { ReportChild } from '../../../models/report-child.model';
   styleUrl: './validation-form.component.scss'
 })
 export class ValidationFormComponent {
-  constructor(private fb: FormBuilder) { }
+  constructor(private authService: AuthService, private fb: FormBuilder, private reportsService: ReportsService, private snackbarService: SnackbarService) { }
 
   public baseForm: FormGroup = this.fb.group({});
   public priorityForm: FormGroup = this.fb.group({
@@ -44,9 +56,9 @@ export class ValidationFormComponent {
   @Input() public set childrenReport(value: ReportChild[]) {
     if (value.length === 0) return;
     this._childrenReport = value;
-
+    console.log(this.childrenReport);    
     let fields: any[] = [];
-    this.childrenReport.forEach((report: ReportChild) => fields.push(report.fields));   
+    this.childrenReport.forEach((report: ReportChild) => fields.push(report.fields));
     this.patchControls(fields);
   }
 
@@ -101,7 +113,7 @@ export class ValidationFormComponent {
 
     tags.forEach((tag: Tag) => {
       if (group.id === tag.type) {
-        formGroup.addControl(tag.id.replaceAll('.', '_'), new FormControl(false));
+        formGroup.addControl(tag.id, new FormControl(false));
 
         if (group.subGroup) {
           this.createFormSubGroup(formSubGroup, group.subGroup, tag.subTags);
@@ -118,7 +130,7 @@ export class ValidationFormComponent {
     tags.forEach((tag: Tag) => {
       if (tag.type === group.id) {
         const control = new FormControl(false);
-        formSubGroup.addControl(tag.id.replaceAll('.', '_'), control);
+        formSubGroup.addControl(tag.id, control);
         control.disable();
       }
       if (group.subGroup) this.createFormSubGroup(formSubGroup, group.subGroup, tag.subTags);
@@ -152,7 +164,7 @@ export class ValidationFormComponent {
 
     for (const id of ids) {
       for (const control of controls) {
-        if (control.parent && (control.parent.get(id.replaceAll('.', '_')) === control)) {
+        if (control.parent && (control.parent.get(id) === control)) {
           if (control.parent instanceof FormGroup) {
             formGroup = control.parent;
           }
@@ -162,7 +174,7 @@ export class ValidationFormComponent {
 
     Object.keys(formGroup.controls).forEach((key: string) => {
       for (const id of ids) {
-        if (id.replaceAll('.', '_') === key) {
+        if (id === key) {
           let foundControl: any = formGroup.get(key);
           if (foundControl instanceof FormControl) {
             if (control.value) {
@@ -227,7 +239,7 @@ export class ValidationFormComponent {
     for (const key in tags) {
       const elements = tags[key as keyof WebAppConfigTags].elements;
       for (const tag of elements) {
-        if (tag.id === id.replaceAll('_', '.')) {
+        if (tag.id === id) {
           return tag;
         } else if (tag.subTags.length > 0) {
           const subTag = this.getTagById(id, { parent: { elements: tag.subTags, groups: [] }, child: { elements: [], groups: [] } });
@@ -238,19 +250,19 @@ export class ValidationFormComponent {
     return undefined;
   }
 
-  private patchControls(fieldsArray: { [key: string]: any }[]) {    
-    fieldsArray.forEach((fields: { [key: string]: any }) => {      
+  private patchControls(fieldsArray: { [key: string]: any }[]) {
+    fieldsArray.forEach((fields: { [key: string]: any }) => {
       for (const key in fields) {
-        let values: any = fields[key];       
+        let values: any = fields[key];
         if (!Array.isArray(values) || values.some((v: any) => typeof v !== 'string')) continue;
 
         const formGroup: FormGroup = this.baseForm.get(key) as FormGroup;
-        
+
         if (formGroup) {
           values.forEach((value: string) => {
-            
+
             for (const key in formGroup.controls) {
-              if (value.replaceAll('.', '_') === key) formGroup.get(key)?.setValue(true);
+              if (value === key) formGroup.get(key)?.setValue(true);
             }
           });
         }
@@ -258,19 +270,206 @@ export class ValidationFormComponent {
     });
   }
 
-  public handleSubmit(): void {
-    console.log(this.baseForm.value);
-    // let data: any = this.reportsService.parseValidationFormData(this.validationForm.value);
-    // let msg: string;
-    // try {
-    //   if (!this._parentReport.validationDate) data.validationDate = Timestamp.now();
-    //   if (!this._parentReport.isValidated) data.validated = true;
-    //   this.reportsService.setReportById(this._parentReport.id, data);
-    //   msg = 'Modifica salvata con successo';
-    //   this.snackbarService.createSnackbar(msg, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
-    // } catch (error) {
-    //   msg = 'C\'è stato un errore nel salvataggio del report. Riprovare!'
-    //   this.snackbarService.createSnackbar(msg, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
-    // }
+  public async handleSubmit(): Promise<void> {
+    if (!this.report) return;
+
+    try {
+      let data: any = {}
+      let fields: any = {};
+
+      data.priority = this.baseForm.value.priority.priority;
+      fields = this.parseReportFields(this.baseForm.value);
+      const { parentFields, childFields } = this.splitFields(fields);
+      data.fields = parentFields;
+
+      if (!this.report.isValidated) data.validated = true;
+      if (!this.report.validationDate) data.validationDate = Timestamp.now();
+
+      const childReports: ReportChild[] = this.childrenReport.map((report: ReportChild) => ({ ...report, fields: { ...report.fields } }));
+      const currentTags: { [key: string]: string[] } = this.getCurrentChildrenTags(childReports);
+      const tagChanges: TagChanges = this.compareTags(currentTags, childFields);
+
+      console.log('Cambiamenti', tagChanges);
+
+      if (Object.keys(tagChanges.toAdd).length !== 0) {
+        console.log('Ci sono tag da aggiungere');
+        this.createNewChildReport(childReports, tagChanges);
+      }
+
+      if (Object.keys(tagChanges.toRemove).length !== 0) {
+        console.log('Ci sono tag da rimuovere');
+        this.removeTags(childReports, tagChanges);
+      }
+
+      data.lastChildTime = Timestamp.now();
+      await this.reportsService.setReportById(this.report.id, data);
+      this.snackbarService.createSnackbar('Modifica salvato con successo', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
+    } catch (error) {
+      console.error(error);
+      this.snackbarService.createSnackbar('C\'è stato un errore nel salvataggio. Riprovare.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
+    }
+  }
+
+  private parseReportFields(formValue: { [key: string]: any }): { [key: string]: any } {
+    let fields: any = {}
+
+    Object.keys(formValue).forEach((formKey: string) => {
+      let values: string[] = [];
+      for (const valueKey in formValue[formKey]) {
+        if (formValue[formKey][valueKey]) {
+          values.push(valueKey);
+        }
+      }
+      fields[formKey] = values;
+    });
+
+    return fields;
+  }
+
+  private splitFields(fields: { [key: string]: any }): { parentFields: { [key: string]: string[] }, childFields: { [key: string]: string[] } } {
+    let parentFields: { [key: string]: string[] } = {};
+    let childFields: { [key: string]: string[] } = {};
+
+    function recurse(group: TagGroup, array: TagGroup[]) {
+      array.push(group);
+      if (group.subGroup) recurse(group.subGroup, array);
+    }
+
+    let parentGroups: TagGroup[] = [];
+    this.tags.parent.groups.forEach((group: TagGroup) => recurse(group, parentGroups));
+
+    let childGroups: TagGroup[] = [];
+    this.tags.child.groups.forEach((group: TagGroup) => recurse(group, childGroups));
+
+    Object.keys(fields).forEach((key: string) => {
+      parentGroups.forEach((group: TagGroup) => {
+        if (group.id === key) {
+          parentFields[key] = fields[key];
+        }
+      });
+
+      childGroups.forEach((group: TagGroup) => {
+        if (group.id === key) {
+          childFields[key] = fields[key];
+        }
+      });
+    });
+
+    return { parentFields, childFields };
+  }
+
+  private getCurrentChildrenTags(reports: ReportChild[]): { [key: string]: string[] } {
+    let currentTags: { [key: string]: Set<string> } = {};
+
+    reports.forEach((report: ReportChild) => {
+      for (const key in report.fields) {
+        this.tagGroups.forEach((group: TagGroup) => {
+          if (group.id !== key) return;
+          if (!Array.isArray(report.fields[key])) return;
+          let field: string[] = report.fields[key];
+          if (!currentTags[key]) currentTags[key] = new Set<string>();
+          field.forEach((tag: string) => currentTags[key].add(tag));
+        });
+      }
+    });
+
+    let currentTagsArray: { [key: string]: string[] } = {};
+    for (const key in currentTags) {
+      currentTagsArray[key] = Array.from(currentTags[key]);
+    }
+
+    return currentTagsArray;
+  }
+
+  private compareTags(currentTags: { [key: string]: string[] }, newTags: { [key: string]: string[] }): TagChanges {
+    const toAdd: { [key: string]: string[] } = {};
+    const toRemove: { [key: string]: string[] } = {};
+
+    for (const key in currentTags) {
+      if (!newTags.hasOwnProperty(key)) {
+        toRemove[key] = currentTags[key];
+      } else {
+        const tagsToRemove = currentTags[key].filter(tag => !newTags[key].includes(tag));
+        if (tagsToRemove.length > 0) {
+          toRemove[key] = tagsToRemove;
+        }
+      }
+    }
+
+    for (const key in newTags) {
+      if (!currentTags.hasOwnProperty(key)) {
+        toAdd[key] = newTags[key];
+      } else {
+        const tagsToAdd = newTags[key].filter(tag => !currentTags[key].includes(tag));
+        if (tagsToAdd.length > 0) {
+          toAdd[key] = tagsToAdd;
+        }
+      }
+    }
+
+    Object.keys(toAdd).forEach(key => {
+      if (toAdd[key].length === 0) {
+        delete toAdd[key];
+      }
+    });
+
+    Object.keys(toRemove).forEach(key => {
+      if (toRemove[key].length === 0) {
+        delete toRemove[key];
+      }
+    });
+
+    return { toAdd, toRemove };
+  }
+
+  private createNewChildReport(reports: ReportChild[], changes: TagChanges) {
+    if (!this.report) return;
+
+    const newReport: any = {
+      closure: false,
+      creationTime: Timestamp.now(),
+      fields: changes.toAdd,
+      flowId: reports[reports.length - 1].flowId,
+      language: LANGUAGE.Italian,
+      parentId: this.report.id,
+      userId: this.authService.loggedUser ? this.authService.loggedUser.id : 'web',
+      verticalId: this.report.verticalId
+    }
+
+    console.log('Nuovo report', newReport);
+    this.reportsService.addChildReport(newReport);
+  }
+
+  private removeTags(reports: ReportChild[], changes: TagChanges): void {
+    reports.forEach((report: ReportChild) => { 
+
+      let r: any = {
+        closure: report.isClosed ? report.isClosed : false,
+        creationTime: report.creationTime,
+        fields: report.fields,
+        flowId: report.flowId,
+        language: report.language,
+        parentId: report.parentId,
+        userId: this.authService.loggedUser ? this.authService.loggedUser.id : 'web',
+        verticalId: this.report ? this.report.verticalId : VERTICAL.Default
+      };
+
+      for (const key in r.fields) {
+        for (const k in changes.toRemove) {
+          if (key !== k) continue;
+          r.fields[key] = r.fields[key].filter((tag: string) => !changes.toRemove[k].includes(tag));
+        }
+      }
+
+      Object.keys(r.fields).forEach(key => {
+        if (r.fields[key].length === 0) {
+          delete r.fields[key];
+        }
+      });
+      this.reportsService.setChildReportById(report.id, r);
+    });
+
+    console.log('Reports', reports);
+    // reports.forEach((report: ReportChild) => this.reportsService.setChildReportById(report.id, report));
   }
 }

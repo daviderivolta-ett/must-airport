@@ -88,7 +88,7 @@ export class ParentReportDetailComponent {
     const closingChild: ReportChild = await this.reportsService.getChildReportById(this.parentReport.closingChildId);
 
     await this.reportsService.setReportById(this.parentReport.id, data);
-    await this.reportsService.setChildReportById(closingChild.id, { closure: false });
+    await this.reportsService.setChildReportById(closingChild.id, { ...closingChild, closure: false });
 
     this.router.navigate(['/segnalazioni']);
   }

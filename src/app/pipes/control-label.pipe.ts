@@ -16,7 +16,7 @@ export class ControlLabelPipe implements PipeTransform {
   }
 
   transform(value: string): string {
-    const tag: Tag | undefined = this.tags.find((tag: Tag) => tag.id === value.replaceAll('_', '.'));
+    const tag: Tag | undefined = this.tags.find((tag: Tag) => tag.id === value);
     if (tag) return tag.name;
     const tagGroup: TagGroup | undefined = this.tagGroups.find((group: TagGroup) => group.id === value);
     if (tagGroup) return tagGroup.name;
