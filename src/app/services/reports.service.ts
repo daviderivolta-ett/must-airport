@@ -400,17 +400,6 @@ export class ReportsService {
     return Array.from(groupMap.values());
   }
 
-  // private parseParentReportFields(fields: ReportParentFieldsDb): ReportParentFields {
-  //   let f = ReportParentFields.createEmpty();
-
-  //   if (fields.foto_campo_largo !== undefined) f.wideShots = fields.foto_campo_largo;
-  //   if (fields.element_type !== undefined) f.elementType = fields.element_type;
-  //   if (fields.tag_tech_el !== undefined) f.tagTechElement = fields.tag_tech_el;
-  //   if (fields.sub_tag_tech_el !== undefined) f.subTagTechElement = fields.sub_tag_tech_el;
-
-  //   return f;
-  // }
-
   private parseReportFields(fields: { [key: string]: any }): { [key: string]: any } {    
     let f: { [key: string]: any } = {};
 
@@ -418,8 +407,7 @@ export class ReportsService {
 
     Object.keys(fields).forEach((key: string) => {
       if (groupIds.has(key) && Array.isArray(fields[key])) {
-        fields[key] = fields[key].map((tag: string) => tag.replace(/\./g, '_'));
-        f[key] = fields[key];
+        f[key] = fields[key].map((tag: string) => tag.replace(/\./g, '_'));
       } else {
         f[key] = fields[key];
       }
@@ -488,7 +476,7 @@ export class ReportsService {
   public async populateChildrenReports(ids: string[]): Promise<ReportChild[]> {
     let reports: ReportChild[] = await Promise.all(ids.map(async id => {
       return await this.getChildReportById(id);
-    }));  
+    }));
     return reports.reverse();
   }
 
@@ -541,9 +529,9 @@ export class ReportsService {
   public async getChildReportById(id: string): Promise<ReportChild> {
     const q = doc(this.db, 'reportChildren', id);
     const snapshot = await getDoc(q);
-    if (snapshot.exists()) {
-      const r = snapshot.data() as ReportChildDb;
-      const report: ReportChild = this.parseChildReport(id, r);    
+    if (snapshot.exists()) {     
+      const r = snapshot.data() as ReportChildDb;     
+      const report: ReportChild = this.parseChildReport(id, r); 
       return report;
     } else {
       throw new Error('Report non trovato');
@@ -594,10 +582,10 @@ export class ReportsService {
 
   private parseChildReport(id: string, report: ReportChildDb): ReportChild {    
     let r = ReportChild.createEmpty();
-
+        
     r.isClosed = report.closure;
     r.creationTime = report.creationTime.toDate();
-    // r.fields = report.fields;
+    r.fields = report.fields;
     r.fields = this.parseReportFields(report.fields);
     r.flowId = report.flowId;
 
@@ -614,7 +602,7 @@ export class ReportsService {
     r.userId = report.userId;
     r.verticalId = report.verticalId;
     r.id = id;
-  
+
     return r;
   }
 

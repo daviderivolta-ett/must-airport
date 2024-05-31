@@ -19,6 +19,7 @@ import { OPERATIONTYPE } from '../../../models/operation.model';
 import { ChildReportsFiltersComponent } from '../../../components/child-reports-filters/child-reports-filters.component';
 import { WebAppConfig } from '../../../models/config.model';
 import { ControlLabelPipe } from '../../../pipes/control-label.pipe';
+import { UtilsService } from '../../../services/utils.service';
 
 @Component({
   selector: 'app-management',
@@ -42,17 +43,23 @@ export class ManagementComponent {
 
   public miniMapData!: MiniMapData;
 
-  constructor(private applicationRef: ApplicationRef, private route: ActivatedRoute, private configService: ConfigService, private reportsService: ReportsService, private archiveDialogService: ArchiveDialogService) {
+  constructor(private applicationRef: ApplicationRef,
+    private route: ActivatedRoute,
+    private configService: ConfigService,
+    private reportsService: ReportsService,
+    private archiveDialogService: ArchiveDialogService,
+    private utilsService: UtilsService) {
+
     effect(async () => {
       this.parentReport = this.reportsService.selectedReportSignal();
       this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
-      
+
       if (this.parentReport.closingChildId) this.childrenReport.unshift(await this.reportsService.getChildReportById(this.parentReport.closingChildId));
-     
+
       this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
 
-      this.filteredChildrenReport = this.childrenReport;
-      this.childrenFields = this.getCumulativeChildrenFields(this.childrenReport);   
+      this.filteredChildrenReport = [...this.childrenReport];
+      this.childrenFields = this.getCumulativeChildrenFields(this.childrenReport);
     });
   }
 
@@ -104,8 +111,9 @@ export class ManagementComponent {
 
   private getCumulativeChildrenFields(reports: ReportChild[]): { [key: string]: string[] } {
     let fields: { [key: string]: string[] } = {};
+    let r: ReportChild[] = this.utilsService.deepClone(reports);
 
-    reports.forEach((report: ReportChild) => {
+    r.forEach((report: ReportChild) => {
       for (const key in report.fields) {
         if (!fields[key]) {
           fields[key] = report.fields[key];
@@ -122,7 +130,7 @@ export class ManagementComponent {
         fields[key] = [...new Set(fields[key])];
       }
     }
- 
+
     return fields;
   }
 
@@ -135,7 +143,7 @@ export class ManagementComponent {
     return field ? field : [];
   }
 
-  public hasChildrenMatchingFields(groupId: string): boolean {  
+  public hasChildrenMatchingFields(groupId: string): boolean {
     return Object.keys(this.childrenFields).some(key => key === groupId);
   }
 

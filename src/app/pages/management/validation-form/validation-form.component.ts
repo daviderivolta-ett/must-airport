@@ -13,6 +13,7 @@ import { AuthService } from '../../../services/auth.service';
 import { SnackbarService } from '../../../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 import { VERTICAL } from '../../../models/app-flow.model';
+import { UtilsService } from '../../../services/utils.service';
 
 interface TagChanges {
   toAdd: { [key: string]: string[] },
@@ -27,7 +28,7 @@ interface TagChanges {
   styleUrl: './validation-form.component.scss'
 })
 export class ValidationFormComponent {
-  constructor(private authService: AuthService, private fb: FormBuilder, private reportsService: ReportsService, private snackbarService: SnackbarService) { }
+  constructor(private authService: AuthService, private fb: FormBuilder, private reportsService: ReportsService, private snackbarService: SnackbarService, private utilsService: UtilsService) { }
 
   public baseForm: FormGroup = this.fb.group({});
   public priorityForm: FormGroup = this.fb.group({
@@ -56,7 +57,6 @@ export class ValidationFormComponent {
   @Input() public set childrenReport(value: ReportChild[]) {
     if (value.length === 0) return;
     this._childrenReport = value;
-    console.log(this.childrenReport);    
     let fields: any[] = [];
     this.childrenReport.forEach((report: ReportChild) => fields.push(report.fields));
     this.patchControls(fields);
@@ -285,7 +285,8 @@ export class ValidationFormComponent {
       if (!this.report.isValidated) data.validated = true;
       if (!this.report.validationDate) data.validationDate = Timestamp.now();
 
-      const childReports: ReportChild[] = this.childrenReport.map((report: ReportChild) => ({ ...report, fields: { ...report.fields } }));
+      // const childReports: ReportChild[] = this.childrenReport.map((report: ReportChild) => ({ ...report, fields: { ...report.fields } }));
+      const childReports: ReportChild[] = this.utilsService.deepClone(this.childrenReport);
       const currentTags: { [key: string]: string[] } = this.getCurrentChildrenTags(childReports);
       const tagChanges: TagChanges = this.compareTags(currentTags, childFields);
 
@@ -436,12 +437,20 @@ export class ValidationFormComponent {
       verticalId: this.report.verticalId
     }
 
+    let f: any = { ...newReport.fields };
+
+    for (const key in f) {
+      f[key] = f[key].map((tag: string) => tag.replace(/\_/g, '.'));
+    }
+
+    newReport.fields = { ...f };
+
     console.log('Nuovo report', newReport);
     this.reportsService.addChildReport(newReport);
   }
 
   private removeTags(reports: ReportChild[], changes: TagChanges): void {
-    reports.forEach((report: ReportChild) => { 
+    reports.forEach((report: ReportChild) => {
 
       let r: any = {
         closure: report.isClosed ? report.isClosed : false,
@@ -458,6 +467,7 @@ export class ValidationFormComponent {
         for (const k in changes.toRemove) {
           if (key !== k) continue;
           r.fields[key] = r.fields[key].filter((tag: string) => !changes.toRemove[k].includes(tag));
+          r.fields[key] = r.fields[key].map((tag: string) => tag.replace(/\_/g, '.'));
         }
       }
 
@@ -470,6 +480,5 @@ export class ValidationFormComponent {
     });
 
     console.log('Reports', reports);
-    // reports.forEach((report: ReportChild) => this.reportsService.setChildReportById(report.id, report));
   }
 }

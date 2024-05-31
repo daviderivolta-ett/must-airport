@@ -12,8 +12,6 @@ import { AuthService } from '../../../services/auth.service';
 import { MiniMapComponent } from '../../../components/mini-map/mini-map.component';
 import { MiniMapData } from '../../../services/map.service';
 import { VERTICAL } from '../../../models/app-flow.model';
-import { PRIORITY } from '../../../models/priority.model';
-import { GeoPoint } from 'firebase/firestore';
 import { TagGroup } from '../../../models/tag.model';
 import { ControlLabelPipe } from '../../../pipes/control-label.pipe';
 
