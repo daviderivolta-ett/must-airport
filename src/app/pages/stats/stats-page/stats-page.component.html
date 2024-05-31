@@ -22,21 +22,28 @@
     @if (reportsNumPerPrioritySerie.data && reportsNumPerPrioritySerie.data.length !== 0) {
     <div class="chart-wrapper">
         <h2 class="chart-title">Segnalazioni per priorità</h2>
-        <app-pie-chart [serie]="reportsNumPerPrioritySerie"/>
+        <app-pie-chart [series]="[reportsNumPerPrioritySerie]"/>
     </div>
     }
 
-    @if (techElementTagsNumSerie.data && techElementTagsNumSerie.data.length !== 0 && techElementSubTagsDrilldownNumSeries && techElementSubTagsDrilldownNumSeries.length !== 0) {
+    @if (parentFlowTagsNumSeries.length !== 0) {
+    <div class="" style="width: 100%;">
+        <h2>TITOLO TEST</h2>
+        <app-pie-chart [series]="parentFlowTagsNumSeries" [drilldown]="parentFlowTagsNumDrilldownSeries" />
+    </div>
+    }
+        
+    <!-- @if (techElementTagsNumSerie.data && techElementTagsNumSerie.data.length !== 0 && techElementSubTagsDrilldownNumSeries && techElementSubTagsDrilldownNumSeries.length !== 0) {
     <div class="chart-wrapper">
         <h2 class="chart-title">Elementi tecnici</h2>
         <app-pie-chart [serie]="techElementTagsNumSerie" [drilldown]="techElementSubTagsDrilldownNumSeries" />
     </div>
-    }
+    } -->
 
-    @if (failureTagsNumSerie.data && failureTagsNumSerie.data.length !== 0 && failureSubTagsDrilldownNumSeries && failureSubTagsDrilldownNumSeries.length !== 0) {
+    <!-- @if (failureTagsNumSerie.data && failureTagsNumSerie.data.length !== 0 && failureSubTagsDrilldownNumSeries && failureSubTagsDrilldownNumSeries.length !== 0) {
     <div class="chart-wrapper">
         <h2 class="chart-title">Segnali di guasto</h2>
         <app-pie-chart [serie]="failureTagsNumSerie" [drilldown]="failureSubTagsDrilldownNumSeries" />
     </div>
-    }
+    } -->
 </div>

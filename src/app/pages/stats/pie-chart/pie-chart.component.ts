@@ -11,7 +11,7 @@ import Drilldown from 'highcharts/modules/drilldown';
   styleUrl: './pie-chart.component.scss'
 })
 export class PieChartComponent {
-  @Input() public serie: Highcharts.SeriesPieOptions = { type: 'pie' };
+  @Input() public series: Highcharts.SeriesPieOptions[] = [];
   @Input() public drilldown: Highcharts.SeriesPieOptions[] = [];
 
   public charts!: Highcharts.Chart;
@@ -93,7 +93,9 @@ export class PieChartComponent {
   }
 
   private initChart(): void {
-    this.chartOptions.series?.push(this.serie);
+    this.series.forEach((serie: Highcharts.SeriesPieOptions) => {
+      this.chartOptions.series?.push(serie);
+    });
 
     if (this.drilldown && this.chartOptions.drilldown) {
       Drilldown(Highcharts);

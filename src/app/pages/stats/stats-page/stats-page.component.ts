@@ -5,7 +5,7 @@ import { ReportsService } from '../../../services/reports.service';
 import { ChartsService } from '../../../services/charts.service';
 import { PieChartComponent } from '../pie-chart/pie-chart.component';
 import { ReportChild } from '../../../models/report-child.model';
-import { AuthService } from '../../../services/auth.service';
+import { ConfigService } from '../../../services/config.service';
 
 @Component({
   selector: 'app-stats-page',
@@ -21,12 +21,16 @@ export class StatsPageComponent {
   public reportsNumPerPrioritySerie: Highcharts.SeriesPieOptions = { type: 'pie' };
   public interventionsPerTimeSerie: Highcharts.SeriesLineOptions = { type: 'line' };
   public inspectionsPerTimeSerie: Highcharts.SeriesLineOptions = { type: 'line' };
+
+  public parentFlowTagsNumSeries: Highcharts.SeriesPieOptions[] = [];
+  public parentFlowTagsNumDrilldownSeries: Highcharts.SeriesPieOptions[] = [];
+
   public techElementTagsNumSerie: Highcharts.SeriesPieOptions = { type: 'pie' };
   public techElementSubTagsDrilldownNumSeries: Highcharts.SeriesPieOptions[] = [];
   public failureTagsNumSerie: Highcharts.SeriesPieOptions = { type: 'pie' };
   public failureSubTagsDrilldownNumSeries: Highcharts.SeriesPieOptions[] = [];
 
-  constructor(private authService: AuthService, private reportsService: ReportsService, private chartsService: ChartsService) {
+  constructor(private configService: ConfigService, private reportsService: ReportsService, private chartsService: ChartsService) {
     effect(async () => {
       this.parentReports = this.reportsService.reportsSignal();
 
@@ -39,21 +43,16 @@ export class StatsPageComponent {
       });
 
       this.childrenReports = (await Promise.all(childReportsPromises)).flat();
-      this.childrenReports = this.childrenReports.map(report => this.reportsService.populateFailureTags(report));
-      this.childrenReports = this.childrenReports.map(report => this.reportsService.populateFailureSubtags(report));
 
       this.reportsNumPerTimeSerie = this.chartsService.createReportsNumPerTimeSerie(this.parentReports);
       this.reportsNumPerPrioritySerie = this.chartsService.createReportsNumPerPrioritySerie(this.parentReports);
       this.interventionsPerTimeSerie = this.chartsService.createInterventionsPerTimeSerie(this.parentReports);
       this.inspectionsPerTimeSerie = this.chartsService.createInspectionsPerTimeSerie(this.parentReports);
 
-      let techElementTagsNumSerie = this.chartsService.createTechElementTagsNumSerie(this.parentReports);
-      this.techElementSubTagsDrilldownNumSeries = this.chartsService.createTechElementSubTagsDrilldownNumSeries(this.parentReports, techElementTagsNumSerie);
-      this.techElementTagsNumSerie = this.chartsService.recalculateSerieBasedOnDrilldownSeries(techElementTagsNumSerie, this.techElementSubTagsDrilldownNumSeries);
+      const { series, drilldownSeries } = this.chartsService.createParentFlowTagsSerie(this.configService.config.tags, this.parentReports);
+      this.parentFlowTagsNumSeries = [...series];
+      this.parentFlowTagsNumDrilldownSeries = [...drilldownSeries];
 
-      let failureTagsNumSerie = this.chartsService.createFailureTagsNumSerie(this.childrenReports);
-      this.failureSubTagsDrilldownNumSeries = this.chartsService.createFailureSubTagsDrilldownNumSeries(this.childrenReports, failureTagsNumSerie);
-      this.failureTagsNumSerie = this.chartsService.recalculateSerieBasedOnDrilldownSeries(failureTagsNumSerie, this.failureSubTagsDrilldownNumSeries);
     });
   }
 }
