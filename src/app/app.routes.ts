@@ -12,6 +12,7 @@ import { userGuard } from './guards/user.guard';
 import { ArchiveComponent } from './pages/archive/page/archive.component';
 import { CalendarPageComponent } from './pages/calendar/page/calendar-page.component';
 import { ParentReportDetailComponent } from './components/parent-report-detail/parent-report-detail.component';
+import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
 
 export const routes: Routes = [
     {
@@ -76,5 +77,10 @@ export const routes: Routes = [
         title: 'MUST - Usa codice',
         component: UseCodeComponent,
         canActivate: [userGuard]
+    },
+    {
+        path: 'privacy-policy',
+        title: 'MUST - Privacy policy',
+        component: PrivacyPolicyComponent
     }
 ];
