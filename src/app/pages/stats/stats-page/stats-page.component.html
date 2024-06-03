@@ -28,19 +28,19 @@
     }
 
     @if (parentFlowTagsNumSeries.length !== 0) {
-        @for (series of parentFlowTagsNumSeries; track $index) {
+        @for (serie of parentFlowTagsNumSeries; track serie.id) {
             <div class="chart-wrapper">
-                <h2>{{series.name}}</h2>
-                <app-pie-chart [series]="[series]" [drilldown]="parentFlowTagsNumDrilldownSeries" />
+                <h2>{{serie.name}}</h2>
+                <app-pie-chart [series]="[serie]" [drilldown]="parentFlowTagsNumDrilldownSeries" />
             </div>
         }
     }
 
     @if (childFlowTagsNumSeries.length !== 0) {
-        @for (series of childFlowTagsNumSeries; track $index) {
+        @for (serie of childFlowTagsNumSeries; track serie.id) {
             <div class="chart-wrapper">
-                <h2>{{series.name}}</h2>
-                <app-pie-chart [series]="[series]" [drilldown]="childFlowTagsNumDrilldownSeries" />
+                <h2>{{serie.name}}</h2>
+                <app-pie-chart [series]="[serie]" [drilldown]="childFlowTagsNumDrilldownSeries" />
             </div>
         }
     }
