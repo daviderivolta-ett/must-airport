@@ -149,11 +149,11 @@ export class ChartsService {
     return serie;
   }
 
-  public createParentFlowTagsSerie(configTags: WebAppConfigTags, reports: ReportParent[]): { series: Highcharts.SeriesPieOptions[], drilldownSeries: Highcharts.SeriesPieOptions[] } {
+  public createTagsSerie(configTagType: WebAppConfigTagType, reports: ReportParent[] | ReportChild[]): { series: Highcharts.SeriesPieOptions[], drilldownSeries: Highcharts.SeriesPieOptions[] } {
     let series: Highcharts.SeriesPieOptions[] = [];
     let drilldownSeries: Highcharts.SeriesPieOptions[] = [];
 
-    configTags.parent.groups.forEach((group: TagGroup) => {
+    configTagType.groups.forEach((group: TagGroup) => {
       const serie: Highcharts.SeriesPieOptions = {
         type: 'pie',
         name: group.id,
@@ -161,19 +161,20 @@ export class ChartsService {
         id: group.id
       }
 
-      configTags.parent.elements.forEach((tag: Tag) => {
+      configTagType.elements.forEach((tag: Tag) => {
         if (tag.type === group.id) {
           let d: Highcharts.PointOptionsObject = {
             name: tag.id,
             drilldown: tag.id,
             y: 0,
+            id: tag.id
           }
 
           if (serie.data) serie.data.push(d);
 
           if (group.subGroup) {
             if (tag.subTags) {
-              const drilldownSerie: Highcharts.SeriesPieOptions[] = this.createParentFlowTagsDrilldownSerie(group.subGroup, d.drilldown ? d.drilldown : '', tag.subTags, drilldownSeries);
+              const drilldownSerie: Highcharts.SeriesPieOptions[] = this.createTagsDrilldownSerie(group.subGroup, d.drilldown ? d.drilldown : '', tag.subTags, drilldownSeries);
               drilldownSeries.concat(drilldownSerie);
             }
           }
@@ -181,15 +182,14 @@ export class ChartsService {
       });
 
       series.push(serie);
-
     });
 
 
-    const tags: { [key: string]: string[] } = this.getReportTags(reports, configTags.parent.groups);
+    const tags: { [key: string]: string[] } = this.getReportTags(reports, configTagType.groups);
     const frequencies: { [key: string]: { [key: string]: number } } = this.calculateTagsFrequency(tags);
     series = this.fillSeriesData(series, frequencies);
 
-    const drilldownGroups: TagGroup[] = configTags.parent.groups.map(group => group.subGroup).filter((subGroup): subGroup is TagGroup => subGroup !== null);
+    const drilldownGroups: TagGroup[] = configTagType.groups.map(group => group.subGroup).filter((subGroup): subGroup is TagGroup => subGroup !== null);
     const drilldownTags: { [key: string]: string[] } = this.getReportTags(reports, drilldownGroups);
     const drilldownFrequencies: { [key: string]: { [key: string]: number } } = this.calculateTagsFrequency(drilldownTags);
     drilldownSeries = this.fillSeriesData(drilldownSeries, drilldownFrequencies);
@@ -197,7 +197,7 @@ export class ChartsService {
     return { series, drilldownSeries };
   }
 
-  private createParentFlowTagsDrilldownSerie(group: TagGroup, drilldownId: string, tags: Tag[], series: Highcharts.SeriesPieOptions[]) {
+  private createTagsDrilldownSerie(group: TagGroup, drilldownId: string, tags: Tag[], series: Highcharts.SeriesPieOptions[]) {
     const serie: Highcharts.SeriesPieOptions = {
       type: 'pie',
       name: group.id,
@@ -210,13 +210,14 @@ export class ChartsService {
         let d: Highcharts.PointOptionsObject = {
           name: tag.id,
           drilldown: tag.id,
-          y: 0
+          y: 0,
+          id: tag.id
         }
         if (serie.data) serie.data.push(d);
 
         if (group.subGroup) {
           if (tag.subTags) {
-            this.createParentFlowTagsDrilldownSerie(group.subGroup, d.drilldown ? d.drilldown : '', tag.subTags, series);
+            this.createTagsDrilldownSerie(group.subGroup, d.drilldown ? d.drilldown : '', tag.subTags, series);
           }
         }
       }
@@ -227,11 +228,11 @@ export class ChartsService {
     return series;
   }
 
-  private getReportTags(reports: ReportParent[], tagGroups: TagGroup[]): { [key: string]: string[] } {
+  private getReportTags(reports: ReportParent[] | ReportChild[], tagGroups: TagGroup[]): { [key: string]: string[] } {
     let tags: { [key: string]: string[] } = {};
 
     tagGroups.forEach((group: TagGroup) => {
-      reports.forEach((report: ReportParent) => {
+      reports.forEach((report: ReportParent | ReportChild) => {
         for (const key in report.fields) {
           if (Object.prototype.hasOwnProperty.call(report.fields, key)) {
             if (key === group.id) {
@@ -244,9 +245,28 @@ export class ChartsService {
         }
       });
     });
+    // tags = this.getTagNames(tags, this.configService.tags);
     console.log('Tags', tags);
-
     return tags;
+  }
+
+  private getTagNames(foundTags: { [key: string]: string[] }, configTags: Tag[]) {
+    const result: { [key: string]: string[] } = {};
+
+    for (const key in foundTags) {
+      if (Object.prototype.hasOwnProperty.call(foundTags, key)) {
+        let tags: string[] = foundTags[key];
+
+        tags = tags.map((t: string) => {
+          const configTag: Tag | undefined = configTags.find((tag: Tag) => tag.id === t);
+          return configTag ? configTag.name : t;
+        });
+
+        result[key] = tags;
+      }
+    }
+
+    return result;
   }
 
   private calculateTagsFrequency(tags: { [key: string]: string[] }): { [key: string]: { [key: string]: number } } {
@@ -262,27 +282,9 @@ export class ChartsService {
 
       }
     }
-
     console.log('Frequencies', frequencies);
     return frequencies;
   }
-
-  // private fillSeriesData(series: Highcharts.SeriesPieOptions[], frequencies: { [key: string]: { [key: string]: number } }): Highcharts.SeriesPieOptions[] {
-  //   series = series.map((serie: Highcharts.SeriesPieOptions) => {
-  //     if (serie.id && frequencies.hasOwnProperty(serie.id)) {
-  //       const frequencyData: { [key: string]: number } = frequencies[serie.id];
-  //       serie.data = (serie.data as Highcharts.PointOptionsObject[]).map((d: Highcharts.PointOptionsObject) => {
-  //         if (d.drilldown && frequencyData.hasOwnProperty(d.drilldown)) {
-  //           d.y = frequencyData[d.drilldown];
-  //         }
-  //         return d;
-  //       });
-  //     }
-  //     return serie;
-  //   });
-  //   console.log('Series', series);
-  //   return series;
-  // }
 
   private fillSeriesData(series: Highcharts.SeriesPieOptions[], frequencies: { [key: string]: { [key: string]: number } }): Highcharts.SeriesPieOptions[] {
     series = series.map((serie: Highcharts.SeriesPieOptions) => {
@@ -297,164 +299,21 @@ export class ChartsService {
       }
       return serie;
     });
+
+    series = this.removeEmptyData(series);
     console.log('Series', series);
+
     return series;
   }
 
+  private removeEmptyData(series: Highcharts.SeriesPieOptions[]) {
+    series = series.map((serie: Highcharts.SeriesPieOptions) => {
+      serie.data = (serie.data as Highcharts.PointOptionsObject[]).filter((d: Highcharts.PointOptionsObject) => d.y !== 0);
+      return serie;
+    });
 
-
-  // public createTechElementTagsNumSerie(reports: ReportParent[]): Highcharts.SeriesPieOptions {
-  //   let techElementTags: TechElementTag[] = [];
-  //   let idFrequency: { [key: string]: number } = {};
-  //   let data: pieChartData[] = [];
-
-  //   techElementTags = reports.flatMap(report =>
-  //     report.fields.tagTechElement
-  //       .filter((tag: any) => typeof tag !== 'string')
-  //       .map((tag: any) => tag as TechElementTag)
-  //   );
-
-  //   techElementTags.forEach(tag => {
-  //     const id = tag.id;
-  //     idFrequency[id] = (idFrequency[id] || 0) + 1;
-  //   });
-
-  //   data = Object.entries(idFrequency).map(([name, value]): pieChartData => ({
-  //     name: ((techElementTags.find(tag => tag.id === name))?.name.it || name) as string,
-  //     y: value,
-  //     drilldown: name
-  //   }));
-
-  //   let serie: Highcharts.SeriesPieOptions = {
-  //     type: 'pie',
-  //     name: 'Elementi tecnici',
-  //     data: data,
-  //   }
-  //   return serie;
-  // }
-
-  // public createFailureSubTagsDrilldownNumSeries(reports: ReportChild[], failureTagsNumSerie: Highcharts.SeriesPieOptions): Highcharts.SeriesPieOptions[] {
-  //   let failureSubTags: FailureSubTag[] = [];
-  //   let series: Highcharts.SeriesPieOptions[] = [];
-
-  //   failureSubTags = reports.flatMap(report => {
-  //     return report.fields.subTagFailure
-  //       .filter((tag: any) => typeof tag !== 'string')
-  //       .map((tag: any) => tag as FailureSubTag)
-  //   });
-
-  //   if (failureTagsNumSerie.data) {
-  //     failureTagsNumSerie.data.map((item: any) => {
-  //       let failureSubTagsPerFailureTag: FailureSubTag[] = failureSubTags.filter(subTag => subTag.id.includes(item.drilldown));
-
-  //       if (failureSubTagsPerFailureTag.length === 0) return;
-
-  //       let idFrequency: { [key: string]: number } = {};
-  //       failureSubTagsPerFailureTag.forEach(tag => {
-  //         const id = tag.id;
-  //         idFrequency[id] = (idFrequency[id] || 0) + 1;
-  //       });
-
-  //       let data: pieChartData[] = [];
-  //       data = Object.entries(idFrequency).map(([name, value]): pieChartData => ({
-  //         name: ((failureSubTagsPerFailureTag.find(tag => tag.id === name))?.name.it || name) as string,
-  //         y: value
-  //       }));
-
-  //       const serie: Highcharts.SeriesPieOptions = {
-  //         id: item.drilldown,
-  //         data: data,
-  //         type: 'pie',
-  //         name: item.name
-  //       }
-
-  //       series.push(serie);
-  //     });
-  //   }
-  //   return series;
-  // }
-
-  // public createFailureTagsNumSerie(reports: ReportChild[]): Highcharts.SeriesPieOptions {
-  //   // console.log(reports);    
-  //   let failureTags: FailureTag[] = [];
-  //   let idFrequency: { [key: string]: number } = {};
-  //   let data: pieChartData[] = [];
-
-  //   failureTags = reports.flatMap(report => {
-  //     return report.fields.tagFailure
-  //       .filter((tag: any) => typeof tag !== 'string')
-  //       .map((tag: any) => tag as FailureTag)
-  //   });
-
-  //   failureTags.forEach(tag => {
-  //     const id = tag.id;
-  //     idFrequency[id] = (idFrequency[id] || 0) + 1;
-  //   });
-
-  //   data = Object.entries(idFrequency).map(([name, value]): pieChartData => ({
-  //     name: ((failureTags.find(tag => tag.id === name))?.name.it || name) as string,
-  //     y: value,
-  //     drilldown: name
-  //   }));
-
-  //   let serie: SeriesPieOptions = {
-  //     type: 'pie',
-  //     name: 'Segnali di guasto',
-  //     data: data
-  //   }
-  //   return serie;
-  // }
-
-  // public createTechElementSubTagsDrilldownNumSeries(reports: ReportParent[], techElementTagsNumSerie: Highcharts.SeriesPieOptions): Highcharts.SeriesPieOptions[] {
-  //   let techElementSubtags: TechElementSubTag[] = [];
-  //   let series: Highcharts.SeriesPieOptions[] = [];
-
-  //   techElementSubtags = reports.flatMap(report => {
-  //     return report.fields.subTagTechElement
-  //       .filter((tag: any) => typeof tag !== 'string')
-  //       .map((tag: any) => tag as TechElementSubTag)
-  //   });
-
-  //   if (techElementTagsNumSerie.data) {
-  //     techElementTagsNumSerie.data.map((item: any) => {
-  //       let techElementSubtagsPerTechElementTag: TechElementSubTag[] = techElementSubtags.filter(subTag => subTag.id.includes(item.drilldown));
-
-  //       let idFrequency: { [key: string]: number } = {};
-  //       techElementSubtagsPerTechElementTag.forEach(tag => {
-  //         const id = tag.id;
-  //         idFrequency[id] = (idFrequency[id] || 0) + 1;
-  //       });
-
-  //       let data: pieChartData[] = [];
-  //       data = Object.entries(idFrequency).map(([name, value]): pieChartData => ({
-  //         name: ((techElementSubtagsPerTechElementTag.find(tag => tag.id === name))?.name.it || name) as string,
-  //         y: value
-  //       }));
-
-  //       const serie: Highcharts.SeriesPieOptions = {
-  //         id: item.drilldown,
-  //         data: data,
-  //         type: 'pie',
-  //         name: item.name
-  //       }
-  //       series.push(serie);
-  //     });
-  //   }
-  //   return series;
-  // }
-
-  // public recalculateSerieBasedOnDrilldownSeries(serie: Highcharts.SeriesPieOptions, drilldownSeries: Highcharts.SeriesPieOptions[]): Highcharts.SeriesPieOptions {
-  //   if (!serie.data) return serie;
-
-  //   serie.data.forEach((data: any) => {
-  //     const matchingDrilldown = drilldownSeries.find(drilldownSerie => data.drilldown === drilldownSerie.id);
-
-  //     if (matchingDrilldown && matchingDrilldown.data) {
-  //       data.y = matchingDrilldown.data.length;
-  //     }
-  //   });
-  //   return serie;
-  // }
+    return series.filter((serie: Highcharts.SeriesPieOptions) => (serie.data as Highcharts.PointOptionsObject[]).length > 0);
+  }
 
   public generateChartUniqueId(): string {
     const alphabet: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';

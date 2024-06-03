@@ -24,6 +24,8 @@ export class StatsPageComponent {
 
   public parentFlowTagsNumSeries: Highcharts.SeriesPieOptions[] = [];
   public parentFlowTagsNumDrilldownSeries: Highcharts.SeriesPieOptions[] = [];
+  public childFlowTagsNumSeries: Highcharts.SeriesPieOptions[] = [];
+  public childFlowTagsNumDrilldownSeries: Highcharts.SeriesPieOptions[] = [];
 
   public techElementTagsNumSerie: Highcharts.SeriesPieOptions = { type: 'pie' };
   public techElementSubTagsDrilldownNumSeries: Highcharts.SeriesPieOptions[] = [];
@@ -49,10 +51,13 @@ export class StatsPageComponent {
       this.interventionsPerTimeSerie = this.chartsService.createInterventionsPerTimeSerie(this.parentReports);
       this.inspectionsPerTimeSerie = this.chartsService.createInspectionsPerTimeSerie(this.parentReports);
 
-      const { series, drilldownSeries } = this.chartsService.createParentFlowTagsSerie(this.configService.config.tags, this.parentReports);
-      this.parentFlowTagsNumSeries = [...series];
-      this.parentFlowTagsNumDrilldownSeries = [...drilldownSeries];
+      const { series: parentSeries, drilldownSeries: parentDrilldownSeries } = this.chartsService.createTagsSerie(this.configService.config.tags.parent, this.parentReports);
+      this.parentFlowTagsNumSeries = [...parentSeries];
+      this.parentFlowTagsNumDrilldownSeries = [...parentDrilldownSeries];
 
+      const { series: childSeries, drilldownSeries: childDrilldownSeries} = this.chartsService.createTagsSerie(this.configService.config.tags.child, this.childrenReports);
+      this.childFlowTagsNumSeries = [...childSeries];
+      this.childFlowTagsNumDrilldownSeries = [...childDrilldownSeries];     
     });
   }
 }
