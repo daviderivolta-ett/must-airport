@@ -1,15 +1,9 @@
-import { Injectable, WritableSignal, effect, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ReportParent } from '../models/report-parent.model';
 import { PRIORITY } from '../models/priority.model';
 import { OPERATIONTYPE, Operation } from '../models/operation.model';
-import { TechElementTag } from '../models/tech-element-tag.model';
-import { TechElementSubTag } from '../models/tech-element-subtag.model';
-import { FailureTag } from '../models/failure-tag.model';
 import { ReportChild } from '../models/report-child.model';
-import { SeriesPieOptions } from 'highcharts';
-import { FailureSubTag } from '../models/failure-subtag.model';
-import { ConfigService } from './config.service';
-import { WebAppConfigTagType, WebAppConfigTags } from '../models/config.model';
+import { WebAppConfigTagType } from '../models/config.model';
 import { Tag, TagGroup } from '../models/tag.model';
 
 export type timeChartData = [number, number];
@@ -20,13 +14,21 @@ export interface pieChartData {
   drilldown?: string
 }
 
+interface CustomSeriesPieOptions extends Highcharts.SeriesPieOptions {
+  uuid: string;
+}
+
+interface CustomPointOptionsObject extends Highcharts.PointOptionsObject {
+  uuid: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ChartsService {
   public reportNumPerTimeSerie: timeChartData[] = [];
 
-  constructor(private configService: ConfigService) { }
+  constructor() { }
 
   public createReportsNumPerTimeSerie(reports: ReportParent[]): Highcharts.SeriesLineOptions {
     let dates: Date[];
@@ -150,31 +152,33 @@ export class ChartsService {
   }
 
   public createTagsSerie(configTagType: WebAppConfigTagType, reports: ReportParent[] | ReportChild[]): { series: Highcharts.SeriesPieOptions[], drilldownSeries: Highcharts.SeriesPieOptions[] } {
-    let series: Highcharts.SeriesPieOptions[] = [];
-    let drilldownSeries: Highcharts.SeriesPieOptions[] = [];
+    let series: CustomSeriesPieOptions[] = [];
+    let drilldownSeries: CustomSeriesPieOptions[] = [];
 
     configTagType.groups.forEach((group: TagGroup) => {
-      const serie: Highcharts.SeriesPieOptions = {
+      const serie: CustomSeriesPieOptions = {
         type: 'pie',
-        name: group.id,
+        name: group.name,
         data: [],
-        id: group.id
+        id: group.id,
+        uuid: group.id
       }
 
       configTagType.elements.forEach((tag: Tag) => {
         if (tag.type === group.id) {
-          let d: Highcharts.PointOptionsObject = {
-            name: tag.id,
+          let d: CustomPointOptionsObject = {
+            name: tag.name,
             drilldown: tag.id,
             y: 0,
-            id: tag.id
+            id: tag.id,
+            uuid: tag.id
           }
 
           if (serie.data) serie.data.push(d);
 
           if (group.subGroup) {
             if (tag.subTags) {
-              const drilldownSerie: Highcharts.SeriesPieOptions[] = this.createTagsDrilldownSerie(group.subGroup, d.drilldown ? d.drilldown : '', tag.subTags, drilldownSeries);
+              const drilldownSerie: CustomSeriesPieOptions[] = this.createTagsDrilldownSerie(group.subGroup, d.drilldown ? d.drilldown : '', tag.subTags, drilldownSeries);
               drilldownSeries.concat(drilldownSerie);
             }
           }
@@ -197,21 +201,23 @@ export class ChartsService {
     return { series, drilldownSeries };
   }
 
-  private createTagsDrilldownSerie(group: TagGroup, drilldownId: string, tags: Tag[], series: Highcharts.SeriesPieOptions[]) {
-    const serie: Highcharts.SeriesPieOptions = {
+  private createTagsDrilldownSerie(group: TagGroup, drilldownId: string, tags: Tag[], series: CustomSeriesPieOptions[]) {
+    const serie: CustomSeriesPieOptions = {
       type: 'pie',
-      name: group.id,
+      name: group.name,
       id: drilldownId,
       data: [],
+      uuid: group.id
     }
 
     tags.forEach((tag: Tag) => {
       if (tag.type === group.id) {
-        let d: Highcharts.PointOptionsObject = {
-          name: tag.id,
+        let d: CustomPointOptionsObject = {
+          name: tag.name,
           drilldown: tag.id,
           y: 0,
-          id: tag.id
+          id: tag.id,
+          uuid: tag.id
         }
         if (serie.data) serie.data.push(d);
 
@@ -246,7 +252,7 @@ export class ChartsService {
       });
     });
     // tags = this.getTagNames(tags, this.configService.tags);
-    console.log('Tags', tags);
+    // console.log('Tags', tags);
     return tags;
   }
 
@@ -282,17 +288,17 @@ export class ChartsService {
 
       }
     }
-    console.log('Frequencies', frequencies);
+    // console.log('Frequencies', frequencies);
     return frequencies;
   }
 
-  private fillSeriesData(series: Highcharts.SeriesPieOptions[], frequencies: { [key: string]: { [key: string]: number } }): Highcharts.SeriesPieOptions[] {
-    series = series.map((serie: Highcharts.SeriesPieOptions) => {
-      if (serie.name && frequencies.hasOwnProperty(serie.name)) {
-        const frequencyData: { [key: string]: number } = frequencies[serie.name];
-        serie.data = (serie.data as Highcharts.PointOptionsObject[]).map((d: Highcharts.PointOptionsObject) => {
-          if (d.name && frequencyData.hasOwnProperty(d.name)) {
-            d.y = frequencyData[d.name];
+  private fillSeriesData(series: CustomSeriesPieOptions[], frequencies: { [key: string]: { [key: string]: number } }): CustomSeriesPieOptions[] {
+    series = series.map((serie: CustomSeriesPieOptions) => {
+      if (serie.uuid && frequencies.hasOwnProperty(serie.uuid)) {
+        const frequencyData: { [key: string]: number } = frequencies[serie.uuid];
+        serie.data = (serie.data as CustomPointOptionsObject[]).map((d: CustomPointOptionsObject) => {
+          if (d.uuid && frequencyData.hasOwnProperty(d.uuid)) {
+            d.y = frequencyData[d.uuid];
           }
           return d;
         });
@@ -301,13 +307,12 @@ export class ChartsService {
     });
 
     series = this.removeEmptyData(series);
-    console.log('Series', series);
-
+    // console.log('Series', series);
     return series;
   }
 
-  private removeEmptyData(series: Highcharts.SeriesPieOptions[]) {
-    series = series.map((serie: Highcharts.SeriesPieOptions) => {
+  private removeEmptyData(series: CustomSeriesPieOptions[]) {
+    series = series.map((serie: CustomSeriesPieOptions) => {
       serie.data = (serie.data as Highcharts.PointOptionsObject[]).filter((d: Highcharts.PointOptionsObject) => d.y !== 0);
       return serie;
     });

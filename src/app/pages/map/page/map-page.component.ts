@@ -31,8 +31,7 @@ export class MapPageComponent {
 
   constructor(private configService: ConfigService, private authService: AuthService, private reportsService: ReportsService) {
     effect(() => {
-      this.reports = this.reportsService.reportsSignal();
-      console.log(this.reports);      
+      this.reports = this.reportsService.reportsSignal();   
     });
 
     effect(() => {

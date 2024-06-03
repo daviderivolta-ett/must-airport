@@ -28,31 +28,20 @@
     }
 
     @if (parentFlowTagsNumSeries.length !== 0) {
-    <div class="chart-wrapper">
-        <h2>Tag</h2>
-        <app-pie-chart [series]="parentFlowTagsNumSeries" [drilldown]="parentFlowTagsNumDrilldownSeries" />
-    </div>
+        @for (series of parentFlowTagsNumSeries; track $index) {
+            <div class="chart-wrapper">
+                <h2>{{series.name}}</h2>
+                <app-pie-chart [series]="[series]" [drilldown]="parentFlowTagsNumDrilldownSeries" />
+            </div>
+        }
     }
 
     @if (childFlowTagsNumSeries.length !== 0) {
-    <div class="chart-wrapper">
-        <h2>Tag</h2>
-        <app-pie-chart [series]="childFlowTagsNumSeries" [drilldown]="childFlowTagsNumDrilldownSeries" />
-    </div>
+        @for (series of childFlowTagsNumSeries; track $index) {
+            <div class="chart-wrapper">
+                <h2>{{series.name}}</h2>
+                <app-pie-chart [series]="[series]" [drilldown]="childFlowTagsNumDrilldownSeries" />
+            </div>
+        }
     }
-
-
-    <!-- @if (techElementTagsNumSerie.data && techElementTagsNumSerie.data.length !== 0 && techElementSubTagsDrilldownNumSeries && techElementSubTagsDrilldownNumSeries.length !== 0) {
-    <div class="chart-wrapper">
-        <h2 class="chart-title">Elementi tecnici</h2>
-        <app-pie-chart [serie]="techElementTagsNumSerie" [drilldown]="techElementSubTagsDrilldownNumSeries" />
-    </div>
-    } -->
-
-    <!-- @if (failureTagsNumSerie.data && failureTagsNumSerie.data.length !== 0 && failureSubTagsDrilldownNumSeries && failureSubTagsDrilldownNumSeries.length !== 0) {
-    <div class="chart-wrapper">
-        <h2 class="chart-title">Segnali di guasto</h2>
-        <app-pie-chart [serie]="failureTagsNumSerie" [drilldown]="failureSubTagsDrilldownNumSeries" />
-    </div>
-    } -->
 </div>
