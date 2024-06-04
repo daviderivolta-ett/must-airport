@@ -20,11 +20,24 @@ import { ChildReportsFiltersComponent } from '../../../components/child-reports-
 import { WebAppConfig } from '../../../models/config.model';
 import { ControlLabelPipe } from '../../../pipes/control-label.pipe';
 import { UtilsService } from '../../../services/utils.service';
+import { LabelPipe } from '../../../pipes/label.pipe';
 
 @Component({
   selector: 'app-management',
   standalone: true,
-  imports: [MiniMapComponent, ChildReportsFiltersComponent, ChildReportCardComponent, ValidationFormComponent, InspectionFormComponent, OperationCardComponent, OperationCardManagementComponent, DatePipe, NgClass, TitleCasePipe, KeyValuePipe, ControlLabelPipe],
+  imports: [MiniMapComponent,
+    ChildReportsFiltersComponent,
+    ChildReportCardComponent,
+    ValidationFormComponent,
+    InspectionFormComponent,
+    OperationCardComponent,
+    OperationCardManagementComponent,
+    DatePipe,
+    NgClass,
+    TitleCasePipe,
+    KeyValuePipe,
+    LabelPipe,
+    ControlLabelPipe],
   templateUrl: './management.component.html',
   styleUrl: './management.component.scss'
 })
