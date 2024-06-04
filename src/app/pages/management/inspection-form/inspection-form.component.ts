@@ -1,16 +1,18 @@
 import { Component, Input } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OperationsService } from '../../../services/operations.service';
-import { OPERATIONTYPE, OperationDb, OperationLink } from '../../../models/operation.model';
+import { OperationDb } from '../../../models/operation.model';
 import { ReportParent } from '../../../models/report-parent.model';
-import { ReportParentDb, ReportsService } from '../../../services/reports.service';
+import { ReportsService } from '../../../services/reports.service';
 import { SnackbarService } from '../../../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
+import { LabelPipe } from '../../../pipes/label.pipe';
+import { TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-inspection-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, LabelPipe, TitleCasePipe],
   templateUrl: './inspection-form.component.html',
   styleUrl: './inspection-form.component.scss'
 })

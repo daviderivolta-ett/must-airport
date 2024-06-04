@@ -5,11 +5,11 @@
     <div class="form-group radio-buttons">
         <div class="radio-single">
             <input type="radio" id="inspection" value="inspection" formControlName="type">
-            <label class="radio-single-label" for="inspection">Ispezione</label>
+            <label class="radio-single-label" for="inspection">{{'inspection' | label | titlecase}}</label>
         </div>
         <div class="radio-single">
             <input type="radio" id="maintenance" value="maintenance" formControlName="type">
-            <label class="radio-single-label" for="maintenance">Intervento</label>
+            <label class="radio-single-label" for="maintenance">{{'maintenance' | label | titlecase}}</label>
         </div>
     </div>
     <button type="submit" [disabled]="!inspectionForm.valid">Crea</button>
