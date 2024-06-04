@@ -28,15 +28,15 @@
     <div class="form-group radio-buttons" formGroupName="priority">
         <div class="radio-single">
             <input type="radio" id="low" value="low" name="priority" formControlName="priority">
-            <label class="radio-single-label low" for="low">Bassa</label>
+            <label class="radio-single-label low" for="low">{{'low' | label | titlecase}}</label>
         </div>
         <div class="radio-single">
             <input type="radio" id="medium" value="medium" name="priority" formControlName="priority">
-            <label class="radio-single-label medium" for="medium">Media</label>
+            <label class="radio-single-label medium" for="medium">{{'medium' | label | titlecase}}</label>
         </div>
         <div class="radio-single">
             <input type="radio" id="high" value="high" name="priority" formControlName="priority">
-            <label class="radio-single-label high" for="high">Alta</label>
+            <label class="radio-single-label high" for="high">{{'high' | label | titlecase}}</label>
         </div>
     </div>
     <button type="submit" [disabled]="!baseForm.valid">Salva modifiche</button>

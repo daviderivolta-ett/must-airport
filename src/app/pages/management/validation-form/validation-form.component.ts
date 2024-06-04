@@ -14,6 +14,7 @@ import { SnackbarService } from '../../../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 import { VERTICAL } from '../../../models/vertical.model';
 import { UtilsService } from '../../../services/utils.service';
+import { LabelPipe } from '../../../pipes/label.pipe';
 
 interface TagChanges {
   toAdd: { [key: string]: string[] },
@@ -23,7 +24,7 @@ interface TagChanges {
 @Component({
   selector: 'app-validation-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, KeyValuePipe, NgClass, TitleCasePipe, ControlLabelPipe],
+  imports: [ReactiveFormsModule, FormsModule, KeyValuePipe, NgClass, TitleCasePipe, LabelPipe, ControlLabelPipe],
   templateUrl: './validation-form.component.html',
   styleUrl: './validation-form.component.scss'
 })
