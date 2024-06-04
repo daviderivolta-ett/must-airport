@@ -11,7 +11,7 @@ import { LoggedUser } from '../../../models/user.model';
 import { AuthService } from '../../../services/auth.service';
 import { MiniMapComponent } from '../../../components/mini-map/mini-map.component';
 import { MiniMapData } from '../../../services/map.service';
-import { VERTICAL } from '../../../models/app-flow.model';
+import { VERTICAL } from '../../../models/vertical.model';
 import { TagGroup } from '../../../models/tag.model';
 import { ControlLabelPipe } from '../../../pipes/control-label.pipe';
 
@@ -56,11 +56,11 @@ export class DialogComponent {
     effect(async () => {
       if (this.dialogService.report().id.length === 0) return;
       this.parentReport = this.dialogService.report();
-
+      console.log(this.parentReport);      
       const childrenIds: string[] = [...this.parentReport.childrenIds];
       if (this.parentReport.closingChildId) childrenIds.push(this.parentReport.closingChildId);
       this.childrenReport = await this.reportsService.populateChildrenReports(childrenIds);
-     
+      console.log(this.childrenReport);      
       this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
     });
   }

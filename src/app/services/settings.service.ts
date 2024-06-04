@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, WritableSignal, effect, signal } from '@angular/core';
-import { VERTICAL } from '../models/app-flow.model';
+import { VERTICAL } from '../models/vertical.model';
 import { Observable, map } from 'rxjs';
 import { AppSettings } from '../models/settings.model';
 

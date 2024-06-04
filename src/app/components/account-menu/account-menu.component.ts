@@ -7,7 +7,7 @@ import { ClickOutsideDirective } from '../../directives/click-outside.directive'
 import { SnackbarService } from '../../observables/snackbar.service';
 import { Router, RouterLink } from '@angular/router';
 import { Timestamp } from 'firebase/firestore';
-import { VERTICAL } from '../../models/app-flow.model';
+import { VERTICAL } from '../../models/vertical.model';
 import { UserService } from '../../services/user.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../models/snackbar.model';
 

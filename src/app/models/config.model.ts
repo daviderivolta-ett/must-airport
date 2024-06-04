@@ -6,13 +6,15 @@ export class WebAppConfig {
     style: WebAppConfigStyle;
     logoUrl: string;
     labels: WebAppConfigLabels;
+    components: WebAppConfigComponents;
 
-    constructor(tags: WebAppConfigTags, name: string, style: WebAppConfigStyle, logoUrl: string, labels: WebAppConfigLabels) {
+    constructor(tags: WebAppConfigTags, name: string, style: WebAppConfigStyle, logoUrl: string, labels: WebAppConfigLabels, components: WebAppConfigComponents) {
         this.tags = tags;
         this.name = name;
         this.style = style;
         this.logoUrl = logoUrl;
         this.labels = labels;
+        this.components = components;
     }
 
     static createEmpty(): WebAppConfig {
@@ -36,6 +38,9 @@ export class WebAppConfig {
                     inspection: 'ispezione',
                     maintenance: 'intervento'
                 }
+            },
+            {
+                hasReportFile: false
             }
         );
     }
@@ -59,6 +64,10 @@ export interface WebAppConfigTagGroup {
 
 export interface WebAppConfigStyle {
     accentColor: string;
+}
+
+export interface WebAppConfigComponents {
+    hasReportFile: boolean;
 }
 
 export interface WebAppConfigLabels {

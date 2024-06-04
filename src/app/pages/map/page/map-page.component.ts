@@ -7,7 +7,7 @@ import { TechElementTag } from '../../../models/tech-element-tag.model';
 import { DialogComponent } from '../dialog/dialog.component';
 import { AdditionalLayersMenuComponent } from '../additional-layers-menu/additional-layers-menu.component';
 import { LoggedUser } from '../../../models/user.model';
-import { VERTICAL } from '../../../models/app-flow.model';
+import { VERTICAL } from '../../../models/vertical.model';
 import { AuthService } from '../../../services/auth.service';
 import { ConfigService } from '../../../services/config.service';
 import { WebAppConfig } from '../../../models/config.model';
@@ -31,7 +31,7 @@ export class MapPageComponent {
 
   constructor(private configService: ConfigService, private authService: AuthService, private reportsService: ReportsService) {
     effect(() => {
-      this.reports = this.reportsService.reportsSignal();   
+      this.reports = this.reportsService.reportsSignal();      
     });
 
     effect(() => {

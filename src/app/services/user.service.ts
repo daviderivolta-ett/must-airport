@@ -3,7 +3,7 @@ import { LoggedUser, UserData } from '../models/user.model';
 import { User } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { Firestore } from '@angular/fire/firestore';
-import { VERTICAL } from '../models/app-flow.model';
+import { VERTICAL } from '../models/vertical.model';
 
 @Injectable({
   providedIn: 'root'

@@ -2,7 +2,7 @@ import { Injectable, Signal, WritableSignal, computed, effect, signal } from '@a
 import { Firestore } from '@angular/fire/firestore';
 import { DocumentData, QuerySnapshot, Timestamp, Unsubscribe, collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
 import { Code, CodeDb } from '../models/code.model';
-import { VERTICAL } from '../models/app-flow.model';
+import { VERTICAL } from '../models/vertical.model';
 import { LoggedUser } from '../models/user.model';
 import { APPTYPE } from '../models/app-type.mode';
 
@@ -115,7 +115,7 @@ export class CodesService {
       case 'default':
         c.vertId = VERTICAL.Default;
         break;
-      case 'airport':
+      case 'genovaAirport':
         c.vertId = VERTICAL.Airport
         break;
       case 'dsh2030':
@@ -207,7 +207,7 @@ export class CodesService {
     }
 
     switch (formData.vertId) {
-      case 'airport':
+      case 'genovaAirport':
         data.vertId = VERTICAL.Airport;
         break;
       case 'default':

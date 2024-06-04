@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { AdditionalLayer } from '../../../models/additional-layer.model';
-import { VERTICAL } from '../../../models/app-flow.model';
+import { VERTICAL } from '../../../models/vertical.model';
 import { FormsModule } from '@angular/forms';
 import { AdditionalLayersService } from '../../../services/additional-layers.service';
 

@@ -1,5 +1,5 @@
 import { DocumentSnapshot } from 'firebase/firestore';
-import { VERTICAL } from './app-flow.model';
+import { VERTICAL } from './vertical.model';
 
 export interface AdditionalLayerStyle {
     fillColor: string;

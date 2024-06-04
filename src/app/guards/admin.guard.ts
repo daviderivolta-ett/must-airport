@@ -3,7 +3,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { USERLEVEL } from '../models/user.model';
-import { VERTICAL } from '../models/app-flow.model';
+import { VERTICAL } from '../models/vertical.model';
 
 export const adminGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);

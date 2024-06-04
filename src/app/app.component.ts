@@ -4,7 +4,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { AuthService } from './services/auth.service';
 import { FirebaseService } from './services/firebase.service';
 import { ReportsService } from './services/reports.service';
-import { VERTICAL } from './models/app-flow.model';
+import { VERTICAL } from './models/vertical.model';
 import { CodesService } from './services/codes.service';
 import { SettingsService } from './services/settings.service';
 import { ThemeService } from './services/theme.service';
@@ -15,6 +15,7 @@ import { UserService } from './services/user.service';
 import { Timestamp } from 'firebase/firestore';
 import { User } from 'firebase/auth';
 import { AdditionalLayersService } from './services/additional-layers.service';
+import { ConfigService } from './services/config.service';
 
 @Component({
   selector: 'app-root',
@@ -26,27 +27,38 @@ import { AdditionalLayersService } from './services/additional-layers.service';
 export class AppComponent {
   public title: string = 'must';
 
-  constructor(private firebaseService: FirebaseService, private authService: AuthService, private codesService: CodesService, private userService: UserService, private reportsService: ReportsService, private additionalLayersService: AdditionalLayersService, private settingsService: SettingsService, private themeService: ThemeService, private splashService: SplashService) {    
+  constructor(private firebaseService: FirebaseService,
+    private authService: AuthService,
+    private codesService: CodesService,
+    private userService: UserService,
+    private configService: ConfigService,
+    private reportsService: ReportsService,
+    private additionalLayersService: AdditionalLayersService,
+    private settingsService: SettingsService,
+    private themeService: ThemeService,
+    private splashService: SplashService) {
+
     this.splashService.createSplash();
     this.codesService.getAllCodes();
+
     effect(async () => {
       if (this.authService.userSignal() === null) return;
       if (this.authService.user === null) return;
-      const loggedUser = await this.createLoggedUser(this.authService.user);    
+      const loggedUser = await this.createLoggedUser(this.authService.user);
       this.authService.loggedUserSignal.set(loggedUser);
     });
-    
+
     effect(() => {
       if (this.authService.loggedUserSignal() === null) return;
       const loggedUser = this.authService.loggedUser;
-      
+
       if (!loggedUser) return;
       if (!loggedUser.email) {
         this.authService.currentAppSignal.set(null);
         this.authService.currentAppSignal.set(VERTICAL.Default);
         return;
       }
-      
+
       if (!loggedUser.lastApp) {
         let data: UserData = {
           userLevel: loggedUser.level,
@@ -61,7 +73,7 @@ export class AppComponent {
       this.authService.currentAppSignal.set(loggedUser.lastApp);
     }, { allowSignalWrites: true });
 
-    effect(() => {
+    effect(async () => {
       if (this.authService.currentAppSignal() === null) return;
       const currentApp: VERTICAL | null = this.authService.currentApp;
       const loggedUser = this.authService.loggedUser;
@@ -107,6 +119,9 @@ export class AppComponent {
         this.settingsService.settingsSignal.set(settings);
         this.themeService.setTheme(settings.styles);
       });
+
+      await this.configService.getVerticalConfig(currentApp);
+
       this.splashService.removeSplash();
 
     }, { allowSignalWrites: true });

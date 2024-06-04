@@ -1,7 +1,7 @@
 import { Component, Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { DocumentReference, DocumentSnapshot, doc, getDoc } from 'firebase/firestore';
-import { VERTICAL } from '../models/app-flow.model';
+import { VERTICAL } from '../models/vertical.model';
 import { Tag, TagGroup } from '../models/tag.model';
 import { MobileAppConfigComponent, MobileAppMobileAppConfigComponentType, MobileAppConfigOption, WebAppConfig, WebAppConfigTags } from '../models/config.model';
 
@@ -53,8 +53,8 @@ export class ConfigService {
       if (!this.mobileAppConfig.parentFlows) return;
       if (!this.mobileAppConfig.childFlows) return;
 
-      // console.log('Mobile config:', this.mobileAppConfig);
-      // console.log('Parent flow:', JSON.parse(this.mobileAppConfig.parentFlows.default));
+      console.log('Mobile config:', this.mobileAppConfig);
+      console.log('Parent flow:', JSON.parse(this.mobileAppConfig.parentFlows.default));
       // console.log('Child flow:', JSON.parse(this.mobileAppConfig.childFlows.horizontal.flowJson));
 
       let parentTags: Tag[] = [];
@@ -87,6 +87,9 @@ export class ConfigService {
       this.config.tags.parent.groups = [...parentTagGroups];
       this.config.tags.child.elements = [...childTags];
       this.config.tags.child.groups = [...childTagGroups];
+      this.config.name = this.mobileAppConfig.name;
+      this.config.logoUrl = this.mobileAppConfig.splashLogoUrl;
+      this.config.style.accentColor = this.mobileAppConfig.splashBackgroundColor;
 
       console.log('Web config:', this.config);
 
@@ -129,20 +132,20 @@ export class ConfigService {
       results = [...results, ...this.searchTags(component.child)];
 
     } else if (component.component === MobileAppMobileAppConfigComponentType.Branch && component.options) {
-      results = [...results, ...component.options.map((o: any) => new Tag(o.id.replace(/\./g, '_'), o.name, '', component.id, [])), ...component.options.flatMap((o: any) => this.searchTags(o.child))];
+      results = [...results, ...component.options.map((o: any) => new Tag(o.id, o.name, '', component.id, [])), ...component.options.flatMap((o: any) => this.searchTags(o.child))];
     }
 
     return results;
   }
 
   private parseTags(component: any): any {
-    return component.options.map((o: any) => new Tag(o.id.replace(/\./g, '_'), o.name, o.description, component.id, o.options ? o.options.map((obj: any) => this.parseSubTags(component.subLevels, 0, obj)) : []));
+    return component.options.map((o: any) => new Tag(o.id, o.name, o.description, component.id, o.options ? o.options.map((obj: any) => this.parseSubTags(component.subLevels, 0, obj)) : []));
   }
 
   private parseSubTags(subLevels: any[], index: number = 0, option: MobileAppConfigOption): any {
     const newIndex: number = index + 1;
     const subTags: Tag = new Tag(
-      option.id.replace(/\./g, '_'),
+      option.id,
       option.name,
       option.description || '',
       subLevels[index].id,

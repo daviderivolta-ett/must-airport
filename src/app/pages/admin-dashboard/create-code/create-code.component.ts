@@ -9,7 +9,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { SnackbarService } from '../../../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 import { APPTYPE } from '../../../models/app-type.mode';
-import { VERTICAL } from '../../../models/app-flow.model';
+import { VERTICAL } from '../../../models/vertical.model';
 
 @Component({
   selector: 'app-create-code',

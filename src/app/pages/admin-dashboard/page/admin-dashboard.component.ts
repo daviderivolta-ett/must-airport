@@ -6,7 +6,7 @@ import { CodeCardComponent } from '../code-card/code-card.component';
 import { CreateCodeDialogService } from '../../../observables/create-code-dialog.service';
 import { NgClass } from '@angular/common';
 import { CodesFiltersComponent } from '../codes-filters/codes-filters.component';
-import { VERTICAL } from '../../../models/app-flow.model';
+import { VERTICAL } from '../../../models/vertical.model';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({

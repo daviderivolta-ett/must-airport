@@ -4,7 +4,7 @@ import { CollectionReference, DocumentData, Query, QuerySnapshot, addDoc, collec
 import { AdditionalLayer, AdditionalLayerDb, AdditionalLayerStyle, additionalLayerConverter } from '../models/additional-layer.model';
 import { Storage } from '@angular/fire/storage';
 import { StorageReference, getBlob, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { VERTICAL } from '../models/app-flow.model';
+import { VERTICAL } from '../models/vertical.model';
 
 @Injectable({
   providedIn: 'root'

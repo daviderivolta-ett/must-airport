@@ -14,7 +14,7 @@ import { LANGUAGE, Language } from '../models/language.model';
 import { StorageReference, deleteObject, getMetadata, ref } from 'firebase/storage';
 import { Storage } from '@angular/fire/storage';
 import { OPERATIONTYPE, Operation, OperationDb } from '../models/operation.model';
-import { VERTICAL } from '../models/app-flow.model';
+import { VERTICAL } from '../models/vertical.model';
 import { ReportChildFields } from '../models/report-child.fields.model';
 import { ConfigService } from './config.service';
 import { ReportTag, ReportTagGroup, Tag, TagGroup } from '../models/tag.model';
@@ -135,11 +135,7 @@ export class ReportsService {
   }
 
   public async getAllParentReports(verticalId: VERTICAL, getAll: boolean) {
-    // console.log('VERTICAL:', verticalId);
-    // await this.dictionaryService.getAll();
-    await this.configService.getVerticalConfig(verticalId);
-    // console.log(this.dictionaryService.failureTagsSignal());
-    // console.log(this.dictionaryService.techElementTags);
+    // await this.configService.getVerticalConfig(verticalId);
 
     let q: Query;
     if (getAll) {
@@ -407,7 +403,7 @@ export class ReportsService {
 
     Object.keys(fields).forEach((key: string) => {
       if (groupIds.has(key) && Array.isArray(fields[key])) {
-        f[key] = fields[key].map((tag: string) => tag.replace(/\./g, '_'));
+        f[key] = fields[key].map((tag: string) => tag);
       } else {
         f[key] = fields[key];
       }

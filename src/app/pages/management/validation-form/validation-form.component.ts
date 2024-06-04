@@ -12,7 +12,7 @@ import { LANGUAGE } from '../../../models/language.model';
 import { AuthService } from '../../../services/auth.service';
 import { SnackbarService } from '../../../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
-import { VERTICAL } from '../../../models/app-flow.model';
+import { VERTICAL } from '../../../models/vertical.model';
 import { UtilsService } from '../../../services/utils.service';
 
 interface TagChanges {
@@ -97,45 +97,38 @@ export class ValidationFormComponent {
 
   private createValidationForm(tags: WebAppConfigTags): FormGroup {
     const baseForm: FormGroup = this.fb.group({});
-
-    for (const key in this.tags) {
-      this.tags[key as keyof WebAppConfigTags].groups.forEach((group: TagGroup) => {
-        const formGroup: FormGroup = this.createFormGroup(baseForm, group, tags[key as keyof WebAppConfigTags].elements);
-        baseForm.addControl(group.id, formGroup);
+  
+    for (const key in tags) {
+      tags[key as keyof WebAppConfigTags].groups.forEach((group: TagGroup) => {
+        this.processTags(baseForm, group, tags[key as keyof WebAppConfigTags].elements, true);
       });
     }
+  
     return baseForm;
   }
-
-  private createFormGroup(baseForm: FormGroup, group: TagGroup, tags: Tag[]): FormGroup {
-    const formGroup: FormGroup = this.fb.group({});
-    const formSubGroup: FormGroup = this.fb.group({});
-
+  
+  private processTags(baseForm: FormGroup, group: TagGroup, tags: Tag[], isTopLevel: boolean): void {
     tags.forEach((tag: Tag) => {
       if (group.id === tag.type) {
-        formGroup.addControl(tag.id, new FormControl(false));
-
-        if (group.subGroup) {
-          this.createFormSubGroup(formSubGroup, group.subGroup, tag.subTags);
-          baseForm.addControl(group.subGroup.id, formSubGroup);
+        this.addControlToGroup(baseForm, group, tag, isTopLevel);
+        if (tag.subTags && tag.subTags.length > 0 && group.subGroup) {
+          this.processTags(baseForm, group.subGroup, tag.subTags, false);
         }
-
       }
     });
-
-    return formGroup;
   }
-
-  private createFormSubGroup(formSubGroup: FormGroup, group: TagGroup, tags: Tag[]): FormGroup {
-    tags.forEach((tag: Tag) => {
-      if (tag.type === group.id) {
-        const control = new FormControl(false);
-        formSubGroup.addControl(tag.id, control);
-        control.disable();
-      }
-      if (group.subGroup) this.createFormSubGroup(formSubGroup, group.subGroup, tag.subTags);
-    });
-    return formSubGroup;
+  
+  private addControlToGroup(baseForm: FormGroup, group: TagGroup, tag: Tag, isTopLevel: boolean): void {
+    let formGroup = baseForm.get(group.id) as FormGroup;
+    if (!formGroup) {
+      formGroup = this.fb.group({});
+      baseForm.addControl(group.id, formGroup);
+    }
+    const control = new FormControl(false);
+    if (!isTopLevel) {
+      control.disable();
+    }
+    formGroup.addControl(tag.id, control);
   }
 
   public checkControls(groupKey: string): boolean {
@@ -143,7 +136,7 @@ export class ValidationFormComponent {
 
     Object.keys(this.baseForm.controls).forEach((key: string) => {
       if (key === groupKey) {
-        let found: any = this.baseForm.get(key);
+        let found: any = this.baseForm.get([`${key}`]);
         if (found instanceof FormGroup) {
           foundGroup = found;
         }
@@ -164,7 +157,7 @@ export class ValidationFormComponent {
 
     for (const id of ids) {
       for (const control of controls) {
-        if (control.parent && (control.parent.get(id) === control)) {
+        if (control.parent && (control.parent.get([`${id}`]) === control)) {
           if (control.parent instanceof FormGroup) {
             formGroup = control.parent;
           }
@@ -175,7 +168,7 @@ export class ValidationFormComponent {
     Object.keys(formGroup.controls).forEach((key: string) => {
       for (const id of ids) {
         if (id === key) {
-          let foundControl: any = formGroup.get(key);
+          let foundControl: any = formGroup.get([`${key}`]);
           if (foundControl instanceof FormControl) {
             if (control.value) {
               foundControl.enable();
@@ -198,7 +191,7 @@ export class ValidationFormComponent {
 
         Object.keys(formControl.parent.controls).forEach((key: string) => {
           if (formControl.parent) {
-            let foundControl: any = formControl.parent.get(key);
+            let foundControl: any = formControl.parent.get([`${key}`]);
             if (formControl === foundControl) {
               let tag: Tag | undefined = this.getTagById(key);
               if (!tag) return;
@@ -256,13 +249,13 @@ export class ValidationFormComponent {
         let values: any = fields[key];
         if (!Array.isArray(values) || values.some((v: any) => typeof v !== 'string')) continue;
 
-        const formGroup: FormGroup = this.baseForm.get(key) as FormGroup;
+        const formGroup: FormGroup = this.baseForm.get([`${key}`]) as FormGroup;
 
         if (formGroup) {
           values.forEach((value: string) => {
 
             for (const key in formGroup.controls) {
-              if (value === key) formGroup.get(key)?.setValue(true);
+              if (value === key) formGroup.get([`${key}`])?.setValue(true);
             }
           });
         }
@@ -440,7 +433,7 @@ export class ValidationFormComponent {
     let f: any = { ...newReport.fields };
 
     for (const key in f) {
-      f[key] = f[key].map((tag: string) => tag.replace(/\_/g, '.'));
+      f[key] = f[key].map((tag: string) => tag);
     }
 
     newReport.fields = { ...f };
@@ -467,7 +460,7 @@ export class ValidationFormComponent {
         for (const k in changes.toRemove) {
           if (key !== k) continue;
           r.fields[key] = r.fields[key].filter((tag: string) => !changes.toRemove[k].includes(tag));
-          r.fields[key] = r.fields[key].map((tag: string) => tag.replace(/\_/g, '.'));
+          r.fields[key] = r.fields[key].map((tag: string) => tag);
         }
       }
 

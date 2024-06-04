@@ -1,4 +1,4 @@
-import { Component, effect } from '@angular/core';
+import { Component, Input, effect } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { LoggedUser } from '../../models/user.model';
@@ -6,7 +6,7 @@ import { AccountMenuComponent } from '../account-menu/account-menu.component';
 import { HeaderService } from '../../observables/header.service';
 import { SettingsService } from '../../services/settings.service';
 import { AppSettings } from '../../models/settings.model';
-import { VERTICAL } from '../../models/app-flow.model';
+import { VERTICAL } from '../../models/vertical.model';
 import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 import { ThemeService } from '../../services/theme.service';
 import { COLORMODE } from '../../models/color-mode.model';
@@ -37,7 +37,7 @@ export class HeaderComponent {
     effect(() => {
       if (this.themeService.colorModeSignal() === null) return;
       this.colorMode = this.themeService.colorModeSignal();    
-    })
+    });
   }
 
   public showAccountMenu(event: Event) {

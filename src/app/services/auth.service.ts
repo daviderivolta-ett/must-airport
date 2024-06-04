@@ -4,7 +4,7 @@ import { Auth, getAuth, signInAnonymously, onAuthStateChanged, User, signInWithE
 import { LoggedUser } from '../models/user.model';
 import { SnackbarService } from '../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../models/snackbar.model';
-import { VERTICAL } from '../models/app-flow.model';
+import { VERTICAL } from '../models/vertical.model';
 
 @Injectable({
   providedIn: 'root'

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CodesFiltersFormData, CodesService } from '../../../services/codes.service';
 import { Code } from '../../../models/code.model';
-import { VERTICAL } from '../../../models/app-flow.model';
+import { VERTICAL } from '../../../models/vertical.model';
 import { TitleCasePipe } from '@angular/common';
 
 @Component({

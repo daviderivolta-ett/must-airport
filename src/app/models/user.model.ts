@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase/firestore";
-import { VERTICAL } from "./app-flow.model";
+import { VERTICAL } from "./vertical.model";
 
 export enum USERLEVEL {
     Superuser = 0,

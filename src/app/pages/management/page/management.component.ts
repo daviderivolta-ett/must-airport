@@ -52,6 +52,7 @@ export class ManagementComponent {
 
     effect(async () => {
       this.parentReport = this.reportsService.selectedReportSignal();
+      // console.log(this.parentReport);   
       this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
 
       if (this.parentReport.closingChildId) this.childrenReport.unshift(await this.reportsService.getChildReportById(this.parentReport.closingChildId));
@@ -60,6 +61,7 @@ export class ManagementComponent {
 
       this.filteredChildrenReport = [...this.childrenReport];
       this.childrenFields = this.getCumulativeChildrenFields(this.childrenReport);
+
     });
   }
 

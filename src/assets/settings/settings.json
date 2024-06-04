@@ -10,7 +10,7 @@
             }
         },
         {
-            "name": "airport",
+            "name": "genovaAirport",
             "assets": {
                 "logoUrl": "./assets/images/aeroporto_genova_logo.svg"
             },
