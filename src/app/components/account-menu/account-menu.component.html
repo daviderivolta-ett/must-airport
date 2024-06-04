@@ -6,17 +6,14 @@
     </div>
     <div class="list-section">
         <p class="section-title">LE MIE APP</p>
-        @for (app of loggedUser?.apps; track $index) {
-        <div class="list-element" [ngClass]="{'current-app': app === loggedUser?.lastApp}">
-            <a class="list-text" routerLink="segnalazioni" (click)="reloadApp(app)" (click)="closeAccountMenu()">
-                @if (app === 'generic') {
-                    Pubblica
-                }
-                @else {
-                    {{app | titlecase}}
-                }
-            </a>
-        </div>
+        @if (loggedUser) {        
+            @for (app of loggedUser.apps; track $index) {
+            <div class="list-element" [ngClass]="{'current-app': app === loggedUser.lastApp}">
+                <a class="list-text" routerLink="segnalazioni" (click)="reloadApp(app)" (click)="closeAccountMenu()">
+                    {{app | verticalName}}
+                </a>
+            </div>
+            }
         }
     </div>
     <div class="list-section">

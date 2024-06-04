@@ -10,11 +10,12 @@ import { Timestamp } from 'firebase/firestore';
 import { VERTICAL } from '../../models/vertical.model';
 import { UserService } from '../../services/user.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../models/snackbar.model';
+import { VerticalNamePipe } from '../../pipes/vertical-name.pipe';
 
 @Component({
   selector: 'app-account-menu',
   standalone: true,
-  imports: [NgClass, ClickOutsideDirective, TitleCasePipe, RouterLink],
+  imports: [NgClass, ClickOutsideDirective, TitleCasePipe, VerticalNamePipe, RouterLink],
   templateUrl: './account-menu.component.html',
   styleUrl: './account-menu.component.scss'
 })
