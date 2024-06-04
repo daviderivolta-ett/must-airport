@@ -1,11 +1,13 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ChildReportFiltersFormData } from '../../services/reports.service';
+import { LabelPipe } from '../../pipes/label.pipe';
+import { TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-child-reports-filters',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, TitleCasePipe, LabelPipe],
   templateUrl: './child-reports-filters.component.html',
   styleUrl: './child-reports-filters.component.scss'
 })

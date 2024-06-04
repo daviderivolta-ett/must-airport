@@ -1,11 +1,11 @@
 <form [formGroup]="filterForm">
     <div class="checkbox-single">
         <input type="checkbox" id="maintenance-checkbox" formControlName="maintenance">
-        <label for="maintenance-checkbox" class="checkbox-single-label">Manutenzioni</label>
+        <label for="maintenance-checkbox" class="checkbox-single-label">{{'maintenance' | label | titlecase}}</label>
     </div>
     <div class="checkbox-single">
         <input type="checkbox" id="inspection-checkbox" formControlName="inspection">
-        <label for="inspection-checkbox" class="checkbox-single-label">Ispezioni</label>
+        <label for="inspection-checkbox" class="checkbox-single-label">{{'inspection' | label | titlecase}}</label>
     </div>
     <div class="checkbox-single">
         <input type="checkbox" id="other-checkbox" formControlName="other">
