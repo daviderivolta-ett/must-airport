@@ -33,7 +33,7 @@ export class WebAppConfig {
             'MUST',
             VERTICAL.Default,
             {
-                logoUrl: '/assets/images/logo.png'
+                logoUrl: '../../assets/images/logo.png'
             },
             {
                 accentColor: 'rgb(31, 111, 235)'

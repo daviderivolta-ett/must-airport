@@ -17,19 +17,19 @@ export class LabelPipe implements PipeTransform {
 
 
   private searchLabel(value: string, object: any): string {
-    let label: string = value;
-
     for (const key in object) {
       if (Object.prototype.hasOwnProperty.call(object, key)) {
-        if (key === value) {        
-          label = object[key];  
-          return label;       
+        if (key === value) {
+          return object[key];
         }
 
-        if (typeof object[key] === 'object') this.searchLabel(value, object[key]);
+        if (typeof object[key] === 'object') {
+          let label: string = this.searchLabel(value, object[key]);
+          if (label !== value) return label;
+        }
       }
     }
-    
-    return label;
+
+    return value;
   }
 }
