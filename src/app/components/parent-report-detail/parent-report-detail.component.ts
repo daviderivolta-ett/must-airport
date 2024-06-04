@@ -26,8 +26,8 @@ import { ControlLabelPipe } from '../../pipes/control-label.pipe';
 export class ParentReportDetailComponent {
   public config: WebAppConfig = this.configService.config;
   public tagGroups: TagGroup[] = this.configService.tagGroups;
-  public parentTagGroups: TagGroup[] = this.configService.parentTagGroups;
-  public childTagGroups: TagGroup[] = this.configService.childTagGroups;
+  public parentTagGroups: TagGroup[] = [];
+  public childTagGroups: TagGroup[] = [];
 
   public childrenFields: any = {};
 
@@ -52,6 +52,9 @@ export class ParentReportDetailComponent {
       this.filteredChildrenReport = this.childrenReport;
       this.childrenFields = this.getCumulativeChildrenFields(this.childrenReport);
     });
+
+    effect(() => this.parentTagGroups = this.configService.parentTagGroupsSignal());
+    effect(() => this.childTagGroups = this.configService.childTagGroupsSignal());
   }
 
   public async ngOnInit(): Promise<void> {

@@ -51,8 +51,7 @@ export class ManagementComponent {
     private utilsService: UtilsService) {
 
     effect(async () => {
-      this.parentReport = this.reportsService.selectedReportSignal();
-      // console.log(this.parentReport);   
+      this.parentReport = this.reportsService.selectedReportSignal();  
       this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
 
       if (this.parentReport.closingChildId) this.childrenReport.unshift(await this.reportsService.getChildReportById(this.parentReport.closingChildId));
