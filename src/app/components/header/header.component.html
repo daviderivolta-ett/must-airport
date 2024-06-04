@@ -1,11 +1,6 @@
 <div class="header">
     <a routerLink="segnalazioni">
-        @if (settings && settings.assets) {
-            <img [src]="settings.assets.logoUrl" class="logo">
-        }
-        @else {
-            <img src="./assets/images/logo.png" alt="Logo di MUST" class="logo">
-        }
+            <img [src]="logoUrl" class="logo">
     </a>
     <div class="menu">
         <ul>

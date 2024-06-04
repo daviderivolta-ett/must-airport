@@ -1,33 +1,43 @@
 import { Tag, TagGroup } from './tag.model';
+import { VERTICAL } from './vertical.model';
 
 export class WebAppConfig {
-    tags: WebAppConfigTags;
     name: string;
+    id: VERTICAL;
+    assets: WebAppConfigAssets;
     style: WebAppConfigStyle;
-    logoUrl: string;
     labels: WebAppConfigLabels;
-    components: WebAppConfigComponents;
+    components: WebAppConfigComponentsType[];
+    tags: WebAppConfigTags;
 
-    constructor(tags: WebAppConfigTags, name: string, style: WebAppConfigStyle, logoUrl: string, labels: WebAppConfigLabels, components: WebAppConfigComponents) {
-        this.tags = tags;
+    constructor(
+        name: string,
+        id: VERTICAL,
+        assets: WebAppConfigAssets,
+        style: WebAppConfigStyle,
+        labels: WebAppConfigLabels,
+        components: WebAppConfigComponentsType[],
+        tags: WebAppConfigTags
+    ) {
         this.name = name;
+        this.id = id;
+        this.assets = assets;
         this.style = style;
-        this.logoUrl = logoUrl;
         this.labels = labels;
         this.components = components;
+        this.tags = tags;
     }
 
-    static createEmpty(): WebAppConfig {
+    static createDefault(): WebAppConfig {
         return new WebAppConfig(
-            {
-                parent: { elements: [], groups: [] },
-                child: { elements: [], groups: [] }
-            },
             'MUST',
+            VERTICAL.Default,
+            {
+                logoUrl: '/assets/images/logo.png'
+            },
             {
                 accentColor: 'rgb(31, 111, 235)'
             },
-            './assets/images/logo.png',
             {
                 priority: {
                     high: 'alta',
@@ -39,10 +49,37 @@ export class WebAppConfig {
                     maintenance: 'intervento'
                 }
             },
+            [],
             {
-                hasReportFile: false
+                parent: { elements: [], groups: [] },
+                child: { elements: [], groups: [] }
             }
         );
+    }
+}
+
+export interface WebAppConfigAssets {
+    logoUrl: string
+}
+
+export interface WebAppConfigStyle {
+    accentColor: string;
+}
+
+export enum WebAppConfigComponentsType {
+    ReportFile = "report_file",
+    AdditionalLayers = "additional_layers"
+}
+
+export interface WebAppConfigLabels {
+    priority: {
+        high: string,
+        medium: string,
+        low: string
+    },
+    operation: {
+        inspection: 'ispezione',
+        maintenance: 'intervento'
     }
 }
 
@@ -62,25 +99,76 @@ export interface WebAppConfigTagGroup {
     order: number;
 }
 
-export interface WebAppConfigStyle {
-    accentColor: string;
-}
+// export class WebAppAppSettings {
+//     app: {
+//         id: string,
+//         name: string
+//     };
+//     assets: {
+//         logoUrl: string
+//     };
+//     styles: {
+//         accent: string
+//     };
+//     components: string[];
+//     labels: {
+//         operations: {
+//             inspection: string,
+//             maintenance: string
+//         },
+//         priority: {
+//             high: string,
+//             medium: string,
+//             low: string
+//         }
+//     }
 
-export interface WebAppConfigComponents {
-    hasReportFile: boolean;
-}
+//     constructor() 
+// }
 
-export interface WebAppConfigLabels {
-    priority: {
-        high: string,
-        medium: string,
-        low: string
-    },
-    operation: {
-        inspection: 'ispezione',
-        maintenance: 'intervento'
-    }
-}
+// export interface WebAppSettingsAssets {
+//     logoUrl: string;
+// }
+
+// export interface WebAppSettingsStyles {
+//     accent: string;
+// }
+
+// export class WebAppAppSettings {
+//     id: string;
+//     name: string;
+//     assets: WebAppSettingsAssets;
+//     styles: WebAppSettingsStyles;
+//     components: WebAppConfigComponentsType[];
+
+//     constructor(
+//         id: string,
+//         name: string,
+//         assets: WebAppSettingsAssets,
+//         styles: WebAppSettingsStyles,
+//         components: WebAppConfigComponentsType[]
+//     ) {
+//         this.id = id;
+//         this.name = name;
+//         this.assets = assets;
+//         this.styles = styles;
+//         this.components = components;
+//     }
+
+//     static createEmpty(): WebAppAppSettings {
+//         return new WebAppAppSettings(
+//             '',
+//             '',
+//             {
+//                 logoUrl: ''
+//             },
+//             {
+//                 accent: ''
+//             },
+//             []
+//         )
+//     }
+// }
 
 export type MobileAppConfigParentFlow = {
     [key: string]: string;

@@ -1,8 +1,8 @@
 import { Inject, Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { SettingsStyles } from '../models/settings.model';
 import { MYCOLORTYPE, MyColor, MyColorShade } from '../models/color.model';
 import { COLORMODE } from '../models/color-mode.model';
+import { WebAppConfigStyle } from '../models/config.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +19,8 @@ export class ThemeService {
     });
   }
 
-  public setTheme(style: SettingsStyles): void {
-    let colorShade: MyColorShade = this.generateColorShade(style.accent);
+  public setTheme(style: WebAppConfigStyle): void {
+    let colorShade: MyColorShade = this.generateColorShade(style.accentColor);
     this.document.documentElement.style.setProperty('--bg-accent', colorShade.regular.hex);
     this.document.documentElement.style.setProperty('--bg-accent-dull', colorShade.dull.hex);
     this.document.documentElement.style.setProperty('--bg-accent-emphasis', colorShade.emphasis.hex);

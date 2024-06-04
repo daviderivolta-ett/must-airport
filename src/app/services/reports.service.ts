@@ -135,8 +135,6 @@ export class ReportsService {
   }
 
   public async getAllParentReports(verticalId: VERTICAL, getAll: boolean) {
-    // await this.configService.getVerticalConfig(verticalId);
-
     let q: Query;
     if (getAll) {
       q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId));
@@ -154,7 +152,7 @@ export class ReportsService {
         reports = reports.sort((a, b) => b.lastChildTime.getTime() - a.lastChildTime.getTime());
         // let allReports: ReportParent[] = reports.filter(report => (report.isArchived === false || report.isArchived === undefined) && report.closingChildId === null);
         let allReports: ReportParent[] = reports.filter(report => (report.isArchived === false || report.isArchived === undefined));
-
+        
         let closedReports: ReportParent[] = reports.filter(report => report.closingChildId);
         this.closedReportSignal.set(closedReports);
 
@@ -456,10 +454,10 @@ export class ReportsService {
       const querySnapshot: QuerySnapshot = await getDocs(q);
       const childrenReport: ReportChild[] = querySnapshot.docs.map(doc => {
         let childReport: ReportChild = this.parseChildReport(doc.id, doc.data() as ReportChildDb);
-        childReport = this.populateChildFlowTags1(childReport);
-        childReport = this.populateChildFlowTags2(childReport);
-        childReport = this.populateFailureTags(childReport);
-        childReport = this.populateFailureSubtags(childReport);
+        // childReport = this.populateChildFlowTags1(childReport);
+        // childReport = this.populateChildFlowTags2(childReport);
+        // childReport = this.populateFailureTags(childReport);
+        // childReport = this.populateFailureSubtags(childReport);
         return childReport;
       });
       return childrenReport;
@@ -495,32 +493,32 @@ export class ReportsService {
     return report;
   }
 
-  public populateParentFlowTags1(report: ReportParent): ReportParent {
-    let tagIds: string[] = report.fields.tagTechElement as string[];
-    let parentFlowTags: Tag[] = tagIds.map((id: string) => {
-      let tag: Tag | undefined = this.configService.parentFlowTags.find((tag: Tag) => tag.id === id);
-      return tag ? tag : Tag.createEmpty();
-    });
-    report.fields.parentFlowTags1 = parentFlowTags;
-    return report;
-  }
+  // public populateParentFlowTags1(report: ReportParent): ReportParent {
+  //   let tagIds: string[] = report.fields.tagTechElement as string[];
+  //   let parentFlowTags: Tag[] = tagIds.map((id: string) => {
+  //     let tag: Tag | undefined = this.configService.parentFlowTags.find((tag: Tag) => tag.id === id);
+  //     return tag ? tag : Tag.createEmpty();
+  //   });
+  //   report.fields.parentFlowTags1 = parentFlowTags;
+  //   return report;
+  // }
 
-  public populateParentFlowTags2(report: ReportParent): ReportParent {
-    let subTagIds: string[] = report.fields.subTagTechElement as string[];
-    let parentFlowTags: Tag[] = subTagIds.map((id: string) => {
-      let foundTag: Tag | undefined;
-      this.configService.parentFlowTags.forEach((tag: Tag) => {
-        // let foundOption: Tag | undefined = tag.options.find((subTag: Tag) => subTag.id === id);
-        // if (foundOption) {
-        //   foundTag = foundOption;
-        //   return;
-        // }
-      });
-      return foundTag ? foundTag : Tag.createEmpty();
-    });
-    report.fields.parentFlowTags2 = parentFlowTags;
-    return report;
-  }
+  // public populateParentFlowTags2(report: ReportParent): ReportParent {
+  //   let subTagIds: string[] = report.fields.subTagTechElement as string[];
+  //   let parentFlowTags: Tag[] = subTagIds.map((id: string) => {
+  //     let foundTag: Tag | undefined;
+  //     this.configService.parentFlowTags.forEach((tag: Tag) => {
+  //       // let foundOption: Tag | undefined = tag.options.find((subTag: Tag) => subTag.id === id);
+  //       // if (foundOption) {
+  //       //   foundTag = foundOption;
+  //       //   return;
+  //       // }
+  //     });
+  //     return foundTag ? foundTag : Tag.createEmpty();
+  //   });
+  //   report.fields.parentFlowTags2 = parentFlowTags;
+  //   return report;
+  // }
 
   public async getChildReportById(id: string): Promise<ReportChild> {
     const q = doc(this.db, 'reportChildren', id);
@@ -602,62 +600,62 @@ export class ReportsService {
     return r;
   }
 
-  private parseChildReportFields(fields: ReportChildFieldsDb): ReportChildFields {
-    let f = ReportChildFields.createEmpty();
+  // private parseChildReportFields(fields: ReportChildFieldsDb): ReportChildFields {
+  //   let f = ReportChildFields.createEmpty();
 
-    if (fields.foto_dettaglio) f.detailShots = fields.foto_dettaglio;
-    if (fields.intervention_photo) f.detailShots = fields.intervention_photo;
-    fields.comment && fields.comment.length !== 0 ? f.description = fields.comment : f.description = '-';
-    fields.tag_failure ? f.tagFailure = fields.tag_failure : []
-    fields.sub_tag_failure ? f.subTagFailure = fields.sub_tag_failure : [];
+  //   if (fields.foto_dettaglio) f.detailShots = fields.foto_dettaglio;
+  //   if (fields.intervention_photo) f.detailShots = fields.intervention_photo;
+  //   fields.comment && fields.comment.length !== 0 ? f.description = fields.comment : f.description = '-';
+  //   fields.tag_failure ? f.tagFailure = fields.tag_failure : []
+  //   fields.sub_tag_failure ? f.subTagFailure = fields.sub_tag_failure : [];
 
-    return f;
-  }
+  //   return f;
+  // }
 
-  public populateFailureTags(report: ReportChild): ReportChild {
-    let tagIds: string[] = report.fields.tagFailure as string[];
-    let failureTags: FailureTag[] = tagIds.map((id: string) => {
-      return this.dictionaryService.getFailureTagById(id);
-    });
-    report.fields.tagFailure = failureTags;
-    return report;
-  }
+  // public populateFailureTags(report: ReportChild): ReportChild {
+  //   let tagIds: string[] = report.fields.tagFailure as string[];
+  //   let failureTags: FailureTag[] = tagIds.map((id: string) => {
+  //     return this.dictionaryService.getFailureTagById(id);
+  //   });
+  //   report.fields.tagFailure = failureTags;
+  //   return report;
+  // }
 
-  public populateFailureSubtags(report: ReportChild): ReportChild {
-    let subTagIds: string[] = report.fields.subTagFailure as string[];
-    let failureSubTags: FailureSubTag[] = subTagIds.map((id: string) => {
-      return this.dictionaryService.getFailureSubTagById(id);
-    });
-    report.fields.subTagFailure = failureSubTags;
-    return report;
-  }
+  // public populateFailureSubtags(report: ReportChild): ReportChild {
+  //   let subTagIds: string[] = report.fields.subTagFailure as string[];
+  //   let failureSubTags: FailureSubTag[] = subTagIds.map((id: string) => {
+  //     return this.dictionaryService.getFailureSubTagById(id);
+  //   });
+  //   report.fields.subTagFailure = failureSubTags;
+  //   return report;
+  // }
 
-  public populateChildFlowTags1(report: ReportChild): ReportChild {
-    let tagIds: string[] = report.fields.tagFailure as string[];
-    let childFlowTags: Tag[] = tagIds.map((id: string) => {
-      let tag: Tag | undefined = this.configService.childFlowTags.find((tag: Tag) => tag.id === id);
-      return tag ? tag : Tag.createEmpty();
-    });
-    report.fields.childFlowTags1 = childFlowTags;
-    return report;
-  }
+  // public populateChildFlowTags1(report: ReportChild): ReportChild {
+  //   let tagIds: string[] = report.fields.tagFailure as string[];
+  //   let childFlowTags: Tag[] = tagIds.map((id: string) => {
+  //     let tag: Tag | undefined = this.configService.childFlowTags.find((tag: Tag) => tag.id === id);
+  //     return tag ? tag : Tag.createEmpty();
+  //   });
+  //   report.fields.childFlowTags1 = childFlowTags;
+  //   return report;
+  // }
 
-  public populateChildFlowTags2(report: ReportChild): ReportChild {
-    let subTagIds: string[] = report.fields.subTagFailure as string[];
-    let childFlowTags: Tag[] = subTagIds.map((id: string) => {
-      let foundTag: Tag | undefined;
-      this.configService.childFlowTags.forEach((tag: Tag) => {
-        // let foundOption: Tag | undefined = tag.options.find((subTag: Tag) => subTag.id === id);
-        // if (foundOption) {
-        //   foundTag = foundOption;
-        //   return;
-        // }
-      });
-      return foundTag ? foundTag : Tag.createEmpty();
-    });
-    report.fields.childFlowTags2 = childFlowTags;
-    return report;
-  }
+  // public populateChildFlowTags2(report: ReportChild): ReportChild {
+  //   let subTagIds: string[] = report.fields.subTagFailure as string[];
+  //   let childFlowTags: Tag[] = subTagIds.map((id: string) => {
+  //     let foundTag: Tag | undefined;
+  //     this.configService.childFlowTags.forEach((tag: Tag) => {
+  //       // let foundOption: Tag | undefined = tag.options.find((subTag: Tag) => subTag.id === id);
+  //       // if (foundOption) {
+  //       //   foundTag = foundOption;
+  //       //   return;
+  //       // }
+  //     });
+  //     return foundTag ? foundTag : Tag.createEmpty();
+  //   });
+  //   report.fields.childFlowTags2 = childFlowTags;
+  //   return report;
+  // }
 
   public parseValidationFormData(formData: ValidationFormData): any {
     let parentReport: any = {

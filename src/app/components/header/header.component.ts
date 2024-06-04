@@ -5,7 +5,6 @@ import { LoggedUser } from '../../models/user.model';
 import { AccountMenuComponent } from '../account-menu/account-menu.component';
 import { HeaderService } from '../../observables/header.service';
 import { SettingsService } from '../../services/settings.service';
-import { AppSettings } from '../../models/settings.model';
 import { VERTICAL } from '../../models/vertical.model';
 import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 import { ThemeService } from '../../services/theme.service';
@@ -19,17 +18,14 @@ import { COLORMODE } from '../../models/color-mode.model';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+  @Input() logoUrl: string = '';
   public loggedUser: LoggedUser | null = null;
   public currentApp: VERTICAL | null = null;
-  public settings: AppSettings | null = null;
   public colorMode: COLORMODE | null = null;
 
   constructor(private headerService: HeaderService, private authService: AuthService, private settingsService: SettingsService, private themeService: ThemeService) {
     effect(() => {
       this.loggedUser = this.authService.loggedUserSignal();
-    });
-    effect(() => {
-      this.settings = this.settingsService.settingsSignal();
     });
     effect(() => {
       this.currentApp = this.authService.currentAppSignal();

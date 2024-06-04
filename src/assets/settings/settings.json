@@ -1,30 +1,72 @@
 {
     "apps": [
         {
-            "name": "generic",
+            "id": "generic",
+            "name": "MUST",
             "assets": {
                 "logoUrl": "./assets/images/logo.png"
             },
-            "styles": {
-                "accent": "rgb(31, 111, 235);"
+            "style": {
+                "accentColor": "rgb(31, 111, 235);"
+            },
+            "components": [],
+            "labels": {
+                "operations": {
+                    "inspection": "intervento",
+                    "maintenance": "manutenzione"
+                },
+                "priority": {
+                    "high": "alta",
+                    "medium": "media",
+                    "low": "bassa"
+                }
             }
         },
         {
-            "name": "genovaAirport",
+            "id": "genovaAirport",
+            "name": "Aeroporto di Genova",
             "assets": {
                 "logoUrl": "./assets/images/aeroporto_genova_logo.svg"
             },
-            "styles": {
-                "accent": "#B41312"
+            "style": {
+                "accentColor": "#B41312"
+            },
+            "components": [
+                "report_file",
+                "additional_layers"
+            ],
+            "labels": {
+                "operations": {
+                    "inspection": "ispezione",
+                    "maintenance": "intervento"
+                },
+                "priority": {
+                    "high": "Urgente",
+                    "medium": "Da risolvere",
+                    "low": "Monitorare"
+                }
             }
         },
         {
-            "name": "dsh2030",
+            "id": "dsh2030",
+            "name": "DSH 2030",
             "assets": {
                 "logoUrl": "./assets/images/dsh2030_logo.jpg"
             },
-            "styles": {
-                "accent": "#B0B92A"
+            "style": {
+                "accentColor": "#B0B92A"
+            },
+            "components": [],
+            "labels": {
+                "operations": {
+                    "inspection": "intervento",
+                    "maintenance": "manutenzione"
+                },
+                "priority": {
+                    "high": "alta",
+                    "medium": "media",
+                    "low": "bassa"
+                }
             }
         }
     ]

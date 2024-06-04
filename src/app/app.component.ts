@@ -6,9 +6,6 @@ import { FirebaseService } from './services/firebase.service';
 import { ReportsService } from './services/reports.service';
 import { VERTICAL } from './models/vertical.model';
 import { CodesService } from './services/codes.service';
-import { SettingsService } from './services/settings.service';
-import { ThemeService } from './services/theme.service';
-import { AppSettings } from './models/settings.model';
 import { SplashService } from './observables/splash.service';
 import { LoggedUser, USERLEVEL, UserData } from './models/user.model';
 import { UserService } from './services/user.service';
@@ -16,6 +13,7 @@ import { Timestamp } from 'firebase/firestore';
 import { User } from 'firebase/auth';
 import { AdditionalLayersService } from './services/additional-layers.service';
 import { ConfigService } from './services/config.service';
+import { WebAppConfig } from './models/config.model';
 
 @Component({
   selector: 'app-root',
@@ -26,6 +24,7 @@ import { ConfigService } from './services/config.service';
 })
 export class AppComponent {
   public title: string = 'must';
+  public config: WebAppConfig = WebAppConfig.createDefault();
 
   constructor(private firebaseService: FirebaseService,
     private authService: AuthService,
@@ -34,8 +33,6 @@ export class AppComponent {
     private configService: ConfigService,
     private reportsService: ReportsService,
     private additionalLayersService: AdditionalLayersService,
-    private settingsService: SettingsService,
-    private themeService: ThemeService,
     private splashService: SplashService) {
 
     this.splashService.createSplash();
@@ -115,16 +112,13 @@ export class AppComponent {
         lastApp: currentApp
       }
       if (loggedUser.email) this.userService.setUserDataById(loggedUser.id, userData);
-      this.settingsService.getAllSettings(currentApp).subscribe((settings: AppSettings) => {
-        this.settingsService.settingsSignal.set(settings);
-        this.themeService.setTheme(settings.styles);
-      });
 
       await this.configService.getVerticalConfig(currentApp);
 
       this.splashService.removeSplash();
-
     }, { allowSignalWrites: true });
+
+    effect(() => this.config = this.configService.configSignal());
   }
 
   private async createLoggedUser(user: User): Promise<LoggedUser> {

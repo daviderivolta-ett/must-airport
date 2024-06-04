@@ -47,7 +47,7 @@ export class MapPageComponent {
     });
 
     effect(() => {
-      this.parentTagGroups = this.configService.parentTagGroupsSignal();
+      this.parentTagGroups = this.configService.parentTagGroupsSignal();     
     });
 
     effect(() => {

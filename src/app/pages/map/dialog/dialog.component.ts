@@ -56,11 +56,11 @@ export class DialogComponent {
     effect(async () => {
       if (this.dialogService.report().id.length === 0) return;
       this.parentReport = this.dialogService.report();
-      console.log(this.parentReport);      
+     
       const childrenIds: string[] = [...this.parentReport.childrenIds];
       if (this.parentReport.closingChildId) childrenIds.push(this.parentReport.closingChildId);
       this.childrenReport = await this.reportsService.populateChildrenReports(childrenIds);
-      console.log(this.childrenReport);      
+    
       this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
     });
   }

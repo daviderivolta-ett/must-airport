@@ -256,25 +256,6 @@ export class ChartsService {
     return tags;
   }
 
-  private getTagNames(foundTags: { [key: string]: string[] }, configTags: Tag[]) {
-    const result: { [key: string]: string[] } = {};
-
-    for (const key in foundTags) {
-      if (Object.prototype.hasOwnProperty.call(foundTags, key)) {
-        let tags: string[] = foundTags[key];
-
-        tags = tags.map((t: string) => {
-          const configTag: Tag | undefined = configTags.find((tag: Tag) => tag.id === t);
-          return configTag ? configTag.name : t;
-        });
-
-        result[key] = tags;
-      }
-    }
-
-    return result;
-  }
-
   private calculateTagsFrequency(tags: { [key: string]: string[] }): { [key: string]: { [key: string]: number } } {
     const frequencies: { [key: string]: { [key: string]: number } } = {};
 
