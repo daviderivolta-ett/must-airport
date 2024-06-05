@@ -9,11 +9,7 @@ export class DialogService {
   public report: WritableSignal<ReportParent> = signal(ReportParent.createEmpty());
   public isOpen: WritableSignal<boolean> = signal(false);
 
-  constructor(private applicationRef: ApplicationRef) {
-    effect(() => {     
-      // this.isOpen() ? this.createDialog() : this.removeDialog();
-    });
-  }
+  constructor(private applicationRef: ApplicationRef) {}
 
   public createDialog(): void {
     const div: HTMLDivElement = document.createElement('div');

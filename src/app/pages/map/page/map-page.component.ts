@@ -21,7 +21,7 @@ import { TagGroup } from '../../../models/tag.model';
   styleUrl: './map-page.component.scss'
 })
 export class MapPageComponent {
-  public config: WebAppConfig = this.configService.config;
+  public config: WebAppConfig = WebAppConfig.createDefault();
   public childTagGroups: TagGroup[] | null = null;
   public parentTagGroups: TagGroup[] | null = null;
   public loggedUser: LoggedUser | null = null;
@@ -30,6 +30,7 @@ export class MapPageComponent {
   public techElementTags: TechElementTag[] = [];
 
   constructor(private configService: ConfigService, private authService: AuthService, private reportsService: ReportsService) {
+    effect(() => this.config = this.configService.configSignal());
     effect(() => {
       this.reports = this.reportsService.reportsSignal();      
     });
