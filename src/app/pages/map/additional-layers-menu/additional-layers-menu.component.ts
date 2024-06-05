@@ -43,7 +43,7 @@ export class AdditionalLayersMenuComponent {
     effect(() => this.isOpen = this.additionalLayersMenuService.isOpenSignal());
 
     effect(() => {
-      if (this.authService.currentAppSignal() === null) return;
+      if (this.authService.currentAppSignal() === null) return;   
       if (this.authService.currentApp) this.additionalLayersService.getAllAdditionalLayers(this.authService.currentApp);
     });
   }
