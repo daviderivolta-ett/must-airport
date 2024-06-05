@@ -157,6 +157,7 @@ export class MapComponent {
   private onMarkerClick(feature: any): void {
     let report: ReportParent = feature.properties.report;
     this.dialogService.report.set(report);
-    this.dialogService.isOpen.set(true);
+    // this.dialogService.isOpen.set(true);
+    this.dialogService.createDialog();
   }
 }

@@ -1,0 +1,55 @@
+<div class="dialog" appCloseEscape (closeEscape)="close()">
+    <div class="backdrop-overlay" (click)="close()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="close-icon-wrapper" (click)="close()">
+                <span class="material-symbols-outlined">close</span>
+            </div>
+
+            <div class="columns">
+                <div class="column parent-report-column">
+                    <div class="img-container">
+                        <img [src]="parentReport.coverImgUrls[0]">
+                    </div>
+                    <div class="parent-report-title-section">
+                        <h2 class="parent-report-title">Dettaglio segnalazione</h2>
+                        @if (loggedUser?.level === 0 || (loggedUser?.level === 1 && currentApp !== 'generic')) {
+                            <button type="button" (click)="navigateTo(parentReport.id)">Gestisci</button>
+                        }
+                    </div>
+                    <div class="parent-report-details">
+                        <div class="info">
+                            <p class="info-title">Prima segnalazione</p>
+                            <p class="info-value">{{parentReport.creationTime | date: 'dd/MM/yyyy'}}  - h. {{parentReport.creationTime | date: 'HH:mm'}}</p>
+                        </div>
+                        <div class="info">
+                            <p class="info-title">Ultimo aggiornamento</p>
+                            <p class="info-value">{{parentReport.lastChildTime | date: 'dd/MM/yyyy'}} - h. {{parentReport.lastChildTime | date: 'HH:mm'}}</p>
+                        </div>
+
+                        @for (group of parentTagGroups; track $index) {
+                            <div class="info">
+                                <p class="info-title">{{group.name}}</p>
+                                @if (hasMatchingField(group.id)) {
+                                    @for (tag of getTags(group.id); track $index; let last = $last) {
+                                        <p class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel}}</p>
+                                    }
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="column children-report-column">
+                    <div class="map-wrapper">
+                        <app-mini-map [miniMapData]="minimapData" />
+                    </div>
+                    <h2 class="children-report-title">Report ({{parentReport.childrenIds.length}})</h2>
+                    <div class="children-report">
+                        @for (report of childReports; track $index) {
+                            <app-child-report-card [childTagGroups]="childTagGroups" [childReport]="report" [parentReport]="parentReport" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

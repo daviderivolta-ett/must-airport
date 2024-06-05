@@ -49,7 +49,7 @@ export class DialogComponent {
   public currentApp: VERTICAL | null = null;
 
   constructor(private dialogService: DialogService, private reportsService: ReportsService, private router: Router, private authService: AuthService) {
-    effect(() => this.isOpen = this.dialogService.isOpen());
+    // effect(() => this.isOpen = this.dialogService.isOpen());
     effect(() => this.loggedUser = this.authService.loggedUserSignal());
     effect(() => this.currentApp = this.authService.currentAppSignal());
 

@@ -23,7 +23,8 @@ export class SidebarCardComponent {
   public openDialog(): void {
     this.sidebarService.isOpen.set(false);
     this.dialogService.report.set(this.report);
-    this.dialogService.isOpen.set(true);
+    // this.dialogService.isOpen.set(true);
+    this.dialogService.createDialog();
   }
   
   public closeDialog(): void {

@@ -1,0 +1,251 @@
+.dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+}
+
+.backdrop-overlay {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(1, 4, 9, .75);
+    backdrop-filter: blur(3px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    position: relative;
+    font-size: .9rem;
+    color: var(--f-default);
+    width: 60%;
+    height: 80%;
+    background-color: var(--bg-default);
+    border-radius: 8px;
+    border: 1px solid var(--border-default);
+}
+
+.columns {
+    height: 100%;
+    padding: 48px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    gap: 48px;
+}
+
+.columns::-webkit-scrollbar {
+    width: 6px;
+}
+
+.columns::-webkit-scrollbar-thumb {
+    background: var(-bg-default);
+    border-radius: 8px;
+}
+
+.parent-report-column {
+    flex: 0 0 60%;
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.parent-report-column::-webkit-scrollbar {
+    display: none;
+}
+
+h2 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+img {
+    width: 100%;
+}
+
+.img-container {
+    position: relative;
+    width: 100%;
+    padding: 0 0 56.25% 0;
+    overflow: hidden;
+    border-radius: 8px;
+    margin: 0 0 24px 0;
+    background-color: var(--bg-inset);
+    border: 1px solid var(--border-default);
+    box-sizing: border-box;
+}
+
+.img-container img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+.parent-report-title-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0 16px 0;
+}
+
+.parent-report-title-section button {
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: .9rem;
+    color: var(--f-default-contrast);
+    background-color: var(--bg-accent);
+    border-radius: 4px;
+    border: none;
+    padding: 4px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &:hover {
+        background-color: var(--bg-accent-emphasis);
+    }
+}
+
+.parent-report-details {
+    padding: 24px;
+    background-color: var(--bg-default);
+    border-radius: 8px;
+    border: 1px solid var(--border-default);
+}
+
+.info {
+    margin: 0 0 8px 0;
+    color: var(--f-subtle);
+}
+
+.info:last-child {
+    margin: 0;
+}
+
+.info-title {
+    font-size: .8rem;
+    font-weight: 600;
+    margin: 0 0 2px 0;
+}
+
+.info-value {
+    font-size: 1rem;
+    display: inline;
+    font-weight: 400;
+    color: var(--f-default);
+    margin: 0;
+}
+
+.comma::after {
+    content: ', ';
+}
+
+.children-report-column {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.map-wrapper {
+    height: 144px;
+    width: 100%;
+    padding: 0 8px 0 0;
+    box-sizing: border-box;
+}
+
+.children-report {
+    overflow-y: auto;
+    padding: 0 8px 8px 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-subtle) var(--bg-default);
+}
+
+.children-report::-webkit-scrollbar {
+    width: 6px;
+}
+
+.children-report::-webkit-scrollbar-thumb {
+    background: var(--bg-subtle);
+    border-radius: 8px;
+}
+
+.children-report-title {
+    margin: 24px 0 16px 0;
+}
+
+app-child-report-card {
+    display: block;
+    margin: 0 0 24px 0;
+}
+
+app-child-report-card:last-child {
+    margin: 0;
+}
+
+.close-icon-wrapper {
+    cursor: pointer;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--f-muted);
+    background-color: var(--bg-default);
+    border-radius: 4px;
+    border: 1px solid var(--border-subtle);
+    height: 32px;
+    width: 32px;
+    transition: .2s ease-in-out;
+
+    &:hover {
+        color: var(--f-default);
+        border-color: var(--border-emphasis);
+    }
+}
+
+.material-symbols-outlined {
+    font-size: 1.2rem;
+}
+
+p {
+    margin: 0;
+}
+
+@media screen and (max-width: 1600px) {
+    .modal-content {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .modal-content {
+        width: 100%;
+        height: 100%;
+    }
+
+    .columns {
+        padding: 24px;
+        display: block;
+        overflow-y: auto;
+        box-sizing: border-box;
+    }
+
+    .parent-report-column {
+        margin: 0 0 48px 0;
+        height: auto;
+    }
+
+    .children-report {
+        overflow-y: hidden;
+        height: auto;
+        padding: 0;
+    }
+}
