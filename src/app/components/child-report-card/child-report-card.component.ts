@@ -10,11 +10,18 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { ControlLabelPipe } from '../../pipes/control-label.pipe';
 import { TagGroup } from '../../models/tag.model';
+import { SentenceCasePipe } from '../../pipes/sentence-case.pipe';
 
 @Component({
   selector: 'app-child-report-card',
   standalone: true,
-  imports: [DatePipe, NgClass, KeyValuePipe, ControlLabelPipe],
+  imports: [
+    DatePipe,
+    NgClass,
+    KeyValuePipe,
+    ControlLabelPipe,
+    SentenceCasePipe
+  ],
   templateUrl: './child-report-card.component.html',
   styleUrl: './child-report-card.component.scss'
 })

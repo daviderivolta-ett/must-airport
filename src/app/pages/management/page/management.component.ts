@@ -21,6 +21,7 @@ import { WebAppConfig } from '../../../models/config.model';
 import { ControlLabelPipe } from '../../../pipes/control-label.pipe';
 import { UtilsService } from '../../../services/utils.service';
 import { LabelPipe } from '../../../pipes/label.pipe';
+import { SentenceCasePipe } from '../../../pipes/sentence-case.pipe';
 
 @Component({
   selector: 'app-management',
@@ -35,6 +36,7 @@ import { LabelPipe } from '../../../pipes/label.pipe';
     DatePipe,
     NgClass,
     TitleCasePipe,
+    SentenceCasePipe,
     KeyValuePipe,
     LabelPipe,
     ControlLabelPipe],

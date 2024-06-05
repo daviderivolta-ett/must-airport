@@ -15,6 +15,7 @@ import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 import { VERTICAL } from '../../../models/vertical.model';
 import { UtilsService } from '../../../services/utils.service';
 import { LabelPipe } from '../../../pipes/label.pipe';
+import { SentenceCasePipe } from '../../../pipes/sentence-case.pipe';
 
 interface TagChanges {
   toAdd: { [key: string]: string[] },
@@ -24,7 +25,16 @@ interface TagChanges {
 @Component({
   selector: 'app-validation-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, KeyValuePipe, NgClass, TitleCasePipe, LabelPipe, ControlLabelPipe],
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    NgClass,
+    KeyValuePipe,
+    TitleCasePipe,
+    LabelPipe,
+    ControlLabelPipe,
+    SentenceCasePipe
+  ],
   templateUrl: './validation-form.component.html',
   styleUrl: './validation-form.component.scss'
 })
@@ -98,16 +108,16 @@ export class ValidationFormComponent {
 
   private createValidationForm(tags: WebAppConfigTags): FormGroup {
     const baseForm: FormGroup = this.fb.group({});
-  
+
     for (const key in tags) {
       tags[key as keyof WebAppConfigTags].groups.forEach((group: TagGroup) => {
         this.processTags(baseForm, group, tags[key as keyof WebAppConfigTags].elements, true);
       });
     }
-  
+
     return baseForm;
   }
-  
+
   private processTags(baseForm: FormGroup, group: TagGroup, tags: Tag[], isTopLevel: boolean): void {
     tags.forEach((tag: Tag) => {
       if (group.id === tag.type) {
@@ -118,7 +128,7 @@ export class ValidationFormComponent {
       }
     });
   }
-  
+
   private addControlToGroup(baseForm: FormGroup, group: TagGroup, tag: Tag, isTopLevel: boolean): void {
     let formGroup = baseForm.get(group.id) as FormGroup;
     if (!formGroup) {

@@ -8,11 +8,12 @@ import { SnackbarService } from '../../../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 import { LabelPipe } from '../../../pipes/label.pipe';
 import { TitleCasePipe } from '@angular/common';
+import { SentenceCasePipe } from '../../../pipes/sentence-case.pipe';
 
 @Component({
   selector: 'app-inspection-form',
   standalone: true,
-  imports: [ReactiveFormsModule, LabelPipe, TitleCasePipe],
+  imports: [ReactiveFormsModule, LabelPipe, TitleCasePipe, SentenceCasePipe],
   templateUrl: './inspection-form.component.html',
   styleUrl: './inspection-form.component.scss'
 })

@@ -14,7 +14,7 @@
                                 <label [for]="control.key" class="checkbox-single-label">
                                     <input type="checkbox" [id]="control.key" [formControlName]="$any(control.key)">
                                     <span class="checkmark"></span>
-                                    {{$any(control.key) | controlLabel}}
+                                    {{$any(control.key) | controlLabel | sentenceCase}}
                                 </label>
                             </div>
                         }
@@ -28,15 +28,15 @@
     <div class="form-group radio-buttons" formGroupName="priority">
         <div class="radio-single">
             <input type="radio" id="low" value="low" name="priority" formControlName="priority">
-            <label class="radio-single-label low" for="low">{{'low' | label | titlecase}}</label>
+            <label class="radio-single-label low" for="low">{{'low' | label | sentenceCase}}</label>
         </div>
         <div class="radio-single">
             <input type="radio" id="medium" value="medium" name="priority" formControlName="priority">
-            <label class="radio-single-label medium" for="medium">{{'medium' | label | titlecase}}</label>
+            <label class="radio-single-label medium" for="medium">{{'medium' | label | sentenceCase}}</label>
         </div>
         <div class="radio-single">
             <input type="radio" id="high" value="high" name="priority" formControlName="priority">
-            <label class="radio-single-label high" for="high">{{'high' | label | titlecase}}</label>
+            <label class="radio-single-label high" for="high">{{'high' | label | sentenceCase}}</label>
         </div>
     </div>
     <button type="submit" [disabled]="!baseForm.valid">Salva modifiche</button>

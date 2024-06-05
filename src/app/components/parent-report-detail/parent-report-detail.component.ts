@@ -15,11 +15,22 @@ import { ChildReportsFiltersComponent } from '../child-reports-filters/child-rep
 import { OPERATIONTYPE } from '../../models/operation.model';
 import { WebAppConfig } from '../../models/config.model';
 import { ControlLabelPipe } from '../../pipes/control-label.pipe';
+import { SentenceCasePipe } from '../../pipes/sentence-case.pipe';
+import { LabelPipe } from '../../pipes/label.pipe';
 
 @Component({
   selector: 'app-parent-report-detail',
   standalone: true,
-  imports: [DatePipe, KeyValuePipe, ControlLabelPipe, NgClass, MiniMapComponent, ChildReportCardComponent, ChildReportsFiltersComponent],
+  imports: [
+    DatePipe,
+    KeyValuePipe,
+    LabelPipe,
+    ControlLabelPipe,
+    SentenceCasePipe,
+    NgClass,
+    MiniMapComponent,
+    ChildReportCardComponent,
+    ChildReportsFiltersComponent],
   templateUrl: './parent-report-detail.component.html',
   styleUrl: './parent-report-detail.component.scss'
 })

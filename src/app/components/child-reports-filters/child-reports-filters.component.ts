@@ -3,11 +3,12 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ChildReportFiltersFormData } from '../../services/reports.service';
 import { LabelPipe } from '../../pipes/label.pipe';
 import { TitleCasePipe } from '@angular/common';
+import { SentenceCasePipe } from '../../pipes/sentence-case.pipe';
 
 @Component({
   selector: 'app-child-reports-filters',
   standalone: true,
-  imports: [ReactiveFormsModule, TitleCasePipe, LabelPipe],
+  imports: [ReactiveFormsModule, TitleCasePipe, LabelPipe, SentenceCasePipe],
   templateUrl: './child-reports-filters.component.html',
   styleUrl: './child-reports-filters.component.scss'
 })

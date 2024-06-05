@@ -28,13 +28,13 @@
                 <p class="info-title">Priorità</p>
                 @switch (parentReport.priority) {
                     @case ("high") {
-                    <p class="info-value priority high">{{parentReport.priority | label}}</p>
+                    <p class="info-value priority high">{{parentReport.priority | label | sentenceCase}}</p>
                     }
                     @case ("medium") {
-                    <p class="info-value priority medium">{{parentReport.priority | label}}</p>
+                    <p class="info-value priority medium">{{parentReport.priority | label | sentenceCase}}</p>
                     }
                     @case ("low") {
-                    <p class="info-value priority low">{{parentReport.priority | label}}</p>
+                    <p class="info-value priority low">{{parentReport.priority | label | sentenceCase}}</p>
                     }
                     @default {
                     <p class="info-value priority not-assigned">Non assegnata</p>
@@ -48,7 +48,7 @@
                     <div class="info-value-list">
                         @if (hasMatchingField(group.id)) {
                             @for (tag of getTags(group.id); track $index; let last = $last) {
-                                <p class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel}}</p>
+                                <p class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel | sentenceCase}}</p>
                             }
                         }
                         @else {
@@ -64,7 +64,7 @@
                     <div class="info-value-list">
                         @if (hasChildrenMatchingFields(group.id)) {
                             @for (tag of getChildrenTags(group.id); track $index; let last = $last) {
-                                <p class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel}}</p>
+                                <p class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel | sentenceCase}}</p>
                             }
                         }
                         @else {

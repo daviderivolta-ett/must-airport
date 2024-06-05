@@ -25,7 +25,7 @@
                     <span class="info-title">{{group.name}}: </span>
                     @if (hasMatchfingField(group.id)) {
                         @for (tag of getTags(group.id); track $index; let last = $last) {
-                            <span class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel}}</span>
+                            <span class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel | sentenceCase}}</span>
                         }
                     }
                     @else {

@@ -17,6 +17,7 @@ import { ControlLabelPipe } from '../../../pipes/control-label.pipe';
 import { MiniMapComponent } from '../../../components/mini-map/mini-map.component';
 import { ChildReportCardComponent } from '../../../components/child-report-card/child-report-card.component';
 import { CloseEscapeDirective } from '../../../directives/close-escape.directive';
+import { SentenceCasePipe } from '../../../pipes/sentence-case.pipe';
 
 @Component({
   selector: 'app-report-dialog',
@@ -25,6 +26,7 @@ import { CloseEscapeDirective } from '../../../directives/close-escape.directive
     NgClass,
     DatePipe,
     ControlLabelPipe,
+    SentenceCasePipe,
     MiniMapComponent,
     ChildReportCardComponent,
     CloseEscapeDirective
