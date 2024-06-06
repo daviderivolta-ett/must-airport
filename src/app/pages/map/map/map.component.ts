@@ -90,8 +90,8 @@ export class MapComponent {
     this.map = Leaflet.map('map', {
       zoomControl: false,
       attributionControl: false,
-      maxZoom: 20,
-      minZoom: 14
+      // maxZoom: 20,
+      // minZoom: 14
     }).setView([44.41361028797091, 8.844596073925151], 13);
 
     Leaflet.control.zoom({

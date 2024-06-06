@@ -34,6 +34,7 @@ export class ReportParent {
     isArchived?: boolean;
     archivingTime?: Date | null;
     tags?: { parent: ReportTagGroup[], child: ReportTagGroup[] };
+    files?: string[];
 
     constructor(
         childFlowIds: string[],
@@ -59,6 +60,7 @@ export class ReportParent {
         validationDate: Timestamp | undefined,
         isArchived?: boolean,
         archivingTime?: Timestamp | null,
+        files?: string[]
     ) {
         this.childFlowIds = childFlowIds;
         this.childrenIds = childrenIds;
@@ -83,6 +85,7 @@ export class ReportParent {
         if (validationDate) this.validationDate = validationDate.toDate();
         if (isArchived) this.isArchived = isArchived;
         if (archivingTime) this.archivingTime = archivingTime.toDate();
+        if (files) this.files = files;
     }
 
     static createEmpty(): ReportParent {
@@ -96,7 +99,6 @@ export class ReportParent {
             Timestamp.now(),
             [],
             '',
-            // ReportParentFields.createEmpty(),
             {},
             LANGUAGE.Italian,
             Timestamp.now(),

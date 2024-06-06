@@ -2,6 +2,6 @@
     <app-sidebar [parentTagGroups]="parentTagGroups" [reports]="reports" />
 }
 <app-map />
-@if (this.config.components.includes($any('report_file'))) {
+@if (this.config.components.includes($any('additional_layers'))) {
     <app-additional-layers-menu />
 }

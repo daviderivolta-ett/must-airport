@@ -1,0 +1,11 @@
+<div class="backdrop">
+    <div class="dialog">
+        <div class="info">
+            <p>{{message}}</p>
+        </div>
+        <div class="actions">
+            <button type="button" (click)="onSubmit($event, false)" class="cancel-button">No, annulla</button>
+            <button type="button" (click)="onSubmit($event, true)" class="confirm-button">Sì, continua</button>
+        </div>
+    </div>
+</div>

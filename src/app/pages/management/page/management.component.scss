@@ -227,6 +227,43 @@ app-operation-card-management:last-child {
     margin: 0;
 }
 
+.add-report-file {
+    cursor: pointer;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    border: 1px solid var(--border-subtle);
+    background-color: var(--bg-default);
+    z-index: 999;
+
+    &:hover {
+        border-color: var(--border-emphasis);
+    }
+}
+
+app-report-file-menu {
+    position: fixed;
+    width: 320px;
+    z-index: 999;
+    bottom: 80px;
+    right: 80px;
+}
+
+.add-icon {
+    transition: .25s cubic-bezier(.47,1.64,.41,.8);
+}
+
+.rotate {
+    transform: rotateZ(45deg);
+    transition: .25s cubic-bezier(.47,1.64,.41,.8);
+}
+
 @media screen and (max-width: 1024px) {
     .page {
         height: auto;
@@ -265,5 +302,10 @@ app-operation-card-management:last-child {
 @media screen and (max-width: 576px) {
     .column {
         width: 100%;
+    }
+
+    app-report-file-menu {
+        width: calc(100% - 48px);
+        right: 24px;
     }
 }

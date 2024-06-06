@@ -1,4 +1,4 @@
-import { ApplicationRef, Component, ViewChild, createComponent, effect } from '@angular/core';
+import { ApplicationRef, Component, EventEmitter, Output, ViewChild, createComponent, effect } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ReportParent } from '../../../models/report-parent.model';
 import { ReportChild } from '../../../models/report-child.model';
@@ -22,6 +22,8 @@ import { ControlLabelPipe } from '../../../pipes/control-label.pipe';
 import { UtilsService } from '../../../services/utils.service';
 import { LabelPipe } from '../../../pipes/label.pipe';
 import { SentenceCasePipe } from '../../../pipes/sentence-case.pipe';
+import { ReportFileMenuComponent } from '../report-file-menu/report-file-menu.component';
+import { ReportFileMenuService } from '../../../observables/report-file-menu.service';
 
 @Component({
   selector: 'app-management',
@@ -33,6 +35,7 @@ import { SentenceCasePipe } from '../../../pipes/sentence-case.pipe';
     InspectionFormComponent,
     OperationCardComponent,
     OperationCardManagementComponent,
+    ReportFileMenuComponent,
     DatePipe,
     NgClass,
     TitleCasePipe,
@@ -58,15 +61,20 @@ export class ManagementComponent {
 
   public miniMapData!: MiniMapData;
 
-  constructor(private applicationRef: ApplicationRef,
+  public isReportFileMenuOpen: boolean = false;
+
+  constructor(
+    private applicationRef: ApplicationRef,
     private route: ActivatedRoute,
     private configService: ConfigService,
     private reportsService: ReportsService,
     private archiveDialogService: ArchiveDialogService,
-    private utilsService: UtilsService) {
+    private utilsService: UtilsService,
+    private reportFileMenuService: ReportFileMenuService
+  ) {
 
     effect(async () => {
-      this.parentReport = this.reportsService.selectedReportSignal();  
+      this.parentReport = this.reportsService.selectedReportSignal();
       this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
 
       if (this.parentReport.closingChildId) this.childrenReport.unshift(await this.reportsService.getChildReportById(this.parentReport.closingChildId));
@@ -80,6 +88,7 @@ export class ManagementComponent {
 
     effect(() => this.parentTagGroups = this.configService.parentTagGroupsSignal());
     effect(() => this.childTagGroups = this.configService.childTagGroupsSignal());
+    effect(() => this.isReportFileMenuOpen = this.reportFileMenuService.isOpenSignal());
   }
 
   async ngOnInit(): Promise<void> {
@@ -169,5 +178,10 @@ export class ManagementComponent {
   public getChildrenTags(groupId: string): string[] {
     const field: string[] = this.childrenFields[groupId];
     return field ? field : [];
+  }
+
+  public toggleReportFileMenu(event: Event): void {
+    event.stopPropagation();
+    this.reportFileMenuService.isOpenSignal.set(!this.reportFileMenuService.isOpenSignal());
   }
 }

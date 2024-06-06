@@ -62,9 +62,10 @@ export class AdditionalLayersFormComponent {
   }
 
   private generateFileName(file: File): string {
-    const fileName: string = file.name.split('.')[0].trim().replaceAll(' ', '');
-    const now: string = new Date().getTime().toString();
-    return `${fileName}_${now}_${this.authService.currentApp}.${file.name.split('.').pop()}`;
+    const lastDotIndex: number = file.name.lastIndexOf('.');
+    const name: string = file.name.slice(0, lastDotIndex).trim().replace(/\s/g, '_');
+    const extension: string = file.name.slice(lastDotIndex + 1);
+    return `${name}_${new Date().getTime().toString()}.${extension}`;
   }
 
   public toggleForm(): void {

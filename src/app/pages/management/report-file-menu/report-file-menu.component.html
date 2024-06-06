@@ -1,0 +1,23 @@
+<div class="dialog" appClickOutside (clickedOutside)="closeDialog()" [@openClose]="isOpen ? 'open' : 'closed'">
+    <form [formGroup]="uploadReportFileForm">
+        <label for="report-file-input" class="custom-file-input">
+            <span>Scegli un file</span>
+            <input type="file" id="report-file-input" placeholder="Seleziona un file pdf" (change)="onFileChange($event)" #inputFile>
+            <input type="hidden" formControlName="fileName">
+        </label>
+        <button type="submit" [disabled]="!uploadReportFileForm.valid" (click)="handleSubmit(inputFile)">
+            <span class="material-symbols-outlined">upload_file</span>
+        </button>
+    </form>
+
+    <ul class="file-list">
+        @for (file of files; track $index) {
+            <li class="list-element">
+                <a [href]="file.url" target="_blank" class="file-link">
+                    <span class="material-symbols-outlined">description</span>
+                    {{file.name}}
+                </a>
+            </li>
+        }
+    </ul>
+</div>

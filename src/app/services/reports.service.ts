@@ -1,21 +1,15 @@
 import { Injectable, WritableSignal, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, orderBy, setDoc, deleteDoc, updateDoc, arrayUnion, arrayRemove, where, or, Query, addDoc } from 'firebase/firestore';
+import { GeoPoint, Timestamp, DocumentData, QuerySnapshot, collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, deleteDoc, updateDoc, arrayUnion, arrayRemove, where, or, Query, addDoc, DocumentReference } from 'firebase/firestore';
 import { ReportParent } from '../models/report-parent.model';
-import { ReportParentFields } from '../models/report-parent.fields.model';
 import { ReportChild } from '../models/report-child.model';
 import { DictionaryService } from './dictionary.service';
-import { TechElementTag } from '../models/tech-element-tag.model';
-import { TechElementSubTag } from '../models/tech-element-subtag.model';
-import { FailureTag } from '../models/failure-tag.model';
-import { FailureSubTag } from '../models/failure-subtag.model';
 import { PRIORITY, Priority } from '../models/priority.model';
 import { LANGUAGE, Language } from '../models/language.model';
 import { StorageReference, deleteObject, getMetadata, ref } from 'firebase/storage';
 import { Storage } from '@angular/fire/storage';
 import { OPERATIONTYPE, Operation, OperationDb } from '../models/operation.model';
 import { VERTICAL } from '../models/vertical.model';
-import { ReportChildFields } from '../models/report-child.fields.model';
 import { ConfigService } from './config.service';
 import { ReportTag, ReportTagGroup, Tag, TagGroup } from '../models/tag.model';
 
@@ -42,6 +36,7 @@ export interface ReportParentDb {
   operations: OperationDb[];
   archived?: boolean;
   archivingTime?: Timestamp | null;
+  files?: string[];
 }
 
 export interface ReportParentFieldsDb {
@@ -152,7 +147,7 @@ export class ReportsService {
         reports = reports.sort((a, b) => b.lastChildTime.getTime() - a.lastChildTime.getTime());
         // let allReports: ReportParent[] = reports.filter(report => (report.isArchived === false || report.isArchived === undefined) && report.closingChildId === null);
         let allReports: ReportParent[] = reports.filter(report => (report.isArchived === false || report.isArchived === undefined));
-        
+       
         let closedReports: ReportParent[] = reports.filter(report => report.closingChildId);
         this.closedReportSignal.set(closedReports);
 
@@ -270,7 +265,14 @@ export class ReportsService {
     })
   }
 
-  public parseParentReport(id: string, report: ReportParentDb): ReportParent {
+  public async setReportFilesByReportId(id: string, fileName: string): Promise<void> {
+    const ref: DocumentReference = doc(this.db, 'reportParents', id);
+    await updateDoc(ref, {
+      files: arrayUnion(fileName)
+    });
+  }
+
+  public parseParentReport(id: string, report: ReportParentDb): ReportParent {    
     let r = ReportParent.createEmpty();
 
     r.childFlowIds = report.childFlowsIds;
@@ -282,7 +284,6 @@ export class ReportsService {
     r.creationTime = report.creationTime.toDate();
     r.descriptionSelections = report.descriptionSelections;
     r.descriptionText = report.descriptionText;
-    // r.fields = report.fields;
     r.fields = this.parseReportFields(report.fields);
     r.language = Language.parseLanguage(report.language);
     r.lastChildTime = report.lastChildTime.toDate();
@@ -305,9 +306,10 @@ export class ReportsService {
     if (report.validationDate) r.validationDate = report.validationDate.toDate();
     if (report.archived) r.isArchived = report.archived;
     if (report.archivingTime) r.archivingTime = report.archivingTime.toDate();
+    report.files ? r.files= report.files : r.files = [];
 
     r.tags = { parent: this.parseReportTags(r.fields, 'parent').sort((a, b) => a.order - b.order), child: this.parseReportTags(r.fields, 'child').sort((a, b) => a.order - b.order) };
-
+        
     return r;
   }
 
@@ -454,10 +456,6 @@ export class ReportsService {
       const querySnapshot: QuerySnapshot = await getDocs(q);
       const childrenReport: ReportChild[] = querySnapshot.docs.map(doc => {
         let childReport: ReportChild = this.parseChildReport(doc.id, doc.data() as ReportChildDb);
-        // childReport = this.populateChildFlowTags1(childReport);
-        // childReport = this.populateChildFlowTags2(childReport);
-        // childReport = this.populateFailureTags(childReport);
-        // childReport = this.populateFailureSubtags(childReport);
         return childReport;
       });
       return childrenReport;
@@ -474,24 +472,24 @@ export class ReportsService {
     return reports.reverse();
   }
 
-  public populateTechElementTags(report: ReportParent): ReportParent {
-    let tagIds: string[] = report.fields.tagTechElement as string[];
-    let techElementTags: TechElementTag[] = tagIds.map((id: string) => {
-      return this.dictionaryService.getTechElementTagById(id);
-    });
-    report.fields.tagTechElement = techElementTags;
-    report.descriptionSelections = techElementTags;
-    return report;
-  }
+  // public populateTechElementTags(report: ReportParent): ReportParent {
+  //   let tagIds: string[] = report.fields.tagTechElement as string[];
+  //   let techElementTags: TechElementTag[] = tagIds.map((id: string) => {
+  //     return this.dictionaryService.getTechElementTagById(id);
+  //   });
+  //   report.fields.tagTechElement = techElementTags;
+  //   report.descriptionSelections = techElementTags;
+  //   return report;
+  // }
 
-  public populateTechElementSubTags(report: ReportParent): ReportParent {
-    let subTagIds: string[] = report.fields.subTagTechElement as string[];
-    let techElementSubTags: TechElementSubTag[] = subTagIds.map((id: string) => {
-      return this.dictionaryService.getTechElementSubTagById(id);
-    });
-    report.fields.subTagTechElement = techElementSubTags;
-    return report;
-  }
+  // public populateTechElementSubTags(report: ReportParent): ReportParent {
+  //   let subTagIds: string[] = report.fields.subTagTechElement as string[];
+  //   let techElementSubTags: TechElementSubTag[] = subTagIds.map((id: string) => {
+  //     return this.dictionaryService.getTechElementSubTagById(id);
+  //   });
+  //   report.fields.subTagTechElement = techElementSubTags;
+  //   return report;
+  // }
 
   // public populateParentFlowTags1(report: ReportParent): ReportParent {
   //   let tagIds: string[] = report.fields.tagTechElement as string[];

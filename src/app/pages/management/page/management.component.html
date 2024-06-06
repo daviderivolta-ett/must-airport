@@ -116,4 +116,10 @@
         </div>
         }
     </div>
+    @if (config.components.includes($any('report_file'))) {
+        <button type="button" class="add-report-file" (click)="toggleReportFileMenu($event)">
+            <span class="material-symbols-outlined add-icon">{{isReportFileMenuOpen ? 'folder_open' : 'folder'}}</span>
+        </button>
+        <app-report-file-menu [report]="parentReport" />
+    }
 </div>

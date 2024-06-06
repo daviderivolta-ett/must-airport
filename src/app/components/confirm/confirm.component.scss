@@ -1,0 +1,58 @@
+p {
+    margin: 0;
+}
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(1, 4, 9, .75);
+    backdrop-filter: blur(2px);
+}
+
+.dialog {
+    background-color: var(--bg-default);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
+    max-width: 400px;
+    margin: 0 24px;
+}
+
+.info {
+    padding: 24px;
+}
+
+button {
+    cursor: pointer;
+    font-family: 'Noto Sans', sans-serif;
+    padding: 8px;
+    width: 50%;
+    background-color: var(--bg-default);
+    border-style: solid;
+    border-color: var(--border-default);
+}
+
+.cancel-button {
+    border-radius: 0 0 0 4px;
+    border-width: 1px 1px 0 0;
+
+    &:hover {
+        background-color: var(--bg-overlay);
+    }
+}
+
+.confirm-button {
+    border-radius: 0 0 4px 0;
+    border-width: 1px 0 0 0;
+    color: var(--bg-done);
+
+    &:hover {
+        background-color: var(--bg-done-dull);
+    }
+}
