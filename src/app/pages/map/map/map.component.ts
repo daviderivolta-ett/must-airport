@@ -10,6 +10,8 @@ import { COLORMODE } from '../../../models/color-mode.model';
 import { AdditionalLayersMenuService } from '../../../observables/additional-layers-menu.service';
 import { AdditionalLayersService } from '../../../services/additional-layers.service';
 import { AdditionalLayer } from '../../../models/additional-layer.model';
+import { AuthService } from '../../../services/auth.service';
+import { getAuth } from 'firebase/auth';
 
 @Component({
   selector: 'app-map',
@@ -38,7 +40,15 @@ export class MapComponent {
     maxZoom: 20
   });
 
-  constructor(private mapService: MapService, private reportsService: ReportsService, private sidebarService: SidebarService, private additionalLayersService: AdditionalLayersService, private additionalLayersMenuService: AdditionalLayersMenuService, private dialogService: DialogService, private themeService: ThemeService) {
+  constructor(
+    private mapService: MapService,
+    private reportsService: ReportsService,
+    private sidebarService: SidebarService,
+    private additionalLayersService: AdditionalLayersService,
+    private additionalLayersMenuService: AdditionalLayersMenuService,
+    private dialogService: DialogService,
+    private themeService: ThemeService
+    ) {
     effect(() => {
       this.markersLayer.clearLayers();
       this.reports = this.reportsService.reportsSignal();
@@ -92,7 +102,7 @@ export class MapComponent {
       attributionControl: false,
       // maxZoom: 20,
       // minZoom: 14
-    }).setView([44.41361028797091, 8.844596073925151], 13);
+    }).setView([40.84553331575015, 14.146874880715899], 13);
 
     Leaflet.control.zoom({
       position: 'bottomright'

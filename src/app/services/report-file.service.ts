@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { Storage } from '@angular/fire/storage';
-import { StorageError, StorageReference, UploadResult, deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { StorageError, StorageReference, UploadResult, UploadTaskSnapshot, deleteObject, getDownloadURL, ref, uploadBytes, uploadBytesResumable } from 'firebase/storage';
 import { VERTICAL } from '../models/vertical.model';
 import { CollectionReference, DocumentData, DocumentReference, DocumentSnapshot, Query, QuerySnapshot, addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { ReportFile, reportFileConverter } from '../models/report-file.model';
@@ -27,6 +27,15 @@ export class ReportFileService {
       }
       throw error;
     }
+
+    // try {
+    //   return await uploadBytesResumable(storageRef, file).on('state_changed',
+    //     (snapshot: UploadTaskSnapshot) => {
+    //       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //     })
+    // } catch (error) {
+
+    // }
   }
 
   public async deleteFile(verticalId: string, fileName: string): Promise<void> {
