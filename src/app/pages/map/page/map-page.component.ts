@@ -29,14 +29,18 @@ export class MapPageComponent {
   public reports: ReportParent[] = [];
   public techElementTags: TechElementTag[] = [];
 
-  constructor(private configService: ConfigService, private authService: AuthService, private reportsService: ReportsService) {
+  constructor(
+    private configService: ConfigService,
+    private authService: AuthService,
+    private reportsService: ReportsService
+  ) {
     effect(() => this.config = this.configService.configSignal());
     effect(() => {
-      this.reports = this.reportsService.reportsSignal();      
+      this.reports = this.reportsService.reportsSignal();
     });
 
     effect(() => {
-      this.reports = this.reportsService.filteredReportsSignal();     
+      this.reports = this.reportsService.filteredReportsSignal();
     });
 
     effect(() => {
@@ -48,7 +52,7 @@ export class MapPageComponent {
     });
 
     effect(() => {
-      this.parentTagGroups = this.configService.parentTagGroupsSignal();     
+      this.parentTagGroups = this.configService.parentTagGroupsSignal();
     });
 
     effect(() => {

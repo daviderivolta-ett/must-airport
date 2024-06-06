@@ -3,6 +3,7 @@
         {
             "id": "generic",
             "name": "MUST",
+            "position": [44.41361028797091, 8.844596073925151],
             "assets": {
                 "logoUrl": "./assets/images/logo.png"
             },
@@ -25,6 +26,7 @@
         {
             "id": "genovaAirport",
             "name": "Aeroporto di Genova",
+            "position": [44.41361028797091, 8.844596073925151],
             "assets": {
                 "logoUrl": "./assets/images/aeroporto_genova_logo.svg"
             },
@@ -50,6 +52,7 @@
         {
             "id": "dsh2030",
             "name": "DSH 2030",
+            "position": [44.4104061473147, 8.92655367243876],
             "assets": {
                 "logoUrl": "./assets/images/dsh2030_logo.jpg"
             },

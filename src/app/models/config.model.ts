@@ -1,9 +1,11 @@
+import { GeoPoint } from 'firebase/firestore';
 import { Tag, TagGroup } from './tag.model';
 import { VERTICAL } from './vertical.model';
 
 export class WebAppConfig {
     name: string;
     id: VERTICAL;
+    position: GeoPoint;
     assets: WebAppConfigAssets;
     style: WebAppConfigStyle;
     labels: WebAppConfigLabels;
@@ -13,6 +15,7 @@ export class WebAppConfig {
     constructor(
         name: string,
         id: VERTICAL,
+        position: GeoPoint,
         assets: WebAppConfigAssets,
         style: WebAppConfigStyle,
         labels: WebAppConfigLabels,
@@ -21,6 +24,7 @@ export class WebAppConfig {
     ) {
         this.name = name;
         this.id = id;
+        this.position = position;
         this.assets = assets;
         this.style = style;
         this.labels = labels;
@@ -32,6 +36,7 @@ export class WebAppConfig {
         return new WebAppConfig(
             'MUST',
             VERTICAL.Default,
+            new GeoPoint(44.41361028797091, 8.844596073925151),
             {
                 logoUrl: '../../assets/images/logo.png'
             },

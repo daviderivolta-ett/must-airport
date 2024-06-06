@@ -1,4 +1,4 @@
-import { Component, effect } from '@angular/core';
+import { Component, Input, effect } from '@angular/core';
 import * as Leaflet from 'leaflet';
 import { GeoJSONFeature, MapService } from '../../../services/map.service';
 import { SidebarService } from '../../../observables/sidebar.service';
@@ -10,8 +10,7 @@ import { COLORMODE } from '../../../models/color-mode.model';
 import { AdditionalLayersMenuService } from '../../../observables/additional-layers-menu.service';
 import { AdditionalLayersService } from '../../../services/additional-layers.service';
 import { AdditionalLayer } from '../../../models/additional-layer.model';
-import { AuthService } from '../../../services/auth.service';
-import { getAuth } from 'firebase/auth';
+import { GeoPoint } from 'firebase/firestore';
 
 @Component({
   selector: 'app-map',
@@ -24,6 +23,17 @@ export class MapComponent {
   public reports: ReportParent[] = [];
   public closedReports: ReportParent[] = [];
   private geoJsonData: any;
+
+  private _initialPosition: GeoPoint = new GeoPoint(0.0, 0.0);
+  public get initialPosition(): GeoPoint {
+    return this._initialPosition
+  }
+  @Input() public set initialPosition(value: GeoPoint) {
+    if (!value) return;
+    this._initialPosition = value;
+    if (!this.map) return;
+    this.map.setView([this.initialPosition.latitude, this.initialPosition.longitude], 13);
+  }
 
   private map!: Leaflet.Map;
   private markersLayer = Leaflet.layerGroup();
@@ -48,7 +58,7 @@ export class MapComponent {
     private additionalLayersMenuService: AdditionalLayersMenuService,
     private dialogService: DialogService,
     private themeService: ThemeService
-    ) {
+  ) {
     effect(() => {
       this.markersLayer.clearLayers();
       this.reports = this.reportsService.reportsSignal();
@@ -102,7 +112,8 @@ export class MapComponent {
       attributionControl: false,
       // maxZoom: 20,
       // minZoom: 14
-    }).setView([40.84553331575015, 14.146874880715899], 13);
+      // }).setView([44.41361028797091, 8.844596073925151], 13);
+    }).setView([this.initialPosition.latitude, this.initialPosition.longitude], 13);
 
     Leaflet.control.zoom({
       position: 'bottomright'

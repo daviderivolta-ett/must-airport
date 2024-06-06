@@ -1,6 +1,6 @@
 import { Injectable, Signal, WritableSignal, computed, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { DocumentReference, DocumentSnapshot, doc, getDoc } from 'firebase/firestore';
+import { DocumentReference, DocumentSnapshot, GeoPoint, doc, getDoc } from 'firebase/firestore';
 import { VERTICAL } from '../models/vertical.model';
 import { Tag, TagGroup } from '../models/tag.model';
 import { MobileAppConfigComponent, MobileAppMobileAppConfigComponentType, MobileAppConfigOption, WebAppConfig, WebAppConfigTags } from '../models/config.model';
@@ -98,6 +98,7 @@ export class ConfigService {
 
     config.id = vertical;
     if (mobileAppConfig.name) config.name = mobileAppConfig.name;
+    if (settings.position) config.position = new GeoPoint(settings.position[0], settings.position[1])
     if (mobileAppConfig.splashLogoUrl) config.assets.logoUrl = mobileAppConfig.splashLogoUrl;
     if (settings.style) config.style = settings.style;
     if (settings.labels) config.labels = settings.labels;
