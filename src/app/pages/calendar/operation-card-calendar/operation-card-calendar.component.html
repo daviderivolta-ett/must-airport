@@ -9,14 +9,12 @@
     <div class="data">
         <div class="details">
             <p class="type">
-                @switch (operation.type) {
-                    @case ("maintenance") {
-                        Intervento
-                    }
-                    @default {
-                        Ispezione
-                    }
-                }        
+                @if (operation.type === 'maintenance') {
+                    {{'maintenance' | label | sentenceCase}}
+                }
+                @else {
+                    {{'inspection' | label | sentenceCase}}
+                }
             </p>
             <p class="info">
                 <span class="operator">{{operation.operatorName}}</span>

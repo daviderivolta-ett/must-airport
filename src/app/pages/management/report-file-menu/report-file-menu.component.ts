@@ -11,6 +11,8 @@ import { Timestamp } from 'firebase/firestore';
 import { ReportParent } from '../../../models/report-parent.model';
 import { ConfirmDialogService } from '../../../observables/confirm-dialog.service';
 import { VERTICAL } from '../../../models/vertical.model';
+import { SnackbarService } from '../../../observables/snackbar.service';
+import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 
 @Component({
   selector: 'app-report-file-menu',
@@ -68,7 +70,8 @@ export class ReportFileMenuComponent {
     private reportFileMenuService: ReportFileMenuService,
     private reportFileService: ReportFileService,
     private confirmDialogService: ConfirmDialogService,
-    private reportsService: ReportsService
+    private reportsService: ReportsService,
+    private snackbarService: SnackbarService
   ) {
     effect(() => this.isOpen = this.reportFileMenuService.isOpenSignal());
     effect(async () => {
@@ -112,6 +115,7 @@ export class ReportFileMenuComponent {
       const fileObj: ReportFile = new ReportFile(fileName, url, file.name, Timestamp.now(), this.report.id, currentApp);
       const id: string = await this.reportFileService.setReportFile(fileObj);
       await this.reportsService.setReportFilesByReportId(this.report.id, id);
+      this.snackbarService.createSnackbar('File caricato con successo', SNACKBARTYPE.Loader, SNACKBAROUTCOME.Success);
     } catch (error) {
       console.error('Error in file upload', error);
     }

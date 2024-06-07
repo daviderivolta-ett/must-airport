@@ -7,11 +7,13 @@ import { SnackbarService } from '../../../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 import { DatePipe } from '@angular/common';
 import { TooltipDirective } from '../../../directives/tooltip.directive';
+import { LabelPipe } from '../../../pipes/label.pipe';
+import { SentenceCasePipe } from '../../../pipes/sentence-case.pipe';
 
 @Component({
   selector: 'app-operation-card-management',
   standalone: true,
-  imports: [DatePipe, TooltipDirective],
+  imports: [DatePipe, LabelPipe, SentenceCasePipe, TooltipDirective],
   templateUrl: './operation-card-management.component.html',
   styleUrl: './operation-card-management.component.scss'
 })

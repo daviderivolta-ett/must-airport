@@ -3,8 +3,8 @@
         <label for="operation-type">Operazione</label>
         <select id="operation-type" formControlName="type">
             <option value="all">Tutti</option>
-            <option value="inspection">Ispezione</option>
-            <option value="maintenance">Manutenzione</option>
+            <option value="inspection">{{'inspection' | label | sentenceCase}}</option>
+            <option value="maintenance">{{'maintenance' | label | sentenceCase}}</option>
         </select>
     </div>
     <div class="date-single">

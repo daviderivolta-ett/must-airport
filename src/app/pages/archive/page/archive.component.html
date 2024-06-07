@@ -5,10 +5,6 @@
         <div class="archive-table-head">
             <div class="archive-table-head-cell type-cell"><span>Status</span></div>
             <div class="archive-table-head-cell creation-time-cell"><span>Data creazione</span></div>
-            <!-- <div class="archive-table-head-cell tech-element-tags-cell"><span>Oggetto</span></div>
-            <div class="archive-table-head-cell tech-element-subtags-cell"><span>Elemento tecnico</span></div>
-            <div class="archive-table-head-cell failure-tags-cell"><span>Segnale di guasto</span></div>
-            <div class="archive-table-head-cell failure-subtags-cell"><span>Modo di guasto</span></div> -->
             @for (group of tagGroups; track $index) {
                 <div class="archive-table-head-cell tag-cell"><span>{{group.name}}</span></div>
             }

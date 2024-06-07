@@ -9,6 +9,8 @@ import { MiniMapData } from '../../../services/map.service';
 
 import localeIt from '@angular/common/locales/it';
 import localeItExtra from '@angular/common/locales/extra/it';
+import { LabelPipe } from '../../../pipes/label.pipe';
+import { SentenceCasePipe } from '../../../pipes/sentence-case.pipe';
 
 registerLocaleData(localeIt, 'it-IT', localeItExtra);
 
@@ -16,7 +18,7 @@ registerLocaleData(localeIt, 'it-IT', localeItExtra);
 @Component({
   selector: 'app-operation-card-calendar',
   standalone: true,
-  imports: [DatePipe, RouterLink, MiniMapComponent],
+  imports: [DatePipe, LabelPipe, SentenceCasePipe, RouterLink, MiniMapComponent],
   templateUrl: './operation-card-calendar.component.html',
   styleUrl: './operation-card-calendar.component.scss'
 })
