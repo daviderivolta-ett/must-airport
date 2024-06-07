@@ -20,7 +20,7 @@ export class OperationCardComponent {
   constructor(private reportsService: ReportsService, private operationsService: OperationsService, private snackbarService: SnackbarService) { }
 
   public copyToClipboard(): void {
-    navigator.clipboard.writeText(`https://s4must.it/appLink?id=${this.operation.operationLink}`);
+    navigator.clipboard.writeText(`https://app.s4must.it/appLink?id=${this.operation.operationLink}`);
   }
 
   public async deleteOperation(): Promise<void> {

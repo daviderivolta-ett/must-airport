@@ -39,7 +39,6 @@ export class ConfigService {
     effect(() => {
       if (this.configSignal().name === 'MUST') return;
       this.config = this.configSignal();
-      console.log(this.config);
       this.themeService.setTheme(this.config.style);
 
       this.tags = this.flatTags(this.config.tags);

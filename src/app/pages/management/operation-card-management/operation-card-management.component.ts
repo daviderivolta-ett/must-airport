@@ -21,7 +21,7 @@ export class OperationCardManagementComponent extends OperationCardBaseComponent
   }
 
   public copyToClipboard(): void {
-    navigator.clipboard.writeText(`https://s4must.it/appLink?id=${this.operation?.operationLink}`);
+    navigator.clipboard.writeText(`https://app.s4must.it/appLink?id=${this.operation?.operationLink}`);
   }
 
   public async deleteOperation(): Promise<void> {
