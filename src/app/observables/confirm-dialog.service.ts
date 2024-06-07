@@ -1,16 +1,13 @@
 import { ApplicationRef, ComponentRef, Injectable, WritableSignal, createComponent, signal } from '@angular/core';
-import { ReportChild } from '../models/report-child.model';
-import { ReportParent } from '../models/report-parent.model';
 import { ConfirmComponent } from '../components/confirm/confirm.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConfirmDialogService {
-  public parentReport: ReportParent = ReportParent.createEmpty();
-  public childReport: ReportChild = ReportChild.createEmpty();
-
   public confirmUploadReportFileSignal: WritableSignal<boolean | null> = signal(null);
+  public confirmDeleteChildReportSignal: WritableSignal<boolean | null> = signal(null);
+  public childReportToDelete: WritableSignal<string | null> = signal(null);
 
   constructor(private applicationRef: ApplicationRef) { }
 

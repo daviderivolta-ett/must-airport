@@ -1,4 +1,4 @@
-import { ApplicationRef, Component, EventEmitter, Output, ViewChild, createComponent, effect } from '@angular/core';
+import { ApplicationRef, Component, createComponent, effect } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ReportParent } from '../../../models/report-parent.model';
 import { ReportChild } from '../../../models/report-child.model';
@@ -24,6 +24,7 @@ import { LabelPipe } from '../../../pipes/label.pipe';
 import { SentenceCasePipe } from '../../../pipes/sentence-case.pipe';
 import { ReportFileMenuComponent } from '../report-file-menu/report-file-menu.component';
 import { ReportFileMenuService } from '../../../observables/report-file-menu.service';
+import { ConfirmDialogService } from '../../../observables/confirm-dialog.service';
 
 @Component({
   selector: 'app-management',
@@ -70,7 +71,8 @@ export class ManagementComponent {
     private reportsService: ReportsService,
     private archiveDialogService: ArchiveDialogService,
     private utilsService: UtilsService,
-    private reportFileMenuService: ReportFileMenuService
+    private reportFileMenuService: ReportFileMenuService,
+    private confirmDialogService: ConfirmDialogService
   ) {
 
     effect(async () => {
@@ -87,8 +89,21 @@ export class ManagementComponent {
     });
 
     effect(() => this.parentTagGroups = this.configService.parentTagGroupsSignal());
+
     effect(() => this.childTagGroups = this.configService.childTagGroupsSignal());
+
     effect(() => this.isReportFileMenuOpen = this.reportFileMenuService.isOpenSignal());
+
+    effect(async () => {
+      if (this.confirmDialogService.confirmUploadReportFileSignal() === null) return;
+      if (this.confirmDialogService.confirmUploadReportFileSignal() === false) return;
+      const reportId = this.confirmDialogService.childReportToDelete();
+      if (reportId) {
+        console.log('Elimina', reportId);        
+        await this.reportsService.deleteChildReportBydId(reportId);
+      }
+      this.resetConfirmDialog();
+    });
   }
 
   async ngOnInit(): Promise<void> {
@@ -183,5 +198,10 @@ export class ManagementComponent {
   public toggleReportFileMenu(event: Event): void {
     event.stopPropagation();
     this.reportFileMenuService.isOpenSignal.set(!this.reportFileMenuService.isOpenSignal());
+  }
+
+  private resetConfirmDialog(): void {
+    this.confirmDialogService.confirmUploadReportFileSignal.set(null);
+    this.confirmDialogService.confirmDeleteChildReportSignal.set(null);
   }
 }

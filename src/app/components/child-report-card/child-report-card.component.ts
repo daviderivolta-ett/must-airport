@@ -1,10 +1,8 @@
 import { DatePipe, KeyValuePipe, NgClass } from '@angular/common';
-import { ApplicationRef, Component, ElementRef, Input, ViewChild, createComponent, effect } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, effect } from '@angular/core';
 import { ReportChild } from '../../models/report-child.model';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { ConfirmDialogService } from '../../observables/confirm-dialog.service';
 import { ReportParent } from '../../models/report-parent.model';
-import { ReportsService } from '../../services/reports.service';
 import { LoggedUser } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
@@ -34,24 +32,23 @@ export class ChildReportCardComponent {
   public loggedUser: LoggedUser | null = null;
   public showDeleteBtn: boolean = false;
 
-  constructor(private applicationRef: ApplicationRef, private confirmDialogService: ConfirmDialogService, private reportsService: ReportsService, private router: Router, private authService: AuthService) {
+  constructor(
+    private confirmDialogService: ConfirmDialogService,
+    private router: Router,
+    private authService: AuthService
+  ) {
     effect(() => this.loggedUser = this.authService.loggedUserSignal());
   }
 
   public ngOnInit(): void {
     this.card?.nativeElement;
-    if (this.router.url !== '/segnalazioni') this.showDeleteBtn = true;    
+    if (this.router.url !== '/segnalazioni') this.showDeleteBtn = true;
   }
 
   public iconClick(): void {
-    this.confirmDialogService.childReport = this.childReport;
-
-    const div = document.createElement('div');
-    div.id = 'confirm-dialog';
-    document.body.append(div);
-    const componentRef = createComponent(ConfirmDialogComponent, { hostElement: div, environmentInjector: this.applicationRef.injector });
-    this.applicationRef.attachView(componentRef.hostView);
-    componentRef.changeDetectorRef.detectChanges();
+    const message: string = `Sicuro di voler eliminare l'aggiornamento del ${this.childReport.creationTime.toLocaleDateString()}? Questa operazione non è reversibile.`;
+    this.confirmDialogService.childReportToDelete.set(this.childReport.id);
+    this.confirmDialogService.createConfirm(message);
   }
 
   public hasMatchfingField(groupId: string): boolean {
