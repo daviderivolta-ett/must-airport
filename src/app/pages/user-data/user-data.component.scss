@@ -1,0 +1,32 @@
+:host {
+    display: block;
+    max-width: 800px;
+    margin: auto;
+    padding: 40px 4%;
+    box-sizing: border-box;
+}
+
+h1 {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+h2 {
+    font-size: 1.2rem;
+    margin: 3rem 0 1rem 0;
+}
+
+a {
+    color: var(--f-accent);
+    font-weight: 500;
+}
+
+.logo-section {
+    text-align: center;
+    margin: 0 0 40px 0;
+}
+
+.logo {
+    width: 72px;
+    height: auto;
+}

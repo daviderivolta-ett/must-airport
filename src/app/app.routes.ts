@@ -13,6 +13,7 @@ import { ArchiveComponent } from './pages/archive/page/archive.component';
 import { CalendarPageComponent } from './pages/calendar/page/calendar-page.component';
 import { ParentReportDetailComponent } from './components/parent-report-detail/parent-report-detail.component';
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
+import { UserDataComponent } from './pages/user-data/user-data.component';
 
 export const routes: Routes = [
     {
@@ -82,5 +83,10 @@ export const routes: Routes = [
         path: 'privacy-policy',
         title: 'MUST - Privacy policy',
         component: PrivacyPolicyComponent
+    },
+    {
+        path: 'user-data',
+        title: 'MUST - User data policy',
+        component: UserDataComponent
     }
 ];
