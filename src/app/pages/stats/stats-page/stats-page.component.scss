@@ -82,3 +82,11 @@ h2 {
 ::ng-deep g.highcharts-label text tspan {
     font-weight: normal !important;
 }
+
+::ng-deep g.highcharts-breadcrumbs-group text {
+    fill: var(--f-default) !important;
+}
+
+::ng-deep g.highcharts-label.highcharts-tooltip text {
+    fill: rgb(31, 35, 40) !important;
+}

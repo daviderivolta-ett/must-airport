@@ -5,7 +5,7 @@
             <select id="appId" formControlName="vertId">
                 <option value="all">Tutti</option>
                 @for (app of apps; track $index) {
-                    <option>{{app | titlecase}}</option>
+                    <option [value]="app">{{app | verticalName}}</option>
                 }
             </select>
         </div>

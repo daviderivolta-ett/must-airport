@@ -2,7 +2,7 @@
 <div class="code-card" [ngClass]="{'is-associated': code.usedOn, 'is-disabled': code.usedOn && !code.isValid}">
     <div class="info">
         <p class="code">{{code.code}}</p>
-        <p class="app secondary-text">{{code.vertId | titlecase}} &#8226; {{code.appType | titlecase}}</p>
+        <p class="app secondary-text">{{code.vertId | verticalName}} &#8226; {{code.appType | titlecase}}</p>
         @if (!code.usedOn) {
             <p class="validity secondary-text">
                 <span class="material-symbols-outlined icon check-icon">check</span>

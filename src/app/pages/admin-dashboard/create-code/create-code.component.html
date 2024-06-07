@@ -11,7 +11,7 @@
             <select id="app" formControlName="app">
                 <option value="">Seleziona un'app</option>
                 @for (app of apps; track $index) {
-                    <option>{{app | titlecase}}</option>
+                    <option>{{app | verticalName}}</option>
                 }
             </select>
         </div>

@@ -10,11 +10,12 @@ import { SnackbarService } from '../../../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 import { APPTYPE } from '../../../models/app-type.mode';
 import { VERTICAL } from '../../../models/vertical.model';
+import { VerticalNamePipe } from '../../../pipes/vertical-name.pipe';
 
 @Component({
   selector: 'app-create-code',
   standalone: true,
-  imports: [NgClass, TitleCasePipe, ReactiveFormsModule, ClickOutsideDirective],
+  imports: [NgClass, TitleCasePipe, VerticalNamePipe, ReactiveFormsModule, ClickOutsideDirective],
   templateUrl: './create-code.component.html',
   styleUrl: './create-code.component.scss',
   animations: [

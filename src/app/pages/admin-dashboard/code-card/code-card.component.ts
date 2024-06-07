@@ -5,11 +5,12 @@ import { TooltipDirective } from '../../../directives/tooltip.directive';
 import { CodesService } from '../../../services/codes.service';
 import { SnackbarService } from '../../../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
+import { VerticalNamePipe } from '../../../pipes/vertical-name.pipe';
 
 @Component({
   selector: 'app-code-card',
   standalone: true,
-  imports: [NgClass, TitleCasePipe, TooltipDirective],
+  imports: [NgClass, TitleCasePipe, VerticalNamePipe, TooltipDirective],
   templateUrl: './code-card.component.html',
   styleUrl: './code-card.component.scss'
 })

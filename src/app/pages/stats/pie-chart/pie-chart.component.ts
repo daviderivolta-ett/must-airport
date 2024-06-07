@@ -74,7 +74,7 @@ export class PieChartComponent {
         showInLegend: true,
         innerSize: '33%',
         borderRadius: 4,
-        borderWidth: 4,
+        borderWidth: 2,
         borderColor: 'rgb(13, 17, 23)'
       }
     },
