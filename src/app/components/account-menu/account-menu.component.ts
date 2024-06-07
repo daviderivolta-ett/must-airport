@@ -1,7 +1,7 @@
 import { Component, Input, effect } from '@angular/core';
 import { LoggedUser, UserData } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
-import { NgClass, TitleCasePipe } from '@angular/common';
+import { NgClass, NgStyle, TitleCasePipe } from '@angular/common';
 import { HeaderService } from '../../observables/header.service';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { SnackbarService } from '../../observables/snackbar.service';

@@ -4,7 +4,6 @@ import { AuthService } from '../../services/auth.service';
 import { LoggedUser } from '../../models/user.model';
 import { AccountMenuComponent } from '../account-menu/account-menu.component';
 import { HeaderService } from '../../observables/header.service';
-import { SettingsService } from '../../services/settings.service';
 import { VERTICAL } from '../../models/vertical.model';
 import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 import { ThemeService } from '../../services/theme.service';
@@ -23,7 +22,7 @@ export class HeaderComponent {
   public currentApp: VERTICAL | null = null;
   public colorMode: COLORMODE | null = null;
 
-  constructor(private headerService: HeaderService, private authService: AuthService, private settingsService: SettingsService, private themeService: ThemeService) {
+  constructor(private headerService: HeaderService, private authService: AuthService, private themeService: ThemeService) {
     effect(() => {
       this.loggedUser = this.authService.loggedUserSignal();
     });

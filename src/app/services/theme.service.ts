@@ -21,10 +21,13 @@ export class ThemeService {
 
   public setTheme(style: WebAppConfigStyle): void {
     let colorShade: MyColorShade = this.generateColorShade(style.accentColor);
-    this.document.documentElement.style.setProperty('--bg-accent', colorShade.regular.hex);
-    this.document.documentElement.style.setProperty('--bg-accent-dull', colorShade.dull.hex);
-    this.document.documentElement.style.setProperty('--bg-accent-emphasis', colorShade.emphasis.hex);
-    this.document.documentElement.style.setProperty('--f-accent', colorShade.regular.hex);
+    // this.document.documentElement.style.setProperty('--bg-accent', colorShade.regular.hex);
+    // this.document.documentElement.style.setProperty('--bg-accent-dull', colorShade.dull.hex);
+    // this.document.documentElement.style.setProperty('--bg-accent-emphasis', colorShade.emphasis.hex);
+    this.document.documentElement.style.setProperty('--bg-brand', colorShade.regular.hex);
+    this.document.documentElement.style.setProperty('--bg-brand-dull', colorShade.dull.hex);
+    this.document.documentElement.style.setProperty('--bg-brand-emphasis', colorShade.emphasis.hex);
+    this.document.documentElement.style.setProperty('--f-brand', colorShade.regular.hex);
   }
 
   public generateColorShade(colorString: string): MyColorShade {
