@@ -87,6 +87,6 @@ h2 {
     fill: var(--f-default) !important;
 }
 
-::ng-deep g.highcharts-label.highcharts-tooltip text {
+::ng-deep g.highcharts-tooltip text {
     fill: rgb(31, 35, 40) !important;
 }

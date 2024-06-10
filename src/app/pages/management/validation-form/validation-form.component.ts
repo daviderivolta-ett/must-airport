@@ -91,8 +91,6 @@ export class ValidationFormComponent {
     controls.forEach((control: FormControl) => control.valueChanges.subscribe((changes: any) => {
       this.updateVisibility(controls, control);
     }));
-
-    console.log(this.baseForm);
   };
 
   private _tagGroups: TagGroup[] = [];
