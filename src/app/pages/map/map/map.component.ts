@@ -24,15 +24,15 @@ export class MapComponent {
   public closedReports: ReportParent[] = [];
   private geoJsonData: any;
 
-  private _initialPosition: GeoPoint = new GeoPoint(0.0, 0.0);
-  public get initialPosition(): GeoPoint {
+  private _initialPosition: { location: GeoPoint, zoom: number } = { location: new GeoPoint(0.0, 0.0), zoom: 13 };
+  public get initialPosition(): { location: GeoPoint, zoom: number } {
     return this._initialPosition
   }
-  @Input() public set initialPosition(value: GeoPoint) {
-    if (!value) return;
+  @Input() public set initialPosition(value: { location: GeoPoint, zoom: number }) {
+    if (!value) return;  
     this._initialPosition = value;
     if (!this.map) return;
-    this.map.setView([this.initialPosition.latitude, this.initialPosition.longitude], 13);
+    this.map.setView([this.initialPosition.location.latitude, this.initialPosition.location.longitude], this.initialPosition.zoom);
   }
 
   private map!: Leaflet.Map;
@@ -112,8 +112,7 @@ export class MapComponent {
       attributionControl: false,
       // maxZoom: 20,
       // minZoom: 14
-      // }).setView([44.41361028797091, 8.844596073925151], 13);
-    }).setView([this.initialPosition.latitude, this.initialPosition.longitude], 13);
+    }).setView([this.initialPosition.location.latitude, this.initialPosition.location.latitude], this.initialPosition.zoom);
 
     Leaflet.control.zoom({
       position: 'bottomright'

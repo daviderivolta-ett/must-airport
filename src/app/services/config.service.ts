@@ -97,7 +97,12 @@ export class ConfigService {
 
     config.id = vertical;
     if (mobileAppConfig.name) config.name = mobileAppConfig.name;
-    if (settings.position) config.position = new GeoPoint(settings.position[0], settings.position[1])
+    if (settings.position) {
+      config.position = {
+        location: new GeoPoint(settings.position.location[0], settings.position.location[1]),
+        zoom: settings.position.zoom
+      }
+    }
     if (mobileAppConfig.splashLogoUrl) config.assets.logoUrl = mobileAppConfig.splashLogoUrl;
     if (settings.style) config.style = settings.style;
     if (settings.labels) config.labels = settings.labels;
@@ -121,7 +126,7 @@ export class ConfigService {
       map(res => {
         let allSettings: any[] = res.apps;
         let appSettings: any | undefined = allSettings.find((item: any) => item.id === app);
-        if (!appSettings) appSettings = allSettings[0];
+        if (!appSettings) appSettings = allSettings[0];       
         return appSettings;
       })
     );

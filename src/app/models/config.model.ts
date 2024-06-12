@@ -5,7 +5,7 @@ import { VERTICAL } from './vertical.model';
 export class WebAppConfig {
     name: string;
     id: VERTICAL;
-    position: GeoPoint;
+    position: WebAppConfigPosition;
     assets: WebAppConfigAssets;
     style: WebAppConfigStyle;
     labels: WebAppConfigLabels;
@@ -15,7 +15,7 @@ export class WebAppConfig {
     constructor(
         name: string,
         id: VERTICAL,
-        position: GeoPoint,
+        position: WebAppConfigPosition,
         assets: WebAppConfigAssets,
         style: WebAppConfigStyle,
         labels: WebAppConfigLabels,
@@ -36,7 +36,10 @@ export class WebAppConfig {
         return new WebAppConfig(
             'MUST',
             VERTICAL.Default,
-            new GeoPoint(44.41361028797091, 8.844596073925151),
+            {
+                location: new GeoPoint(44.41361028797091, 8.844596073925151),
+                zoom: 13
+            },
             {
                 logoUrl: '../../assets/images/logo.png'
             },
@@ -61,6 +64,11 @@ export class WebAppConfig {
             }
         );
     }
+}
+
+export interface WebAppConfigPosition {
+    location: GeoPoint,
+    zoom: number
 }
 
 export interface WebAppConfigAssets {
