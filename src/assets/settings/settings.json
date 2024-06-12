@@ -8,7 +8,7 @@
                 "zoom": 6
             },
             "assets": {
-                "logoUrl": "/assets/images/logo.png"
+                "logoUrl": "./assets/images/logo.png"
             },
             "style": {
                 "accentColor": "rgb(31, 111, 235);"

@@ -33,7 +33,8 @@
               "src/styles.scss",
               "./node_modules/leaflet/dist/leaflet.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "baseHref": "/aeroporto-dev/"
           },
           "configurations": {
             "production": {
@@ -49,7 +50,8 @@
                   "maximumError": "4kb"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "baseHref": "/aeroporto-dev/"
             },
             "development": {
               "optimization": false,
@@ -60,7 +62,8 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.development.ts"
                 }
-              ]
+              ],
+              "baseHref": "/aeroporto-dev/"
             }
           },
           "defaultConfiguration": "production"

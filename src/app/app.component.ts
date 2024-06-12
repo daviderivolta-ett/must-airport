@@ -118,7 +118,10 @@ export class AppComponent {
       this.splashService.removeSplash();
     }, { allowSignalWrites: true });
 
-    effect(() => this.config = this.configService.configSignal());
+    effect(() => {
+      this.config = this.configService.configSignal()
+      console.log(this.config);
+    });
   }
 
   private async createLoggedUser(user: User): Promise<LoggedUser> {

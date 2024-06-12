@@ -41,7 +41,7 @@ export class WebAppConfig {
                 zoom: 13
             },
             {
-                logoUrl: '../../assets/images/logo.png'
+                logoUrl: './assets/images/logo.png'
             },
             {
                 accentColor: 'rgb(31, 111, 235)'

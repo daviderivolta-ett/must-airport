@@ -97,7 +97,7 @@ export class ConfigService {
 
     config.id = vertical;
     if (mobileAppConfig.name) config.name = mobileAppConfig.name;
-    if (settings.position) {
+    if (settings.position) {      
       config.position = {
         location: new GeoPoint(settings.position.location[0], settings.position.location[1]),
         zoom: settings.position.zoom
