@@ -140,7 +140,7 @@ export class ReportsService {
     const unsubscribe = onSnapshot(q,
       (querySnapshot: QuerySnapshot<DocumentData>) => {
         let reports: ReportParent[] = [];
-        querySnapshot.forEach(doc => {
+        querySnapshot.forEach(doc => {        
           reports.push(this.parseParentReport(doc.id, doc.data() as ReportParentDb));
         });
 
@@ -271,7 +271,7 @@ export class ReportsService {
   }
 
   public parseParentReport(id: string, report: ReportParentDb): ReportParent {    
-    let r = ReportParent.createEmpty();
+    let r = ReportParent.createEmpty();  
 
     r.childFlowIds = report.childFlowsIds;
     r.childrenIds = report.childrenIds;

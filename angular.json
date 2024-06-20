@@ -34,7 +34,7 @@
               "./node_modules/leaflet/dist/leaflet.css"
             ],
             "scripts": [],
-            "baseHref": "/aeroporto-dev/"
+            "baseHref": "/aeroporto-demo/"
           },
           "configurations": {
             "production": {
@@ -51,7 +51,7 @@
                 }
               ],
               "outputHashing": "all",
-              "baseHref": "/aeroporto-dev/"
+              "baseHref": "/aeroporto-demo/"
             },
             "development": {
               "optimization": false,
@@ -63,7 +63,7 @@
                   "with": "src/environments/environment.development.ts"
                 }
               ],
-              "baseHref": "/aeroporto-dev/"
+              "baseHref": "/aeroporto-demo/"
             }
           },
           "defaultConfiguration": "production"

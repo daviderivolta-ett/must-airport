@@ -120,7 +120,7 @@ export class AppComponent {
 
     effect(() => {
       this.config = this.configService.configSignal()
-      console.log(this.config);
+      // console.log(this.config);
     });
   }
 

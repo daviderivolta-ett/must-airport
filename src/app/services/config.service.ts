@@ -63,10 +63,13 @@ export class ConfigService {
   }
 
   public async generateWebAppConfig(mobileAppConfig: any, vertical: VERTICAL): Promise<void> {
+    console.log('MOBILE CONFIG:', mobileAppConfig);
+
     let parentTags: Tag[] = [];
     let parentTagGroups: TagGroup[] = [];
+
     for (const key in mobileAppConfig.parentFlows) {
-      const component: MobileAppConfigComponent = JSON.parse(mobileAppConfig.parentFlows[key]);
+      const component: MobileAppConfigComponent = await this.checkConfigType(mobileAppConfig.parentFlows[key]);
       parentTags.push(...this.searchTags(component));
       parentTagGroups.push(...this.searchTagGroups(component));
     }
@@ -77,7 +80,7 @@ export class ConfigService {
     let childTags: Tag[] = [];
     let childTagGroups: TagGroup[] = [];
     for (const key in mobileAppConfig.childFlows) {
-      const component: MobileAppConfigComponent = JSON.parse(mobileAppConfig.childFlows[key].flowJson);
+      const component: MobileAppConfigComponent = await this.checkConfigType(mobileAppConfig.childFlows[key]);
       childTags.push(...this.searchTags(component));
       childTagGroups.push(...this.searchTagGroups(component));
     }
@@ -97,7 +100,7 @@ export class ConfigService {
 
     config.id = vertical;
     if (mobileAppConfig.name) config.name = mobileAppConfig.name;
-    if (settings.position) {      
+    if (settings.position) {
       config.position = {
         location: new GeoPoint(settings.position.location[0], settings.position.location[1]),
         zoom: settings.position.zoom
@@ -118,6 +121,8 @@ export class ConfigService {
       }
     }
 
+    console.log('WEB CONFIG:', config);
+
     this.configSignal.set(config);
   }
 
@@ -126,10 +131,47 @@ export class ConfigService {
       map(res => {
         let allSettings: any[] = res.apps;
         let appSettings: any | undefined = allSettings.find((item: any) => item.id === app);
-        if (!appSettings) appSettings = allSettings[0];       
+        if (!appSettings) appSettings = allSettings[0];
         return appSettings;
       })
     );
+  }
+
+  private async checkConfigType(flows: any): Promise<MobileAppConfigComponent> {
+    let flow: any;
+
+    try {
+      flow = JSON.parse(flows);
+    } catch (error) {
+      flow = null;
+    }
+
+    if (!flow) {
+      for (const key in flows) {
+        if (Object.prototype.hasOwnProperty.call(flows, key)) {
+
+          for (const src in flows) {
+            switch (src) {
+              case 'flowJson':
+                if (!flows[src]) continue;
+                flow = JSON.parse(flows[src]);
+                break;
+
+              case 'flowUrl':
+                if (!flows[src]) continue;
+                let d: any = await fetch(flows[src]);
+                flow = await d.json();
+                break;
+
+              default:
+                break;
+            }
+          }
+        }
+      }
+    }
+
+    return flow;
   }
 
   private searchTags(component: MobileAppConfigComponent): Tag[] {
