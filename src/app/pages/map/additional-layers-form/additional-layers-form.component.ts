@@ -53,9 +53,9 @@ export class AdditionalLayersFormComponent {
     const fileName: string = this.generateFileName(file);
     let style: AdditionalLayerStyle = this.additionalLayersService.getGeoJsonStyle(JSON.parse(fileContentString));
 
-    // await this.additionalLayersService.uploadGeoJSON(file, fileName);
+    await this.additionalLayersService.uploadGeoJSON(file, fileName, this.authService.currentApp);
     const layer: AdditionalLayerDb = new AdditionalLayerDb(this.uploadFileForm.value.name, fileName, this.authService.currentApp, style);
-    // this.additionalLayersService.setAdditionalLayer(layer);
+    this.additionalLayersService.setAdditionalLayer(layer);
 
     this.uploadFileForm.reset();
     input.value = '';

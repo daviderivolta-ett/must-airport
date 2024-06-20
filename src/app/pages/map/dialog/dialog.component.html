@@ -37,6 +37,9 @@
                                         <p class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel}}</p>
                                     }
                                 }
+                                @else {
+                                    <p class="info-value">-</p>
+                                }
                             </div>
                         }                            
                     </div>

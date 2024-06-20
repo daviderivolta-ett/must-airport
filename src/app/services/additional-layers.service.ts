@@ -46,7 +46,7 @@ export class AdditionalLayersService {
       async (querySnapshot: QuerySnapshot<DocumentData>) => {
         const promises: Promise<AdditionalLayer>[] = querySnapshot.docs.map(async doc => {
           const layerDb: AdditionalLayerDb = doc.data() as AdditionalLayerDb;
-          const geoJSON = JSON.parse(await this.getGeoJson(layerDb.fileName));
+          const geoJSON = JSON.parse(await this.getGeoJson(vertId, layerDb.fileName));
           return new AdditionalLayer(layerDb.name, layerDb.fileName, layerDb.vertId, layerDb.style, doc.id, geoJSON);
         });
 
@@ -63,8 +63,8 @@ export class AdditionalLayersService {
     // .catch((error) => console.log('nu'));
   }
 
-  public async uploadGeoJSON(file: File, fileName: string): Promise<string> {
-    const storageRef = ref(this.storage, 'geoJSON/' + fileName);
+  public async uploadGeoJSON(file: File, fileName: string, verticalId: VERTICAL): Promise<string> {
+    const storageRef = ref(this.storage, `geoJSON/${verticalId}/${fileName}`);
     return uploadBytes(storageRef, file).then(async (snapshot) => {
       return await getDownloadURL(storageRef);
     });
@@ -99,9 +99,9 @@ export class AdditionalLayersService {
     return style;
   }
 
-  private async getGeoJson(fileName: string): Promise<any> {
+  private async getGeoJson(verticalId: VERTICAL, fileName: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      const storageRef: StorageReference = ref(this.storage, `geoJSON/${fileName}`);
+      const storageRef: StorageReference = ref(this.storage, `geoJSON/${verticalId}/${fileName}`);
 
       getBlob(storageRef).then(async blob => {
         const contentString: string | undefined = await this.readFile(blob);
