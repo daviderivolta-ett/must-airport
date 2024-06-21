@@ -36,6 +36,18 @@
                     }
                 </div>
             }
+
+            <div class="info">
+                <span class="info-title">Note:</span>                
+                <span class="info-value">
+                    @if (childReport.fields.comment && childReport.fields.length !== 0) {
+                        {{childReport.fields.comment}}
+                    }
+                    @else {
+                        -
+                    }
+                </span>
+            </div>
         </div>
 
         <div class="card-footer">
