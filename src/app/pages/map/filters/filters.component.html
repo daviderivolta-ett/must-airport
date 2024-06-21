@@ -10,15 +10,15 @@
             <div class="checkbox-list">
                 <div class="checkbox-single">
                     <input type="checkbox" id="low" formControlName="low">
-                    <label for="low" class="checkbox-single-label">Bassa</label>
+                    <label for="low" class="checkbox-single-label">{{'low' | label | sentenceCase}}</label>
                 </div>
                 <div class="checkbox-single">
                     <input type="checkbox" id="medium" formControlName="medium">
-                    <label for="medium" class="checkbox-single-label">Media</label>
+                    <label for="medium" class="checkbox-single-label">{{'medium' | label | sentenceCase}}</label>
                 </div>
                 <div class="checkbox-single">
                     <input type="checkbox" id="high" formControlName="high">
-                    <label for="high" class="checkbox-single-label">Alta</label>
+                    <label for="high" class="checkbox-single-label">{{'high' | label | sentenceCase}}</label>
                 </div>
             </div>
             @if (loggedUser && loggedUser.level < 2) {

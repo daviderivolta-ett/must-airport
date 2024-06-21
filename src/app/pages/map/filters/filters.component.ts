@@ -5,11 +5,13 @@ import { FiltersFormData, ParsedFiltersFormData, ReportsService } from '../../..
 import { FiltersService } from '../../../observables/filters.service';
 import { LoggedUser } from '../../../models/user.model';
 import { AuthService } from '../../../services/auth.service';
+import { LabelPipe } from '../../../pipes/label.pipe';
+import { SentenceCasePipe } from '../../../pipes/sentence-case.pipe';
 
 @Component({
   selector: 'app-filters',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass],
+  imports: [ReactiveFormsModule, NgClass, LabelPipe, SentenceCasePipe],
   templateUrl: './filters.component.html',
   styleUrl: './filters.component.scss'
 })
