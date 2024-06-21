@@ -93,7 +93,8 @@ export class MapComponent {
             fillColor: layer.style.fillColor,
             color: layer.style.strokeColor,
             weight: 1
-          }
+          },
+          onEachFeature: (feature, layer) => feature.properties.description ? layer.bindPopup(feature.properties.description) : ''
         }).addTo(this.additionalLayers).bringToBack();
       });
     });
@@ -117,8 +118,6 @@ export class MapComponent {
     Leaflet.control.zoom({
       position: 'bottomright'
     }).addTo(this.map);
-
-    // this.map.setMaxBounds(this.map.getBounds());
 
     this.map.on('click', () => {
       this.sidebarService.isOpen.set(false);
@@ -177,7 +176,6 @@ export class MapComponent {
   private onMarkerClick(feature: any): void {
     let report: ReportParent = feature.properties.report;
     this.dialogService.report.set(report);
-    // this.dialogService.isOpen.set(true);
     this.dialogService.createDialog();
   }
 }
