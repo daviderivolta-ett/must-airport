@@ -88,7 +88,7 @@ export class AdditionalLayersService {
     });
   }
 
-  public getGeoJsonStyle(geoJSON: any): AdditionalLayerStyle {
+  public getGeoJsonStyle(geoJSON: any): AdditionalLayerStyle {  
     let style: AdditionalLayerStyle = { fillColor: '#3388ff', strokeColor: '#3388ff' };
     for (let i = 0; i < geoJSON.features.length; i++) {
       const feature: any = geoJSON.features[i];
