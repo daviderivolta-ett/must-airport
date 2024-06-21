@@ -29,7 +29,7 @@ export class MapComponent {
     return this._initialPosition
   }
   @Input() public set initialPosition(value: { location: GeoPoint, zoom: number }) {
-    if (!value) return;  
+    if (!value) return;
     this._initialPosition = value;
     if (!this.map) return;
     this.map.setView([this.initialPosition.location.latitude, this.initialPosition.location.longitude], this.initialPosition.zoom);
@@ -86,7 +86,7 @@ export class MapComponent {
 
     effect(() => {
       if (this.additionalLayersService.currentLayersSignal() === null) return;
-      this.additionalLayers.clearLayers();
+      this.additionalLayers.clearLayers();    
       this.additionalLayersService.currentLayersSignal().forEach((layer: AdditionalLayer) => {
         Leaflet.geoJSON(layer.geoJson, {
           style: {
