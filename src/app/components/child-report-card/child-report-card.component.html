@@ -6,6 +6,9 @@
         @if (childReport.fields.intervention_photo && childReport.fields.intervention_photo.length !== 0) {
             <img src="{{childReport.fields.intervention_photo[0]}}" alt="Immagine del report">
         }
+        @if (childReport.fields.photo_detail && childReport.fields.photo_detail.length !== 0) {
+            <img src="{{childReport.fields.photo_detail[0]}}" alt="Immagine del report">
+        }
 
         @if (childReport.flowId === 'maintenance' || childReport.flowId === 'inspectionHorizontal' || childReport.flowId === 'inspectionVertical') {
             <div class="icon-wrapper">
