@@ -1,7 +1,7 @@
 @if (parentTagGroups) {
     <app-sidebar [parentTagGroups]="parentTagGroups" [reports]="reports" />
 }
-<app-map [initialPosition]="config.position" />
+<app-map [currentApp]="currentApp" [initialPosition]="config.position" />
 @if (this.config.components.includes($any('additional_layers'))) {
     <app-additional-layers-menu />
 }

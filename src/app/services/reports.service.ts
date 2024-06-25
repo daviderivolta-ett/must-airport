@@ -131,23 +131,38 @@ export class ReportsService {
 
   public async getAllParentReports(verticalId: VERTICAL, getAll: boolean) {
     let q: Query;
-    if (getAll) {
-      q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId));
+
+    if (verticalId === VERTICAL.Default) {
+      if (getAll) {
+        q = query(collection(this.db, 'reportParents'));
+      } else {
+        q = query(collection(this.db, 'reportParents'), where('validated', '==', true));
+      }
     } else {
-      q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId), where('validated', '==', true));
+      if (getAll) {
+        q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId));
+      } else {
+        q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId), where('validated', '==', true));
+      }
     }
+
+    // if (getAll) {
+    //   q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId));
+    // } else {
+    //   q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId), where('validated', '==', true));
+    // }
 
     const unsubscribe = onSnapshot(q,
       (querySnapshot: QuerySnapshot<DocumentData>) => {
         let reports: ReportParent[] = [];
-        querySnapshot.forEach(doc => {        
+        querySnapshot.forEach(doc => {
           reports.push(this.parseParentReport(doc.id, doc.data() as ReportParentDb));
         });
 
         reports = reports.sort((a, b) => b.lastChildTime.getTime() - a.lastChildTime.getTime());
         // let allReports: ReportParent[] = reports.filter(report => (report.isArchived === false || report.isArchived === undefined) && report.closingChildId === null);
         let allReports: ReportParent[] = reports.filter(report => (report.isArchived === false || report.isArchived === undefined));
-       
+
         let closedReports: ReportParent[] = reports.filter(report => report.closingChildId);
         this.closedReportSignal.set(closedReports);
 
@@ -270,8 +285,8 @@ export class ReportsService {
     });
   }
 
-  public parseParentReport(id: string, report: ReportParentDb): ReportParent {    
-    let r = ReportParent.createEmpty();  
+  public parseParentReport(id: string, report: ReportParentDb): ReportParent {
+    let r = ReportParent.createEmpty();
 
     r.childFlowIds = report.childFlowsIds;
     r.childrenIds = report.childrenIds;
@@ -304,10 +319,10 @@ export class ReportsService {
     if (report.validationDate) r.validationDate = report.validationDate.toDate();
     if (report.archived) r.isArchived = report.archived;
     if (report.archivingTime) r.archivingTime = report.archivingTime.toDate();
-    report.files ? r.files= report.files : r.files = [];
+    report.files ? r.files = report.files : r.files = [];
 
     r.tags = { parent: this.parseReportTags(r.fields, 'parent').sort((a, b) => a.order - b.order), child: this.parseReportTags(r.fields, 'child').sort((a, b) => a.order - b.order) };
-        
+
     return r;
   }
 
@@ -394,7 +409,7 @@ export class ReportsService {
     return Array.from(groupMap.values());
   }
 
-  private parseReportFields(fields: { [key: string]: any }): { [key: string]: any } {    
+  private parseReportFields(fields: { [key: string]: any }): { [key: string]: any } {
     let f: { [key: string]: any } = {};
 
     const groupIds = new Set(this.configService.tagGroups.map((group: TagGroup) => group.id));
@@ -473,9 +488,9 @@ export class ReportsService {
   public async getChildReportById(id: string): Promise<ReportChild> {
     const q = doc(this.db, 'reportChildren', id);
     const snapshot = await getDoc(q);
-    if (snapshot.exists()) {     
-      const r = snapshot.data() as ReportChildDb;     
-      const report: ReportChild = this.parseChildReport(id, r); 
+    if (snapshot.exists()) {
+      const r = snapshot.data() as ReportChildDb;
+      const report: ReportChild = this.parseChildReport(id, r);
       return report;
     } else {
       throw new Error('Report non trovato');
@@ -505,9 +520,9 @@ export class ReportsService {
   }
 
   public async setChildReportById(id: string, data: any): Promise<void> {
-    console.log('Data', data);    
+    console.log('Data', data);
     console.log('id', id);
-    
+
     try {
       const ref = doc(this.db, 'reportChildren', id);
       await setDoc(ref, data);
@@ -524,9 +539,9 @@ export class ReportsService {
     });
   }
 
-  private parseChildReport(id: string, report: ReportChildDb): ReportChild {    
+  private parseChildReport(id: string, report: ReportChildDb): ReportChild {
     let r = ReportChild.createEmpty();
-        
+
     r.isClosed = report.closure;
     r.creationTime = report.creationTime.toDate();
     r.fields = report.fields;

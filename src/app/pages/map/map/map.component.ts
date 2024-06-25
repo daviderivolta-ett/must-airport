@@ -11,6 +11,7 @@ import { AdditionalLayersMenuService } from '../../../observables/additional-lay
 import { AdditionalLayersService } from '../../../services/additional-layers.service';
 import { AdditionalLayer } from '../../../models/additional-layer.model';
 import { GeoPoint } from 'firebase/firestore';
+import { VERTICAL } from '../../../models/vertical.model';
 
 @Component({
   selector: 'app-map',
@@ -33,6 +34,15 @@ export class MapComponent {
     this._initialPosition = value;
     if (!this.map) return;
     this.map.setView([this.initialPosition.location.latitude, this.initialPosition.location.longitude], this.initialPosition.zoom);
+  }
+
+  private _currentApp: VERTICAL | null = null;
+  @Input() public set currentApp(value: VERTICAL | null) {
+    if (!value) return;
+    this._currentApp = value;
+  }
+  public get currentApp(): VERTICAL | null {
+    return this._currentApp;
   }
 
   private map!: Leaflet.Map;
@@ -173,7 +183,9 @@ export class MapComponent {
     return color;
   }
 
-  private onMarkerClick(feature: any): void {
+  private onMarkerClick(feature: any): void {    
+    if (feature.properties.report.verticalId !== this.currentApp) return;
+
     let report: ReportParent = feature.properties.report;
     this.dialogService.report.set(report);
     this.dialogService.createDialog();
