@@ -132,25 +132,25 @@ export class ReportsService {
   public async getAllParentReports(verticalId: VERTICAL, getAll: boolean) {
     let q: Query;
 
-    if (verticalId === VERTICAL.Default) {
-      if (getAll) {
-        q = query(collection(this.db, 'reportParents'));
-      } else {
-        q = query(collection(this.db, 'reportParents'), where('validated', '==', true));
-      }
-    } else {
-      if (getAll) {
-        q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId));
-      } else {
-        q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId), where('validated', '==', true));
-      }
-    }
-
-    // if (getAll) {
-    //   q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId));
+    // if (verticalId === VERTICAL.Default) {
+    //   if (getAll) {
+    //     q = query(collection(this.db, 'reportParents'));
+    //   } else {
+    //     q = query(collection(this.db, 'reportParents'), where('validated', '==', true));
+    //   }
     // } else {
-    //   q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId), where('validated', '==', true));
+    //   if (getAll) {
+    //     q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId));
+    //   } else {
+    //     q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId), where('validated', '==', true));
+    //   }
     // }
+
+    if (getAll) {
+      q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId));
+    } else {
+      q = query(collection(this.db, 'reportParents'), where('verticalId', '==', verticalId), where('validated', '==', true));
+    }
 
     const unsubscribe = onSnapshot(q,
       (querySnapshot: QuerySnapshot<DocumentData>) => {
@@ -170,7 +170,6 @@ export class ReportsService {
 
         let archivedReports: ReportParent[] = reports.filter(report => report.isArchived === true);
         this.archivedReportsSignal.set(archivedReports);
-
 
         if (this.selectedReportId) {
           const selectedReport = allReports.find(report => report.id === this.selectedReportId);

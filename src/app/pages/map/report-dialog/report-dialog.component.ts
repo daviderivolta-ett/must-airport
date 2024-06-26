@@ -53,7 +53,7 @@ export class ReportDialogComponent {
     private reportsService: ReportsService
   ) {
     effect(async () => {
-      this.parentReport = this.dialogService.report();
+      this.parentReport = this.dialogService.report();     
 
       const childIds: string[] = [...this.parentReport.childrenIds];
       if (this.parentReport.closingChildId) childIds.push(this.parentReport.closingChildId);

@@ -6,7 +6,7 @@
         @for (group of parentTagGroups; track $index) {
             <div>
                 <span class="info">{{group.name}}: </span>
-                @if (hasMatchingField(group.id)) {
+                @if (hasMatchingField(group.id) && getTags(group.id).length !== 0) {
                     @for (tag of getTags(group.id); track $index; let last = $last) {
                         <span class="info-title" [ngClass]="{'comma': !last}">{{tag | controlLabel}}</span>
                     }

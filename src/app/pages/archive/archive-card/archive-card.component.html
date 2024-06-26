@@ -14,12 +14,12 @@
     @for (group of tagGroups; track $index) {
         <div class="archive-table-row-cell tag-cell">
             <span class="info-value-mobile-label">{{group.name}}: </span>
-            @if (hasMatchingField(group.id)) {
+            @if (hasMatchingField(group.id) && getTags(group.id).length !== 0) {
                 @for (tag of getTags(group.id); track $index; let last = $last) {
                     <p class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel}}</p>
                 }
             }
-            @else if (hasChildrenMatchingFields(group.id)) {
+            @else if (hasChildrenMatchingFields(group.id) && getChildrenTags(group.id).length !== 0) {
                 @for (tag of getChildrenTags(group.id); track $index; let last = $last) {
                     <p class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel}}</p>
                 }

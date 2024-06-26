@@ -46,7 +46,7 @@
                 <div class="info">
                     <p class="info-title">{{group.name}}</p>
                     <div class="info-value-list">
-                        @if (hasMatchingField(group.id)) {
+                        @if (hasMatchingField(group.id) && getTags(group.id).length !== 0) {
                             @for (tag of getTags(group.id); track $index; let last = $last) {
                                 <p class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel | sentenceCase}}</p>
                             }
@@ -62,7 +62,7 @@
                 <div class="info">
                     <p class="info-title">{{group.name}}</p>
                     <div class="info-value-list">
-                        @if (hasChildrenMatchingFields(group.id)) {
+                        @if (hasChildrenMatchingFields(group.id) && getChildrenTags(group.id).length !== 0) {
                             @for (tag of getChildrenTags(group.id); track $index; let last = $last) {
                                 <p class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel | sentenceCase}}</p>
                             }

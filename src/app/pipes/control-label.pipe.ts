@@ -15,7 +15,7 @@ export class ControlLabelPipe implements PipeTransform {
     this.tagGroups = this.configService.tagGroups;
   }
 
-  transform(value: string): string {  
+  transform(value: string): string {   
     const tag: Tag | undefined = this.tags.find((tag: Tag) => tag.id === value);
     if (tag) return tag.name;
     const tagGroup: TagGroup | undefined = this.tagGroups.find((group: TagGroup) => group.id === value);

@@ -32,7 +32,7 @@
                         @for (group of parentTagGroups; track $index) {
                             <div class="info">
                                 <p class="info-title">{{group.name}}</p>
-                                @if (hasMatchingField(group.id)) {
+                                @if (hasMatchingField(group.id) && getTags(group.id).length !== 0) {
                                     @for (tag of getTags(group.id); track $index; let last = $last) {
                                         <p class="info-value" [ngClass]="{'comma': !last}">{{tag | controlLabel}}</p>
                                     }
