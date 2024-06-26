@@ -90,6 +90,7 @@ export interface FiltersFormData {
 export interface ParsedFiltersFormData {
   priority: {
     [key: string]: any;
+    closed: boolean;
     notAssigned: boolean;
     low: boolean;
     medium: boolean;
@@ -160,7 +161,7 @@ export class ReportsService {
         });
 
         reports = reports.sort((a, b) => b.lastChildTime.getTime() - a.lastChildTime.getTime());
-        // let allReports: ReportParent[] = reports.filter(report => (report.isArchived === false || report.isArchived === undefined) && report.closingChildId === null);
+
         let allReports: ReportParent[] = reports.filter(report => (report.isArchived === false || report.isArchived === undefined));
 
         let closedReports: ReportParent[] = reports.filter(report => report.closingChildId);
@@ -199,11 +200,13 @@ export class ReportsService {
   }
 
   public filterReports(filters: ParsedFiltersFormData): void {
+    console.log(filters);
+
     let filteredReports: ReportParent[] = [];
     let priorityData = filters.priority;
 
-    for (const key in priorityData) {
-      if (priorityData[key] === false) continue;
+    for (const key in priorityData) {      
+      if (priorityData[key] === false) continue;     
 
       if (key === 'notAssigned' && priorityData[key] === true) {
         filteredReports = filteredReports.concat(this.reports.filter(report => report.priority === undefined || report.priority === PRIORITY.NotAssigned));
@@ -212,7 +215,9 @@ export class ReportsService {
       } else if (key === 'closed' && priorityData[key] === true) {
         filteredReports = filteredReports.concat(this.reports.filter(report => report.closingChildId));
       }
+
     }
+
 
     let dateData = filters.date;
     for (const key in dateData) {
@@ -224,6 +229,7 @@ export class ReportsService {
         filteredReports = filteredReports.filter(report => report.creationTime < dateData[key]!)
       }
     }
+
     this.filteredReportsSignal.set(filteredReports);
   }
 

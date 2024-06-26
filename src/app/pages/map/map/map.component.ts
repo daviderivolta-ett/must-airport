@@ -46,7 +46,8 @@ export class MapComponent {
   }
 
   private map!: Leaflet.Map;
-  private markersLayer = Leaflet.layerGroup();
+  private markersLayer: Leaflet.LayerGroup = Leaflet.layerGroup();
+  private closedReportLayer: Leaflet.LayerGroup = Leaflet.layerGroup();
   private additionalLayers: Leaflet.LayerGroup = Leaflet.layerGroup();
 
   private darkTile: Leaflet.Layer = Leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {

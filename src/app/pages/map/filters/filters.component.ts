@@ -17,7 +17,7 @@ import { SentenceCasePipe } from '../../../pipes/sentence-case.pipe';
 })
 export class FiltersComponent {
   public filterForm = this.fb.group({
-    closed: [true],
+    closed: [false],
     notAssigned: [true],
     low: [true],
     medium: [true],
@@ -31,11 +31,9 @@ export class FiltersComponent {
 
   constructor(private fb: FormBuilder, private filtersService: FiltersService, private reportsService: ReportsService, private authService: AuthService) {
     effect(() => this.loggedUser = this.authService.loggedUserSignal());
+
     this.filterForm.valueChanges.subscribe(changes => {
-      const filtersFormData: FiltersFormData = this.filterForm.value as FiltersFormData;
-      const parsedFiltersFormData: ParsedFiltersFormData = this.parseFiltersFormData(filtersFormData);      
-      this.reportsService.filterReports(parsedFiltersFormData);
-      this.filtersService.filtersLastState = filtersFormData;
+      this.filterReports();
     });
   }
 
@@ -68,5 +66,12 @@ export class FiltersComponent {
       typeof value.endingDate === 'string' && value.endingDate === '' ? parsedValue.date.endingDate = null : parsedValue.date.endingDate = new Date(value.endingDate);
     }
     return parsedValue;
+  }
+
+  private filterReports(): void {    
+    const filtersFormData: FiltersFormData = this.filterForm.value as FiltersFormData;
+    const parsedFiltersFormData: ParsedFiltersFormData = this.parseFiltersFormData(filtersFormData);
+    this.reportsService.filterReports(parsedFiltersFormData);
+    this.filtersService.filtersLastState = filtersFormData;
   }
 }
