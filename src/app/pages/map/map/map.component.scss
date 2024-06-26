@@ -18,6 +18,10 @@
 ::ng-deep a.leaflet-control-zoom-in,
 ::ng-deep a.leaflet-control-zoom-out {
     background-color: var(--bg-default);
-    color: var(--f-default);
-    border: 1px solid var(--border-muted);
+    color: var(--f-muted);
+    border: 1px solid var(--border-subtle);
+
+    &:hover {
+        background-color: var(--bg-default);
+    }
 }
