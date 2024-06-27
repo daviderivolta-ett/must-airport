@@ -509,7 +509,7 @@ export class ReportsService {
     }
   }
 
-  public async deleteChildReportBydId(id: string): Promise<void> {
+  public async deleteChildReportById(id: string): Promise<void> {
     try {
       let childReport: ReportChild = await this.getChildReportById(id);
 

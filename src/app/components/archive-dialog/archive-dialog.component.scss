@@ -43,16 +43,16 @@ button {
     border-width: 1px 1px 0 0;
 
     &:hover {
-        background-color: var(--bg-subtle);
+        background-color: var(--bg-overlay);
     }
 }
 
 .delete-button {
     border-radius: 0 0 4px 0;
     border-width: 1px 0 0 0;
-    color: var(--f-danger);
+    color: var(--bg-done);
 
     &:hover {
-        background-color: var(--bg-danger-dull);
+        background-color: var(--bg-done-dull);
     }
 }

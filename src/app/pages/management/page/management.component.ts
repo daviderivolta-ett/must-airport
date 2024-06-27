@@ -1,5 +1,5 @@
 import { ApplicationRef, Component, createComponent, effect } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReportParent } from '../../../models/report-parent.model';
 import { ReportChild } from '../../../models/report-child.model';
 import { ValidationFormComponent } from '../validation-form/validation-form.component';
@@ -10,8 +10,6 @@ import { InspectionFormComponent } from '../inspection-form/inspection-form.comp
 import { OperationCardComponent } from '../operation-card/operation-card.component';
 import { MiniMapComponent } from '../../../components/mini-map/mini-map.component';
 import { MiniMapData } from '../../../services/map.service';
-import { ArchiveDialogComponent } from '../../../components/archive-dialog/archive-dialog.component';
-import { ArchiveDialogService } from '../../../observables/archive-dialog.service';
 import { TagGroup } from '../../../models/tag.model';
 import { ConfigService } from '../../../services/config.service';
 import { OperationCardManagementComponent } from '../operation-card-management/operation-card-management.component';
@@ -25,6 +23,11 @@ import { SentenceCasePipe } from '../../../pipes/sentence-case.pipe';
 import { ReportFileMenuComponent } from '../report-file-menu/report-file-menu.component';
 import { ReportFileMenuService } from '../../../observables/report-file-menu.service';
 import { ConfirmDialogService } from '../../../observables/confirm-dialog.service';
+import { HoverTooltipDirective } from '../../../directives/hover-tooltip.directive';
+import { CONFIRMDIALOG } from '../../../models/confirm-dialog.model';
+import { Timestamp } from 'firebase/firestore';
+import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
+import { SnackbarService } from '../../../observables/snackbar.service';
 
 @Component({
   selector: 'app-management',
@@ -37,6 +40,7 @@ import { ConfirmDialogService } from '../../../observables/confirm-dialog.servic
     OperationCardComponent,
     OperationCardManagementComponent,
     ReportFileMenuComponent,
+    HoverTooltipDirective,
     DatePipe,
     NgClass,
     TitleCasePipe,
@@ -67,9 +71,10 @@ export class ManagementComponent {
   constructor(
     private applicationRef: ApplicationRef,
     private route: ActivatedRoute,
+    private router: Router,
     private configService: ConfigService,
     private reportsService: ReportsService,
-    private archiveDialogService: ArchiveDialogService,
+    private snackbarService: SnackbarService,
     private utilsService: UtilsService,
     private reportFileMenuService: ReportFileMenuService,
     private confirmDialogService: ConfirmDialogService
@@ -95,14 +100,33 @@ export class ManagementComponent {
     effect(() => this.isReportFileMenuOpen = this.reportFileMenuService.isOpenSignal());
 
     effect(async () => {
-      if (this.confirmDialogService.confirmUploadReportFileSignal() === null) return;
-      if (this.confirmDialogService.confirmUploadReportFileSignal() === false) return;
-      const reportId = this.confirmDialogService.childReportToDelete();
-      if (reportId) {
-        console.log('Elimina', reportId);        
-        await this.reportsService.deleteChildReportBydId(reportId);
+      if (this.confirmDialogService.deleteChildReportSignal() !== true) return;
+
+      const id: string | null = this.confirmDialogService.childReportToDelete;
+      if (id) {
+        await this.reportsService.deleteChildReportById(id);
       }
+
       this.resetConfirmDialog();
+    });
+
+    effect(async () => {
+      if (this.confirmDialogService.archiveReportSignal() !== true) return;
+
+      const reportDb: any = {
+        archived: true,
+        archivingTime: Timestamp.now()
+      }
+
+      try {
+        await this.reportsService.setReportById(this.parentReport.id, reportDb);
+        this.snackbarService.createSnackbar('Segnalazione archiviata con successo.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
+        this.router.navigate(['/archivio']);
+      } catch (error) {
+        this.snackbarService.createSnackbar('Errore nell\'archiviazione della segnalazione.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
+      }
+
+      this.confirmDialogService.archiveReportSignal.set(null);
     });
   }
 
@@ -114,14 +138,16 @@ export class ManagementComponent {
   }
 
   public archiveReportClick(): void {
-    this.archiveDialogService.parentReport = this.parentReport;
+    // this.archiveDialogService.parentReport = this.parentReport;
 
-    const div = document.createElement('div');
-    div.id = 'archive-dialog';
-    document.body.append(div);
-    const componentRef = createComponent(ArchiveDialogComponent, { hostElement: div, environmentInjector: this.applicationRef.injector });
-    this.applicationRef.attachView(componentRef.hostView);
-    componentRef.changeDetectorRef.detectChanges();
+    // const div = document.createElement('div');
+    // div.id = 'archive-dialog';
+    // document.body.append(div);
+    // const componentRef = createComponent(ArchiveDialogComponent, { hostElement: div, environmentInjector: this.applicationRef.injector });
+    // this.applicationRef.attachView(componentRef.hostView);
+    // componentRef.changeDetectorRef.detectChanges();
+    this.confirmDialogService.parentReportToArchive = this.parentReport;
+    this.confirmDialogService.createConfirm('Vuoi archiviare la segnalazione?', CONFIRMDIALOG.ArchiveReport);
   }
 
   public filterChildReports(filter: ChildReportFiltersFormData) {
@@ -201,7 +227,7 @@ export class ManagementComponent {
   }
 
   private resetConfirmDialog(): void {
-    this.confirmDialogService.confirmUploadReportFileSignal.set(null);
-    this.confirmDialogService.confirmDeleteChildReportSignal.set(null);
+    this.confirmDialogService.childReportToDelete = null;
+    this.confirmDialogService.deleteChildReportSignal.set(null);
   }
 }

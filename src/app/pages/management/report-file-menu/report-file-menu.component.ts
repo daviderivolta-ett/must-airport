@@ -13,6 +13,7 @@ import { ConfirmDialogService } from '../../../observables/confirm-dialog.servic
 import { VERTICAL } from '../../../models/vertical.model';
 import { SnackbarService } from '../../../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
+import { CONFIRMDIALOG } from '../../../models/confirm-dialog.model';
 
 @Component({
   selector: 'app-report-file-menu',
@@ -75,12 +76,19 @@ export class ReportFileMenuComponent {
   ) {
     effect(() => this.isOpen = this.reportFileMenuService.isOpenSignal());
     effect(async () => {
-      if (this.confirmDialogService.confirmUploadReportFileSignal() === null) return;
-      if (this.confirmDialogService.confirmUploadReportFileSignal() === false) return;
+      // if (this.confirmDialogService.confirmUploadReportFileSignal() === null) return;
+      // if (this.confirmDialogService.confirmUploadReportFileSignal() === false) return;
 
-      await this.overwriteReportFile(this.report)
+      // await this.overwriteReportFile(this.report)
+      // if (this.file && this.authService.currentApp) await this.uploadFile(this.file, this.authService.currentApp);
+      // this.emptyInput();
+
+      if (this.confirmDialogService.uploadFileSignal() !== true) return;
+      await this.overwriteReportFile(this.report);
       if (this.file && this.authService.currentApp) await this.uploadFile(this.file, this.authService.currentApp);
       this.emptyInput();
+
+      this.confirmDialogService.uploadFileSignal.set(null);
     });
   }
 
@@ -101,7 +109,7 @@ export class ReportFileMenuComponent {
 
     if (this.report.files && this.report.files.length > 0) {
       const message: string = 'Questo report ha già un file associato. Questa operazione lo sovrascriverà. Sicuro di voler procedere?';
-      this.confirmDialogService.createConfirm(message);
+      this.confirmDialogService.createConfirm(message, CONFIRMDIALOG.UploadFile);
     } else {
       await this.uploadFile(this.file, this.authService.currentApp);
       this.emptyInput();
@@ -134,7 +142,7 @@ export class ReportFileMenuComponent {
     input.value = '';
     this.file = null;
     this.uploadReportFileForm.reset();
-    this.confirmDialogService.confirmUploadReportFileSignal.set(null);
+    // this.confirmDialogService.confirmUploadReportFileSignal.set(null);
   }
 
   private async overwriteReportFile(report: ReportParent): Promise<void> {

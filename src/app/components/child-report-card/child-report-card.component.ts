@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { ControlLabelPipe } from '../../pipes/control-label.pipe';
 import { TagGroup } from '../../models/tag.model';
 import { SentenceCasePipe } from '../../pipes/sentence-case.pipe';
+import { CONFIRMDIALOG } from '../../models/confirm-dialog.model';
 
 @Component({
   selector: 'app-child-report-card',
@@ -37,7 +38,10 @@ export class ChildReportCardComponent {
     private router: Router,
     private authService: AuthService
   ) {
-    effect(() => this.loggedUser = this.authService.loggedUserSignal());
+    effect(() => {
+      this.loggedUser = this.authService.loggedUserSignal()
+      console.log(this.loggedUser);      
+    });
   }
 
   public ngOnInit(): void {
@@ -47,8 +51,8 @@ export class ChildReportCardComponent {
 
   public iconClick(): void {
     const message: string = `Sicuro di voler eliminare l'aggiornamento del ${this.childReport.creationTime.toLocaleDateString()}? Questa operazione non è reversibile.`;
-    this.confirmDialogService.childReportToDelete.set(this.childReport.id);
-    this.confirmDialogService.createConfirm(message);
+    this.confirmDialogService.childReportToDelete = this.childReport.id;
+    this.confirmDialogService.createConfirm(message, CONFIRMDIALOG.DeleteChildReport);
   }
 
   public hasMatchfingField(groupId: string): boolean {

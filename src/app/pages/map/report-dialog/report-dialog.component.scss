@@ -36,6 +36,18 @@
     display: flex;
     justify-content: space-between;
     gap: 48px;
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-subtle) var(--bg-default);
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: var(-bg-subtle);
+        border-radius: 8px;
+    }
 }
 
 .columns::-webkit-scrollbar {

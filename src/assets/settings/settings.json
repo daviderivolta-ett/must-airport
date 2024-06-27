@@ -31,7 +31,7 @@
             "name": "Aeroporto di Genova",
             "position": {
                 "location": [44.41361028797091, 8.844596073925151],
-                "zoom": 13
+                "zoom": 15
             },
             "assets": {
                 "logoUrl": "./assets/images/aeroporto_genova_logo.svg"

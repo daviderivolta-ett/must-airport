@@ -121,7 +121,7 @@ export class ConfigService {
       }
     }
 
-    console.log('WEB CONFIG:', config);
+    // console.log('WEB CONFIG:', config);
 
     this.configSignal.set(config);
   }

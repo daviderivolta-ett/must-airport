@@ -17,6 +17,9 @@ import { WebAppConfig } from '../../models/config.model';
 import { ControlLabelPipe } from '../../pipes/control-label.pipe';
 import { SentenceCasePipe } from '../../pipes/sentence-case.pipe';
 import { LabelPipe } from '../../pipes/label.pipe';
+import { HoverTooltipDirective } from '../../directives/hover-tooltip.directive';
+import { ConfirmDialogService } from '../../observables/confirm-dialog.service';
+import { CONFIRMDIALOG } from '../../models/confirm-dialog.model';
 
 @Component({
   selector: 'app-parent-report-detail',
@@ -27,6 +30,7 @@ import { LabelPipe } from '../../pipes/label.pipe';
     LabelPipe,
     ControlLabelPipe,
     SentenceCasePipe,
+    HoverTooltipDirective,
     NgClass,
     MiniMapComponent,
     ChildReportCardComponent,
@@ -49,7 +53,13 @@ export class ParentReportDetailComponent {
 
   public miniMapData: MiniMapData = { location: new GeoPoint(0.0, 0.0), priority: PRIORITY.NotAssigned };
 
-  constructor(private router: Router, private route: ActivatedRoute, protected reportsService: ReportsService, private configService: ConfigService) {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    protected reportsService: ReportsService,
+    private configService: ConfigService,
+    private confirmDialogService: ConfirmDialogService
+  ) {
     effect(async () => {
       if (this.parentReportSignal().id === '') return;
       let report: ReportParent = this.parentReportSignal();
@@ -66,6 +76,41 @@ export class ParentReportDetailComponent {
 
     effect(() => this.parentTagGroups = this.configService.parentTagGroupsSignal());
     effect(() => this.childTagGroups = this.configService.childTagGroupsSignal());
+
+    effect(async () => {
+      if (this.confirmDialogService.unarchiveReportSignal() !== true) return;
+
+      let data: ReportParentClosingDataDb = {
+        archived: false,
+        archivingTime: null
+      }
+
+      await this.reportsService.setReportById(this.parentReport.id, data);
+      this.router.navigate(['/archivio']);
+
+      this.confirmDialogService.unarchiveReportSignal.set(null);
+    });
+
+    effect(async () => {
+      if (this.confirmDialogService.reopenReportSignal() !== true) return;
+
+      let data = {
+        closingChildId: null,
+        closingTime: null,
+        childrenIds: [...this.parentReport.childrenIds, this.parentReport.closingChildId]
+      };
+
+      if (!this.parentReport.closingChildId) return;
+
+      const closingChild: ReportChild = await this.reportsService.getChildReportById(this.parentReport.closingChildId);
+
+      await this.reportsService.setReportById(this.parentReport.id, data);
+      await this.reportsService.setChildReportById(closingChild.id, { ...closingChild, closure: false });
+
+      this.router.navigate(['/segnalazioni']);
+
+      this.confirmDialogService.reopenReportSignal.set(null);
+    });
   }
 
   public async ngOnInit(): Promise<void> {
@@ -81,30 +126,11 @@ export class ParentReportDetailComponent {
   }
 
   public async restoreReport(): Promise<void> {
-    let data: ReportParentClosingDataDb = {
-      archived: false,
-      archivingTime: null
-    }
-
-    await this.reportsService.setReportById(this.parentReport.id, data);
-    this.router.navigate(['/archivio']);
+    this.confirmDialogService.createConfirm('Vuoi estrarre la segnalazione dall\'archivio?', CONFIRMDIALOG.UnarchiveReport);
   }
 
   public async reopenReport(): Promise<void> {
-    let data = {
-      closingChildId: null,
-      closingTime: null,
-      childrenIds: [...this.parentReport.childrenIds, this.parentReport.closingChildId]
-    };
-
-    if (!this.parentReport.closingChildId) return;
-
-    const closingChild: ReportChild = await this.reportsService.getChildReportById(this.parentReport.closingChildId);
-
-    await this.reportsService.setReportById(this.parentReport.id, data);
-    await this.reportsService.setChildReportById(closingChild.id, { ...closingChild, closure: false });
-
-    this.router.navigate(['/segnalazioni']);
+    this.confirmDialogService.createConfirm('Vuoi riaprire la segnalazione?', CONFIRMDIALOG.ReopenReport);
   }
 
   public filterChildReports(filter: ChildReportFiltersFormData) {

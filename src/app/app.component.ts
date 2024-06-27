@@ -68,6 +68,8 @@ export class AppComponent {
       }
       this.authService.currentAppSignal.set(null);
       this.authService.currentAppSignal.set(loggedUser.lastApp);
+
+      // this.splashService.removeSplash();
     }, { allowSignalWrites: true });
 
     effect(async () => {
@@ -77,7 +79,7 @@ export class AppComponent {
 
       if (!currentApp || !loggedUser) return;
 
-      this.splashService.createSplash();
+      // this.splashService.createSplash();
 
       this.additionalLayersService.currentLayers = [];
 
@@ -119,8 +121,7 @@ export class AppComponent {
     }, { allowSignalWrites: true });
 
     effect(() => {
-      this.config = this.configService.configSignal()
-      // console.log(this.config);
+      this.config = this.configService.configSignal();
     });
   }
 

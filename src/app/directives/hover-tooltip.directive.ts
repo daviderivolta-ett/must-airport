@@ -6,13 +6,13 @@ import { Tag } from '../models/tag.model';
   standalone: true
 })
 export class HoverTooltipDirective {
-  private _data: any = [];
+  private _data: string = '';
 
-  public get data(): any {
+  public get data(): string {
     return this._data;
   }
 
-  @Input() public set data(value: any) {    
+  @Input() public set data(value: string) {    
     if (!value || value.length === 0) return;
     this._data = value;
     this.createTooltip();
@@ -44,12 +44,12 @@ export class HoverTooltipDirective {
   private createTooltip(): void {
     this.tooltipElement = this.renderer.createElement('div');
     this.renderer.addClass(this.tooltipElement, 'hover-tooltip');
-    this.tooltipElement.innerHTML = this.getStringTags(this.data);
+    this.tooltipElement.innerHTML = this.data;
     this.renderer.setStyle(this.tooltipElement, 'display', 'none');
     this.renderer.setStyle(this.tooltipElement, 'position', 'fixed');
 
     const hostRect: DOMRect = this.el.nativeElement.getBoundingClientRect();
-    const top: number = hostRect.top + 24;
+    const top: number = hostRect.top + 32;
     const right: number = window.innerWidth - hostRect.right + hostRect.width / 2;
 
     this.renderer.setStyle(this.tooltipElement, 'top', `${top}px`);
@@ -82,13 +82,6 @@ export class HoverTooltipDirective {
     if (this.tooltipElement) {
       this.renderer.removeChild(this.el.nativeElement, this.tooltipElement);
     }
-  }
-
-  private getStringTags(tags: Tag[]): string {
-    let strings: string[] = [];
-    tags.forEach((tag: Tag) => strings.push(tag.name));
-    let tooltip: string = strings.join(', ').toLowerCase();
-    return tooltip;
   }
 
   private isMobile(): boolean {

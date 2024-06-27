@@ -3,12 +3,12 @@
         <div class="header">
             <h2>Dettagli segnalazione</h2>
             @if (parentReport.closingChildId) {
-            <button class="archive-btn" (click)="reopenReport()">
+            <button class="archive-btn" (click)="reopenReport()" appHoverTooltip data="Riapri segnalazione">
                 <span class="material-symbols-outlined archive-icon">unarchive</span>
             </button>
             }
             @else {
-            <button class="archive-btn" (click)="restoreReport()">
+            <button class="archive-btn" (click)="restoreReport()" appHoverTooltip data="Rimuovi dall'archivio">
                 <span class="material-symbols-outlined archive-icon">unarchive</span>
             </button>
             }
