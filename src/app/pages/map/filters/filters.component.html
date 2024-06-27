@@ -1,4 +1,4 @@
-<div class="dropdown">
+<div class="dropdown" appClickOutside (clickedOutside)="closeDropdown()">
     <button type="button" class="dropdown-toggle" [ngClass]="{'dropdown-toggle-open': isOpen}"
         (click)="toggleFilters()">
         Filtri

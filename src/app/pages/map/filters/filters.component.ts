@@ -7,11 +7,12 @@ import { LoggedUser } from '../../../models/user.model';
 import { AuthService } from '../../../services/auth.service';
 import { LabelPipe } from '../../../pipes/label.pipe';
 import { SentenceCasePipe } from '../../../pipes/sentence-case.pipe';
+import { ClickOutsideDirective } from '../../../directives/click-outside.directive';
 
 @Component({
   selector: 'app-filters',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, LabelPipe, SentenceCasePipe],
+  imports: [ReactiveFormsModule, ClickOutsideDirective, NgClass, LabelPipe, SentenceCasePipe],
   templateUrl: './filters.component.html',
   styleUrl: './filters.component.scss'
 })
@@ -43,6 +44,10 @@ export class FiltersComponent {
 
   public toggleFilters(): void {
     this.isOpen = !this.isOpen;
+  }
+
+  public closeDropdown(): void {
+    this.isOpen = false;
   }
 
   private parseFiltersFormData(value: FiltersFormData): ParsedFiltersFormData {
