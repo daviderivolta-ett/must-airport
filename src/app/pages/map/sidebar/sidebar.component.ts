@@ -14,13 +14,21 @@ import { TagGroup } from '../../../models/tag.model';
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
-  @Input() public reports: ReportParent[] = [];
+  private _reports: ReportParent[] = [];
+  public get reports(): ReportParent[] {
+    return this._reports;
+  }
+  @Input() public set reports(value: ReportParent[]) {
+    if (!value) return;
+    this._reports = value;  
+  }
+
   @Input() public parentTagGroups: TagGroup[] = [];
   public isOpen: boolean = false;
 
   constructor(private sidebarService: SidebarService) {
     effect(() => {
-      this.isOpen = this.sidebarService.isOpen();   
+      this.isOpen = this.sidebarService.isOpen();
     });
   }
 

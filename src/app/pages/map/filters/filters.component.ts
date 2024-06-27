@@ -17,7 +17,7 @@ import { SentenceCasePipe } from '../../../pipes/sentence-case.pipe';
 })
 export class FiltersComponent {
   public filterForm = this.fb.group({
-    closed: [false],
+    closed: [true],
     notAssigned: [true],
     low: [true],
     medium: [true],

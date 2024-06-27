@@ -3,7 +3,6 @@ import * as Leaflet from 'leaflet';
 import { GeoJSONFeature, MapService } from '../../../services/map.service';
 import { SidebarService } from '../../../observables/sidebar.service';
 import { ReportParent } from '../../../models/report-parent.model';
-import { ReportsService } from '../../../services/reports.service';
 import { DialogService } from '../../../observables/dialog.service';
 import { ThemeService } from '../../../services/theme.service';
 import { COLORMODE } from '../../../models/color-mode.model';
@@ -21,9 +20,26 @@ import { VERTICAL } from '../../../models/vertical.model';
   styleUrl: './map.component.scss'
 })
 export class MapComponent {
-  public reports: ReportParent[] = [];
-  public closedReports: ReportParent[] = [];
-  private geoJsonData: any;
+  private _reports: ReportParent[] = [];
+  public get reports(): ReportParent[] {
+    return this._reports;
+  }
+  @Input() public set reports(value: ReportParent[]) {
+    if (!value) return;
+    this._reports = value;
+
+    this.markersLayer.clearLayers();
+    this.closedReportLayer.clearLayers();
+
+    const normalReports: ReportParent[] = this.reports.filter((report: ReportParent) => !report.closingChildId);
+    const closedReports: ReportParent[] = this.reports.filter((report: ReportParent) => report.closingChildId);
+
+    const normalGeoJsonData: any = this.mapService.createGeoJson(normalReports);
+    const closedGeoJsonData: any = this.mapService.createGeoJson(closedReports);
+
+    this.populateMap(normalGeoJsonData, this.markersLayer);
+    this.populateMap(closedGeoJsonData, this.closedReportLayer);
+  }
 
   private _initialPosition: { location: GeoPoint, zoom: number } = { location: new GeoPoint(0.0, 0.0), zoom: 13 };
   public get initialPosition(): { location: GeoPoint, zoom: number } {
@@ -63,27 +79,12 @@ export class MapComponent {
 
   constructor(
     private mapService: MapService,
-    private reportsService: ReportsService,
     private sidebarService: SidebarService,
     private additionalLayersService: AdditionalLayersService,
     private additionalLayersMenuService: AdditionalLayersMenuService,
     private dialogService: DialogService,
     private themeService: ThemeService
   ) {
-    effect(() => {
-      this.markersLayer.clearLayers();
-      this.reports = this.reportsService.reportsSignal();
-      this.geoJsonData = this.mapService.createGeoJson(this.reports);
-      this.populateMap(this.geoJsonData);
-    });
-
-    effect(() => {
-      this.markersLayer.clearLayers();
-      this.reports = this.reportsService.filteredReportsSignal();
-      this.geoJsonData = this.mapService.createGeoJson(this.reports);
-      this.populateMap(this.geoJsonData);
-    });
-
     effect(() => {
       if (this.themeService.colorModeSignal() === null) return;
       if (this.themeService.colorMode === COLORMODE.Dark) {
@@ -97,7 +98,7 @@ export class MapComponent {
 
     effect(() => {
       if (this.additionalLayersService.currentLayersSignal() === null) return;
-      this.additionalLayers.clearLayers();    
+      this.additionalLayers.clearLayers();
       this.additionalLayersService.currentLayersSignal().forEach((layer: AdditionalLayer) => {
         Leaflet.geoJSON(layer.geoJson, {
           style: {
@@ -116,14 +117,13 @@ export class MapComponent {
     this.darkTile.addTo(this.map);
     this.map.addLayer(this.additionalLayers);
     this.map.addLayer(this.markersLayer);
+    this.map.addLayer(this.closedReportLayer);
   }
 
   private initMap(): void {
     this.map = Leaflet.map('map', {
       zoomControl: false,
       attributionControl: false,
-      // maxZoom: 20,
-      // minZoom: 14
     }).setView([this.initialPosition.location.latitude, this.initialPosition.location.latitude], this.initialPosition.zoom);
 
     Leaflet.control.zoom({
@@ -136,10 +136,10 @@ export class MapComponent {
     });
   }
 
-  private populateMap(geoJsonData: any): void {
+  private populateMap(geoJsonData: any, layerGroup: Leaflet.LayerGroup): void {
     Leaflet.geoJSON(geoJsonData, {
       pointToLayer: (feature, latLng) => this.createMarker(feature, latLng).on('click', () => this.onMarkerClick(feature))
-    }).addTo(this.markersLayer);
+    }).addTo(layerGroup);
   }
 
   private createMarker(feature: GeoJSONFeature, latLng: Leaflet.LatLng): Leaflet.CircleMarker {
@@ -147,8 +147,8 @@ export class MapComponent {
     let options = {
       stroke: true,
       radius: 8,
-      weight: 2,
-      color: color,
+      weight: 1,
+      color: 'white',
       opacity: 1,
       fillColor: color,
       fillOpacity: 0.5
@@ -184,7 +184,7 @@ export class MapComponent {
     return color;
   }
 
-  private onMarkerClick(feature: any): void {    
+  private onMarkerClick(feature: any): void {
     if (feature.properties.report.verticalId !== this.currentApp) return;
 
     let report: ReportParent = feature.properties.report;

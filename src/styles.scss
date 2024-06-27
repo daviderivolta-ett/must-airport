@@ -97,7 +97,7 @@ h3 {
     padding: 0 0 56.25% 0;
     overflow: hidden;
     border-radius: 8px;
-    background-color: var(--bg-inset);
+    background-color: rgb(1, 4, 9);
     border: 1px solid var(--border-default);
     box-sizing: border-box;
 }
@@ -108,6 +108,12 @@ h3 {
     height: 100%;
     border-radius: 8px;
     object-fit: contain;
+}
+
+.img-container img.placeholder {
+    max-width: 96px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .card .img-container {

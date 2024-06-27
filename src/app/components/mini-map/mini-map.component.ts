@@ -87,8 +87,8 @@ export class MiniMapComponent {
     let options: Leaflet.CircleMarkerOptions = {
       stroke: true,
       radius: 8,
-      weight: 2,
-      color: color,
+      weight: 1,
+      color: 'white',
       opacity: 1,
       fillColor: color,
       fillOpacity: 0.5

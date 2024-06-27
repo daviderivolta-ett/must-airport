@@ -27,6 +27,7 @@ export class MapPageComponent {
   public loggedUser: LoggedUser | null = null;
   public currentApp: VERTICAL | null = null;
   public reports: ReportParent[] = [];
+  public closedReports: ReportParent[] = [];
   public techElementTags: TechElementTag[] = [];
 
   constructor(
@@ -34,29 +35,11 @@ export class MapPageComponent {
     private authService: AuthService,
     private reportsService: ReportsService
   ) {
+    effect(() => this.loggedUser = this.authService.loggedUserSignal());
+    effect(() => this.currentApp = this.authService.currentAppSignal());
     effect(() => this.config = this.configService.configSignal());
-    effect(() => {
-      this.reports = this.reportsService.reportsSignal();
-    });
-
-    effect(() => {
-      this.reports = this.reportsService.filteredReportsSignal();
-    });
-
-    effect(() => {
-      this.loggedUser = this.authService.loggedUserSignal();
-    });
-
-    effect(() => {
-      this.currentApp = this.authService.currentAppSignal();
-    });
-
-    effect(() => {
-      this.parentTagGroups = this.configService.parentTagGroupsSignal();
-    });
-
-    effect(() => {
-      this.childTagGroups = this.configService.childTagGroupsSignal();
-    });
+    effect(() => this.reports = this.reportsService.filteredReportsSignal());
+    effect(() => this.parentTagGroups = this.configService.parentTagGroupsSignal());
+    effect(() => this.childTagGroups = this.configService.childTagGroupsSignal());
   }
 }
