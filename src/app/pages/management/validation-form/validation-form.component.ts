@@ -276,23 +276,24 @@ export class ValidationFormComponent {
     if (!this.report) return;
 
     try {
-      let data: any = {}
+      let data: any = {};
       let fields: any = {};
 
       data.priority = this.baseForm.value.priority.priority;
       fields = this.parseReportFields(this.baseForm.value);
       const { parentFields, childFields } = this.splitFields(fields);
-      data.fields = parentFields;
+
+      data.fields = parentFields;     
 
       if (!this.report.isValidated) data.validated = true;
       if (!this.report.validationDate) data.validationDate = Timestamp.now();
 
       // const childReports: ReportChild[] = this.childrenReport.map((report: ReportChild) => ({ ...report, fields: { ...report.fields } }));
       const childReports: ReportChild[] = this.utilsService.deepClone(this.childrenReport);
-      const currentTags: { [key: string]: string[] } = this.getCurrentChildrenTags(childReports);
+      const currentTags: { [key: string]: string[] } = this.getCurrentTags(childReports);
       const tagChanges: TagChanges = this.compareTags(currentTags, childFields);
 
-      console.log('Cambiamenti', tagChanges);
+      // console.log('Cambiamenti', tagChanges);
 
       if (Object.keys(tagChanges.toAdd).length !== 0) {
         console.log('Ci sono tag da aggiungere');
@@ -305,7 +306,8 @@ export class ValidationFormComponent {
       }
 
       data.lastChildTime = Timestamp.now();
-      await this.reportsService.setReportById(this.report.id, data);
+      
+      await this.reportsService.setReportByValidationForm(this.report.id, data);
       this.snackbarService.createSnackbar('Modifica salvato con successo', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
     } catch (error) {
       console.error(error);
@@ -361,10 +363,10 @@ export class ValidationFormComponent {
     return { parentFields, childFields };
   }
 
-  private getCurrentChildrenTags(reports: ReportChild[]): { [key: string]: string[] } {
+  private getCurrentTags(reports: ReportChild[] | ReportParent[]): { [key: string]: string[] } {
     let currentTags: { [key: string]: Set<string> } = {};
 
-    reports.forEach((report: ReportChild) => {
+    reports.forEach((report: ReportChild | ReportParent) => {
       for (const key in report.fields) {
         this.tagGroups.forEach((group: TagGroup) => {
           if (group.id !== key) return;

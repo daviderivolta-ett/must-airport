@@ -162,7 +162,7 @@ export class ReportsService {
 
         reports = reports.sort((a, b) => b.lastChildTime.getTime() - a.lastChildTime.getTime());
 
-        let allReports: ReportParent[] = reports.filter(report => (report.isArchived === false || report.isArchived === undefined));        
+        let allReports: ReportParent[] = reports.filter(report => (report.isArchived === false || report.isArchived === undefined));
         this.reportsSignal.set(allReports);
 
         this.archivedReportsSignal.set(reports.filter(report => report.isArchived === true));
@@ -183,6 +183,19 @@ export class ReportsService {
     try {
       const ref = doc(this.db, 'reportParents', id);
       await setDoc(ref, data, { merge: true });
+    } catch (error) {
+      console.error('Error setting document: ', error);
+      throw new Error('Failed to set report by ID');
+    }
+  }
+
+  public async setReportByValidationForm(id: string, data: any): Promise<void> {
+    try {
+      const ref = doc(this.db, 'reportParents', id);
+      await updateDoc(ref, {
+        ...data,
+        'fields': data.fields
+      });
     } catch (error) {
       console.error('Error setting document: ', error);
       throw new Error('Failed to set report by ID');
