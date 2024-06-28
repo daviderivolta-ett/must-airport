@@ -106,3 +106,10 @@ a.file-link {
         font-size: 1.3rem;
     }
 }
+
+.filename {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin: 0;
+}
