@@ -1,13 +1,13 @@
 <div class="page">
     <h1>Elenco codici</h1>
     @if (apps.length !== 0) {
-    <app-codes-filters [allCodes]="allCodes" [apps]="apps"/>
+    <app-codes-filters [codes]="codes" [apps]="apps"/>
     }
     <div class="codes-section">
-        @for (code of allCodes; track $index) {
-            <app-code-card [code]="code" />
+        @for (code of codes; track $index) {
+            <app-auth-code [code]="code" />
         }
-        @if (allCodes.length === 0) {
+        @if (codes.length === 0) {
             <p class="not-found-msg">Non è stato trovato alcun codice</p>
         }
     </div>

@@ -1,6 +1,6 @@
 import { Component, Input, effect } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CodesService, CreateCodeFormData } from '../../../services/codes.service';
+import { CodesService } from '../../../services/codes.service';
 import { DICTIONARY } from '../../../dictionaries/dictionary';
 import { NgClass, TitleCasePipe } from '@angular/common';
 import { CreateCodeDialogService } from '../../../observables/create-code-dialog.service';
@@ -11,6 +11,7 @@ import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 import { APPTYPE } from '../../../models/app-type.mode';
 import { VERTICAL } from '../../../models/vertical.model';
 import { VerticalNamePipe } from '../../../pipes/vertical-name.pipe';
+import { AuthCode } from '../../../models/auth-code.model';
 
 @Component({
   selector: 'app-create-code',
@@ -54,11 +55,11 @@ export class CreateCodeComponent {
     effect(() => this.isOpen = this.createCodeDialogService.isOpenSignal());
   }
 
-  public handleSubmit(): void {    
-    let ref = this.codesService.parseCreateCodeFormData(this.createCodeForm.value as CreateCodeFormData);     
-    const appTypeControl = this.createCodeForm.get('type');
-    const appType: APPTYPE = appTypeControl ? (appTypeControl.value as APPTYPE) : APPTYPE.Web;
-    this.codesService.setCodeById(appType, ref.code, ref);   
+  public handleSubmit(): void {
+    const authCode: AuthCode = new AuthCode(this.createCodeForm.value.code as string, true, this.createCodeForm.value.app as VERTICAL);
+    authCode.appType = this.createCodeForm.value.type as APPTYPE;
+    authCode.creationDate = new Date();
+    this.codesService.setAuthCodeById(authCode.code, authCode, authCode.appType);
     this.createCodeForm.reset({ app: '', type: '' });
     this.createCodeDialogService.isOpenSignal.set(false);
     this.generateCode();
@@ -86,6 +87,5 @@ export class CreateCodeComponent {
 
   public ngOnInit(): void {
     this.generateCode();
-    console.log(this.apps);
   }
 }

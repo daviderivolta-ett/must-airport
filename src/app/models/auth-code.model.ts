@@ -1,4 +1,4 @@
-import { DocumentData, QueryDocumentSnapshot, SnapshotOptions } from 'firebase/firestore';
+import { DocumentData, QueryDocumentSnapshot, SnapshotOptions, Timestamp } from 'firebase/firestore';
 import { VERTICAL } from './vertical.model';
 import { APPTYPE } from './app-type.mode';
 
@@ -9,6 +9,7 @@ export class AuthCode {
     appType: APPTYPE = APPTYPE.Web;
     user: string | null = null;
     associatedOn: Date | null = null;
+    creationDate: Date | null = null;
 
     constructor(
         code: string,
@@ -37,9 +38,9 @@ export const authCodeConverter = {
         c.isValid = authCode.isValid;
         c.vertId = authCode.vertId;
 
-        if (authCode.appType) c.appType = authCode.appType;
         if (authCode.user) c.user = authCode.user;
         if (authCode.associatedOn) c.associatedOn = authCode.associatedOn;
+        if (authCode.creationDate) c.creationDate = Timestamp.fromDate(authCode.creationDate);
 
         return c;
     },
@@ -47,13 +48,14 @@ export const authCodeConverter = {
         const data: DocumentData = snapshot.data(options)!;
 
         const authCode: AuthCode = new AuthCode(
-            data['code'],
+            data['code'] ? data['code'] : snapshot.id,
             data['isValid'],
             data['vertId']
         );
 
         if (data['user']) authCode.user = data['user'];
         if (data['associatedOn']) authCode.associatedOn = data['associatedOn'].toDate();
+        if (data['creationDate']) authCode.creationDate = data['creationDate'].toDate();
         return authCode;
     }
 }

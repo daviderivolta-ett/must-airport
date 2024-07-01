@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CodesFiltersFormData, CodesService } from '../../../services/codes.service';
-import { Code } from '../../../models/code.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CodesService } from '../../../services/codes.service';
 import { VERTICAL } from '../../../models/vertical.model';
 import { TitleCasePipe } from '@angular/common';
 import { VerticalNamePipe } from '../../../pipes/vertical-name.pipe';
+import { AuthCode } from '../../../models/auth-code.model';
 
 @Component({
   selector: 'app-codes-filters',
@@ -14,7 +14,7 @@ import { VerticalNamePipe } from '../../../pipes/vertical-name.pipe';
   styleUrl: './codes-filters.component.scss'
 })
 export class CodesFiltersComponent {
-  @Input() public allCodes: Code[] = [];
+  @Input() public codes: AuthCode[] = [];
   @Input() public apps: VERTICAL[] = [];
   public filterForm: FormGroup = this.fb.group({
     vertId: ['all'],
@@ -25,10 +25,12 @@ export class CodesFiltersComponent {
   constructor(private fb: FormBuilder, private codesService: CodesService) { }
 
   public ngOnInit(): void {
-    this.filterForm.valueChanges.subscribe(changes => {      
-      const filtersFormData: CodesFiltersFormData = this.filterForm.value as CodesFiltersFormData;
-      const parsedFormData = this.codesService.parseCodesFiltersFormData(filtersFormData);
-      this.codesService.filterCodes(parsedFormData);
+    this.filterForm.valueChanges.subscribe(changes => {
+      // const filtersFormData: CodesFiltersFormData = this.filterForm.value as CodesFiltersFormData;
+      // const parsedFormData = this.codesService.parseCodesFiltersFormData(filtersFormData);
+      // this.codesService.filterCodes(parsedFormData);
+      const formData: any = this.filterForm.value;
+      this.codesService.filterAuthCodes(formData);
     });
   }
 

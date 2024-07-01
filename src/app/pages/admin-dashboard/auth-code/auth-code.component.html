@@ -1,0 +1,29 @@
+<div class="code-card" [ngClass]="{'is-associated' : code.associatedOn, 'is-disabled' : code.associatedOn && !code.isValid}">
+    <div class="info">
+        <p class="code">{{code.code}}</p>
+        <p class="app secondary-text">{{code.vertId | verticalName}} &#8226; {{code.appType | titlecase}}</p>
+        <p class="validity secondary-text">
+            <span class="material-symbols-outlined icon validity-icon" [ngStyle]="{'color': code.associatedOn ? 'var(--f-danger)' : 'var(--f-success)'}">
+                @if (!code.associatedOn) {check}
+                @else {close}
+            </span>
+            @if (!code.associatedOn) {Codice non ancora utilizzato}
+            @else {Codice usato}
+        </p>
+    </div>
+    <div class="call-to-action">
+        @if (!code.associatedOn) {        
+            <button type="button" class="copy-button" [disabled]="code.associatedOn" [appTooltip]="'Copiato ' + code.code" (click)="copyToClipboard()">
+                <span class="material-symbols-outlined icon toggle-validation-icon">content_copy</span>
+            </button>
+        }
+        @else {
+            <button type="button" class="copy-button" (click)="toggleCode()">
+                <span class="material-symbols-outlined icon copy-icon">
+                    @if (code.isValid) {block}
+                    @else {check}
+                </span>
+            </button>
+        }
+    </div>
+</div>

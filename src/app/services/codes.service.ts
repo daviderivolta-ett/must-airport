@@ -1,6 +1,6 @@
 import { Injectable, Signal, WritableSignal, computed, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { DocumentData, Query, QueryDocumentSnapshot, QuerySnapshot, Timestamp, Unsubscribe, collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
+import { DocumentData, DocumentReference, Query, QueryDocumentSnapshot, QuerySnapshot, Timestamp, Unsubscribe, collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
 import { Code, CodeDb } from '../models/code.model';
 import { VERTICAL } from '../models/vertical.model';
 import { LoggedUser } from '../models/user.model';
@@ -52,6 +52,8 @@ export class CodesService {
   public mobileCodesSignal: WritableSignal<Code[]> = signal([]);
 
   ////
+  public authCodes: AuthCode[] = [];
+  public filteredAuthCodesSignal: WritableSignal<AuthCode[]> = signal([]);
   public webAuthCodesSignal: WritableSignal<AuthCode[]> = signal([]);
   public mobileAuthCodesSignal: WritableSignal<AuthCode[]> = signal([]);
 
@@ -59,14 +61,13 @@ export class CodesService {
     const webAuthCodes: AuthCode[] = this.webAuthCodesSignal();
     const mobileAuthCodes: AuthCode[] = this.mobileAuthCodesSignal();
     const authCodes: AuthCode[] = [...webAuthCodes, ...mobileAuthCodes];
-
     return authCodes;
   });
   ////
 
   constructor(private db: Firestore) {
     effect(() => this.codes = this.codesSignal());
-    effect(() => console.log(this.authCodesSignal()));
+    effect(() => this.authCodes = this.authCodesSignal());
   }
 
   public async setCodeById(appType: APPTYPE, id: string, data: CodeDb): Promise<void> {
@@ -78,15 +79,21 @@ export class CodesService {
     }
   }
 
+  public async setAuthCodeById(id: string, data: AuthCode, appType: APPTYPE): Promise<void> {
+    const ref: DocumentReference<DocumentData> = doc(this.db, appType === APPTYPE.Mobile ? 'mobile_codes' : 'web_codes', id).withConverter(authCodeConverter);
+    try {
+      await setDoc(ref, data, { merge: true });
+    } catch (error) {
+      throw new Error('Errore nell\'aggiornamento del codice.');
+    }
+  }
+
   public async getAllCodes(): Promise<void> {
     await this.getAllWebCodes();
     await this.getAllMobileCodes();
 
-    const webAuthCodes: AuthCode[] = await this.getAllAuthCodes(APPTYPE.Web);
-    const mobileAuthCodes: AuthCode[] = await this.getAllAuthCodes(APPTYPE.Mobile);
-
-    this.webAuthCodesSignal.set(webAuthCodes);
-    this.mobileAuthCodesSignal.set(mobileAuthCodes);
+    await this.getAllAuthCodes(APPTYPE.Web);
+    await this.getAllAuthCodes(APPTYPE.Mobile);
   }
 
   public async getAllWebCodes(): Promise<void> {
@@ -102,16 +109,19 @@ export class CodesService {
     );
   }
 
-  public async getAllAuthCodes(appType: APPTYPE): Promise<AuthCode[]> {
-    const authCodes: AuthCode[] = [];
+  public async getAllAuthCodes(appType: APPTYPE): Promise<void> {
     const q: Query = query(collection(this.db, appType === APPTYPE.Mobile ? 'mobile_codes' : 'web_codes')).withConverter(authCodeConverter);
-    const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
-    querySnapshot.forEach((doc: QueryDocumentSnapshot) => {
-      const authCode: AuthCode = doc.data() as AuthCode;
-      appType === APPTYPE.Mobile ? authCode.appType = APPTYPE.Mobile : authCode.appType = APPTYPE.Web;
-      authCodes.push(authCode);
-    });
-    return authCodes;
+    const unsubscribe: Unsubscribe = onSnapshot(q, (querySnapshot: QuerySnapshot<DocumentData>) => {
+      const authCodes: AuthCode[] = [];
+      querySnapshot.forEach((doc: QueryDocumentSnapshot) => {
+        const authCode: AuthCode = doc.data() as AuthCode;
+        appType === APPTYPE.Mobile ? authCode.appType = APPTYPE.Mobile : authCode.appType = APPTYPE.Web;
+        authCodes.push(authCode);
+        appType === APPTYPE.Mobile ? this.mobileAuthCodesSignal.set(authCodes) : this.webAuthCodesSignal.set(authCodes);
+      });
+    },
+      (error: Error) => console.log(error)
+    );
   }
 
   public async getAllMobileCodes(): Promise<void> {
@@ -285,6 +295,35 @@ export class CodesService {
       }
     }
     this.filteredCodesSignal.set(filteredCodes);
+  }
+
+  public filterAuthCodes(filters: any): void {
+    let filteredCodes: AuthCode[] = [...this.authCodes];
+
+    for (const key in filters) {
+      if (Object.prototype.hasOwnProperty.call(filters, key)) {
+        if (key === 'isValid') {
+          if (filters[key] !== 'all') {
+            switch (filters[key]) {
+              case 'true':
+                filteredCodes = filteredCodes.filter((code: AuthCode) => code.associatedOn);
+                break;
+              default:
+                filteredCodes = filteredCodes.filter((code: AuthCode) => !code.associatedOn);
+                break;
+            }
+          }
+        }
+        if (key === 'appType') {
+          if (filters[key] !== 'all') filteredCodes = filteredCodes.filter((code: AuthCode) => code.appType === filters[key]);
+        }
+        if (key === 'vertId') {
+          if (filters[key] !== 'all') filteredCodes = filteredCodes.filter((code: AuthCode) => code.vertId === filters[key]);
+        }
+      }
+    }
+
+    this.filteredAuthCodesSignal.set(filteredCodes);
   }
 
   public checkIfUserIsAuthorized(user: LoggedUser, app: VERTICAL): boolean {
