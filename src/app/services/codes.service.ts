@@ -1,10 +1,11 @@
 import { Injectable, Signal, WritableSignal, computed, effect, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { DocumentData, QuerySnapshot, Timestamp, Unsubscribe, collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
+import { DocumentData, Query, QueryDocumentSnapshot, QuerySnapshot, Timestamp, Unsubscribe, collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
 import { Code, CodeDb } from '../models/code.model';
 import { VERTICAL } from '../models/vertical.model';
 import { LoggedUser } from '../models/user.model';
 import { APPTYPE } from '../models/app-type.mode';
+import { AuthCode, authCodeConverter } from '../models/auth-code.model';
 
 export interface CreateCodeFormData {
   code: string;
@@ -50,13 +51,27 @@ export class CodesService {
   public mobileCodes: Code[] = [];
   public mobileCodesSignal: WritableSignal<Code[]> = signal([]);
 
+  ////
+  public webAuthCodesSignal: WritableSignal<AuthCode[]> = signal([]);
+  public mobileAuthCodesSignal: WritableSignal<AuthCode[]> = signal([]);
+
+  public authCodesSignal: Signal<AuthCode[]> = computed(() => {
+    const webAuthCodes: AuthCode[] = this.webAuthCodesSignal();
+    const mobileAuthCodes: AuthCode[] = this.mobileAuthCodesSignal();
+    const authCodes: AuthCode[] = [...webAuthCodes, ...mobileAuthCodes];
+
+    return authCodes;
+  });
+  ////
+
   constructor(private db: Firestore) {
     effect(() => this.codes = this.codesSignal());
+    effect(() => console.log(this.authCodesSignal()));
   }
 
   public async setCodeById(appType: APPTYPE, id: string, data: CodeDb): Promise<void> {
-    const ref = appType === APPTYPE.Web ? doc(this.db, 'web_codes', id) : doc(this.db, 'mobile_codes', id);  
-    try {   
+    const ref = appType === APPTYPE.Web ? doc(this.db, 'web_codes', id) : doc(this.db, 'mobile_codes', id);
+    try {
       await setDoc(ref, data, { merge: true });
     } catch (error) {
       throw new Error('Errore nell\'aggiornamento del codice.');
@@ -66,6 +81,12 @@ export class CodesService {
   public async getAllCodes(): Promise<void> {
     await this.getAllWebCodes();
     await this.getAllMobileCodes();
+
+    const webAuthCodes: AuthCode[] = await this.getAllAuthCodes(APPTYPE.Web);
+    const mobileAuthCodes: AuthCode[] = await this.getAllAuthCodes(APPTYPE.Mobile);
+
+    this.webAuthCodesSignal.set(webAuthCodes);
+    this.mobileAuthCodesSignal.set(mobileAuthCodes);
   }
 
   public async getAllWebCodes(): Promise<void> {
@@ -79,6 +100,18 @@ export class CodesService {
     },
       (error: Error) => console.log(error)
     );
+  }
+
+  public async getAllAuthCodes(appType: APPTYPE): Promise<AuthCode[]> {
+    const authCodes: AuthCode[] = [];
+    const q: Query = query(collection(this.db, appType === APPTYPE.Mobile ? 'mobile_codes' : 'web_codes')).withConverter(authCodeConverter);
+    const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
+    querySnapshot.forEach((doc: QueryDocumentSnapshot) => {
+      const authCode: AuthCode = doc.data() as AuthCode;
+      appType === APPTYPE.Mobile ? authCode.appType = APPTYPE.Mobile : authCode.appType = APPTYPE.Web;
+      authCodes.push(authCode);
+    });
+    return authCodes;
   }
 
   public async getAllMobileCodes(): Promise<void> {
