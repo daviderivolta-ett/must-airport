@@ -20,8 +20,9 @@ p {
     background-color: var(--bg-default);
     border: 1px solid var(--border-default);
     border-radius: 4px;
-    max-width: 400px;
     margin: 0 24px;
+    width: 500px;
+    text-align: center;
 }
 
 .info {

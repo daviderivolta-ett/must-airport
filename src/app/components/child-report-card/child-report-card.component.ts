@@ -39,8 +39,7 @@ export class ChildReportCardComponent {
     private authService: AuthService
   ) {
     effect(() => {
-      this.loggedUser = this.authService.loggedUserSignal()
-      console.log(this.loggedUser);      
+      this.loggedUser = this.authService.loggedUserSignal()   
     });
   }
 

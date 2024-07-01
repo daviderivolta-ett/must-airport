@@ -55,8 +55,8 @@ export class CodesService {
   }
 
   public async setCodeById(appType: APPTYPE, id: string, data: CodeDb): Promise<void> {
-    const ref = appType === APPTYPE.Web ? doc(this.db, 'web_codes', id) : doc(this.db, 'mobile_codes', id);
-    try {
+    const ref = appType === APPTYPE.Web ? doc(this.db, 'web_codes', id) : doc(this.db, 'mobile_codes', id);  
+    try {   
       await setDoc(ref, data, { merge: true });
     } catch (error) {
       throw new Error('Errore nell\'aggiornamento del codice.');
@@ -164,7 +164,7 @@ export class CodesService {
       code: formData.code,
       creationDate: Timestamp.now(),
       isValid: false,
-      vertId: formData.app.toLowerCase(),
+      vertId: formData.app,
       // appType: formData.type,
       associatedOn: null,
       user: null,

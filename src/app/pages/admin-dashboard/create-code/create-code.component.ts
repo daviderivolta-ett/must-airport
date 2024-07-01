@@ -54,11 +54,11 @@ export class CreateCodeComponent {
     effect(() => this.isOpen = this.createCodeDialogService.isOpenSignal());
   }
 
-  public handleSubmit(): void {
-    let ref = this.codesService.parseCreateCodeFormData(this.createCodeForm.value as CreateCodeFormData);
+  public handleSubmit(): void {    
+    let ref = this.codesService.parseCreateCodeFormData(this.createCodeForm.value as CreateCodeFormData);     
     const appTypeControl = this.createCodeForm.get('type');
     const appType: APPTYPE = appTypeControl ? (appTypeControl.value as APPTYPE) : APPTYPE.Web;
-    this.codesService.setCodeById(appType, ref.code, ref);
+    this.codesService.setCodeById(appType, ref.code, ref);   
     this.createCodeForm.reset({ app: '', type: '' });
     this.createCodeDialogService.isOpenSignal.set(false);
     this.generateCode();
@@ -86,5 +86,6 @@ export class CreateCodeComponent {
 
   public ngOnInit(): void {
     this.generateCode();
+    console.log(this.apps);
   }
 }
