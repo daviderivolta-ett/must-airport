@@ -27,9 +27,17 @@ export class InspectionFormComponent {
   public today: Date = new Date(Date.now());
   @Input() public parentReport: ReportParent = ReportParent.createEmpty();
 
-  constructor(private fb: FormBuilder, private operationsService: OperationsService, private reportsService: ReportsService, private snackbarService: SnackbarService) { }
+  constructor(
+    private fb: FormBuilder,
+    private operationsService: OperationsService,
+    private reportsService: ReportsService,
+    private snackbarService: SnackbarService
+  ) { }
 
   public async handleSubmit(): Promise<void> {
+    console.log(this.inspectionForm.value);
+    console.log(this.parentReport);
+            
     let operation: OperationDb = this.operationsService.parseOperationFormData(this.inspectionForm.value);
 
     let operationLink: any = {
@@ -61,10 +69,10 @@ export class InspectionFormComponent {
           break;
       }
 
-      const operationLinkId: string = await this.operationsService.setOperationLink(operationLink);
-      operation.operationLink = operationLinkId;
+      // const operationLinkId: string = await this.operationsService.setOperationLink(operationLink);
+      // operation.operationLink = operationLinkId;
 
-      await this.reportsService.setOperationsByReportId(this.parentReport.id, operation);
+      // await this.reportsService.setOperationsByReportId(this.parentReport.id, operation);
       this.snackbarService.createSnackbar(msg, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
     } catch (error) {
       msg = 'Si è verificato un errore. Riprovare.'

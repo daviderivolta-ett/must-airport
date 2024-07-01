@@ -11,6 +11,7 @@ export class WebAppConfig {
     labels: WebAppConfigLabels;
     components: WebAppConfigComponentsType[];
     tags: WebAppConfigTags;
+    flows: WebAppConfigFlows;
 
     constructor(
         name: string,
@@ -20,7 +21,8 @@ export class WebAppConfig {
         style: WebAppConfigStyle,
         labels: WebAppConfigLabels,
         components: WebAppConfigComponentsType[],
-        tags: WebAppConfigTags
+        tags: WebAppConfigTags,
+        flows: WebAppConfigFlows
     ) {
         this.name = name;
         this.id = id;
@@ -30,6 +32,7 @@ export class WebAppConfig {
         this.labels = labels;
         this.components = components;
         this.tags = tags;
+        this.flows = flows;
     }
 
     static createDefault(): WebAppConfig {
@@ -61,6 +64,10 @@ export class WebAppConfig {
             {
                 parent: { elements: [], groups: [] },
                 child: { elements: [], groups: [] }
+            },
+            {
+                parent: [],
+                child: []
             }
         );
     }
@@ -112,76 +119,10 @@ export interface WebAppConfigTagGroup {
     order: number;
 }
 
-// export class WebAppAppSettings {
-//     app: {
-//         id: string,
-//         name: string
-//     };
-//     assets: {
-//         logoUrl: string
-//     };
-//     styles: {
-//         accent: string
-//     };
-//     components: string[];
-//     labels: {
-//         operations: {
-//             inspection: string,
-//             maintenance: string
-//         },
-//         priority: {
-//             high: string,
-//             medium: string,
-//             low: string
-//         }
-//     }
-
-//     constructor() 
-// }
-
-// export interface WebAppSettingsAssets {
-//     logoUrl: string;
-// }
-
-// export interface WebAppSettingsStyles {
-//     accent: string;
-// }
-
-// export class WebAppAppSettings {
-//     id: string;
-//     name: string;
-//     assets: WebAppSettingsAssets;
-//     styles: WebAppSettingsStyles;
-//     components: WebAppConfigComponentsType[];
-
-//     constructor(
-//         id: string,
-//         name: string,
-//         assets: WebAppSettingsAssets,
-//         styles: WebAppSettingsStyles,
-//         components: WebAppConfigComponentsType[]
-//     ) {
-//         this.id = id;
-//         this.name = name;
-//         this.assets = assets;
-//         this.styles = styles;
-//         this.components = components;
-//     }
-
-//     static createEmpty(): WebAppAppSettings {
-//         return new WebAppAppSettings(
-//             '',
-//             '',
-//             {
-//                 logoUrl: ''
-//             },
-//             {
-//                 accent: ''
-//             },
-//             []
-//         )
-//     }
-// }
+export interface WebAppConfigFlows {
+    parent: string[],
+    child: string[]
+}
 
 export type MobileAppConfigParentFlow = {
     [key: string]: string;

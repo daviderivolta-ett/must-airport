@@ -74,7 +74,7 @@ export class CreateCodeComponent {
       code = code + randomWord;
       if (i < 3) code = code + '-';
     }
-    if (!this.codesService.codes.find(item => item.code === code)) {
+    if (!this.codesService.authCodes.find((item: AuthCode) => item.code === code)) {
       this.createCodeForm.get('code')?.setValue(code);
     } else {
       this.generateCode();

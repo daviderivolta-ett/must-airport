@@ -63,7 +63,7 @@ export class ConfigService {
   }
 
   public async generateWebAppConfig(mobileAppConfig: any, vertical: VERTICAL): Promise<void> {
-    // console.log('MOBILE CONFIG:', mobileAppConfig);
+    console.log('MOBILE CONFIG:', mobileAppConfig);
 
     let parentTags: Tag[] = [];
     let parentTagGroups: TagGroup[] = [];
@@ -120,8 +120,22 @@ export class ConfigService {
         groups: [...childTagGroups]
       }
     }
+    if (mobileAppConfig.parentFlows) {
+      for (const key in mobileAppConfig.parentFlows) {
+        if (Object.prototype.hasOwnProperty.call(mobileAppConfig.parentFlows, key)) {
+          config.flows.parent.push(key);
+        }
+      }      
+    }
+    if (mobileAppConfig.childFlows) {
+      for (const key in mobileAppConfig.childFlows) {
+        if (Object.prototype.hasOwnProperty.call(mobileAppConfig.childFlows, key)) {
+          config.flows.child.push(key);
+        }
+      }
+    }
 
-    // console.log('WEB CONFIG:', config);
+    console.log('WEB CONFIG:', config);
 
     this.configSignal.set(config);
   }

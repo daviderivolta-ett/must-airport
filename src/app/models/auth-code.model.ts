@@ -40,7 +40,7 @@ export const authCodeConverter = {
 
         if (authCode.user) c.user = authCode.user;
         if (authCode.associatedOn) c.associatedOn = authCode.associatedOn;
-        if (authCode.creationDate) c.creationDate = Timestamp.fromDate(authCode.creationDate);
+        if (authCode.creationDate) c.creationDate = authCode.creationDate;     
 
         return c;
     },

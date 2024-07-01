@@ -28,7 +28,7 @@ export class AdminDashboardComponent {
   ) {
     effect(() => {
       let codes = this.codesService.authCodesSignal();
-      this.codes = this.sortAuthCodes(codes);
+      this.codes = this.sortAuthCodes(codes);    
     });
     effect(() => {
       let codes = this.codesService.filteredAuthCodesSignal();
