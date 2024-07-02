@@ -4,7 +4,6 @@ import { CodesService } from '../../services/codes.service';
 import { AuthService } from '../../services/auth.service';
 import { SnackbarService } from '../../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../models/snackbar.model';
-import { Code, CodeDb } from '../../models/code.model';
 import { Timestamp } from 'firebase/firestore';
 import { APPTYPE } from '../../models/app-type.mode';
 import { LoggedUser, USERLEVEL, UserData } from '../../models/user.model';
