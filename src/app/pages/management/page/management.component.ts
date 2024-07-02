@@ -13,7 +13,7 @@ import { MiniMapData } from '../../../services/map.service';
 import { TagGroup } from '../../../models/tag.model';
 import { ConfigService } from '../../../services/config.service';
 import { OperationCardManagementComponent } from '../operation-card-management/operation-card-management.component';
-import { OPERATIONTYPE } from '../../../models/operation.model';
+import { Inspection, OPERATIONTYPE } from '../../../models/operation.model';
 import { ChildReportsFiltersComponent } from '../../../components/child-reports-filters/child-reports-filters.component';
 import { WebAppConfig } from '../../../models/config.model';
 import { ControlLabelPipe } from '../../../pipes/control-label.pipe';
@@ -28,6 +28,7 @@ import { CONFIRMDIALOG } from '../../../models/confirm-dialog.model';
 import { Timestamp } from 'firebase/firestore';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 import { SnackbarService } from '../../../observables/snackbar.service';
+import { OperationsService } from '../../../services/operations.service';
 
 @Component({
   selector: 'app-management',
@@ -64,6 +65,8 @@ export class ManagementComponent {
   public childrenReport: ReportChild[] = [];
   public filteredChildrenReport: ReportChild[] = [];
 
+  public operations: Inspection[] = [];
+
   public miniMapData!: MiniMapData;
 
   public isReportFileMenuOpen: boolean = false;
@@ -74,6 +77,7 @@ export class ManagementComponent {
     private router: Router,
     private configService: ConfigService,
     private reportsService: ReportsService,
+    private operationsService: OperationsService,
     private snackbarService: SnackbarService,
     private utilsService: UtilsService,
     private reportFileMenuService: ReportFileMenuService,
@@ -91,6 +95,8 @@ export class ManagementComponent {
       this.filteredChildrenReport = [...this.childrenReport];
       this.childrenFields = this.getCumulativeChildrenFields(this.childrenReport);
 
+      let operations: Inspection[] = await this.operationsService.getAllInspectionsByReportId(this.parentReport.id);
+      this.operations = operations.sort((a: Inspection, b: Inspection) => a.date.getTime() - b.date.getTime());
     });
 
     effect(() => this.parentTagGroups = this.configService.parentTagGroupsSignal());
@@ -156,7 +162,7 @@ export class ManagementComponent {
     if (filter.inspection) {
       this.filteredChildrenReport = this.filteredChildrenReport.concat(
         this.childrenReport.filter((report: ReportChild) =>
-          report.flowId === OPERATIONTYPE.InspectionHorizontal || report.flowId === OPERATIONTYPE.InspectionVertical
+          report.flowId === OPERATIONTYPE.InspectionHorizontal || report.flowId === OPERATIONTYPE.InspectionVertical || report.flowId === OPERATIONTYPE.Inspection
         )
       );
     }
@@ -170,7 +176,7 @@ export class ManagementComponent {
     if (filter.other) {
       this.filteredChildrenReport = this.filteredChildrenReport.concat(
         this.childrenReport.filter((report: ReportChild) =>
-          report.flowId !== OPERATIONTYPE.InspectionHorizontal && report.flowId !== OPERATIONTYPE.InspectionVertical && report.flowId !== OPERATIONTYPE.Maintenance
+          report.flowId !== OPERATIONTYPE.InspectionHorizontal && report.flowId !== OPERATIONTYPE.InspectionVertical &&  report.flowId !== OPERATIONTYPE.Inspection && report.flowId !== OPERATIONTYPE.Maintenance
         )
       );
     }

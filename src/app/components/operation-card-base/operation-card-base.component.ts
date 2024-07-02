@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Operation } from '../../models/operation.model';
+import { Inspection, Operation } from '../../models/operation.model';
 import { ReportsService } from '../../services/reports.service';
 import { ReportParent } from '../../models/report-parent.model';
 
@@ -11,14 +11,14 @@ import { ReportParent } from '../../models/report-parent.model';
   styleUrl: './operation-card-base.component.scss'
 })
 export class OperationCardBaseComponent {
-  private _operation: Operation | null = null;
+  private _operation: Inspection | null = null;
   protected _report: ReportParent | null = null;
 
-  public get operation(): Operation | null {
+  public get operation(): Inspection | null {
     return this._operation;
   }
 
-  @Input() public set operation(value: Operation) {
+  @Input() public set operation(value: Inspection) {
     if (!value) return;
     this._operation = value;
 
@@ -43,8 +43,8 @@ export class OperationCardBaseComponent {
     let report: ReportParent | null = null;
 
     this.reportsService.reports.forEach((r: ReportParent) => {
-      r.operations.forEach((op: Operation) => {
-        if (op.id === id) {
+      r.operations.forEach((op: string) => {
+        if (op === id) {
           report = r;
           return;
         }

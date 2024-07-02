@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ReportParent } from '../models/report-parent.model';
 import { PRIORITY } from '../models/priority.model';
-import { OPERATIONTYPE, Operation } from '../models/operation.model';
+import { Inspection, OPERATIONTYPE, Operation } from '../models/operation.model';
 import { ReportChild } from '../models/report-child.model';
 import { WebAppConfigTagType } from '../models/config.model';
 import { Tag, TagGroup } from '../models/tag.model';
@@ -57,9 +57,8 @@ export class ChartsService {
     return serie;
   }
 
-  public createInterventionsPerTimeSerie(reports: ReportParent[]): Highcharts.SeriesLineOptions {
-    const operations: Operation[] = reports.flatMap(report => report.operations);
-    const interventions: Operation[] = operations.filter(operation => operation.type === OPERATIONTYPE.Maintenance);
+  public createInterventionsPerTimeSerie(operations: Inspection[]): Highcharts.SeriesLineOptions {
+    const interventions: Inspection[] = operations.filter(operation => operation.type === OPERATIONTYPE.Maintenance);
     const interventionFrequency = this.calculateDateFrequency(interventions);
     let interventionsSerieData: [number, number][] = Object.entries(interventionFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
     interventionsSerieData.sort((a, b) => a[0] - b[0]);
@@ -77,9 +76,11 @@ export class ChartsService {
     return interventionsSerie;
   }
 
-  public createInspectionsPerTimeSerie(reports: ReportParent[]): Highcharts.SeriesLineOptions {
-    const operations: Operation[] = reports.flatMap(report => report.operations);
-    const inspections: Operation[] = operations.filter(operation => operation.type === OPERATIONTYPE.InspectionHorizontal || operation.type === OPERATIONTYPE.InspectionVertical);
+  public createInspectionsPerTimeSerie(operations: Inspection[]): Highcharts.SeriesLineOptions {
+    const inspections: Inspection[] = operations.filter(operation =>
+      operation.type === OPERATIONTYPE.InspectionHorizontal ||
+      operation.type === OPERATIONTYPE.InspectionVertical ||
+      operation.type === OPERATIONTYPE.Inspection);
     const inspectionFrequency = this.calculateDateFrequency(inspections);
     let inspectionsSerieData: [number, number][] = Object.entries(inspectionFrequency).map(([dateString, count]) => [new Date(dateString).getTime(), count]);
     inspectionsSerieData.sort((a, b) => a[0] - b[0]);
@@ -97,7 +98,7 @@ export class ChartsService {
     return inspectionsSerie;
   }
 
-  private calculateDateFrequency(operations: Operation[]): { [key: string]: number } {
+  private calculateDateFrequency(operations: Inspection[]): { [key: string]: number } {
     const dates: Date[] = operations.map(operation => operation.date);
 
     const dateFrequency: { [key: string]: number } = {};

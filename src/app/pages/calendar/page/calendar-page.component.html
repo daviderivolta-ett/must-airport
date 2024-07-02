@@ -6,7 +6,7 @@
         <h2>{{keyValue.key | date: 'EEEE, MMMM d, y':'':'it-IT'}}</h2>
         <div class="day">
             @for (operation of keyValue.value; track operation.id) {
-                <app-operation-card-calendar [operation]="operation"/>
+                <app-operation-card-calendar [operation]="operation" />
             }
         </div>
     }

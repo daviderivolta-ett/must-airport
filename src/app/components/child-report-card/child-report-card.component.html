@@ -9,11 +9,14 @@
         @else if (childReport.fields.photo_detail && childReport.fields.photo_detail.length !== 0) {
             <img src="{{childReport.fields.photo_detail[0]}}" alt="Immagine del report">
         }
+        @else if (childReport.fields.maintenance_photo && childReport.fields.maintenance_photo.length !== 0) {
+            <img src="{{childReport.fields.maintenance_photo[0]}}" alt="Immagine del report">
+        }
         @else {
             <img src="./assets/images/logo.png" class="placeholder" alt="Immagine placeholder">
         }
 
-        @if (childReport.flowId === 'maintenance' || childReport.flowId === 'inspectionHorizontal' || childReport.flowId === 'inspectionVertical') {
+        @if (childReport.flowId === 'maintenance' || childReport.flowId === 'inspectionHorizontal' || childReport.flowId === 'inspectionVertical' || childReport.flowId === 'inspection') {
             <div class="icon-wrapper">
                 @if (childReport.isClosed) {
                     <span class="material-symbols-outlined verified-icon">check_circle</span>
@@ -45,6 +48,9 @@
                 <span class="info-value">
                     @if (childReport.fields.comment && childReport.fields.length !== 0) {
                         {{childReport.fields.comment}}
+                    }
+                    @else if (childReport.fields.maintenance_description && childReport.fields.maintenance_description.length !== 0) {
+                        {{childReport.fields.maintenance_description}}
                     }
                     @else {
                         -

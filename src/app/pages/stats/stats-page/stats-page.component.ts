@@ -6,6 +6,8 @@ import { ChartsService } from '../../../services/charts.service';
 import { PieChartComponent } from '../pie-chart/pie-chart.component';
 import { ReportChild } from '../../../models/report-child.model';
 import { ConfigService } from '../../../services/config.service';
+import { Inspection } from '../../../models/operation.model';
+import { OperationsService } from '../../../services/operations.service';
 
 @Component({
   selector: 'app-stats-page',
@@ -17,6 +19,8 @@ import { ConfigService } from '../../../services/config.service';
 export class StatsPageComponent {
   public parentReports: ReportParent[] = [];
   public childrenReports: ReportChild[] = [];
+  public operations: Inspection[] = [];
+
   public reportsNumPerTimeSerie: Highcharts.SeriesLineOptions = { type: 'line' };
   public reportsNumPerPrioritySerie: Highcharts.SeriesPieOptions = { type: 'pie' };
   public interventionsPerTimeSerie: Highcharts.SeriesLineOptions = { type: 'line' };
@@ -32,7 +36,12 @@ export class StatsPageComponent {
   public failureTagsNumSerie: Highcharts.SeriesPieOptions = { type: 'pie' };
   public failureSubTagsDrilldownNumSeries: Highcharts.SeriesPieOptions[] = [];
 
-  constructor(private configService: ConfigService, private reportsService: ReportsService, private chartsService: ChartsService) {
+  constructor(
+    private configService: ConfigService,
+    private reportsService: ReportsService,
+    private operationsService: OperationsService,
+    private chartsService: ChartsService
+  ) {
     effect(async () => {
       this.parentReports = this.reportsService.reportsSignal();
 
@@ -46,18 +55,20 @@ export class StatsPageComponent {
 
       this.childrenReports = (await Promise.all(childReportsPromises)).flat();
 
-      this.reportsNumPerTimeSerie = this.chartsService.createReportsNumPerTimeSerie(this.parentReports);
+      this.operations = await this.operationsService.getAllInspections();
+
+        this.reportsNumPerTimeSerie = this.chartsService.createReportsNumPerTimeSerie(this.parentReports);
       this.reportsNumPerPrioritySerie = this.chartsService.createReportsNumPerPrioritySerie(this.parentReports);
-      this.interventionsPerTimeSerie = this.chartsService.createInterventionsPerTimeSerie(this.parentReports);
-      this.inspectionsPerTimeSerie = this.chartsService.createInspectionsPerTimeSerie(this.parentReports);
+      this.interventionsPerTimeSerie = this.chartsService.createInterventionsPerTimeSerie(this.operations);
+      this.inspectionsPerTimeSerie = this.chartsService.createInspectionsPerTimeSerie(this.operations);
 
       const { series: parentSeries, drilldownSeries: parentDrilldownSeries } = this.chartsService.createTagsSerie(this.configService.config.tags.parent, this.parentReports);
       this.parentFlowTagsNumSeries = [...parentSeries];
       this.parentFlowTagsNumDrilldownSeries = [...parentDrilldownSeries];
 
-      const { series: childSeries, drilldownSeries: childDrilldownSeries} = this.chartsService.createTagsSerie(this.configService.config.tags.child, this.childrenReports);
+      const { series: childSeries, drilldownSeries: childDrilldownSeries } = this.chartsService.createTagsSerie(this.configService.config.tags.child, this.childrenReports);
       this.childFlowTagsNumSeries = [...childSeries];
-      this.childFlowTagsNumDrilldownSeries = [...childDrilldownSeries];     
+      this.childFlowTagsNumDrilldownSeries = [...childDrilldownSeries];
     });
   }
 }

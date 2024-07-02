@@ -29,7 +29,7 @@ export class ReportParent {
     verticalId: string;
 
     id: string;
-    operations: Operation[];
+    operations: string[];
     validationDate?: Date;
     isArchived?: boolean;
     archivingTime?: Date | null;
@@ -56,7 +56,7 @@ export class ReportParent {
         isValidated: boolean,
         verticalId: string,
         id: string,
-        operations: Operation[],
+        operations: string[],
         validationDate: Timestamp | undefined,
         isArchived?: boolean,
         archivingTime?: Timestamp | null,

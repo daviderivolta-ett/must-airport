@@ -33,7 +33,7 @@ export interface ReportParentDb {
   validated: boolean;
   validationDate: Timestamp;
   verticalId: string;
-  operations: OperationDb[];
+  operations: string[];
   archived?: boolean;
   archivingTime?: Timestamp | null;
   files?: string[];
@@ -271,6 +271,13 @@ export class ReportsService {
     }
   }
 
+  public async removeOperationByReportId(reportId: string, operationId: string): Promise<void> {
+    const ref = doc(this.db, 'reportParents', reportId);
+    await updateDoc(ref, {
+      operations: arrayRemove(operationId)
+    });
+  }
+
   public async setOperationsByReportId(id: string, operation: OperationDb): Promise<void> {
     let parentReport: ReportParentDb = await this.getParentReportById(id);
     if (!parentReport.operations) parentReport.operations = [];
@@ -320,13 +327,15 @@ export class ReportsService {
     r.verticalId = report.verticalId;
     r.id = id;
 
-    if (report.operations) {
-      r.operations = report.operations.map((operation: OperationDb) => {
-        return this.parseParentReportOperation(operation);
-      });
-    } else {
-      r.operations = [];
-    }
+    // if (report.operations) {
+    //   r.operations = report.operations.map((operation: OperationDb) => {
+    //     return this.parseParentReportOperation(operation);
+    //   });
+    // } else {
+    //   r.operations = [];
+    // }
+
+    if (report.operations) r.operations = [...report.operations];
 
     if (report.validationDate) r.validationDate = report.validationDate.toDate();
     if (report.archived) r.isArchived = report.archived;
@@ -599,10 +608,10 @@ export class ReportsService {
     return parentReport;
   }
 
-  public getAllOperations(): Operation[] {
-    const operations: Operation[] = []
+  public getAllOperations(): string[] {
+    const operations: string[] = []
     this.reports.map((report: ReportParent) => {
-      report.operations.forEach((operation: Operation) => {
+      report.operations.forEach((operation: string) => {
         operations.push(operation);
       });
     })

@@ -23,13 +23,12 @@ export class OperationCardManagementComponent extends OperationCardBaseComponent
   }
 
   public copyToClipboard(): void {
-    navigator.clipboard.writeText(`https://app.s4must.it/appLink?id=${this.operation?.operationLink}`);
+    navigator.clipboard.writeText(`https://app.s4must.it/appLink?id=${this.operation?.linkId}`);
   }
 
   public async deleteOperation(): Promise<void> {
     if (!this.operation) return;
- 
-    const operationLink: OperationLinkDb = await this.operationsService.getOperationById(this.operation.operationLink);
+    if (!this.report) return;
 
     let msg: string;
 
@@ -44,8 +43,9 @@ export class OperationCardManagementComponent extends OperationCardBaseComponent
           break;
       }
 
-      await this.reportsService.deleteOperationByReportId(operationLink.reportParentId, this.operation);
-      await this.operationsService.deleteOperationLinkById(this.operation.operationLink)
+      await this.operationsService.deleteInspectionById(this.operation.id);
+      await this.operationsService.deleteOperationLinkById(this.operation.linkId);
+      await this.reportsService.removeOperationByReportId(this.report.id, this.operation.id);
       this.snackbarService.createSnackbar(msg, SNACKBARTYPE.Closable);
 
     } catch (error) {

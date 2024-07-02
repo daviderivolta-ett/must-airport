@@ -110,7 +110,7 @@
         }
         @else {
         <div class="operations">
-            @for (operation of parentReport.operations; track $index) {
+            @for (operation of operations; track $index) {
             <app-operation-card-management [operation]="operation" />
             }
         </div>

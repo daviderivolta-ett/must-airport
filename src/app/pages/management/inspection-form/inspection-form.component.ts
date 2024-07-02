@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OperationsService } from '../../../services/operations.service';
-import { OperationDb } from '../../../models/operation.model';
+import { Inspection, InspectionLink, OPERATIONTYPE, OperationDb, OperationLink } from '../../../models/operation.model';
 import { ReportParent } from '../../../models/report-parent.model';
 import { ReportsService } from '../../../services/reports.service';
 import { SnackbarService } from '../../../observables/snackbar.service';
@@ -35,49 +35,53 @@ export class InspectionFormComponent {
   ) { }
 
   public async handleSubmit(): Promise<void> {
-    console.log(this.inspectionForm.value);
-    console.log(this.parentReport);
-            
-    let operation: OperationDb = this.operationsService.parseOperationFormData(this.inspectionForm.value);
+    let inspection: Inspection = new Inspection(
+      new Date(this.inspectionForm.value.date!),
+      '',
+      '',
+      this.parentReport.id,
+      this.inspectionForm.value.operator!,
+      this.inspectionForm.value.type! as OPERATIONTYPE
+    );
 
-    let operationLink: any = {
-      reportParentId: this.parentReport.id,
-      verticalId: this.parentReport.verticalId,
-      type: 'activateChildFlow'
-    };
+    let link: InspectionLink = new InspectionLink(
+      OPERATIONTYPE.Maintenance,
+      this.parentReport.id,
+      this.parentReport.verticalId
+    );
 
-    let msg: string;
+    if (inspection.type === 'inspection') {
+      switch (this.parentReport.childFlowIds[0]) {
+        case 'horizontal':
+          inspection.type = OPERATIONTYPE.InspectionHorizontal;
+          link.childFlowId = OPERATIONTYPE.InspectionHorizontal;
+          break;
 
-    try {
-      switch (operation.type) {
-        case 'inspection':
-          msg = 'Intervento creato con successo.';
-
-          if (this.parentReport.childFlowIds[0] === 'horizontal') {
-            operationLink.childFlowId = 'inspectionHorizontal';
-            operation.type = 'inspectionHorizontal';
-          } else {
-            operationLink.childFlowId = 'inspectionVertical';
-            operation.type = 'inspectionVertical';
-          }
-
+        case 'vertical':
+          inspection.type = OPERATIONTYPE.InspectionVertical;
+          link.childFlowId = OPERATIONTYPE.InspectionVertical;
           break;
 
         default:
-          msg = 'Ispezione creata con successo.';
-          operationLink.childFlowId = 'maintenance';
+          inspection.type = OPERATIONTYPE.Inspection;
+          link.childFlowId = OPERATIONTYPE.Inspection;
           break;
       }
+    } else {
+      inspection.type = OPERATIONTYPE.Maintenance;
+      link.childFlowId = OPERATIONTYPE.Maintenance;
+    }
 
-      // const operationLinkId: string = await this.operationsService.setOperationLink(operationLink);
-      // operation.operationLink = operationLinkId;
-
-      // await this.reportsService.setOperationsByReportId(this.parentReport.id, operation);
-      this.snackbarService.createSnackbar(msg, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
+    try {
+      inspection.linkId = await this.operationsService.setOperationLink(link);
+      let inspectionId: string = await this.operationsService.setInspection(inspection);
+      this.parentReport.operations.push(inspectionId);
+      await this.reportsService.setReportById(this.parentReport.id, { operations: this.parentReport.operations });
     } catch (error) {
-      msg = 'Si è verificato un errore. Riprovare.'
+      let msg = 'Si è verificato un errore. Riprovare.'
       this.snackbarService.createSnackbar(msg, SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
     }
+
     this.inspectionForm.reset();
   }
 }
