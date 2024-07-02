@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { OperationCardBaseComponent } from '../../../components/operation-card-base/operation-card-base.component';
 import { ReportsService } from '../../../services/reports.service';
-import { OperationLinkDb } from '../../../models/operation.model';
 import { OperationsService } from '../../../services/operations.service';
 import { SnackbarService } from '../../../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';

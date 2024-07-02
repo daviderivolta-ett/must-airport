@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Inspection, Operation } from '../../models/operation.model';
+import { Inspection } from '../../models/operation.model';
 import { ReportsService } from '../../services/reports.service';
 import { ReportParent } from '../../models/report-parent.model';
 

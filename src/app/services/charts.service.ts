@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ReportParent } from '../models/report-parent.model';
 import { PRIORITY } from '../models/priority.model';
-import { Inspection, OPERATIONTYPE, Operation } from '../models/operation.model';
+import { Inspection, OPERATIONTYPE } from '../models/operation.model';
 import { ReportChild } from '../models/report-child.model';
 import { WebAppConfigTagType } from '../models/config.model';
 import { Tag, TagGroup } from '../models/tag.model';

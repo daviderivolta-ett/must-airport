@@ -1,9 +1,7 @@
 import { GeoPoint, Timestamp } from 'firebase/firestore';
-import { ReportParentFields } from './report-parent.fields.model';
 import { TechElementSubTag } from './tech-element-subtag.model';
 import { PRIORITY } from './priority.model';
 import { LANGUAGE } from './language.model';
-import { Operation } from './operation.model';
 import { ReportTagGroup } from './tag.model';
 
 export class ReportParent {

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OperationsService } from '../../../services/operations.service';
-import { Inspection, InspectionLink, OPERATIONTYPE, OperationDb, OperationLink } from '../../../models/operation.model';
+import { Inspection, InspectionLink, OPERATIONTYPE } from '../../../models/operation.model';
 import { ReportParent } from '../../../models/report-parent.model';
 import { ReportsService } from '../../../services/reports.service';
 import { SnackbarService } from '../../../observables/snackbar.service';

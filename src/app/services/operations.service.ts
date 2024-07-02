@@ -1,5 +1,5 @@
 import { Injectable, WritableSignal, effect, signal } from '@angular/core';
-import { Inspection, InspectionLink, OPERATIONTYPE, Operation, OperationDb, OperationLink, OperationLinkDb, inspectionConverter, inspectionLinkConverter } from '../models/operation.model';
+import { Inspection, InspectionLink, OPERATIONTYPE, inspectionConverter, inspectionLinkConverter } from '../models/operation.model';
 import { CollectionReference, DocumentData, DocumentReference, Query, QueryDocumentSnapshot, QuerySnapshot, Timestamp, addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { Firestore } from '@angular/fire/firestore';
 
@@ -55,16 +55,6 @@ export class OperationsService {
     return inspections;
   }
 
-  public async getOperationById(id: string): Promise<OperationLinkDb> {
-    const q = doc(this.db, 'links', id);
-    const snapshot = await getDoc(q);
-    if (snapshot.exists()) {
-      return snapshot.data() as OperationLinkDb;
-    } else {
-      throw new Error('Operazione non trovata');
-    }
-  }
-
   public async setOperationLink(inspectionLink: InspectionLink): Promise<string> {
     const ref: CollectionReference<DocumentData> = collection(this.db, 'links').withConverter(inspectionLinkConverter);
     const docRef: DocumentReference = await addDoc(ref, inspectionLink);
@@ -83,27 +73,6 @@ export class OperationsService {
 
   public async deleteInspectionById(id: string): Promise<void> {
     await deleteDoc(doc(this.db, 'inspections', id));
-  }
-
-  public parseOperationFormData(formData: any): OperationDb {
-    let operation: OperationDb = {
-      operatorName: formData.operator,
-      date: Timestamp.fromDate(new Date(formData.date)),
-      type: formData.type,
-      id: new Date(formData.date).valueOf().toString() + new Date(Date.now()).valueOf().toString(),
-      operationLink: ''
-    }
-    return operation;
-  }
-
-  public reParseOperationLink(operationLink: OperationLink): any {
-    let o: any = {
-      childFlowId: operationLink.childFlowId,
-      reportParentId: operationLink.reportParentId,
-      type: operationLink.type,
-      verticalId: operationLink.verticalId
-    }
-    return o;
   }
 
   public parseOperationsFiltersFormData(data: OperationsFiltersFormData): ParsedOperationsFiltersFormData {

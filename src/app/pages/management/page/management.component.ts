@@ -7,7 +7,6 @@ import { ChildReportFiltersFormData, ReportsService } from '../../../services/re
 import { DatePipe, KeyValuePipe, NgClass, TitleCasePipe } from '@angular/common';
 import { ChildReportCardComponent } from '../../../components/child-report-card/child-report-card.component';
 import { InspectionFormComponent } from '../inspection-form/inspection-form.component';
-import { OperationCardComponent } from '../operation-card/operation-card.component';
 import { MiniMapComponent } from '../../../components/mini-map/mini-map.component';
 import { MiniMapData } from '../../../services/map.service';
 import { TagGroup } from '../../../models/tag.model';
@@ -38,7 +37,6 @@ import { OperationsService } from '../../../services/operations.service';
     ChildReportCardComponent,
     ValidationFormComponent,
     InspectionFormComponent,
-    OperationCardComponent,
     OperationCardManagementComponent,
     ReportFileMenuComponent,
     HoverTooltipDirective,

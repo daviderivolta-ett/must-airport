@@ -1,6 +1,5 @@
 import { Component, effect } from '@angular/core';
-import { Inspection, Operation } from '../../../models/operation.model';
-import { OperationCardComponent } from '../../management/operation-card/operation-card.component';
+import { Inspection } from '../../../models/operation.model';
 import { OperationsService } from '../../../services/operations.service';
 import { CalendarFiltersComponent } from '../calendar-filters/calendar-filters.component';
 import { OperationCardCalendarComponent } from '../operation-card-calendar/operation-card-calendar.component';
@@ -10,7 +9,7 @@ import { DatePipe, KeyValuePipe } from '@angular/common';
 @Component({
   selector: 'app-calendar-page',
   standalone: true,
-  imports: [KeyValuePipe, DatePipe, OperationCardComponent, CalendarFiltersComponent, OperationCardBaseComponent, OperationCardCalendarComponent],
+  imports: [KeyValuePipe, DatePipe, CalendarFiltersComponent, OperationCardBaseComponent, OperationCardCalendarComponent],
   templateUrl: './calendar-page.component.html',
   styleUrl: './calendar-page.component.scss'
 })

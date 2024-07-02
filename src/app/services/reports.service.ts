@@ -8,7 +8,7 @@ import { PRIORITY, Priority } from '../models/priority.model';
 import { LANGUAGE, Language } from '../models/language.model';
 import { StorageReference, deleteObject, getMetadata, ref } from 'firebase/storage';
 import { Storage } from '@angular/fire/storage';
-import { OPERATIONTYPE, Operation, OperationDb } from '../models/operation.model';
+import { OPERATIONTYPE } from '../models/operation.model';
 import { VERTICAL } from '../models/vertical.model';
 import { ConfigService } from './config.service';
 import { ReportTag, ReportTagGroup, Tag, TagGroup } from '../models/tag.model';
@@ -278,25 +278,6 @@ export class ReportsService {
     });
   }
 
-  public async setOperationsByReportId(id: string, operation: OperationDb): Promise<void> {
-    let parentReport: ReportParentDb = await this.getParentReportById(id);
-    if (!parentReport.operations) parentReport.operations = [];
-
-    const ref = doc(this.db, 'reportParents', id);
-    await updateDoc(ref, {
-      operations: arrayUnion(operation)
-    })
-  }
-
-  public async deleteOperationByReportId(id: string, operation: Operation): Promise<void> {
-    let parentReport: ReportParentDb = await this.getParentReportById(id);
-    let operationDb: any = this.reParseParentReportOperation(operation);
-    const ref = doc(this.db, 'reportParents', id);
-    await updateDoc(ref, {
-      operations: arrayRemove(operationDb)
-    })
-  }
-
   public async setReportFilesByReportId(id: string, fileName: string): Promise<void> {
     const ref: DocumentReference = doc(this.db, 'reportParents', id);
     await updateDoc(ref, {
@@ -326,14 +307,6 @@ export class ReportsService {
     r.isValidated = report.validated;
     r.verticalId = report.verticalId;
     r.id = id;
-
-    // if (report.operations) {
-    //   r.operations = report.operations.map((operation: OperationDb) => {
-    //     return this.parseParentReportOperation(operation);
-    //   });
-    // } else {
-    //   r.operations = [];
-    // }
 
     if (report.operations) r.operations = [...report.operations];
 
@@ -444,43 +417,6 @@ export class ReportsService {
     });
 
     return f;
-  }
-
-
-  private parseParentReportOperation(operation: OperationDb): Operation {
-    let o = Operation.createEmpty();
-
-    if (operation.date !== undefined) o.date = operation.date.toDate();
-    if (operation.operatorName !== undefined) o.operatorName = operation.operatorName;
-    if (operation.type !== undefined) {
-      switch (operation.type) {
-        case 'inspectionVertical':
-          o.type = OPERATIONTYPE.InspectionVertical;
-          break;
-        case 'inspectionHorizontal':
-          o.type = OPERATIONTYPE.InspectionHorizontal;
-          break;
-        default:
-          o.type = OPERATIONTYPE.Maintenance;
-          break;
-      }
-    }
-    if (operation.id !== undefined) o.id = operation.id;
-    if (operation.operationLink !== undefined) o.operationLink = operation.operationLink;
-
-    return o;
-  }
-
-  private reParseParentReportOperation(operation: Operation): any {
-    let o = {
-      date: Timestamp.fromDate(operation.date),
-      operatorName: operation.operatorName,
-      type: operation.type,
-      id: operation.id,
-      operationLink: operation.operationLink
-    }
-
-    return o;
   }
 
   public async getAllChildrenReports(verticalId: VERTICAL): Promise<ReportChild[]> {
