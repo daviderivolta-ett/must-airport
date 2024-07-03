@@ -1,7 +1,7 @@
 import { Component, Input, effect } from '@angular/core';
 import { LoggedUser, UserData } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
-import { NgClass, NgStyle, TitleCasePipe } from '@angular/common';
+import { NgClass, TitleCasePipe } from '@angular/common';
 import { HeaderService } from '../../observables/header.service';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { SnackbarService } from '../../observables/snackbar.service';
@@ -43,14 +43,6 @@ export class AccountMenuComponent {
   public reloadApp(selectedApp: VERTICAL = VERTICAL.Default): void {
     const user: LoggedUser | null = this.authService.loggedUser;    
     if (!user) return;
-    let userData: UserData = {
-      userLevel: user.level,
-      lastLogin: Timestamp.fromDate(user.lastLogin),
-      // apps: user.apps,
-      lastApp: selectedApp
-    }
-    // this.userService.setUserDataById(user.id, userData);
-    // window.location.reload();
     this.authService.currentAppSignal.set(selectedApp);
   }
 }

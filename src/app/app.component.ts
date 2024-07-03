@@ -74,6 +74,9 @@ export class AppComponent {
 
     effect(async () => {
       if (this.authService.currentAppSignal() === null) return;
+      
+      this.splashService.createSplash();
+
       const currentApp: VERTICAL | null = this.authService.currentApp;
       const loggedUser = this.authService.loggedUser;
 
