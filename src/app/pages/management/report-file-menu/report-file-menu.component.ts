@@ -14,11 +14,13 @@ import { VERTICAL } from '../../../models/vertical.model';
 import { SnackbarService } from '../../../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 import { CONFIRMDIALOG } from '../../../models/confirm-dialog.model';
+import { UploadTaskSnapshot } from 'firebase/storage';
+import { NgStyle } from '@angular/common';
 
 @Component({
   selector: 'app-report-file-menu',
   standalone: true,
-  imports: [ClickOutsideDirective, ReactiveFormsModule],
+  imports: [ClickOutsideDirective, ReactiveFormsModule, NgStyle],
   templateUrl: './report-file-menu.component.html',
   styleUrl: './report-file-menu.component.scss',
   animations: [
@@ -48,6 +50,7 @@ export class ReportFileMenuComponent {
   public isOpen: boolean = false;
   public file: File | null = null;
   public files: ReportFile[] = [];
+  public uploadProgress: number = 0;
 
   private _report: ReportParent = ReportParent.createEmpty();
   public get report(): ReportParent {
@@ -76,13 +79,6 @@ export class ReportFileMenuComponent {
   ) {
     effect(() => this.isOpen = this.reportFileMenuService.isOpenSignal());
     effect(async () => {
-      // if (this.confirmDialogService.confirmUploadReportFileSignal() === null) return;
-      // if (this.confirmDialogService.confirmUploadReportFileSignal() === false) return;
-
-      // await this.overwriteReportFile(this.report)
-      // if (this.file && this.authService.currentApp) await this.uploadFile(this.file, this.authService.currentApp);
-      // this.emptyInput();
-
       if (this.confirmDialogService.uploadFileSignal() !== true) return;
       await this.overwriteReportFile(this.report);
       if (this.file && this.authService.currentApp) await this.uploadFile(this.file, this.authService.currentApp);
@@ -119,7 +115,7 @@ export class ReportFileMenuComponent {
   public async uploadFile(file: File, currentApp: VERTICAL) {
     try {
       const fileName: string = this.generateFileName(file);
-      const url: string = await this.reportFileService.uploadFile(file, currentApp, fileName);
+      const url: string = await this.reportFileService.uploadFile(file, currentApp, fileName, this.handleProgress.bind(this));
       const fileObj: ReportFile = new ReportFile(fileName, url, file.name, Timestamp.now(), this.report.id, currentApp);
       const id: string = await this.reportFileService.setReportFile(fileObj);
       await this.reportsService.setReportFilesByReportId(this.report.id, id);
@@ -127,6 +123,11 @@ export class ReportFileMenuComponent {
     } catch (error) {
       console.error('Error in file upload', error);
     }
+  }
+
+  private handleProgress(snapshot: UploadTaskSnapshot): void {
+    this.uploadProgress = Math.floor((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+    if (snapshot.state !== 'running') this.uploadProgress = 0;
   }
 
   private generateFileName(file: File): string {
@@ -142,7 +143,6 @@ export class ReportFileMenuComponent {
     input.value = '';
     this.file = null;
     this.uploadReportFileForm.reset();
-    // this.confirmDialogService.confirmUploadReportFileSignal.set(null);
   }
 
   private async overwriteReportFile(report: ReportParent): Promise<void> {

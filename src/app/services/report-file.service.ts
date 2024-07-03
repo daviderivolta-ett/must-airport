@@ -13,29 +13,52 @@ export class ReportFileService {
 
   constructor(private db: Firestore, private storage: Storage) { }
 
-  public async uploadFile(file: File, verticalId: VERTICAL, fileName: string): Promise<string> {
+  public async uploadFile(file: File, verticalId: VERTICAL, fileName: string, onProgress: (snapshot: UploadTaskSnapshot) => void): Promise<string> {
     const storageRef: StorageReference = ref(this.storage, `documents/${verticalId}/${fileName}`);
 
-    try {
-      return await uploadBytes(storageRef, file)
-        .then((result: UploadResult) => getDownloadURL(result.ref).then(url => url))
-    } catch (error) {
-      if (error instanceof StorageError) {
-        console.error('Firebase storage error:', error.code, error.message);
-      } else {
-        console.error('Error uploading file:', error);
-      }
-      throw error;
-    }
-
     // try {
-    //   return await uploadBytesResumable(storageRef, file).on('state_changed',
-    //     (snapshot: UploadTaskSnapshot) => {
-    //       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    //     })
+    //   return await uploadBytes(storageRef, file)
+    //     .then((result: UploadResult) => getDownloadURL(result.ref).then(url => url))
     // } catch (error) {
-
+    //   if (error instanceof StorageError) {
+    //     console.error('Firebase storage error:', error.code, error.message);
+    //   } else {
+    //     console.error('Error uploading file:', error);
+    //   }
+    //   throw error;
     // }
+
+    return new Promise((resolve, reject) => {
+      const uploadTask = uploadBytesResumable(storageRef, file);
+      uploadTask.on('state_changed', (snapshot: UploadTaskSnapshot) => {
+        onProgress(snapshot);
+
+        switch (snapshot.state) {
+          case 'paused':
+            break;
+          case 'running':
+            break;
+        }
+
+      },
+        (error) => {
+          onProgress(uploadTask.snapshot);
+          if (error instanceof StorageError) {
+            console.error('Firebase storage error', error);
+          } else {
+            console.error('Error uploading file', error);
+          }
+          reject(error);
+        },
+        () => {
+          onProgress(uploadTask.snapshot);
+          getDownloadURL(uploadTask.snapshot.ref)
+            .then((url: string) => resolve(url))
+            .catch((error: Error) => reject(error));
+        }
+      );
+    });
+
   }
 
   public async deleteFile(verticalId: string, fileName: string): Promise<void> {

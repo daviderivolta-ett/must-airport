@@ -19,8 +19,18 @@
                 </a>
             </li>
         }
+
         @if (files.length === 0) {
-            <p>Nessun file associato al report</p>
+            @if (uploadProgress !== 0) {
+                <p>Caricamento... {{uploadProgress}}%</p>
+            }
+            @else {
+                <p>Nessun report trovato</p>
+            }
+        }
+        @else if (uploadProgress !== 0) {
+            <p>Caricamento... {{uploadProgress}}%</p>
         }
     </ul>
+    <div class="progress-bar" [ngStyle]="{'width': uploadProgress + '%'}"></div>
 </div>

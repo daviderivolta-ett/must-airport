@@ -1,4 +1,5 @@
 .dialog {
+    position: relative;
     background-color: var(--bg-default);
     padding: 16px;
     box-sizing: border-box;
@@ -112,4 +113,13 @@ a.file-link {
     white-space: nowrap;
     text-overflow: ellipsis;
     margin: 0;
+}
+
+.progress-bar {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    height: 4px;
+    background-color: var(--bg-accent);
 }
