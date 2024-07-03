@@ -1,4 +1,4 @@
-import { DatePipe, KeyValuePipe, NgClass } from '@angular/common';
+import { DatePipe, KeyValuePipe, NgClass, NgStyle } from '@angular/common';
 import { Component, ElementRef, Input, ViewChild, effect } from '@angular/core';
 import { ReportChild } from '../../models/report-child.model';
 import { ConfirmDialogService } from '../../observables/confirm-dialog.service';
@@ -16,6 +16,7 @@ import { CONFIRMDIALOG } from '../../models/confirm-dialog.model';
   standalone: true,
   imports: [
     DatePipe,
+    NgStyle,
     NgClass,
     KeyValuePipe,
     ControlLabelPipe,
@@ -26,9 +27,21 @@ import { CONFIRMDIALOG } from '../../models/confirm-dialog.model';
 })
 export class ChildReportCardComponent {
   @ViewChild('card') card: ElementRef | undefined;
-  @Input() public childReport: ReportChild = ReportChild.createEmpty();
+  private _childReport: ReportChild = ReportChild.createEmpty();
+  public get childReport(): ReportChild {
+    return this._childReport;
+  }
+  @Input() set childReport(value: ReportChild) {
+    if (!value) return;
+    this._childReport = value;
+    this.images = this.getReportImgs(value);
+  }
+
   @Input() public parentReport: ReportParent = ReportParent.createEmpty();
   @Input() public childTagGroups: TagGroup[] = [];
+
+  public images: string[] = [];
+  public currentImg: number = 0
 
   public loggedUser: LoggedUser | null = null;
   public showDeleteBtn: boolean = false;
@@ -39,7 +52,7 @@ export class ChildReportCardComponent {
     private authService: AuthService
   ) {
     effect(() => {
-      this.loggedUser = this.authService.loggedUserSignal()   
+      this.loggedUser = this.authService.loggedUserSignal()
     });
   }
 
@@ -61,5 +74,39 @@ export class ChildReportCardComponent {
   public getTags(groupId: string): string[] {
     const field: string[] = this.childReport.fields[groupId];
     return field ? field : [];
+  }
+
+  public getReportImgs(report: ReportChild): string[] {
+    let imgs: string[] = [];
+
+    if (report.fields.foto_dettaglio) {
+      imgs = [...report.fields.foto_dettaglio];
+    } else if (report.fields.intervention_photo) {
+      imgs = [...report.fields.intervention_photo];
+    } else if (report.fields.photo_detail) {
+      imgs = [...report.fields.photo_detail];
+    } else if (report.fields.maintenance_photo) {
+      imgs = [...report.fields.maintenance_photo];
+    } else {
+      imgs = [];
+    }
+
+    return imgs;
+  }
+
+  public changeImg(intent: 'prev' | 'next'): void {    
+    const lastImg: number = this.images.length - 1;
+
+    switch (intent) {
+      case 'prev':
+        let prevImg: number = this.currentImg - 1;
+        prevImg < 0 ? this.currentImg = lastImg : this.currentImg = prevImg;
+        break;
+
+      default:
+        let nextImg: number = this.currentImg + 1;
+        nextImg > lastImg ? this.currentImg = 0 : this.currentImg = nextImg;
+        break;
+    }
   }
 }

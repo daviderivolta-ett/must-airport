@@ -25,3 +25,27 @@
 .verified-icon {
     font-size: 1.25rem;
 }
+
+.slideshow-btn {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 40px;
+    color: var(--f-default-contrast);
+    background-color: transparent;
+    border: none;
+}
+
+.slideshow-btn.slideshow-btn-left {
+    left: 0;
+}
+
+.slideshow-btn.slideshow-btn-right {
+    right: 0;
+}
