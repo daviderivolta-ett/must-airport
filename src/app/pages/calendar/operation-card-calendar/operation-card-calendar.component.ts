@@ -31,6 +31,7 @@ export class OperationCardCalendarComponent extends OperationCardBaseComponent {
 
   public override set report(value: ReportParent) {
     this._report = value;
+    console.log(value);    
     if (!this.report) return;
     this.minimapData = { location: this.report.location, priority: this.report.priority }; 
   }

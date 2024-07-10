@@ -18,7 +18,7 @@ export class OperationCardBaseComponent {
     return this._operation;
   }
 
-  @Input() public set operation(value: Inspection) {
+  @Input() public set operation(value: Inspection) {    
     if (!value) return;
     this._operation = value;
 
@@ -50,7 +50,18 @@ export class OperationCardBaseComponent {
         }
       });
 
-    })
+    });
+
+    this.reportsService.archivedReports.forEach((r: ReportParent) => {
+      r.operations.forEach((op: string) => {
+        if (op === id) {
+          report = r;
+          return;
+        }
+      });
+
+    });
+
     return report;
   }
 }
