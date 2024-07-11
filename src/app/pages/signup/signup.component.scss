@@ -1,0 +1,80 @@
+.page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100% - 57px);
+}
+
+.signup-form {
+    width: 320px;
+    padding: 24px;
+    box-sizing: border-box;
+    background-color: var(--bg-default);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
+}
+
+h1 {
+    font-size: 1rem;
+    margin: 0 0 24px 0;
+    text-align: center;
+}
+
+label {
+    display: block;
+    color: var(--f-default);
+    font-size: .8rem;
+    margin: 0 0 8px 0;
+}
+
+input {
+    font-size: .9rem;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    box-sizing: border-box;
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
+
+    &::placeholder {
+        color: var(--f-muted);
+    }
+}
+
+.input-email,
+.input-password,
+.input-password-confirm {
+    margin: 0 0 12px 0;
+}
+
+.login {
+    font-size: .8rem;
+    width: 100%;
+    text-align: center;
+    margin: 16px 0 0 0;
+    color: var(--f-default);
+}
+
+button {
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    color: var(--f-default-contrast);
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: .5;
+    }
+}
+
+button.submit {    
+    background-color: var(--bg-accent);
+    border: none;
+
+    &:hover {
+        background-color: var(--bg-accent-emphasis);
+    }
+}

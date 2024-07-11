@@ -68,6 +68,14 @@ input {
     background-color: var(--border-default);
 }
 
+.signup {
+    font-size: .8rem;
+    width: 100%;
+    text-align: center;
+    margin: 16px 0 0 0;
+    color: var(--f-default);
+}
+
 button {
     cursor: pointer;
     border-radius: 4px;

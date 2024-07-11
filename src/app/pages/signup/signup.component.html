@@ -1,1 +1,34 @@
-<p>signup works!</p>
+<div class="page">
+    <div class="signup-form">
+        <h1>Registrati per continuare</h1>
+        <form [formGroup]="signupForm" (submit)="handleSubmit()">
+            <div class="input-single input-email">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Email" formControlName="email">
+            </div>
+            <div class="input-single input-password">
+                <label for="email">Password</label>
+                <input type="password" id="password" placeholder="6+ caratteri" formControlName="password">
+            </div>
+            <div class="input-single input-password-confirm">
+                <label for="email">Conferma password</label>
+                <input type="password" id="password" placeholder="Riscrivi la password" formControlName="confirmPassword">
+            </div>
+            
+            <div>
+                @if (signupForm.controls['email'].hasError('email')) {
+                    <app-alert msg="Non hai inserito una mail valida" />
+                }
+                @if (signupForm.controls['password'].hasError('minlength')) {
+                    <app-alert msg="La password deve almeno {{minPasswordLength}} caratteri" />
+                }
+                @if (signupForm.getError('mismatch')) {
+                    <app-alert msg="Le due password non sono uguali" />
+                }
+            </div>
+            
+            <button type="submit" class="submit" [disabled]="signupForm.invalid">Crea account</button>
+            <p class="login">Hai già un account? <a routerLink="/login">Accedi</a></p> 
+        </form>
+    </div>
+</div>

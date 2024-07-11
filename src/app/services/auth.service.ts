@@ -1,6 +1,6 @@
 import { Injectable, WritableSignal, effect, signal, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { Auth, getAuth, signInAnonymously, onAuthStateChanged, User, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, AuthProvider } from 'firebase/auth';
+import { Auth, getAuth, signInAnonymously, onAuthStateChanged, User, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, AuthProvider, createUserWithEmailAndPassword, UserCredential } from 'firebase/auth';
 import { LoggedUser } from '../models/user.model';
 import { SnackbarService } from '../observables/snackbar.service';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../models/snackbar.model';
@@ -47,6 +47,13 @@ export class AuthService {
       }
       this.ngZone.run(() => this.router.navigate(['/segnalazioni']));
     });
+  }
+
+  public createNewUserWithEmailAndPassword(email: string, password: string): void {
+    createUserWithEmailAndPassword(this.auth, email, password)
+      .then((userCredential: UserCredential) => {
+        console.log(userCredential);        
+      });
   }
 
   public logInAnonymously(): void {

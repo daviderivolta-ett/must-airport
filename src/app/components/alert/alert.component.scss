@@ -7,7 +7,7 @@
     color: var(--f-danger);
     border: 1px solid var(--border-danger-dull);
     border-radius: 4px;
-    margin: 8px 0 0 0;
+    margin: 8px 0;
 }
 
 .alert-icon-wrapper {
@@ -20,6 +20,7 @@
 
 .alert-message {
     margin: 0;
+    font-size: .8rem;
 }
 
 .alert-icon {
