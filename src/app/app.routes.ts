@@ -14,6 +14,7 @@ import { CalendarPageComponent } from './pages/calendar/page/calendar-page.compo
 import { ParentReportDetailComponent } from './components/parent-report-detail/parent-report-detail.component';
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
 import { UserDataComponent } from './pages/user-data/user-data.component';
+import { SignupComponent } from './pages/signup/signup.component';
 
 export const routes: Routes = [
     {
@@ -66,6 +67,11 @@ export const routes: Routes = [
         path: 'login',
         title: 'MUST - Login',
         component: LoginComponent
+    },
+    {
+        path: 'signup',
+        title: 'MUST - Resgistrati',
+        component: SignupComponent
     },
     {
         path: 'admin-dashboard',
