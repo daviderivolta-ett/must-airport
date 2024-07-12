@@ -11,7 +11,7 @@
                         <img [src]="parentReport.coverImgUrls[0]">
                     </div>
                     <div class="parent-report-title-section">
-                        <h2 class="parent-report-title">Dettaglio segnalazione</h2>
+                        <h2 class="parent-report-title">Dettaglio segnalazione (id: {{parentReport.progressiveId}})</h2>
                         @if (loggedUser?.level === 0 || (loggedUser?.level === 1 && currentApp !== 'generic')) {
                             <button type="button" (click)="navigateTo(parentReport.id)">Gestisci</button>
                         }
