@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AlertComponent } from '../../components/alert/alert.component';
 
-export function passwordMatchValidator(): ValidatorFn {
+function passwordMatchValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const formGroup = control as FormGroup;
     const password = formGroup.get('password')?.value;

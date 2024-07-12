@@ -1,4 +1,4 @@
-import { ApplicationRef, Component, createComponent, effect } from '@angular/core';
+import { ApplicationRef, Component, effect } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReportParent } from '../../../models/report-parent.model';
 import { ReportChild } from '../../../models/report-child.model';
@@ -95,6 +95,8 @@ export class ManagementComponent {
 
       let operations: Inspection[] = await this.operationsService.getAllInspectionsByReportId(this.parentReport.id);
       this.operations = operations.sort((a: Inspection, b: Inspection) => a.date.getTime() - b.date.getTime());
+
+      console.log(this.parentReport);      
     });
 
     effect(() => this.parentTagGroups = this.configService.parentTagGroupsSignal());

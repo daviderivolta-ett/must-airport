@@ -33,6 +33,7 @@ export interface ReportParentDb {
   validated: boolean;
   validationDate: Timestamp;
   verticalId: string;
+  progressiveId: string;
   operations: string[];
   archived?: boolean;
   archivingTime?: Timestamp | null;
@@ -306,6 +307,7 @@ export class ReportsService {
     r.userId = report.userId;
     r.isValidated = report.validated;
     r.verticalId = report.verticalId;
+    report.progressiveId ? r.progressiveId = report.progressiveId : r.progressiveId = '-';
     r.id = id;
 
     if (report.operations) r.operations = [...report.operations];

@@ -25,6 +25,7 @@ export class ReportParent {
     userId: string;
     isValidated: boolean;
     verticalId: string;
+    progressiveId: string;
 
     id: string;
     operations: string[];
@@ -53,6 +54,7 @@ export class ReportParent {
         userId: string,
         isValidated: boolean,
         verticalId: string,
+        progressiveId: string,
         id: string,
         operations: string[],
         validationDate: Timestamp | undefined,
@@ -78,6 +80,7 @@ export class ReportParent {
         this.userId = userId;
         this.isValidated = isValidated;
         this.verticalId = verticalId;
+        this.progressiveId = progressiveId;
         this.id = id;
         this.operations = operations;
         if (validationDate) this.validationDate = validationDate.toDate();
@@ -105,6 +108,7 @@ export class ReportParent {
             PRIORITY.NotAssigned,
             '',
             false,
+            '',
             '',
             '',
             [],
