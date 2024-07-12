@@ -21,6 +21,7 @@ import { HoverTooltipDirective } from '../../directives/hover-tooltip.directive'
 import { ConfirmDialogService } from '../../observables/confirm-dialog.service';
 import { CONFIRMDIALOG } from '../../models/confirm-dialog.model';
 import { DeleteReportComponent } from '../delete-report/delete-report.component';
+import { ArchiveReportComponent } from '../archive-report/archive-report.component';
 
 @Component({
   selector: 'app-parent-report-detail',
@@ -36,7 +37,8 @@ import { DeleteReportComponent } from '../delete-report/delete-report.component'
     MiniMapComponent,
     ChildReportCardComponent,
     ChildReportsFiltersComponent,
-    DeleteReportComponent],
+    DeleteReportComponent,
+  ArchiveReportComponent],
   templateUrl: './parent-report-detail.component.html',
   styleUrl: './parent-report-detail.component.scss'
 })
@@ -74,6 +76,8 @@ export class ParentReportDetailComponent {
 
       this.filteredChildrenReport = [...this.childrenReport];
       this.childrenFields = this.getCumulativeChildrenFields(this.childrenReport);
+
+      console.log(this.parentReport);      
     });
 
     effect(() => this.parentTagGroups = this.configService.parentTagGroupsSignal());

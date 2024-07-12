@@ -29,6 +29,7 @@ import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 import { SnackbarService } from '../../../observables/snackbar.service';
 import { OperationsService } from '../../../services/operations.service';
 import { DeleteReportComponent } from '../../../components/delete-report/delete-report.component';
+import { ArchiveReportComponent } from '../../../components/archive-report/archive-report.component';
 
 @Component({
   selector: 'app-management',
@@ -40,6 +41,7 @@ import { DeleteReportComponent } from '../../../components/delete-report/delete-
     InspectionFormComponent,
     OperationCardManagementComponent,
     ReportFileMenuComponent,
+    ArchiveReportComponent,
     HoverTooltipDirective,
     DatePipe,
     NgClass,
@@ -115,24 +117,24 @@ export class ManagementComponent {
       this.resetConfirmDialog();
     });
 
-    effect(async () => {
-      if (this.confirmDialogService.archiveReportSignal() !== true) return;
+    // effect(async () => {
+    //   if (this.confirmDialogService.archiveReportSignal() !== true) return;
 
-      const reportDb: any = {
-        archived: true,
-        archivingTime: Timestamp.now()
-      }
+    //   const reportDb: any = {
+    //     archived: true,
+    //     archivingTime: Timestamp.now()
+    //   }
 
-      try {
-        await this.reportsService.setReportById(this.parentReport.id, reportDb);
-        this.snackbarService.createSnackbar('Segnalazione archiviata con successo.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
-        this.router.navigate(['/archivio']);
-      } catch (error) {
-        this.snackbarService.createSnackbar('Errore nell\'archiviazione della segnalazione.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
-      }
+    //   try {
+    //     await this.reportsService.setReportById(this.parentReport.id, reportDb);
+    //     this.snackbarService.createSnackbar('Segnalazione archiviata con successo.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
+    //     this.router.navigate(['/archivio']);
+    //   } catch (error) {
+    //     this.snackbarService.createSnackbar('Errore nell\'archiviazione della segnalazione.', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Error);
+    //   }
 
-      this.confirmDialogService.archiveReportSignal.set(null);
-    });
+    //   this.confirmDialogService.archiveReportSignal.set(null);
+    // });
   }
 
   async ngOnInit(): Promise<void> {
@@ -142,7 +144,7 @@ export class ManagementComponent {
     }
   }
 
-  public archiveReportClick(): void {
+  // public archiveReportClick(): void {
     // this.archiveDialogService.parentReport = this.parentReport;
 
     // const div = document.createElement('div');
@@ -151,9 +153,9 @@ export class ManagementComponent {
     // const componentRef = createComponent(ArchiveDialogComponent, { hostElement: div, environmentInjector: this.applicationRef.injector });
     // this.applicationRef.attachView(componentRef.hostView);
     // componentRef.changeDetectorRef.detectChanges();
-    this.confirmDialogService.parentReportToArchive = this.parentReport;
-    this.confirmDialogService.createConfirm('Vuoi archiviare la segnalazione?', CONFIRMDIALOG.ArchiveReport);
-  }
+  //   this.confirmDialogService.parentReportToArchive = this.parentReport;
+  //   this.confirmDialogService.createConfirm('Vuoi archiviare la segnalazione?', CONFIRMDIALOG.ArchiveReport);
+  // }
 
   public filterChildReports(filter: ChildReportFiltersFormData) {
     this.filteredChildrenReport = [];

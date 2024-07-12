@@ -1,0 +1,19 @@
+button.archive-btn {
+    cursor: pointer;
+    height: 32px;
+    width: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+
+    &:hover {
+        border-color: var(--border-emphasis);
+    }
+}
+
+.icon {
+    font-size: 1rem;
+}

@@ -2,9 +2,10 @@
     <div class="column first-column">
         <div class="header">
             <h2>Dettagli segnalazione (id: {{parentReport.progressiveId}})</h2>
-            <button class="archive-btn" (click)="archiveReportClick()" appHoverTooltip data="Archivia segnalazione">
+            <!-- <button class="archive-btn" (click)="archiveReportClick()" appHoverTooltip data="Archivia segnalazione">
                 <span class="material-symbols-outlined archive-icon">archive</span>
-            </button>
+            </button> -->
+            <app-archive-report [report]="parentReport" />
         </div>
         <div class="image-section">
             <div class="img-container">

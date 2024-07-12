@@ -2,12 +2,12 @@
     <div class="column first-column">
         <div class="header">
             <h2>Dettagli segnalazione (id: {{parentReport.progressiveId}})</h2>
-            @if (parentReport.closingChildId) {
+            @if (parentReport.closingChildId && !parentReport.isArchived) {
             <button class="archive-btn" (click)="reopenReport()" appHoverTooltip data="Riapri segnalazione">
                 <span class="material-symbols-outlined archive-icon">unarchive</span>
             </button>
             }
-            @else {
+            @if (parentReport.isArchived) {
             <button class="archive-btn" (click)="restoreReport()" appHoverTooltip data="Rimuovi dall'archivio">
                 <span class="material-symbols-outlined archive-icon">unarchive</span>
             </button>
@@ -110,7 +110,10 @@
             }
         </div>
     </div>
-    @if (parentReport.id.length !== 0 && !parentReport.closingChildId) {
+    @if (parentReport.closingChildId && !parentReport.isArchived) {
+        <app-archive-report [report]="parentReport" />
+    }
+    @if (parentReport.isArchived) {
         <app-delete-report [report]="parentReport" [childReports]="childrenReport" />
     }
 </div>
