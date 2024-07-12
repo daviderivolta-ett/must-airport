@@ -20,6 +20,7 @@ import { LabelPipe } from '../../pipes/label.pipe';
 import { HoverTooltipDirective } from '../../directives/hover-tooltip.directive';
 import { ConfirmDialogService } from '../../observables/confirm-dialog.service';
 import { CONFIRMDIALOG } from '../../models/confirm-dialog.model';
+import { DeleteReportComponent } from '../delete-report/delete-report.component';
 
 @Component({
   selector: 'app-parent-report-detail',
@@ -34,7 +35,8 @@ import { CONFIRMDIALOG } from '../../models/confirm-dialog.model';
     NgClass,
     MiniMapComponent,
     ChildReportCardComponent,
-    ChildReportsFiltersComponent],
+    ChildReportsFiltersComponent,
+    DeleteReportComponent],
   templateUrl: './parent-report-detail.component.html',
   styleUrl: './parent-report-detail.component.scss'
 })
@@ -106,7 +108,7 @@ export class ParentReportDetailComponent {
       const child: any = {
         closure: false,
         creationTime: closingChild.creationTime,
-        fields: {...closingChild.fields},
+        fields: { ...closingChild.fields },
         flowId: closingChild.flowId,
         language: closingChild.language,
         parentId: closingChild.parentId,
@@ -163,7 +165,7 @@ export class ParentReportDetailComponent {
     if (filter.other) {
       this.filteredChildrenReport = this.filteredChildrenReport.concat(
         this.childrenReport.filter((report: ReportChild) =>
-        report.flowId !== OPERATIONTYPE.InspectionHorizontal && report.flowId !== OPERATIONTYPE.InspectionVertical &&  report.flowId !== OPERATIONTYPE.Inspection && report.flowId !== OPERATIONTYPE.Maintenance
+          report.flowId !== OPERATIONTYPE.InspectionHorizontal && report.flowId !== OPERATIONTYPE.InspectionVertical && report.flowId !== OPERATIONTYPE.Inspection && report.flowId !== OPERATIONTYPE.Maintenance
         )
       );
     }

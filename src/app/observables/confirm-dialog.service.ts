@@ -10,6 +10,7 @@ export class ConfirmDialogService {
   public childReportToDelete: string | null = null;
   public parentReportToArchive: ReportParent | null = null;
 
+  public deleteReportSignal: WritableSignal<boolean | null> = signal(null);
   public archiveReportSignal: WritableSignal<boolean | null> = signal(null);
   public unarchiveReportSignal: WritableSignal<boolean | null> = signal(null);
   public reopenReportSignal: WritableSignal<boolean | null> = signal(null);

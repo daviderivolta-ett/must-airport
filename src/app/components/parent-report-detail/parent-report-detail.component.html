@@ -115,4 +115,7 @@
             }
         </div>
     </div>
+    @if (parentReport.id.length !== 0) {
+        <app-delete-report [report]="parentReport" [childReports]="childrenReport" />
+    }
 </div>

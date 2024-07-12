@@ -1,0 +1,16 @@
+button.delete-btn {
+    cursor: pointer;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    color: var(--f-danger);
+    border: 1px solid var(--border-danger-dull);
+    background-color: var(--bg-danger-dull);
+    z-index: 999;
+}

@@ -31,10 +31,14 @@ export class ConfirmComponent {
     host.remove();
   }
 
-  public handleConfirm(type: CONFIRMDIALOG | null): void {    
+  public handleConfirm(type: CONFIRMDIALOG | null): void {
     if (!type) return;
-    
+
     switch (type) {
+      case CONFIRMDIALOG.DeleteReport:
+        this.confirmDialogService.deleteReportSignal.set(true);
+        break;
+        
       case CONFIRMDIALOG.ArchiveReport:
         this.confirmDialogService.archiveReportSignal.set(true);
         break;

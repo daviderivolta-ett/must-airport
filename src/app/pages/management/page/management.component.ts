@@ -28,6 +28,7 @@ import { Timestamp } from 'firebase/firestore';
 import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 import { SnackbarService } from '../../../observables/snackbar.service';
 import { OperationsService } from '../../../services/operations.service';
+import { DeleteReportComponent } from '../../../components/delete-report/delete-report.component';
 
 @Component({
   selector: 'app-management',

@@ -190,6 +190,29 @@ export class ReportsService {
     }
   }
 
+  public async deleteReport(report: ReportParent): Promise<void> {
+    try {
+
+      for (const key in report.fields) {
+        if (Object.prototype.hasOwnProperty.call(report.fields, key)) {
+          if (key === 'photo_wide_field') {
+            if (Array.isArray(report.fields[key])) {
+              report.fields[key].forEach((url: string) => {
+                let imgRef: StorageReference = this.getImageReference(url);
+                this.deleteImage(imgRef);
+              });
+            }
+          }          
+        }
+      }
+
+      await deleteDoc(doc(this.db, 'reportParents', report.id));
+    } catch (error) {
+      console.error('Error deleting document: ', error);
+      throw new Error('Failed to delete report by ID');
+    }
+  }
+
   public async setReportByValidationForm(id: string, data: any): Promise<void> {
     try {
       const ref = doc(this.db, 'reportParents', id);

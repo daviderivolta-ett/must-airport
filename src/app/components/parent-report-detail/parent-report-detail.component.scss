@@ -234,6 +234,12 @@ app-operation-card-management:last-child {
     margin: 0;
 }
 
+app-delete-report {
+    position: fixed;
+    bottom: 24px;
+    right: 72px;
+}
+
 @media screen and (max-width: 1024px) {
     .page {
         height: auto;
