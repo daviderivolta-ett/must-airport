@@ -94,9 +94,7 @@ export class ManagementComponent {
       this.childrenFields = this.getCumulativeChildrenFields(this.childrenReport);
 
       let operations: Inspection[] = await this.operationsService.getAllInspectionsByReportId(this.parentReport.id);
-      this.operations = operations.sort((a: Inspection, b: Inspection) => a.date.getTime() - b.date.getTime());
-
-      console.log(this.parentReport);      
+      this.operations = operations.sort((a: Inspection, b: Inspection) => a.date.getTime() - b.date.getTime());    
     });
 
     effect(() => this.parentTagGroups = this.configService.parentTagGroupsSignal());
