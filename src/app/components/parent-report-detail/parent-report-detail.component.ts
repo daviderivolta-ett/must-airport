@@ -75,7 +75,7 @@ export class ParentReportDetailComponent {
       this.filteredChildrenReport = this.childrenReport;
       this.childrenFields = this.getCumulativeChildrenFields(this.childrenReport);
       console.log(this.parentReport);
-      
+      console.log(this.childrenReport);
     });
 
     effect(() => this.parentTagGroups = this.configService.parentTagGroupsSignal());
@@ -153,7 +153,12 @@ export class ParentReportDetailComponent {
     if (filter.inspection) {
       this.filteredChildrenReport = this.filteredChildrenReport.concat(
         this.childrenReport.filter((report: ReportChild) =>
-          !report.isClosed && report.flowId === OPERATIONTYPE.InspectionHorizontal || report.flowId === OPERATIONTYPE.InspectionVertical || report.flowId === OPERATIONTYPE.Inspection || report.flowId === OPERATIONTYPE.Maintenance
+          !report.isClosed && (
+            report.flowId === OPERATIONTYPE.InspectionHorizontal ||
+            report.flowId === OPERATIONTYPE.InspectionVertical ||
+            report.flowId === OPERATIONTYPE.Inspection ||
+            report.flowId === OPERATIONTYPE.Maintenance
+          )
         )
       );
     }
@@ -167,7 +172,11 @@ export class ParentReportDetailComponent {
     if (filter.other) {
       this.filteredChildrenReport = this.filteredChildrenReport.concat(
         this.childrenReport.filter((report: ReportChild) =>
-          report.flowId !== OPERATIONTYPE.InspectionHorizontal && report.flowId !== OPERATIONTYPE.InspectionVertical && report.flowId !== OPERATIONTYPE.Inspection && report.flowId !== OPERATIONTYPE.Maintenance
+          report.flowId !== OPERATIONTYPE.InspectionHorizontal && (
+            report.flowId !== OPERATIONTYPE.InspectionVertical &&
+            report.flowId !== OPERATIONTYPE.Inspection &&
+            report.flowId !== OPERATIONTYPE.Maintenance
+          )
         )
       );
     }
