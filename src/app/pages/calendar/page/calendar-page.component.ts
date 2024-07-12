@@ -5,6 +5,8 @@ import { CalendarFiltersComponent } from '../calendar-filters/calendar-filters.c
 import { OperationCardCalendarComponent } from '../operation-card-calendar/operation-card-calendar.component';
 import { OperationCardBaseComponent } from '../../../components/operation-card-base/operation-card-base.component';
 import { DatePipe, KeyValuePipe } from '@angular/common';
+import { ReportParent } from '../../../models/report-parent.model';
+import { ReportsService } from '../../../services/reports.service';
 
 @Component({
   selector: 'app-calendar-page',
@@ -37,6 +39,7 @@ export class CalendarPageComponent {
   }
 
   constructor(
+    private reportsService: ReportsService,
     private operationsService: OperationsService
   ) {   
     effect(() => this.operations = this.operationsService.filteredOperationsSignal());
@@ -45,7 +48,14 @@ export class CalendarPageComponent {
   }
 
   public async ngOnInit(): Promise<void> {
-    let operations: Inspection[] = await this.operationsService.getAllInspections();   
+    let operations: Inspection[] = await this.operationsService.getAllInspections();
+    let reports: ReportParent[] = this.reportsService.reports;    
+
+    operations = operations.filter((operation: Inspection) => {
+      const report: ReportParent | undefined = reports.find((report: ReportParent) => report.id === operation.reportParentId);
+      return report ? !(report.isArchived || report.closingChildId) : false;
+    });
+
     this.operations = operations.sort((a: Inspection, b: Inspection) => a.date.getTime() - b.date.getTime());
     this.operationsService.operationsSignal.set(operations);
   }

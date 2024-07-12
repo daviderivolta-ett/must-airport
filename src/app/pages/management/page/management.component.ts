@@ -161,14 +161,14 @@ export class ManagementComponent {
     if (filter.inspection) {
       this.filteredChildrenReport = this.filteredChildrenReport.concat(
         this.childrenReport.filter((report: ReportChild) =>
-          report.flowId === OPERATIONTYPE.InspectionHorizontal || report.flowId === OPERATIONTYPE.InspectionVertical || report.flowId === OPERATIONTYPE.Inspection
+        !report.isClosed && report.flowId === OPERATIONTYPE.InspectionHorizontal || report.flowId === OPERATIONTYPE.InspectionVertical || report.flowId === OPERATIONTYPE.Inspection || report.flowId === OPERATIONTYPE.Maintenance
         )
       );
     }
 
     if (filter.maintenance) {
       this.filteredChildrenReport = this.filteredChildrenReport.concat(
-        this.childrenReport.filter((report: ReportChild) => report.flowId === OPERATIONTYPE.Maintenance)
+        this.childrenReport.filter((report: ReportChild) => report.isClosed)
       );
     }
 
