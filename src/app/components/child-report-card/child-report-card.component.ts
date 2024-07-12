@@ -33,8 +33,8 @@ export class ChildReportCardComponent {
   }
   @Input() set childReport(value: ReportChild) {
     if (!value) return;
-    this._childReport = value;
-    this.images = this.getReportImgs(value);
+    this._childReport = value;    
+    this.images = this.getReportImgs(value);   
   }
 
   @Input() public parentReport: ReportParent = ReportParent.createEmpty();
@@ -79,22 +79,15 @@ export class ChildReportCardComponent {
   public getReportImgs(report: ReportChild): string[] {
     let imgs: string[] = [];
 
-    if (report.fields.foto_dettaglio) {
-      imgs = [...report.fields.foto_dettaglio];
-    } else if (report.fields.intervention_photo) {
-      imgs = [...report.fields.intervention_photo];
-    } else if (report.fields.photo_detail) {
-      imgs = [...report.fields.photo_detail];
-    } else if (report.fields.maintenance_photo) {
-      imgs = [...report.fields.maintenance_photo];
-    } else {
-      imgs = [];
-    }
+    if (report.fields.foto_dettaglio) imgs = [...report.fields.foto_dettaglio];
+    if (report.fields.intervention_photo) imgs = [...report.fields.intervention_photo];
+    if (report.fields.photo_detail) imgs = [...report.fields.photo_detail];
+    if (report.fields.maintenance_photo) imgs = [...report.fields.maintenance_photo];
 
     return imgs;
   }
 
-  public changeImg(intent: 'prev' | 'next'): void {    
+  public changeImg(intent: 'prev' | 'next'): void {
     const lastImg: number = this.images.length - 1;
 
     switch (intent) {

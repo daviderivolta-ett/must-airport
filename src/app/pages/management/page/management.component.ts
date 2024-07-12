@@ -190,26 +190,23 @@ export class ManagementComponent {
 
   private getCumulativeChildrenFields(reports: ReportChild[]): { [key: string]: string[] } {
     let fields: { [key: string]: string[] } = {};
-    let r: ReportChild[] = this.utilsService.deepClone(reports);
-
-    r.forEach((report: ReportChild) => {
+  
+    reports.forEach((report: ReportChild) => {
       for (const key in report.fields) {
         if (!fields[key]) {
-          fields[key] = report.fields[key];
+          fields[key] = Array.isArray(report.fields[key]) ? [...report.fields[key]] : [];
         } else {
           if (Array.isArray(report.fields[key])) {
-            report.fields[key].forEach((id: string) => fields[key].push(id));
+            report.fields[key].forEach((id: string) => {
+              if (!fields[key].includes(id)) {
+                fields[key].push(id);
+              }
+            });
           }
         }
       }
     });
-
-    for (const key in fields) {
-      if (Array.isArray(fields[key])) {
-        fields[key] = [...new Set(fields[key])];
-      }
-    }
-
+  
     return fields;
   }
 

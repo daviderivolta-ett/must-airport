@@ -63,7 +63,7 @@ export class ParentReportDetailComponent {
     private confirmDialogService: ConfirmDialogService
   ) {
     effect(async () => {
-      if (this.parentReportSignal().id === '') return;
+      if (this.parentReportSignal().id.length === 0) return;
       let report: ReportParent = this.parentReportSignal();
       this.parentReport = report;
 
@@ -72,10 +72,8 @@ export class ParentReportDetailComponent {
 
       this.miniMapData = { location: this.parentReport.location, priority: this.parentReport.priority };
 
-      this.filteredChildrenReport = this.childrenReport;
+      this.filteredChildrenReport = [...this.childrenReport];
       this.childrenFields = this.getCumulativeChildrenFields(this.childrenReport);
-      console.log(this.parentReport);
-      console.log(this.childrenReport);
     });
 
     effect(() => this.parentTagGroups = this.configService.parentTagGroupsSignal());
@@ -186,25 +184,23 @@ export class ParentReportDetailComponent {
 
   private getCumulativeChildrenFields(reports: ReportChild[]): { [key: string]: string[] } {
     let fields: { [key: string]: string[] } = {};
-
+  
     reports.forEach((report: ReportChild) => {
       for (const key in report.fields) {
         if (!fields[key]) {
-          fields[key] = report.fields[key];
+          fields[key] = Array.isArray(report.fields[key]) ? [...report.fields[key]] : [];
         } else {
           if (Array.isArray(report.fields[key])) {
-            report.fields[key].forEach((id: string) => fields[key].push(id));
+            report.fields[key].forEach((id: string) => {
+              if (!fields[key].includes(id)) {
+                fields[key].push(id);
+              }
+            });
           }
         }
       }
     });
-
-    for (const key in fields) {
-      if (Array.isArray(fields[key])) {
-        fields[key] = [...new Set(fields[key])];
-      }
-    }
-
+  
     return fields;
   }
 

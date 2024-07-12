@@ -526,7 +526,7 @@ export class ReportsService {
 
     r.isClosed = report.closure;
     r.creationTime = report.creationTime.toDate();
-    r.fields = report.fields;
+    // r.fields = {...report.fields};
     r.fields = this.parseReportFields(report.fields);
     r.flowId = report.flowId;
 
@@ -542,7 +542,7 @@ export class ReportsService {
     r.parentId = report.parentId;
     r.userId = report.userId;
     r.verticalId = report.verticalId;
-    r.id = id;
+    r.id = id;    
 
     return r;
   }
