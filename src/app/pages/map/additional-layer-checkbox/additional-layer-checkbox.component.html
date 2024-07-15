@@ -4,4 +4,7 @@
         <span class="checkmark"></span>
         {{layer.name.charAt(0).toUpperCase() + layer.name.slice(1)}}
     </label>
+    <button type="button" class="delete-btn" (click)="deleteLayer(layer)">
+        <span class="material-symbols-outlined">delete</span>
+    </button>
 </div>

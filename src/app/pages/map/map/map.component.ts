@@ -98,13 +98,25 @@ export class MapComponent {
 
     effect(() => {
       if (this.additionalLayersService.currentLayersSignal() === null) return;
+
       this.additionalLayers.clearLayers();
       this.additionalLayersService.currentLayersSignal().forEach((layer: AdditionalLayer) => {
         Leaflet.geoJSON(layer.geoJson, {
-          style: {
+          style: (feature) => ({
             fillColor: layer.style.fillColor,
             color: layer.style.strokeColor,
             weight: 1
+          }),
+          pointToLayer: (feature, latLng) => {
+            return Leaflet.circleMarker(latLng, {
+              stroke: true,
+              radius: 8,
+              weight: 1,
+              color: layer.style.strokeColor,
+              opacity: 1,
+              fillColor: layer.style.fillColor,
+              fillOpacity: 0.5
+            });
           },
           onEachFeature: (feature, layer) => feature.properties.description ? layer.bindPopup(feature.properties.description) : ''
         }).addTo(this.additionalLayers).bringToBack();

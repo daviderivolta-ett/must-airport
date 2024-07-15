@@ -1,4 +1,4 @@
-import { DocumentSnapshot } from 'firebase/firestore';
+import { DocumentData, DocumentSnapshot } from 'firebase/firestore';
 import { VERTICAL } from './vertical.model';
 
 export interface AdditionalLayerStyle {
@@ -6,58 +6,53 @@ export interface AdditionalLayerStyle {
     strokeColor: string;
 }
 
-export class AdditionalLayerDb {
+export class AdditionalLayer {
+    id: string;
     name: string;
     fileName: string;
     vertId: VERTICAL;
+    geoJson: any;
     style: AdditionalLayerStyle;
 
-    constructor(name: string, fileName: string, vertId: VERTICAL, style: AdditionalLayerStyle = { fillColor: '#3388ff', strokeColor: '#3388ff' }) {
+    constructor(
+        id: string = '',
+        name: string = '',
+        fileName: string = '',
+        vertId: VERTICAL = VERTICAL.Default,
+        geoJson: any = {},
+        style: AdditionalLayerStyle = {
+            fillColor: '#3388ff',
+            strokeColor: '#3388ff'
+        },
+    ) {
+        this.id = id;
         this.name = name;
         this.fileName = fileName;
         this.vertId = vertId;
+        this.geoJson = geoJson;
         this.style = style;
-    }
-
-    static fromAdditionLayer(layer: AdditionalLayer): AdditionalLayerDb {
-        return new AdditionalLayerDb(layer.name, layer.fileName, layer.vertId, layer.style);
-    }
-
-    static createEmpty(): AdditionalLayer {
-        return new AdditionalLayer(
-            '',
-            '',
-            VERTICAL.Default,
-            { fillColor: '#3388ff', strokeColor: '#3388ff' },
-            '',
-            null
-        )
     }
 }
 
 export const additionalLayerConverter = {
-    toFirestore: (layer: AdditionalLayerDb) => {
+    toFirestore: (layer: AdditionalLayer): DocumentData => {
         return {
             name: layer.name,
             fileName: layer.fileName,
-            vertId: layer.vertId,
-            style: layer.style
-        };
+            style: layer.style,
+            vertId: layer.vertId
+        }
     },
-    fromFirestore: (snapshot: DocumentSnapshot, options: any) => {
-        const data = snapshot.data(options);
-        if (!data) return;
-        return new AdditionalLayerDb(data['name'], data['fileName'], data['vertId'], data['style']);
-    }
-}
-
-export class AdditionalLayer extends AdditionalLayerDb {
-    id: string;
-    geoJson: any;
-
-    constructor(name: string, fileName: string, vertId: VERTICAL, style: AdditionalLayerStyle = { fillColor: '3388ff', strokeColor: '3388ff' }, id: string, geoJson: any) {
-        super(name, fileName, vertId, style);
-        this.id = id;
-        this.geoJson = geoJson;
+    fromFirestore: (snapshot: DocumentSnapshot): AdditionalLayer => {
+        const data = snapshot.data();
+        if (!data) return new AdditionalLayer();
+        return new AdditionalLayer(
+            snapshot.id,
+            data['name'],
+            data['fileName'],
+            data['vertId'],
+            {},
+            data['style']
+        );
     }
 }

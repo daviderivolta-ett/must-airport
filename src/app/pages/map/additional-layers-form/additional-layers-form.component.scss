@@ -41,6 +41,14 @@ form {
     box-sizing: border-box;
 }
 
+form .first-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 8px 0;
+}
+
 .additional-layer-name-input {
     font-family: 'Noto Sans', sans-serif;
     padding: 8px;
@@ -48,11 +56,19 @@ form {
     background: var(--bg-subtle);
     border: 1px solid var(--border-default);
     border-radius: 4px;
-    margin: 0 0 8px 0;
+    height: 32px;
+    width: 100%;
     
     &:hover {
-        border-color: var(--border-emphasis);        
+        border-color: var(--border-emphasis);
     }
+}
+
+.additional-layer-color-input {
+    height: 32px;
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
 }
 
 .custom-file-input {

@@ -48,6 +48,7 @@ export class AppComponent {
     effect(() => {
       if (this.authService.loggedUserSignal() === null) return;
       const loggedUser = this.authService.loggedUser;
+      
 
       if (!loggedUser) return;
       if (!loggedUser.email) {

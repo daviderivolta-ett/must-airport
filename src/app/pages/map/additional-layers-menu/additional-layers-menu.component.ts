@@ -11,7 +11,11 @@ import { AuthService } from '../../../services/auth.service';
 @Component({
   selector: 'app-additional-layers-menu',
   standalone: true,
-  imports: [NgClass, AdditionalLayersFormComponent, AdditionalLayerCheckboxComponent],
+  imports: [
+    NgClass,
+    AdditionalLayersFormComponent,
+    AdditionalLayerCheckboxComponent
+  ],
   templateUrl: './additional-layers-menu.component.html',
   styleUrl: './additional-layers-menu.component.scss',
   animations: [
@@ -35,15 +39,17 @@ export class AdditionalLayersMenuComponent {
   public layers: AdditionalLayer[] = [];
   public isOpen: boolean = false;
 
-  constructor(private authService: AuthService, private additionalLayersService: AdditionalLayersService, private additionalLayersMenuService: AdditionalLayersMenuService) {
-    effect(() => {
-      this.layers = this.additionalLayersService.allLayersSignal();    
-    });
+  constructor(
+    private authService: AuthService,
+    private additionalLayersService: AdditionalLayersService,
+    private additionalLayersMenuService: AdditionalLayersMenuService
+  ) {
+    effect(() => this.layers = this.additionalLayersService.allLayersSignal());
 
     effect(() => this.isOpen = this.additionalLayersMenuService.isOpenSignal());
 
     effect(() => {
-      if (this.authService.currentAppSignal() === null) return;   
+      if (this.authService.currentAppSignal() === null) return;
       if (this.authService.currentApp) this.additionalLayersService.getAllAdditionalLayers(this.authService.currentApp);
     });
   }

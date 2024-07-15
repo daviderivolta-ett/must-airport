@@ -1,8 +1,14 @@
+.checkbox-single {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .checkbox-single-label {
     cursor: pointer;
     display: block;
-    width: 100%;
     padding: 0 0 0 24px;
+    width: 100%;
 }
 
 input[type="checkbox"] {
@@ -44,4 +50,20 @@ input[type="checkbox"]:checked + .checkmark {
 
 input[type="checkbox"]:checked + .checkmark::after {
     display: block;
+}
+
+.delete-btn {
+    cursor: pointer;
+    background-color: transparent;
+    color: var(--f-danger);
+    border: none;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .material-symbols-outlined {
+        font-size: 1rem;
+    }
 }

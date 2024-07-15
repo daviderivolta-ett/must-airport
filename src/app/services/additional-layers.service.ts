@@ -1,10 +1,11 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { CollectionReference, DocumentData, Query, QuerySnapshot, addDoc, collection, onSnapshot, query, where } from 'firebase/firestore';
-import { AdditionalLayer, AdditionalLayerDb, AdditionalLayerStyle, additionalLayerConverter } from '../models/additional-layer.model';
+import { CollectionReference, Query, QueryDocumentSnapshot, QuerySnapshot, addDoc, collection, deleteDoc, doc, onSnapshot, query, where } from 'firebase/firestore';
+import { AdditionalLayer, AdditionalLayerStyle, additionalLayerConverter } from '../models/additional-layer.model';
 import { Storage } from '@angular/fire/storage';
-import { StorageReference, getBlob, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { StorageReference, deleteObject, getBlob, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { VERTICAL } from '../models/vertical.model';
+import { Unsubscribe } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -37,38 +38,62 @@ export class AdditionalLayersService {
   }
 
   public async getAllAdditionalLayers(vertId: VERTICAL) {
-    const ref = collection(this.db, 'additionalLayers').withConverter(additionalLayerConverter);
-    if (!ref) return;
+    const ref: CollectionReference = collection(this.db, 'additionalLayers');
+    const q: Query = query(ref, where('vertId', '==', vertId)).withConverter(additionalLayerConverter);
 
-    const q: Query = query(ref as CollectionReference<AdditionalLayerDb>, where('vertId', '==', vertId));
+    const unsubscribe: Unsubscribe = onSnapshot(q, async (querySnapshot: QuerySnapshot) => {
+      let layers: AdditionalLayer[] = [];
+      const promises = querySnapshot.docs.map(async (doc: QueryDocumentSnapshot) => {
+        const layer: AdditionalLayer = doc.data() as AdditionalLayer;
+        const geoJson = JSON.parse(await this.getGeoJson(vertId, layer.fileName));
+        layer.geoJson = geoJson;
+        return layer;
+      });
 
-    const unsubscribe = onSnapshot(q,
-      async (querySnapshot: QuerySnapshot<DocumentData>) => {
-        const promises: Promise<AdditionalLayer>[] = querySnapshot.docs.map(async doc => {
-          const layerDb: AdditionalLayerDb = doc.data() as AdditionalLayerDb;
-          const geoJSON = JSON.parse(await this.getGeoJson(vertId, layerDb.fileName));
-          return new AdditionalLayer(layerDb.name, layerDb.fileName, layerDb.vertId, layerDb.style, doc.id, geoJSON);
-        });
+      layers = await Promise.all(promises);
+      layers.sort((a: AdditionalLayer, b: AdditionalLayer) => a.name.localeCompare(b.name));
 
-        const layers: AdditionalLayer[] = await Promise.all(promises);
-        layers.sort((a, b) => a.name.localeCompare(b.name));
-        this.allLayersSignal.set(layers);
-      },
-      (err: Error) => console.log(err)
-    );
+      this.allLayersSignal.set(layers);
+    });
   }
 
-  public async setAdditionalLayer(data: AdditionalLayerDb): Promise<void> {
-    const ref = collection(this.db, 'additionalLayers').withConverter(additionalLayerConverter);
-    await addDoc(ref, data)
-    // .catch((error) => console.log('nu'));
+  public async uploadAdditionalLayer(data: AdditionalLayer): Promise<void> {
+    try {
+      const ref: CollectionReference = collection(this.db, 'additionalLayers').withConverter(additionalLayerConverter);
+      await addDoc(ref, data);
+    } catch (error) {
+      throw new Error('Errore nel caricamento del layer');
+    }
+  }
+
+  public async deleteAdditionalLayer(id: string) {
+    try {
+      await deleteDoc(doc(this.db, 'additionalLayers', id));
+    } catch (error) {
+      throw new Error('Errore nella cancellazione del file');
+    }
   }
 
   public async uploadGeoJSON(file: File, fileName: string, verticalId: VERTICAL): Promise<string> {
-    const storageRef = ref(this.storage, `geoJSON/${verticalId}/${fileName}`);
-    return uploadBytes(storageRef, file).then(async (snapshot) => {
-      return await getDownloadURL(storageRef);
-    });
+    try {
+      const storageRef = ref(this.storage, `geoJSON/${verticalId}/${fileName}`);
+      return uploadBytes(storageRef, file).then(async (snapshot) => {
+        return await getDownloadURL(storageRef);
+      });
+    } catch (error) {
+      throw new Error('Errore nel caricamento del layer');
+    }
+  }
+
+  public async deleteGeoJSON(layer: AdditionalLayer) {
+    const fileRef: StorageReference = ref(this.storage, `geoJSON/${layer.vertId}/${layer.fileName}`);
+    deleteObject(fileRef)
+      .then(() => {
+        console.log('Layer cancellato correttamente');
+      })
+      .catch(() => {
+        throw new Error('Errore nella cancellazione del file');
+      })
   }
 
   public async readFile(file: File | Blob): Promise<string | undefined> {

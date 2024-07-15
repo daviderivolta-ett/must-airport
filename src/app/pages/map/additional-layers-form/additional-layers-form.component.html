@@ -1,25 +1,27 @@
 <button type="button" class="dropdown-toggle" [ngClass]="{'dropdown-toggle-open': isOpen}" (click)="toggleForm()">
     Aggiungi nuovo layer
-    <span class="material-symbols-outlined">add</span>
+    <span class="material-symbols-outlined">{{isOpen ? 'keyboard_arrow_up' :'keyboard_arrow_down'}}</span>
 </button>
-<form [ngClass]="{'dropdown-open': isOpen}" [formGroup]="uploadFileForm">
-    <input type="text" class="additional-layer-name-input" placeholder="Scegli un nome per il layer"
-        formControlName="name">
+<form [ngClass]="{'dropdown-open': isOpen}" [formGroup]="uploadFileForm" (submit)="handleSubmit(inputGeoJSON)">
+    <div class="first-row">
+        <input type="text" class="additional-layer-name-input" placeholder="Scegli un nome per il layer" formControlName="name">
+        <input type="color" class="additional-layer-color-input" value="#3388ff" formControlName="color">
+    </div>
     <label for="file-input" class="custom-file-input">
         <span>Scegli un file</span>
         <input type="file" accept=".geojson" id="file-input" (change)="onFileChange($event)" #inputGeoJSON
             placeholder="Seleziona file geoJSON">
     </label>
     <input type="hidden" formControlName="fileName">
-    <button type="submit" [disabled]="!uploadFileForm.valid" (click)="handleSubmit(inputGeoJSON)">Carica</button>
-    <div class="validation-msg">
-        @if (!uploadFileForm.get('name')?.pristine && uploadFileForm.get('name')?.invalid) {
-        <!-- <p>Il campo nome è obbligatorio</p> -->
-        <app-alert msg="Il campo nome è obbligatorio"/>
-    }
-    @if (inputGeoJSON.files && inputGeoJSON.files[0] && uploadFileForm.get('fileName')?.invalid) {
-        <!-- <p>Il file inserito non è un GeoJSON valido</p> -->
-        <app-alert msg="Il file inserito non è un GeoJSON valido"/>
-        }
-    </div>
+    <button type="submit" [disabled]="!uploadFileForm.valid">Carica</button>
 </form>
+<div class="validation-msg">
+    @if (!uploadFileForm.get('name')?.pristine && uploadFileForm.get('name')?.invalid) {
+    <!-- <p>Il campo nome è obbligatorio</p> -->
+    <app-alert msg="Il campo nome è obbligatorio"/>
+}
+@if (inputGeoJSON.files && inputGeoJSON.files[0] && uploadFileForm.get('fileName')?.invalid) {
+    <!-- <p>Il file inserito non è un GeoJSON valido</p> -->
+    <app-alert msg="Il file inserito non è un GeoJSON valido"/>
+    }
+</div>

@@ -2,9 +2,11 @@ import { Component } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AdditionalLayersService } from '../../../services/additional-layers.service';
 import { AuthService } from '../../../services/auth.service';
-import { AdditionalLayer, AdditionalLayerDb, AdditionalLayerStyle } from '../../../models/additional-layer.model';
+import { AdditionalLayer, AdditionalLayerStyle } from '../../../models/additional-layer.model';
 import { NgClass } from '@angular/common';
 import { AlertComponent } from '../../../components/alert/alert.component';
+import { SnackbarService } from '../../../observables/snackbar.service';
+import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 
 @Component({
   selector: 'app-additional-layers-form',
@@ -18,18 +20,21 @@ export class AdditionalLayersFormComponent {
   public isOpen: boolean = false;
   public uploadFileForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
+    color: ['#3388ff'],
     fileName: ['', [Validators.required, Validators.minLength(1)]]
   });
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private additionalLayersService: AdditionalLayersService) {
-    // this.uploadFileForm.valueChanges.subscribe(change => console.log(this.uploadFileForm));
-  }
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private additionalLayersService: AdditionalLayersService,
+    private snackbarService: SnackbarService
+  ) { }
 
   public async onFileChange(event: Event): Promise<void> {
     const inputElement: HTMLInputElement = event.target as HTMLInputElement;
     if (!inputElement.files) return;
     const file: any = inputElement.files[0];
-    // const isValid: boolean = await this.additionalLayersService.readFile(file);
     const fileContentString: string | undefined = await this.additionalLayersService.readFile(file);
     let isValid: boolean = false;
     fileContentString ? isValid = this.additionalLayersService.isValidGeoJSON(fileContentString) : isValid = false;
@@ -51,11 +56,19 @@ export class AdditionalLayersFormComponent {
     }
 
     const fileName: string = this.generateFileName(file);
-    let style: AdditionalLayerStyle = this.additionalLayersService.getGeoJsonStyle(JSON.parse(fileContentString));
-
-    await this.additionalLayersService.uploadGeoJSON(file, fileName, this.authService.currentApp);
-    const layer: AdditionalLayerDb = new AdditionalLayerDb(this.uploadFileForm.value.name, fileName, this.authService.currentApp, style);
-    this.additionalLayersService.setAdditionalLayer(layer);
+    let style: AdditionalLayerStyle = { fillColor: this.uploadFileForm.value.color, strokeColor: this.uploadFileForm.value.color };
+    try {
+      await this.additionalLayersService.uploadGeoJSON(file, fileName, this.authService.currentApp);
+      const layer: AdditionalLayer = new AdditionalLayer('', this.uploadFileForm.value.name, fileName, this.authService.currentApp, {}, style);
+      this.additionalLayersService.uploadAdditionalLayer(layer);
+      this.snackbarService.createSnackbar('Layer caricato correttamente', SNACKBARTYPE.Loader, SNACKBAROUTCOME.Success);
+    } catch (error: any) {
+      if (error instanceof Error) {
+        this.snackbarService.createSnackbar(error.message, SNACKBARTYPE.Loader, SNACKBAROUTCOME.Error);
+      } else {
+        this.snackbarService.createSnackbar('Si è verificato un errore sconosciuto', SNACKBARTYPE.Loader, SNACKBAROUTCOME.Error);
+      }
+    }
 
     this.uploadFileForm.reset();
     input.value = '';
