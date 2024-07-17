@@ -11,7 +11,7 @@ export class LabelPipe implements PipeTransform {
 
   constructor(private configService: ConfigService) { }
 
-  transform(value: string): string {
+  transform(value: string): string {  
     return this.searchLabel(value, this.labels);
   }
 
@@ -20,7 +20,7 @@ export class LabelPipe implements PipeTransform {
     for (const key in object) {
       if (Object.prototype.hasOwnProperty.call(object, key)) {
         if (key === value) {
-          return object[key];
+          return object[key].displayName;
         }
 
         if (typeof object[key] === 'object') {

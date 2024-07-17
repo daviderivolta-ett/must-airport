@@ -16,7 +16,12 @@ import { TagGroup } from '../../../models/tag.model';
 @Component({
   selector: 'app-map-page',
   standalone: true,
-  imports: [MapComponent, SidebarComponent, DialogComponent, AdditionalLayersMenuComponent],
+  imports: [
+    MapComponent,
+    SidebarComponent,
+    DialogComponent,
+    AdditionalLayersMenuComponent
+  ],
   templateUrl: './map-page.component.html',
   styleUrl: './map-page.component.scss'
 })
@@ -27,6 +32,7 @@ export class MapPageComponent {
   public loggedUser: LoggedUser | null = null;
   public currentApp: VERTICAL | null = null;
   public reports: ReportParent[] = [];
+  public filteredReports: ReportParent[] = [];
   public closedReports: ReportParent[] = [];
   public techElementTags: TechElementTag[] = [];
 
@@ -38,8 +44,15 @@ export class MapPageComponent {
     effect(() => this.loggedUser = this.authService.loggedUserSignal());
     effect(() => this.currentApp = this.authService.currentAppSignal());
     effect(() => this.config = this.configService.configSignal());
-    effect(() => this.reports = this.reportsService.filteredReportsSignal());
+    effect(() => {
+      this.reports = this.reportsService.reportsSignal();
+      this.filteredReports = [...this.reports.filter((report: ReportParent) => !report.closingChildId)];
+    });
     effect(() => this.parentTagGroups = this.configService.parentTagGroupsSignal());
     effect(() => this.childTagGroups = this.configService.childTagGroupsSignal());
+  }
+
+  public reportFiltersChanged(filters: any): void {
+    this.filteredReports = [...this.reportsService.filterParentReports(filters)];
   }
 }

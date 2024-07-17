@@ -51,9 +51,21 @@ export class WebAppConfig {
             },
             {
                 priority: {
-                    high: 'alta',
-                    medium: 'media',
-                    low: 'bassa'
+                    high: {
+                        displayName: 'Alta',
+                        color: '#FF0000',
+                        order: 3
+                    },
+                    medium: {
+                        displayName: 'Media',
+                        color: '#FFA500',
+                        order: 2
+                    },
+                    low: {
+                        displayName: 'Bassa',
+                        color: '#008000',
+                        order: 1
+                    }
                 },
                 operation: {
                     inspection: 'ispezione',
@@ -93,9 +105,21 @@ export enum WebAppConfigComponentsType {
 
 export interface WebAppConfigLabels {
     priority: {
-        high: string,
-        medium: string,
-        low: string
+        high: {
+            displayName: string,
+            color: string,
+            order: number
+        },
+        medium: {
+            displayName: string,
+            color: string,
+            order: number
+        },
+        low: {
+            displayName: string,
+            color: string,
+            order: number
+        }
     },
     operation: {
         inspection: 'ispezione',

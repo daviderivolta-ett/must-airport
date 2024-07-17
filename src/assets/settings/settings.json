@@ -4,7 +4,10 @@
             "id": "generic",
             "name": "MUST",
             "position": {
-                "location": [41.83271407231033, 12.493576390942872],
+                "location": [
+                    41.83271407231033,
+                    12.493576390942872
+                ],
                 "zoom": 6
             },
             "assets": {
@@ -16,13 +19,29 @@
             "components": [],
             "labels": {
                 "operations": {
-                    "inspection": "intervento",
-                    "maintenance": "manutenzione"
+                    "inspection": {
+                        "displayName": "ispezione"
+                    },
+                    "maintenance": {
+                        "displayName": "intervento"
+                    }
                 },
                 "priority": {
-                    "high": "alta",
-                    "medium": "media",
-                    "low": "bassa"
+                    "high": {
+                        "displayName": "Alta",
+                        "color": "#FF0000",
+                        "order": 3
+                    },
+                    "medium": {
+                        "displayName": "Media",
+                        "color": "#FFA500",
+                        "order": 2
+                    },
+                    "low": {
+                        "displayName": "Bassa",
+                        "color": "#00FF00",
+                        "order": 1
+                    }
                 }
             }
         },
@@ -30,7 +49,10 @@
             "id": "genovaAirport",
             "name": "Aeroporto di Genova",
             "position": {
-                "location": [44.41361028797091, 8.844596073925151],
+                "location": [
+                    44.41361028797091,
+                    8.844596073925151
+                ],
                 "zoom": 15
             },
             "assets": {
@@ -45,13 +67,29 @@
             ],
             "labels": {
                 "operations": {
-                    "inspection": "ispezione",
-                    "maintenance": "intervento"
+                    "inspection": {
+                        "displayName": "intervento"
+                    },
+                    "maintenance": {
+                        "displayName": "manutenzione"
+                    }
                 },
                 "priority": {
-                    "high": "Urgente",
-                    "medium": "Da risolvere",
-                    "low": "Monitorare"
+                    "high": {
+                        "displayName": "Urgente",
+                        "color": "#FF0000",
+                        "order": 3
+                    },
+                    "medium": {
+                        "displayName": "Da risolvere",
+                        "color": "#FFA500",
+                        "order": 2
+                    },
+                    "low": {
+                        "displayName": "Monitorare",
+                        "color": "#00FF00",
+                        "order": 1
+                    }
                 }
             }
         },
@@ -59,7 +97,10 @@
             "id": "dsh2030",
             "name": "DSH 2030",
             "position": {
-                "location": [44.4104061473147, 8.92655367243876],
+                "location": [
+                    44.4104061473147,
+                    8.92655367243876
+                ],
                 "zoom": 13
             },
             "assets": {
@@ -71,13 +112,29 @@
             "components": [],
             "labels": {
                 "operations": {
-                    "inspection": "intervento",
-                    "maintenance": "manutenzione"
+                    "inspection": {
+                        "displayName": "ispezione"
+                    },
+                    "maintenance": {
+                        "displayName": "intervento"
+                    }
                 },
                 "priority": {
-                    "high": "alta",
-                    "medium": "media",
-                    "low": "bassa"
+                    "high": {
+                        "displayName": "Alta",
+                        "color": "#FF0000",
+                        "order": 3
+                    },
+                    "medium": {
+                        "displayName": "Media",
+                        "color": "#FFA500",
+                        "order": 2
+                    },
+                    "low": {
+                        "displayName": "Bassa",
+                        "color": "#00FF00",
+                        "order": 1
+                    }
                 }
             }
         }

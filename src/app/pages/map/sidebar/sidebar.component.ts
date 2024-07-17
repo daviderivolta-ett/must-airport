@@ -1,4 +1,4 @@
-import { Component, Input, effect } from '@angular/core';
+import { Component, EventEmitter, Input, Output, effect } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { SidebarService } from '../../../observables/sidebar.service';
 import { ReportParent } from '../../../models/report-parent.model';
@@ -20,11 +20,13 @@ export class SidebarComponent {
   }
   @Input() public set reports(value: ReportParent[]) {
     if (!value) return;
-    this._reports = value;  
+    this._reports = value;
   }
 
   @Input() public parentTagGroups: TagGroup[] = [];
   public isOpen: boolean = false;
+
+  @Output() onFiltersChanged: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private sidebarService: SidebarService) {
     effect(() => {
@@ -34,5 +36,9 @@ export class SidebarComponent {
 
   public toggleSidebar() {
     this.sidebarService.isOpen.set(!this.sidebarService.isOpen());
+  }
+
+  public filtersChanged(filters: any) {
+    this.onFiltersChanged.emit(filters);
   }
 }

@@ -63,7 +63,7 @@ export class ConfigService {
   }
 
   public async generateWebAppConfig(mobileAppConfig: any, vertical: VERTICAL): Promise<void> {
-    console.log('MOBILE CONFIG:', mobileAppConfig);
+    // console.log('MOBILE CONFIG:', mobileAppConfig);
 
     let parentTags: Tag[] = [];
     let parentTagGroups: TagGroup[] = [];

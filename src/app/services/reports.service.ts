@@ -169,7 +169,8 @@ export class ReportsService {
         this.archivedReportsSignal.set(reports.filter(report => report.isArchived === true));
         this.closedReportSignal.set(reports.filter(report => report.closingChildId));
 
-        this.filteredReportsSignal.set(allReports);
+        // this.filteredReportsSignal.set(allReports);
+        this.reportsSignal.set(allReports);
 
         if (this.selectedReportId) {
           const selectedReport = allReports.find(report => report.id === this.selectedReportId);
@@ -202,7 +203,7 @@ export class ReportsService {
                 this.deleteImage(imgRef);
               });
             }
-          }          
+          }
         }
       }
 
@@ -234,34 +235,31 @@ export class ReportsService {
     }
   }
 
-  public filterReports(filters: ParsedFiltersFormData): void {
+  public filterParentReports(filters: any): ReportParent[] {    
     let filteredReports: ReportParent[] = [];
-    let priorityData = filters.priority;
+    let priorityData: Record<string, Boolean> = filters.priority;
 
     for (const key in priorityData) {
-      if (priorityData[key] === false) continue;
-
-      if (key === 'notAssigned' && priorityData[key] === true) {
-        filteredReports = filteredReports.concat(this.reports.filter(report => report.priority === undefined || report.priority === PRIORITY.NotAssigned));
-      } else if (key !== 'closed' && priorityData[key] === true) {
-        filteredReports = filteredReports.concat(this.reports.filter(report => report.priority === key && !report.closingChildId));
-      } else if (key === 'closed' && priorityData[key] === true) {
-        filteredReports = filteredReports.concat(this.reports.filter(report => report.closingChildId));
+      if (Object.prototype.hasOwnProperty.call(priorityData, key)) {
+        if (priorityData[key] === false) continue;
+        filteredReports = filteredReports.concat(this.reports.filter((report: ReportParent) => report.priority === key && !report.closingChildId));
       }
     }
 
-    let dateData = filters.date;
-    for (const key in dateData) {
-      if (dateData[key] === null) continue;
-      if (key === 'initialDate' && dateData[key] !== null) {
-        filteredReports = filteredReports.filter(report => report.creationTime > dateData[key]!)
-      }
-      if (key === 'endingDate' && dateData[key] !== null) {
-        filteredReports = filteredReports.filter(report => report.creationTime < dateData[key]!)
-      }
+    if (filters.closed) filteredReports = filteredReports.concat(this.reports.filter((report: ReportParent) => report.closingChildId));
+    if (filters.notAssigned) filteredReports = filteredReports.concat(this.reports.filter((report: ReportParent) => !report.priority));
+    
+    const initialDate = new Date(filters.initialDate);
+    const endingDate = new Date(filters.endingDate);
+
+    const isValidDate = (date: any) => {
+      return date instanceof Date && !isNaN(date.getTime());
     }
 
-    this.filteredReportsSignal.set(filteredReports);
+    if (isValidDate(initialDate)) filteredReports = filteredReports.filter((report: ReportParent) => report.creationTime > initialDate);
+    if (isValidDate(endingDate)) filteredReports = filteredReports.filter((report: ReportParent) => report.creationTime < endingDate);    
+
+    return filteredReports;
   }
 
   public getImageReference(url: string): StorageReference {
@@ -542,7 +540,7 @@ export class ReportsService {
     r.parentId = report.parentId;
     r.userId = report.userId;
     r.verticalId = report.verticalId;
-    r.id = id;    
+    r.id = id;
 
     return r;
   }

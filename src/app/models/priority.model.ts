@@ -5,6 +5,12 @@ export enum PRIORITY {
     High = 'high',
 }
 
+export interface StatusDetail {
+    displayName: string,
+    color: string,
+    order: number
+}
+
 export class Priority {
     static parsePriorities(string: string | undefined): PRIORITY {
         let priority: PRIORITY;
