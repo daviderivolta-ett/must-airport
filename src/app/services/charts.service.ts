@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ReportParent } from '../models/report-parent.model';
-import { PRIORITY } from '../models/priority.model';
+import { PRIORITY, StatusDetail } from '../models/priority.model';
 import { Inspection, OPERATIONTYPE } from '../models/operation.model';
 import { ReportChild } from '../models/report-child.model';
 import { WebAppConfigTagType } from '../models/config.model';
@@ -109,7 +109,7 @@ export class ChartsService {
     return dateFrequency;
   }
 
-  public createReportsNumPerPrioritySerie(reports: ReportParent[]): Highcharts.SeriesPieOptions {
+  public createReportsNumPerPrioritySerie(reports: ReportParent[], labels: { [key: string]: StatusDetail }): Highcharts.SeriesPieOptions {  
     let data: pieChartData[] = [];
     let priorities: PRIORITY[];
     priorities = reports.map(report => report.priority);
@@ -119,25 +119,22 @@ export class ChartsService {
       priorityFrequencyRaw[priority] = (priorityFrequencyRaw[priority] || 0) + 1;
     });
 
-    const colorMapping: Record<string, string> = {
-      '': 'grey',
-      'low': 'green',
-      'medium': 'orange',
-      'high': 'red'
+    const colorMapping: Record<string, string> = {};
+    const nameMapping: Record<string, string> = {};
+    for (const key in labels) {
+      if (Object.prototype.hasOwnProperty.call(labels, key)) {
+        colorMapping[key] = labels[key].color;
+        nameMapping[key] = labels[key].displayName;
+      }
     }
+    colorMapping[''] = 'grey';
+    nameMapping[''] = 'Non validate';
 
     data = Object.entries(priorityFrequencyRaw).map(([name, value]): pieChartData => ({
       name: name,
       y: value,
       color: colorMapping[name]
     }));
-
-    const nameMapping: Record<string, string> = {
-      "": "Non validate",
-      "low": "Bassa",
-      "medium": "Media",
-      "high": "Alta"
-    }
 
     data.forEach(item => {
       item.name = nameMapping[item.name] || item.name;

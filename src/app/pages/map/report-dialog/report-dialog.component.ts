@@ -53,13 +53,14 @@ export class ReportDialogComponent {
     private reportsService: ReportsService
   ) {
     effect(async () => {
-      this.parentReport = this.dialogService.report();     
+      this.parentReport = this.dialogService.report();
 
       const childIds: string[] = [...this.parentReport.childrenIds];
       if (this.parentReport.closingChildId) childIds.push(this.parentReport.closingChildId);
       this.childReports = await this.reportsService.populateChildrenReports(childIds);
 
       this.minimapData = { location: this.parentReport.location, priority: this.parentReport.priority };
+      console.log(this.parentReport);      
     });
 
     effect(() => this.parentTagGroups = this.configService.parentTagGroupsSignal());

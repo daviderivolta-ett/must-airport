@@ -8,6 +8,7 @@ import { ReportChild } from '../../../models/report-child.model';
 import { ConfigService } from '../../../services/config.service';
 import { Inspection } from '../../../models/operation.model';
 import { OperationsService } from '../../../services/operations.service';
+import { StatusDetail } from '../../../models/priority.model';
 
 @Component({
   selector: 'app-stats-page',
@@ -17,6 +18,8 @@ import { OperationsService } from '../../../services/operations.service';
   styleUrl: './stats-page.component.scss'
 })
 export class StatsPageComponent {
+  public labels: { [key: string]: StatusDetail } = {};
+
   public parentReports: ReportParent[] = [];
   public childrenReports: ReportChild[] = [];
   public operations: Inspection[] = [];
@@ -42,6 +45,7 @@ export class StatsPageComponent {
     private operationsService: OperationsService,
     private chartsService: ChartsService
   ) {
+    effect(() => this.labels = this.configService.config.labels.priority);
     effect(async () => {
       this.parentReports = this.reportsService.reportsSignal();
 
@@ -57,8 +61,8 @@ export class StatsPageComponent {
 
       this.operations = await this.operationsService.getAllInspections();
 
-        this.reportsNumPerTimeSerie = this.chartsService.createReportsNumPerTimeSerie(this.parentReports);
-      this.reportsNumPerPrioritySerie = this.chartsService.createReportsNumPerPrioritySerie(this.parentReports);
+      this.reportsNumPerTimeSerie = this.chartsService.createReportsNumPerTimeSerie(this.parentReports);
+      this.reportsNumPerPrioritySerie = this.chartsService.createReportsNumPerPrioritySerie(this.parentReports, this.labels);
       this.interventionsPerTimeSerie = this.chartsService.createInterventionsPerTimeSerie(this.operations);
       this.inspectionsPerTimeSerie = this.chartsService.createInspectionsPerTimeSerie(this.operations);
 
