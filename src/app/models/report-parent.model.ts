@@ -34,6 +34,7 @@ export class ReportParent {
     archivingTime?: Date | null;
     tags?: { parent: ReportTagGroup[], child: ReportTagGroup[] };
     files?: string[];
+    color?: string;
 
     constructor(
         childFlowIds: string[],

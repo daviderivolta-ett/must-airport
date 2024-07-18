@@ -311,13 +311,19 @@ export class ValidationFormComponent {
 
   public async handleSubmit(): Promise<void> {
     if (!this.report) return;
-
+    
     try {
       let data: any = {};
       let fields: any = {};
 
-
       data.priority = this.baseForm.value.priority;
+
+      for (const key in this.statusLabels) {
+        if (Object.prototype.hasOwnProperty.call(this.statusLabels, key)) {
+          if(this.baseForm.value.priority === key) data.color = this.statusLabels[key].color
+        }
+      }
+
       fields = this.parseReportFields(this.baseForm.value);
       const { parentFields, childFields } = this.splitFields(fields);
 
@@ -342,7 +348,7 @@ export class ValidationFormComponent {
       }
 
       data.lastChildTime = Timestamp.now();
-
+      
       await this.reportsService.setReportByValidationForm(this.report.id, data);
       this.snackbarService.createSnackbar('Modifica salvato con successo', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
     } catch (error) {
