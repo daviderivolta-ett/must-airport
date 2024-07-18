@@ -11,6 +11,7 @@ import { AdditionalLayersService } from '../../../services/additional-layers.ser
 import { AdditionalLayer } from '../../../models/additional-layer.model';
 import { GeoPoint } from 'firebase/firestore';
 import { VERTICAL } from '../../../models/vertical.model';
+import { StatusDetail } from '../../../models/priority.model';
 
 @Component({
   selector: 'app-map',
@@ -59,6 +60,15 @@ export class MapComponent {
   }
   public get currentApp(): VERTICAL | null {
     return this._currentApp;
+  }
+
+  private _labels: { [key: string]: StatusDetail } = {};
+  public get labels(): { [key: string]: StatusDetail } {
+    return this._labels;
+  }
+  @Input() public set labels(labels: { [key: string]: StatusDetail }) {
+    this._labels = labels;
+    console.log(this.labels);
   }
 
   private map!: Leaflet.Map;
@@ -170,28 +180,16 @@ export class MapComponent {
   }
 
   private chooseMarkerColor(feature: GeoJSONFeature): string {
-    let color: string;
+    let color: string = 'grey';
 
     if (feature.properties['report'].closingChildId) {
       return color = 'blue';
     }
 
-    switch (feature.properties['report'].priority) {
-      case 'high':
-        color = 'red';
-        break;
-
-      case 'medium':
-        color = 'orange';
-        break;
-
-      case 'low':
-        color = 'green';
-        break;
-
-      default:
-        color = 'grey';
-        break;
+    for (const key in this.labels) {
+      if (Object.prototype.hasOwnProperty.call(this.labels, key)) {
+        if (key === feature.properties['report'].priority) color = this.labels[key].color;
+      }
     }
     return color;
   }
