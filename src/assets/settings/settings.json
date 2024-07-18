@@ -39,7 +39,7 @@
                     },
                     "low": {
                         "displayName": "Bassa",
-                        "color": "#00FF00",
+                        "color": "#008000",
                         "order": 0
                     }
                 }
@@ -87,7 +87,7 @@
                     },
                     "low": {
                         "displayName": "Monitorare",
-                        "color": "#00FF00",
+                        "color": "#008000",
                         "order": 0
                     }
                 }
@@ -132,7 +132,7 @@
                     },
                     "low": {
                         "displayName": "Bassa",
-                        "color": "#00FF00",
+                        "color": "#008000",
                         "order": 0
                     }
                 }
