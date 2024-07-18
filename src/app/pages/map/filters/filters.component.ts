@@ -1,14 +1,11 @@
 import { KeyValuePipe, NgClass, NgStyle } from '@angular/common';
-import { Component, EventEmitter, Output, effect } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, EventEmitter, Input, Output, effect } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LoggedUser } from '../../../models/user.model';
 import { AuthService } from '../../../services/auth.service';
 import { LabelPipe } from '../../../pipes/label.pipe';
 import { SentenceCasePipe } from '../../../pipes/sentence-case.pipe';
-import { ConfigService } from '../../../services/config.service';
 import { StatusDetail } from '../../../models/priority.model';
-import { StatusOrderPipe } from '../../../pipes/status-order.pipe';
-import { WebAppConfig } from '../../../models/config.model';
 
 @Component({
   selector: 'app-filters',
@@ -19,8 +16,7 @@ import { WebAppConfig } from '../../../models/config.model';
     NgStyle,
     LabelPipe,
     SentenceCasePipe,
-    KeyValuePipe,
-    StatusOrderPipe
+    KeyValuePipe
   ],
   templateUrl: './filters.component.html',
   styleUrl: './filters.component.scss'
@@ -41,11 +37,8 @@ export class FiltersComponent {
   public get labels(): { [key: string]: StatusDetail } {
     return this._labels;
   }
-  public set labels(labels: { [key: string]: StatusDetail }) {
-    console.log(labels);
+  @Input() public set labels(labels: { [key: string]: StatusDetail }) {
     this._labels = labels;
-    // this.statuses = [...this.fillStatusesOrderArray(labels)];
-    // this.form.addControl('priority', this.createStatusFormGroup(labels));
     this.updateStatusesAndForm(labels);
   }
   public statuses: { id: string, order: number, label: string }[] = [];
@@ -54,14 +47,9 @@ export class FiltersComponent {
 
   constructor(
     private authService: AuthService,
-    private configService: ConfigService,
     private fb: FormBuilder
   ) {
     effect(() => this.loggedUser = this.authService.loggedUserSignal());
-    effect(() => {
-      this.labels = this.configService.configSignal().labels.priority;
-    });
-
     this.form.valueChanges.subscribe((changes: any) => this.onFiltersChanged.emit(changes));
   }
 

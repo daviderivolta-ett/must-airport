@@ -23,12 +23,8 @@ import { ReportFileMenuComponent } from '../report-file-menu/report-file-menu.co
 import { ReportFileMenuService } from '../../../observables/report-file-menu.service';
 import { ConfirmDialogService } from '../../../observables/confirm-dialog.service';
 import { HoverTooltipDirective } from '../../../directives/hover-tooltip.directive';
-import { CONFIRMDIALOG } from '../../../models/confirm-dialog.model';
-import { Timestamp } from 'firebase/firestore';
-import { SNACKBAROUTCOME, SNACKBARTYPE } from '../../../models/snackbar.model';
 import { SnackbarService } from '../../../observables/snackbar.service';
 import { OperationsService } from '../../../services/operations.service';
-import { DeleteReportComponent } from '../../../components/delete-report/delete-report.component';
 import { ArchiveReportComponent } from '../../../components/archive-report/archive-report.component';
 
 @Component({
@@ -54,7 +50,7 @@ import { ArchiveReportComponent } from '../../../components/archive-report/archi
   styleUrl: './management.component.scss'
 })
 export class ManagementComponent {
-  public config: WebAppConfig = this.configService.config;
+  public config: WebAppConfig = WebAppConfig.createDefault();
   public tagGroups: TagGroup[] = this.configService.tagGroups;
   public parentTagGroups: TagGroup[] = [];
   public childTagGroups: TagGroup[] = [];
@@ -84,7 +80,7 @@ export class ManagementComponent {
     private reportFileMenuService: ReportFileMenuService,
     private confirmDialogService: ConfirmDialogService
   ) {
-
+    effect(() => this.config = this.configService.configSignal());
     effect(async () => {
       this.parentReport = this.reportsService.selectedReportSignal();
       this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
@@ -101,9 +97,7 @@ export class ManagementComponent {
     });
 
     effect(() => this.parentTagGroups = this.configService.parentTagGroupsSignal());
-
     effect(() => this.childTagGroups = this.configService.childTagGroupsSignal());
-
     effect(() => this.isReportFileMenuOpen = this.reportFileMenuService.isOpenSignal());
 
     effect(async () => {

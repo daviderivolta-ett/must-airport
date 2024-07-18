@@ -2,9 +2,6 @@
     <div class="column first-column">
         <div class="header">
             <h2>Dettagli segnalazione (id: {{parentReport.progressiveId}})</h2>
-            <!-- <button class="archive-btn" (click)="archiveReportClick()" appHoverTooltip data="Archivia segnalazione">
-                <span class="material-symbols-outlined archive-icon">archive</span>
-            </button> -->
             <app-archive-report [report]="parentReport" />
         </div>
         <div class="image-section">
@@ -104,7 +101,7 @@
     <div class="column third-column">
         <h2>Scheda validazione</h2>
         @if (config.tags) {
-            <app-validation-form [tags]="config.tags" [tagGroups]="tagGroups" [report]="parentReport" [childrenReport]="childrenReport"/>
+            <app-validation-form [tags]="config.tags" [tagGroups]="tagGroups" [report]="parentReport" [childrenReport]="childrenReport" [statusLabels]="config.labels.priority"/>
         }
     </div>
     <div class="column fourth-column">

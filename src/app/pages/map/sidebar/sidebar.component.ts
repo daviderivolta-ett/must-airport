@@ -5,6 +5,8 @@ import { ReportParent } from '../../../models/report-parent.model';
 import { SidebarCardComponent } from '../sidebar-card/sidebar-card.component';
 import { FiltersComponent } from '../filters/filters.component';
 import { TagGroup } from '../../../models/tag.model';
+import { WebAppConfigLabels } from '../../../models/config.model';
+import { StatusDetail } from '../../../models/priority.model';
 
 @Component({
   selector: 'app-sidebar',
@@ -30,6 +32,7 @@ export class SidebarComponent {
   @Input() public parentTagGroups: TagGroup[] = [];
   public isOpen: boolean = false;
 
+  @Input() labels: { [key: string]: StatusDetail } = {};
   @Output() onFiltersChanged: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private sidebarService: SidebarService) {

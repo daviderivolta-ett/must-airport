@@ -5,7 +5,7 @@
     <div class="header">
         <h1>Tutte le segnalazioni</h1>
     </div>
-    <app-filters (onFiltersChanged)="filtersChanged($event)" />
+    <app-filters [labels]="labels" (onFiltersChanged)="filtersChanged($event)" />
     <div class="sidebar-content">
         @for (report of reports; track report.id) {
         <app-sidebar-card [parentTagGroups]="parentTagGroups" [report]="report" />

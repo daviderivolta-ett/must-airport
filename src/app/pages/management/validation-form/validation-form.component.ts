@@ -16,6 +16,7 @@ import { VERTICAL } from '../../../models/vertical.model';
 import { UtilsService } from '../../../services/utils.service';
 import { LabelPipe } from '../../../pipes/label.pipe';
 import { SentenceCasePipe } from '../../../pipes/sentence-case.pipe';
+import { StatusDetail } from '../../../models/priority.model';
 
 interface TagChanges {
   toAdd: { [key: string]: string[] },
@@ -39,51 +40,48 @@ interface TagChanges {
   styleUrl: './validation-form.component.scss'
 })
 export class ValidationFormComponent {
-  constructor(private authService: AuthService, private fb: FormBuilder, private reportsService: ReportsService, private snackbarService: SnackbarService, private utilsService: UtilsService) { }
-
   public baseForm: FormGroup = this.fb.group({});
   public priorityForm: FormGroup = this.fb.group({
     priority: ['', Validators.required]
   });
 
+  public isReportLoading: boolean = true;
   private _report: ReportParent | null = null;
-
   public get report(): ReportParent | null {
     return this._report;
   }
-
   @Input() public set report(value: ReportParent) {
     if (!value || value.id.length === 0) return;
     this._report = value;
-    this.priorityForm.setValue({ priority: this.report?.priority });
+    // this.priorityForm.setValue({ priority: this.report?.priority });
     this.patchControls([this.report?.fields]);
+    this.isReportLoading = false;
   }
 
+  public areReportChildsLoading: boolean = true;
   private _childrenReport: ReportChild[] = [];
-
   public get childrenReport(): ReportChild[] {
     return this._childrenReport;
   }
-
   @Input() public set childrenReport(value: ReportChild[]) {
     if (value.length === 0) return;
     this._childrenReport = value;
     let fields: any[] = [];
     this.childrenReport.forEach((report: ReportChild) => fields.push(report.fields));
     this.patchControls(fields);
+    this.areReportChildsLoading = false;
   }
 
+  public areTagsLoading: boolean = true;
   private _tags: WebAppConfigTags = { parent: { elements: [], groups: [] }, child: { elements: [], groups: [] } };
-
   public get tags() {
     return this._tags;
   }
-
   @Input() public set tags(value: WebAppConfigTags) {
     if (!value) return;
     this._tags = value;
     this.baseForm = this.createValidationForm(this.tags);
-    this.baseForm.addControl('priority', this.priorityForm);
+    // this.baseForm.addControl('priority', this.priorityForm);
 
     this.baseForm.updateValueAndValidity();
 
@@ -91,28 +89,67 @@ export class ValidationFormComponent {
     controls.forEach((control: FormControl) => control.valueChanges.subscribe((changes: any) => {
       this.updateVisibility(controls, control);
     }));
+    this.areTagsLoading = false;
   };
 
+  public areTagGroupsLoading: boolean = true;
   private _tagGroups: TagGroup[] = [];
-
   public get tagGroups(): TagGroup[] {
     return this._tagGroups;
   }
-
   @Input() public set tagGroups(value: TagGroup[]) {
     if (!value) return;
     this._tagGroups = value;
+    this.areTagGroupsLoading = false;
+  }
+
+  public areStatusLabelsLoading: boolean = true;
+  private _statusLabels: { [key: string]: StatusDetail } = {};
+  public get statusLabels(): { [key: string]: StatusDetail } {
+    return this._statusLabels;
+  }
+  @Input() public set statusLabels(statusLabels: { [key: string]: StatusDetail }) {
+    this._statusLabels = statusLabels;
+    this.updateStatusesAndForm(statusLabels);
+    this.areStatusLabelsLoading = false;
+  }
+  public statuses: { id: string, order: number, label: string }[] = [];
+
+  constructor(
+    private authService: AuthService,
+    private fb: FormBuilder,
+    private reportsService: ReportsService,
+    private snackbarService: SnackbarService,
+    private utilsService: UtilsService
+  ) { }
+
+  private fillStatusesOrderArray(labels: { [key: string]: StatusDetail }): string[] {
+    const statuses: string[] = [];
+    for (const key in labels) {
+      if (Object.prototype.hasOwnProperty.call(labels, key)) {
+        statuses[labels[key].order] = key;
+      }
+    }
+
+    return statuses;
+  }
+
+  private updateStatusesAndForm(labels: { [key: string]: StatusDetail }): void {
+    this.statuses = this.fillStatusesOrderArray(labels).map((key: string) => ({
+      id: key,
+      order: labels[key].order,
+      label: labels[key].displayName
+    }));
+    this.baseForm.setControl('priority', new FormControl(this.report ? this.report.priority : '', [Validators.required]));
   }
 
   private createValidationForm(tags: WebAppConfigTags): FormGroup {
     const baseForm: FormGroup = this.fb.group({});
-
     for (const key in tags) {
       tags[key as keyof WebAppConfigTags].groups.forEach((group: TagGroup) => {
         this.processTags(baseForm, group, tags[key as keyof WebAppConfigTags].elements, true);
       });
     }
-
     return baseForm;
   }
 
@@ -279,21 +316,20 @@ export class ValidationFormComponent {
       let data: any = {};
       let fields: any = {};
 
-      data.priority = this.baseForm.value.priority.priority;
+
+      data.priority = this.baseForm.value.priority;
       fields = this.parseReportFields(this.baseForm.value);
       const { parentFields, childFields } = this.splitFields(fields);
 
-      data.fields = parentFields;     
+      data.fields = parentFields;
 
       if (!this.report.isValidated) data.validated = true;
       if (!this.report.validationDate) data.validationDate = Timestamp.now();
 
-      // const childReports: ReportChild[] = this.childrenReport.map((report: ReportChild) => ({ ...report, fields: { ...report.fields } }));
       const childReports: ReportChild[] = this.utilsService.deepClone(this.childrenReport);
       const currentTags: { [key: string]: string[] } = this.getCurrentTags(childReports);
       const tagChanges: TagChanges = this.compareTags(currentTags, childFields);
 
-      // console.log('Cambiamenti', tagChanges);
 
       if (Object.keys(tagChanges.toAdd).length !== 0) {
         console.log('Ci sono tag da aggiungere');
@@ -306,7 +342,7 @@ export class ValidationFormComponent {
       }
 
       data.lastChildTime = Timestamp.now();
-      
+
       await this.reportsService.setReportByValidationForm(this.report.id, data);
       this.snackbarService.createSnackbar('Modifica salvato con successo', SNACKBARTYPE.Closable, SNACKBAROUTCOME.Success);
     } catch (error) {

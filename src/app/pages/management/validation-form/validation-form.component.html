@@ -1,3 +1,4 @@
+@if (!isReportLoading && !areReportChildsLoading && !areTagsLoading && !areTagGroupsLoading && !areStatusLabelsLoading) {
 <form [formGroup]="baseForm" id="validation-form" (ngSubmit)="handleSubmit()">
 
     @for (group of tagGroups; track $index) {
@@ -25,7 +26,8 @@
     }
 
     <h3 class="priority-title">Priorità</h3>
-    <div class="form-group radio-buttons" formGroupName="priority">
+    @if (baseForm.get('priority')) {
+    <!-- <div class="form-group radio-buttons" formGroupName="priority">
         <div class="radio-single">
             <input type="radio" id="low" value="low" name="priority" formControlName="priority">
             <label class="radio-single-label low" for="low">{{'low' | label | sentenceCase}}</label>
@@ -38,6 +40,19 @@
             <input type="radio" id="high" value="high" name="priority" formControlName="priority">
             <label class="radio-single-label high" for="high">{{'high' | label | sentenceCase}}</label>
         </div>
+    </div> -->
+    <div class="form-group radio-buttons">
+        @for (status of statuses; track $index) {
+            <div class="radio-single">
+                <input type="radio" [id]="status.id" [value]="status.id" name="priority" formControlName="priority">
+                <label class="radio-single-label low" [for]="status.id">{{status.label | sentenceCase}}</label>
+            </div>
+        }
     </div>
+    }
     <button type="submit" [disabled]="!baseForm.valid">Salva modifiche</button>
 </form>
+}
+@else {
+    <p>Caricamento...</p>
+}
