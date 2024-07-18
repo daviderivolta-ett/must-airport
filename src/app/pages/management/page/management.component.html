@@ -29,20 +29,8 @@
 
             <div class="info">
                 <p class="info-title">Priorità</p>
-                @switch (parentReport.priority) {
-                    @case ("high") {
-                    <p class="info-value priority high">{{parentReport.priority | label | sentenceCase}}</p>
-                    }
-                    @case ("medium") {
-                    <p class="info-value priority medium">{{parentReport.priority | label | sentenceCase}}</p>
-                    }
-                    @case ("low") {
-                    <p class="info-value priority low">{{parentReport.priority | label | sentenceCase}}</p>
-                    }
-                    @default {
-                    <p class="info-value priority not-assigned">Non assegnata</p>
-                    }
-                }
+                @if (priority) {<p class="info-value priority" [ngClass]="priority">{{priority | label | sentenceCase}}</p>}
+                @else {<p class="info-value priority not-assigned">Non assegnata</p>}
             </div>
 
             @for (group of parentTagGroups; track $index) {

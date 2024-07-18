@@ -68,7 +68,6 @@ export class MapComponent {
   }
   @Input() public set labels(labels: { [key: string]: StatusDetail }) {
     this._labels = labels;
-    console.log(this.labels);
   }
 
   private map!: Leaflet.Map;

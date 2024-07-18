@@ -26,6 +26,7 @@ import { HoverTooltipDirective } from '../../../directives/hover-tooltip.directi
 import { SnackbarService } from '../../../observables/snackbar.service';
 import { OperationsService } from '../../../services/operations.service';
 import { ArchiveReportComponent } from '../../../components/archive-report/archive-report.component';
+import { StatusDetail } from '../../../models/priority.model';
 
 @Component({
   selector: 'app-management',
@@ -61,6 +62,7 @@ export class ManagementComponent {
   public parentReport: ReportParent = ReportParent.createEmpty();
   public childrenReport: ReportChild[] = [];
   public filteredChildrenReport: ReportChild[] = [];
+  public priority: string | null = null;
 
   public operations: Inspection[] = [];
 
@@ -80,7 +82,9 @@ export class ManagementComponent {
     private reportFileMenuService: ReportFileMenuService,
     private confirmDialogService: ConfirmDialogService
   ) {
-    effect(() => this.config = this.configService.configSignal());
+    effect(() => {
+      this.config = this.configService.configSignal(); 
+    });
     effect(async () => {
       this.parentReport = this.reportsService.selectedReportSignal();
       this.childrenReport = await this.reportsService.populateChildrenReports(this.parentReport.childrenIds);
@@ -94,6 +98,8 @@ export class ManagementComponent {
 
       let operations: Inspection[] = await this.operationsService.getAllInspectionsByReportId(this.parentReport.id);
       this.operations = operations.sort((a: Inspection, b: Inspection) => a.date.getTime() - b.date.getTime());
+      
+      this.priority = this.getPriority(this.parentReport, this.config.labels.priority);  
     });
 
     effect(() => this.parentTagGroups = this.configService.parentTagGroupsSignal());
@@ -139,14 +145,14 @@ export class ManagementComponent {
   }
 
   // public archiveReportClick(): void {
-    // this.archiveDialogService.parentReport = this.parentReport;
+  // this.archiveDialogService.parentReport = this.parentReport;
 
-    // const div = document.createElement('div');
-    // div.id = 'archive-dialog';
-    // document.body.append(div);
-    // const componentRef = createComponent(ArchiveDialogComponent, { hostElement: div, environmentInjector: this.applicationRef.injector });
-    // this.applicationRef.attachView(componentRef.hostView);
-    // componentRef.changeDetectorRef.detectChanges();
+  // const div = document.createElement('div');
+  // div.id = 'archive-dialog';
+  // document.body.append(div);
+  // const componentRef = createComponent(ArchiveDialogComponent, { hostElement: div, environmentInjector: this.applicationRef.injector });
+  // this.applicationRef.attachView(componentRef.hostView);
+  // componentRef.changeDetectorRef.detectChanges();
   //   this.confirmDialogService.parentReportToArchive = this.parentReport;
   //   this.confirmDialogService.createConfirm('Vuoi archiviare la segnalazione?', CONFIRMDIALOG.ArchiveReport);
   // }
@@ -186,7 +192,7 @@ export class ManagementComponent {
 
   private getCumulativeChildrenFields(reports: ReportChild[]): { [key: string]: string[] } {
     let fields: { [key: string]: string[] } = {};
-  
+
     reports.forEach((report: ReportChild) => {
       for (const key in report.fields) {
         if (!fields[key]) {
@@ -202,7 +208,7 @@ export class ManagementComponent {
         }
       }
     });
-  
+
     return fields;
   }
 
@@ -232,5 +238,15 @@ export class ManagementComponent {
   private resetConfirmDialog(): void {
     this.confirmDialogService.childReportToDelete = null;
     this.confirmDialogService.deleteChildReportSignal.set(null);
+  }
+
+  private getPriority(report: ReportParent, labels: { [key: string]: StatusDetail }): string | null {    
+    let priority: string | null = null;
+    for (const key in labels) {
+      if (Object.prototype.hasOwnProperty.call(labels, key)) {
+        if (key === report.priority) priority = key;
+      }
+    }    
+    return priority;
   }
 }
