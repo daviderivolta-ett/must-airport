@@ -30,17 +30,17 @@
                     "high": {
                         "displayName": "Alta",
                         "color": "#FF0000",
-                        "order": 3
+                        "order": 2
                     },
                     "medium": {
                         "displayName": "Media",
                         "color": "#FFA500",
-                        "order": 2
+                        "order": 1
                     },
                     "low": {
                         "displayName": "Bassa",
                         "color": "#00FF00",
-                        "order": 1
+                        "order": 0
                     }
                 }
             }
@@ -78,17 +78,17 @@
                     "high": {
                         "displayName": "Urgente",
                         "color": "#FF0000",
-                        "order": 3
+                        "order": 2
                     },
                     "medium": {
                         "displayName": "Da risolvere",
                         "color": "#FFA500",
-                        "order": 2
+                        "order": 1
                     },
                     "low": {
                         "displayName": "Monitorare",
                         "color": "#00FF00",
-                        "order": 1
+                        "order": 0
                     }
                 }
             }
@@ -123,17 +123,17 @@
                     "high": {
                         "displayName": "Alta",
                         "color": "#FF0000",
-                        "order": 3
+                        "order": 2
                     },
                     "medium": {
                         "displayName": "Media",
                         "color": "#FFA500",
-                        "order": 2
+                        "order": 1
                     },
                     "low": {
                         "displayName": "Bassa",
                         "color": "#00FF00",
-                        "order": 1
+                        "order": 0
                     }
                 }
             }

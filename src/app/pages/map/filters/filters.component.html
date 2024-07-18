@@ -4,56 +4,20 @@
         Filtri
         <span class="material-symbols-outlined filter">filter_list</span>
     </button>
-    <!-- <div class="form-group dropdown-content" [ngClass]="{'dropdown-open': isOpen}" [formGroup]="filterForm">
-        <div class="priority">
-            <h3 class="priority-title">Priorità</h3>
-            <div class="checkbox-list">
-                <div class="checkbox-single">
-                    <input type="checkbox" id="low" formControlName="low">
-                    <label for="low" class="checkbox-single-label">{{'low' | label | sentenceCase}}</label>
-                </div>
-                <div class="checkbox-single">
-                    <input type="checkbox" id="medium" formControlName="medium">
-                    <label for="medium" class="checkbox-single-label">{{'medium' | label | sentenceCase}}</label>
-                </div>
-                <div class="checkbox-single">
-                    <input type="checkbox" id="high" formControlName="high">
-                    <label for="high" class="checkbox-single-label">{{'high' | label | sentenceCase}}</label>
-                </div>
-            </div>
-            @if (loggedUser && loggedUser.level < 2) {
-            <div class="checkbox-single isolated">
-                <input type="checkbox" id="not-assigned" formControlName="notAssigned">
-                <label for="not-assigned" class="checkbox-single-label">Non validate</label>
-            </div>
-            }
-            <div class="checkbox-single isolated">
-                <input type="checkbox" id="closed" formControlName="closed">
-                <label for="closed" class="checkbox-single-label">Chiuse</label>
-            </div>
-        </div>
-        <div class="date-selection">
-            <h3 class="date-selection-title">Range date</h3>
-            <div class="date-inputs">
-                <input type="date" min="2018-01-01" max="{{today.toISOString().split('T')[0]}}" formControlName="initialDate">
-                <input type="date" min="2018-01-01" max="{{today.toISOString().split('T')[0]}}" formControlName="endingDate">
-            </div>
-        </div>
-    </div> -->
 
     <div class="form-group dropdown-content" [ngClass]="{'dropdown-open': isOpen}" [formGroup]="form">
         @if (form.get('priority')) {
-        <div class="priority" formGroupName="priority">
-            <h3 class="priority-title">Priorità</h3>
-            <div class="checkbox-list">
-            @for (control of $any(form).get('priority').controls | keyvalue; track $index) {
-                <div class="checkbox-single">
-                    <input type="checkbox" [id]="control.key" [formControlName]="$any(control.key)">
-                    <label [for]="control.key" class="checkbox-single-label">{{$any(control).key | label | sentenceCase}}</label>
+            <div class="priority" formGroupName="priority">
+                <h3 class="priority-title">Priorità</h3>
+                <div class="checkbox-list">
+                    @for (status of statuses; track $index) {
+                        <div class="checkbox-single">
+                            <input type="checkbox" [id]="status.id" [formControlName]="status.id">
+                            <label [for]="status.id" class="checkbox-single-label">{{status.label | sentenceCase}}</label>
+                        </div>
+                    }
                 </div>
-            }
             </div>
-        </div>
         }
         @if (loggedUser && loggedUser.level < 2) {
         <div class="checkbox-single isolated">

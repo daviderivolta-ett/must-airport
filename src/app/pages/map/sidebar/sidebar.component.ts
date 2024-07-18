@@ -9,7 +9,11 @@ import { TagGroup } from '../../../models/tag.model';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [NgClass, SidebarCardComponent, FiltersComponent],
+  imports: [
+    NgClass,
+    SidebarCardComponent,
+    FiltersComponent
+  ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
@@ -29,9 +33,7 @@ export class SidebarComponent {
   @Output() onFiltersChanged: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private sidebarService: SidebarService) {
-    effect(() => {
-      this.isOpen = this.sidebarService.isOpen();
-    });
+    effect(() => this.isOpen = this.sidebarService.isOpen());
   }
 
   public toggleSidebar() {

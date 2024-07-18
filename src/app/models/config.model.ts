@@ -54,17 +54,17 @@ export class WebAppConfig {
                     high: {
                         displayName: 'Alta',
                         color: '#FF0000',
-                        order: 3
+                        order: 2
                     },
                     medium: {
                         displayName: 'Media',
                         color: '#FFA500',
-                        order: 2
+                        order: 1
                     },
                     low: {
                         displayName: 'Bassa',
                         color: '#008000',
-                        order: 1
+                        order: 0
                     }
                 },
                 operation: {
