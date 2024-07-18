@@ -1,11 +1,11 @@
-import { Component, Input, WritableSignal, effect, signal } from '@angular/core';
+import { Component, WritableSignal, effect, signal } from '@angular/core';
 import { ReportParent } from '../../models/report-parent.model';
 import { ChildReportFiltersFormData, ReportParentClosingDataDb, ReportParentDb, ReportsService } from '../../services/reports.service';
 import { ReportChild } from '../../models/report-child.model';
-import { ReportTagGroup, Tag, TagGroup } from '../../models/tag.model';
+import { TagGroup } from '../../models/tag.model';
 import { MiniMapData } from '../../services/map.service';
 import { GeoPoint } from 'firebase/firestore';
-import { PRIORITY } from '../../models/priority.model';
+import { PRIORITY, StatusDetail } from '../../models/priority.model';
 import { ConfigService } from '../../services/config.service';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { DatePipe, KeyValuePipe, NgClass } from '@angular/common';
@@ -43,7 +43,7 @@ import { ArchiveReportComponent } from '../archive-report/archive-report.compone
   styleUrl: './parent-report-detail.component.scss'
 })
 export class ParentReportDetailComponent {
-  public config: WebAppConfig = this.configService.config;
+  public config: WebAppConfig = WebAppConfig.createDefault();
   public tagGroups: TagGroup[] = this.configService.tagGroups;
   public parentTagGroups: TagGroup[] = [];
   public childTagGroups: TagGroup[] = [];
@@ -54,6 +54,8 @@ export class ParentReportDetailComponent {
   public parentReport: ReportParent = ReportParent.createEmpty();
   public childrenReport: ReportChild[] = [];
   public filteredChildrenReport: ReportChild[] = [];
+
+  public priority: string | null = null;
 
   public miniMapData: MiniMapData = { location: new GeoPoint(0.0, 0.0), priority: PRIORITY.NotAssigned };
 
@@ -77,9 +79,12 @@ export class ParentReportDetailComponent {
       this.filteredChildrenReport = [...this.childrenReport];
       this.childrenFields = this.getCumulativeChildrenFields(this.childrenReport);
 
+      this.priority = this.getPriority(this.parentReport, this.config.labels.priority);
+
       console.log(this.parentReport);      
     });
 
+    effect(() => this.config = this.configService.configSignal());
     effect(() => this.parentTagGroups = this.configService.parentTagGroupsSignal());
     effect(() => this.childTagGroups = this.configService.childTagGroupsSignal());
 
@@ -224,5 +229,15 @@ export class ParentReportDetailComponent {
   public getChildrenTags(groupId: string): string[] {
     const field: string[] = this.childrenFields[groupId];
     return field ? field : [];
+  }
+
+  private getPriority(report: ReportParent, labels: { [key: string]: StatusDetail }): string | null {    
+    let priority: string | null = null;
+    for (const key in labels) {
+      if (Object.prototype.hasOwnProperty.call(labels, key)) {
+        if (key === report.priority) priority = key;
+      }
+    }    
+    return priority;
   }
 }
