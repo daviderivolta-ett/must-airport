@@ -178,7 +178,7 @@ export class MapComponent {
     return new Leaflet.CircleMarker(latLng, options);
   }
 
-  private chooseMarkerColor(feature: GeoJSONFeature): string {
+  private chooseMarkerColor(feature: GeoJSONFeature): string {    
     let color: string = 'grey';
 
     if (feature.properties['report'].closingChildId) {
